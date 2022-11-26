@@ -14,6 +14,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { login } from '@store/action/auth.action'
 import { VisibilityOff, Visibility } from '@material-ui/icons'
 import { InputAdornment, IconButton } from '@mui/material'
+import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login'
+import { GOOGLE_CONFIGS } from 'src/App/configs'
 
 type State = {
   username: string
@@ -71,6 +73,12 @@ export default function SignIn() {
     e.preventDefault()
     dispatch(login(username, password))
   }
+  const onGoogleLoginSuccess: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void = (res) => {
+    console.log('success:', res);
+};
+  const onGoogleLoginFailure: (error: any) => void = (err) => {
+      console.log('failed:', err);
+  };
 
   return (
     <Container component='main' maxWidth='xs'>
@@ -125,9 +133,17 @@ export default function SignIn() {
             }}
           />
           <Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
-            Submit
+            Login
           </Button>
         </form>
+       <GoogleLogin
+          clientId={GOOGLE_CONFIGS.clientId}
+          buttonText="Sign in with Google"
+          onSuccess={onGoogleLoginSuccess}
+          onFailure={onGoogleLoginFailure}
+          cookiePolicy={'single_host_origin'}
+          isSignedIn={true}
+      />
       </div>
     </Container>
   )

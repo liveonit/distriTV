@@ -4,9 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { SnackbarProvider } from 'notistack'
 // material core
 import { MuiThemeProvider } from '@material-ui/core/styles'
+// Google login init
+import { gapi } from 'gapi-script';
 
 // context
-import { GLOBAL_CONFIGS, THEMES } from './configs'
+import { GLOBAL_CONFIGS, GOOGLE_CONFIGS, THEMES } from './configs'
 import themes from './themes'
 import { useGlobalContext } from './context/GlobalContext'
 // atomic
@@ -15,11 +17,22 @@ import LinearProgress from './components/atoms/LinearProgress'
 import SnackBarBase from './components/molecules/SnackBar'
 import Routes from './routes/Routes'
 
+
 function App() {
   // 0: light, 1: dark
   const { i18n } = useTranslation()
   const { modeTheme, language } = useGlobalContext()
   const type = modeTheme === THEMES.LIGHT ? 0 : 1
+
+  React.useEffect(() => {
+     const initClient = () => {
+           gapi.client.init({
+           clientId: GOOGLE_CONFIGS.clientId,
+           scope: ''
+         });
+      };
+      gapi.load('client:auth2', initClient);
+  });
 
   React.useEffect(() => {
     i18n.changeLanguage(language)

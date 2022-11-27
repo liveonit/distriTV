@@ -4,7 +4,7 @@ import { DataSource } from 'typeorm';
 
 import path from 'path';
 
-import { config } from '@src/config';
+import { config } from '../config';
 
 export class Db {
   public readonly config: MysqlConnectionOptions;

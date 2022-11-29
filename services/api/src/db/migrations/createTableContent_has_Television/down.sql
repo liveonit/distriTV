@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `mydb`.`content_has_television` ;

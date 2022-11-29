@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `mydb`.`television_has_notification`;

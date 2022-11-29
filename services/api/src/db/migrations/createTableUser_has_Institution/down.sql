@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS `mydb`.`user_has_institution`;

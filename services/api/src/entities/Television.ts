@@ -1,4 +1,5 @@
 import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Institution } from './Institution';
 
 @Entity()
 export class Television extends BaseEntity {
@@ -11,6 +12,6 @@ export class Television extends BaseEntity {
   @Column()
   mac!: String;
 
-  @Column({ nullable: true })
-  institution_idinstitution!: string;
+  @ManyToOne(() => Institution, (inst) => inst.televisions)
+  public institution?: Institution;
 }

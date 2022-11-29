@@ -1,5 +1,13 @@
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Permission } from './Permission';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Television } from './Television';
 import { User } from './User';
 
 @Entity()
@@ -13,12 +21,10 @@ export class Institution extends BaseEntity {
   @Column({ nullable: true })
   description?: string;
 
-  @ManyToMany(() => User, user => user.roles)
+  @ManyToMany(() => User, (user) => user.roles)
+  @JoinTable({ name: 'institution_has_users' })
   users?: User[];
 
-  @ManyToMany(() => Permission, (permission) => permission.roles, {
-    cascade: true,
-  })
-  @JoinTable()
-  permissions?: Permission[];
+  @OneToMany(() => Television, (tv) => tv.institution)
+  public televisions?: Television[];
 }

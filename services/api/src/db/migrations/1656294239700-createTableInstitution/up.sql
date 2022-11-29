@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `institution` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(45) NULL,
-  `departamento` VARCHAR(45) NULL,
-  `localidad` VARCHAR(45) NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `city` VARCHAR(45),
+  `locality` VARCHAR(45),
   PRIMARY KEY (`id`));

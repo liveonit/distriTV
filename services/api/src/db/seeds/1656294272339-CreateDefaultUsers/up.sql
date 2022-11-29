@@ -20,12 +20,14 @@ VALUES
   );
 
 INSERT INTO
-  `user_has_roles`(`userId`, `roleId`)
+  `user_has_roles`(`userId`, `roleId`, `institutionId`)
 VALUES
   (
     '06ab86cb-52cf-4b6a-ac19-0d62e0307dc6',
-    '48f76d11-2932-4536-9198-7ce0ce4bb1c7'
+    '48f76d11-2932-4536-9198-7ce0ce4bb1c7',
+    1
   );
+
 INSERT INTO
   `user`(
     `id`,
@@ -48,12 +50,15 @@ VALUES
   );
 
 INSERT INTO
-  `user_has_roles`(`userId`, `roleId`)
+  `user_has_roles`(`userId`, `roleId`, `institutionId`)
 VALUES
   (
     '48f75e89-0f7f-4d82-8c3a-8a2a45ecdd09',
-    '7b5ec802-5923-4a1b-b9d1-2f522ad6c6a3'
+    '7b5ec802-5923-4a1b-b9d1-2f522ad6c6a3',
+    1
   );
+
+
 INSERT INTO
   `user`(
     `id`,
@@ -73,4 +78,13 @@ VALUES
     'user',
     'two',
     'usuario2@example.com'
+  );
+
+INSERT INTO
+  `user_has_roles`(`userId`, `roleId`, `institutionId`)
+VALUES
+  (
+    'eb273257-f77a-493b-a10b-5f7e874e41c6',
+    '7b5ec802-5923-4a1b-b9d1-2f522ad6c6a3',
+    1
   );

@@ -1,5 +1,4 @@
-CREATE TABLE IF NOT EXISTS `mydb`.`Label` (
-  `idLabel` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `label` (
+  `id` INT NOT NULL,
   `descripcion` VARCHAR(45) NULL,
-  PRIMARY KEY (`idLabel`))
-ENGINE = InnoDB;
+  PRIMARY KEY (`id`));

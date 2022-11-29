@@ -1,18 +1,17 @@
-CREATE TABLE IF NOT EXISTS `mydb`.`television_has_label` (
-  `Television_idTelevision` INT NOT NULL,
-  `label_idlabel` INT NOT NULL,
-  PRIMARY KEY (`Television_idTelevision`, `label_idlabel`),
-  INDEX `fk_Television_has_label_label1_idx` (`label_idLabel` ASC) VISIBLE,
-  INDEX `fk_Television_has_label_Television1_idx` (`Television_idTelevision` ASC) VISIBLE,
-  CONSTRAINT `fk_Television_has_label_Television1`
-    FOREIGN KEY (`Television_idTelevision`)
-    REFERENCES `mydb`.`Television` (`idTelevision`)
+CREATE TABLE IF NOT EXISTS `television_has_label` (
+  `televisionId` INT NOT NULL,
+  `labelId` INT NOT NULL,
+  PRIMARY KEY (`televisionId`, `labelId`),
+  INDEX `fk_television_has_label_label1_idx` (`labelId` ASC) VISIBLE,
+  INDEX `fk_television_has_label_television1_idx` (`televisionId` ASC) VISIBLE,
+  CONSTRAINT `fk_television_has_label_television1`
+    FOREIGN KEY (`televisionId`)
+    REFERENCES `television` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Television_has_label_label1`
-    FOREIGN KEY (`label_idLabel`)
-    REFERENCES `mydb`.`label` (`idLabel`)
+  CONSTRAINT `fk_television_has_label_label1`
+    FOREIGN KEY (`labelId`)
+    REFERENCES `label` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
 

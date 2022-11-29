@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS `mydb`.`user_has_institution`;
+DROP TABLE IF EXISTS `user_has_institution`;

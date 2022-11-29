@@ -1,20 +1,19 @@
-CREATE TABLE IF NOT EXISTS `mydb`.`content_has_television` (
-  `Content_idContent` INT NOT NULL,
-  `Television_idTelevision` INT NOT NULL,
-  `fecha_inicio_agenda` DATETIME NOT NULL,
-  `fecha_fin_agenda` DATETIME NOT NULL,
+CREATE TABLE IF NOT EXISTS `content_has_television` (
+  `contentId` INT NOT NULL,
+  `televisionId` INT NOT NULL,
+  `fechaInicioAgenda` DATETIME NOT NULL,
+  `fechaFinAgenda` DATETIME NOT NULL,
   `cron` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`Content_idContent`, `Television_idTelevision`, `fecha_inicio_agenda`, `fecha_fin_agenda`, `cron`),
-  INDEX `fk_Content_has_Television_Television1_idx` (`Television_idTelevision` ASC) VISIBLE,
-  INDEX `fk_Content_has_Television_Content1_idx` (`Content_idContent` ASC) VISIBLE,
-  CONSTRAINT `fk_Content_has_Television_Content1`
-    FOREIGN KEY (`Content_idContent`)
-    REFERENCES `mydb`.`Content` (`idContent`)
+  PRIMARY KEY (`contentId`, `televisionId`, `fechaInicioAgenda`, `fechaFinAgenda`, `cron`),
+  INDEX `fk_content_has_television_television1_idx` (`televisionId` ASC) VISIBLE,
+  INDEX `fk_content_has_television_content1_idx` (`contentId` ASC) VISIBLE,
+  CONSTRAINT `fk_content_has_television_content1`
+    FOREIGN KEY (`contentId`)
+    REFERENCES `content` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Content_has_Television_Television1`
-    FOREIGN KEY (`Television_idTelevision`)
-    REFERENCES `mydb`.`Television` (`idTelevision`)
+  CONSTRAINT `fk_content_has_television_television1`
+    FOREIGN KEY (`televisionId`)
+    REFERENCES `television` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);

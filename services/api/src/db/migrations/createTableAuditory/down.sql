@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS `mydb`.`Auditory`;
+DROP TABLE IF EXISTS `auditory`;

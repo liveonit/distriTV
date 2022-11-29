@@ -20,7 +20,7 @@ VALUES
   );
 
 INSERT INTO
-  `user_roles_role`(`userId`, `roleId`)
+  `user_has_roles`(`userId`, `roleId`)
 VALUES
   (
     '06ab86cb-52cf-4b6a-ac19-0d62e0307dc6',
@@ -39,16 +39,16 @@ INSERT INTO
 VALUES
   (
     '48f75e89-0f7f-4d82-8c3a-8a2a45ecdd09',
-    'funcionario',
+    'user1',
     '$argon2i$v=19$m=4096,t=3,p=1$N0pNbWJzSnZoSk9ubFdJVw$7p4JA2zUyeUurWHSZ1PQ1A',
     1,
-    'funcionario',
+    'user1',
     'uno',
-    'funcionario@example.com'
+    'user1@example.com'
   );
 
 INSERT INTO
-  `user_roles_role`(`userId`, `roleId`)
+  `user_has_roles`(`userId`, `roleId`)
 VALUES
   (
     '48f75e89-0f7f-4d82-8c3a-8a2a45ecdd09',
@@ -67,10 +67,10 @@ INSERT INTO
 VALUES
   (
     'eb273257-f77a-493b-a10b-5f7e874e41c6',
-    'usuario1',
+    'user2',
     '$argon2i$v=19$m=4096,t=3,p=1$TEgzU0pBMGswcm5qaVVhNg$U+R7nIGEQDgOPsJpQQejlA',
     1,
-    'usuario',
-    'uno',
-    'usuario@example.com'
+    'user',
+    'two',
+    'usuario2@example.com'
   );

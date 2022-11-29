@@ -31,7 +31,7 @@ export class Db {
   public connectDb = async (params: {
     retry?: boolean;
     retryMsInterval?: number;
-    runAfterConnect?: 'migrations' | 'syncModels' | 'dropAndSyncModels';
+    runAfterConnect?: 'migrations' | 'syncModels' | 'dropAndSyncModels' | 'dropDbAndRunMigrations';
   }): Promise<DataSource | undefined> => {
     const { retry, retryMsInterval, runAfterConnect } = params;
     try {
@@ -41,9 +41,21 @@ export class Db {
       } else {
         logger.success('DB ALREADY CONNECTED 💾 🗂 💾', 'TypeORM');
       }
-      if (runAfterConnect === 'migrations') await this.runMigrations();
-      else if (runAfterConnect === 'syncModels' || runAfterConnect === 'dropAndSyncModels')
-        await this.syncModels(runAfterConnect === 'dropAndSyncModels');
+
+      switch (runAfterConnect) {
+        case 'syncModels':
+          await this.syncModels();
+          break;
+        case 'dropAndSyncModels':
+          await this.syncModels(true);
+          break;
+        case 'dropDbAndRunMigrations':
+          await this.clearDb();
+          await this.runMigrations();
+          break;
+        default:
+          await this.runMigrations();
+      }
     } catch (err) {
       logger.error('DB CONNECTION REFUSED 📛 🆘 📛 ', 'TypeORM');
       logger.error(`${err}`, 'TypeORM');
@@ -79,7 +91,7 @@ export class Db {
     return this.dataSource;
   };
 
-  public syncModels = async (dropBefore: boolean) => {
+  public syncModels = async (dropBefore = false) => {
     try {
       await this.getConnection().synchronize(dropBefore);
       if (this.config.logging === 'all')

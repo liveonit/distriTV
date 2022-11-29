@@ -1,5 +1,5 @@
 INSERT INTO
-  `role_permissions_permission` (`roleId`, `permissionId`)
+  `role_has_permissions` (`roleId`, `permissionId`)
 VALUES
   (
     '7b5ec802-5923-4a1b-b9d1-2f522ad6c6a3',

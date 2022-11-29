@@ -1,1 +1,0 @@
-ALTER TABLE `book` DROP FOREIGN KEY (`authorId`)

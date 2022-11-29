@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS `mydb`.`content_has_television` ;
+DROP TABLE IF EXISTS `content_has_television` ;

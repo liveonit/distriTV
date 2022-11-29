@@ -22,10 +22,7 @@ async function main() {
 
   // Initialize DB connection
   // Connect to db, run pending migrations and run seeds
-
-  await db.connectDb({ retry: true });
-  await db.clearDb()
-  await db.runMigrations()
+  await db.connectDb({ retry: true, runAfterConnect: 'dropDbAndRunMigrations' });
 
   // Connect Redis client cache
   await redisClient.connect();

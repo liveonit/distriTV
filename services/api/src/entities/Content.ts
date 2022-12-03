@@ -1,6 +1,12 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, JoinTable ,ManyToOne, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  Column,
+  JoinTable,
+  ManyToMany,
+} from 'typeorm';
 import { Television } from './Television';
-
 
 @Entity()
 export class Content extends BaseEntity {
@@ -9,16 +15,14 @@ export class Content extends BaseEntity {
 
   @Column()
   nombre!: String;
-  
+
   @Column()
   tipo!: String;
 
   @Column()
   duracion!: number;
 
-
-    @ManyToMany(() => Television, (tv) => tv.id)
-    @JoinTable()
-    tvs?: Television[]
-
+  @ManyToMany(() => Television, (tv) => tv.id)
+  @JoinTable({ name: 'content_has_television'})
+  tvs?: Television[];
 }

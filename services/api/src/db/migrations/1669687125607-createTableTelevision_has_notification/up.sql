@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `television_has_notification` (
   `televisionId` INT NOT NULL,
-  `NotificationId` INT NOT NULL,
+  `notificationId` INT NOT NULL,
   PRIMARY KEY (`televisionId`, `notificationId`),
   INDEX `fk_television_has_notification_notification1_idx` (`notificationId` ASC) VISIBLE,
   INDEX `fk_television_has_notification_television1_idx` (`televisionId` ASC) VISIBLE,

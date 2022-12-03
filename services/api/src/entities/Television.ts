@@ -21,16 +21,16 @@ export class Television extends BaseEntity {
 
 
     @ManyToMany(() => Notification, (noti) => noti.id)
-    @JoinTable()
+    @JoinTable({ name: 'television_has_notification'})
     notis?: Notification[]
 
     @ManyToMany(() => Label, (lbl) => lbl.id)
-    @JoinTable()
+    @JoinTable({ name: 'television_has_label'})
     labels?: Label[]
 
     @ManyToMany(() => Content, (cnt) => cnt.id) // Entidad fuerte TV por eso va acá.
     cnts?: Content[];
-      
+
 
 
 }

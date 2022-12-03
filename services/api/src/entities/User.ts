@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Role } from './Role';
+
+import { RoleMapping } from './RoleMapping';
 
 @Entity()
 export class User extends BaseEntity {
@@ -28,9 +29,6 @@ export class User extends BaseEntity {
   @Column()
   email?: string;
 
-  @ManyToMany(() => Role, (role) => role.users, {
-    cascade: true,
-  })
-  @JoinTable()
-  roles?: Role[];
+  @ManyToOne(() => RoleMapping, (role) => role.user)
+  roleMappings?: RoleMapping[];
 }

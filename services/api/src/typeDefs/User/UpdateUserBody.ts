@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { roleMapping } from './CreateUserBody';
 
 export const updateUserBodySchema = z.object({
   username: z.string().optional(),
@@ -7,7 +8,7 @@ export const updateUserBodySchema = z.object({
   lastName: z.string().optional(),
   enabled: z.boolean().optional(),
   email: z.string().optional(),
-  roleIds: z.array(z.string()).optional(),
+  roleMappings: z.array(roleMapping),
 });
 
 export type UpdateUserBodyType = z.infer<typeof updateUserBodySchema>;

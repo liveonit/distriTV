@@ -1,7 +1,7 @@
 import { db, Db } from '@src/db';
+import { BaseCustomEntity } from '@src/utils/BaseCustomEntity';
 import { NotFound } from '@src/utils/errors';
 import {
-  BaseEntity,
   FindManyOptions,
   FindOneOptions,
   FindOptionsWhere,
@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-export class BaseService<T extends BaseEntity> {
+export class BaseService<T extends BaseCustomEntity> {
   protected readonly model: ObjectType<T>;
   protected readonly db: Db;
   constructor(model: ObjectType<T>) {
@@ -34,7 +34,7 @@ export class BaseService<T extends BaseEntity> {
   public readonly insertMany = async (entities: T[]) => {
     return this.db.getConnection().transaction('READ COMMITTED', async (em) => {
       const result = await em.insert<T>(this.model, entities as any[]);
-      return em.findBy<T>(this.model, result.identifiers as FindOptionsWhere<T>[]);
+      return await em.findBy<T>(this.model, result.identifiers as FindOptionsWhere<T>[]);
     });
   };
 

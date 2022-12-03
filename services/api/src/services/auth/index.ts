@@ -20,6 +20,8 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { BadRequest, Forbidden, NotFound, Unauthorized } from '@src/utils/errors';
 import { handleErrorAsync } from '@middlewares/errorCatcher';
 import { uuid } from '@src/utils/helpers/uuid';
+import { RoleMapping } from '@src/entities/RoleMapping';
+import { db } from '@src/db';
 export interface CustomContext {
   req: Request;
   res: Response;
@@ -35,10 +37,14 @@ declare global {
 
 class AuthService {
   public async createUser(user: CreateUserBodyType): Promise<Omit<User, 'password'>> {
-    let newUser = User.create(user as User);
+    let newUser = User.create(_.omit(user, ['roleMappings']) as User);
     newUser.password = await argon2.hash(user.password);
-    if (user.roleIds) newUser.roles = await Role.find({ where: { id: In(user.roleIds) } });
     newUser = await newUser.save();
+    if (user.roleMappings) {
+      newUser.roleMappings = user.roleMappings.map((rm) =>
+        RoleMapping.create({ userId: newUser.id, ...rm }),
+      );
+    }
     return _.omit(newUser, ['password']);
   }
 
@@ -49,14 +55,27 @@ class AuthService {
   ): Promise<Omit<User, 'password'>> {
     let currentUser = await User.findOneOrFail({
       where: { id },
-      relations: ['roles'],
+      relations: ['roleMappings', 'roleMappings.role', 'roleMappings.institution'],
     });
     if (user.password) {
       currentUser.password = await argon2.hash(user.password);
       await redisClient.del(`${id}:*`);
     }
-    if (user.roleIds) currentUser.roles = await Role.find({ where: { name: In(user.roleIds) } });
     currentUser = await currentUser.save();
+    if (user.roleMappings) {
+      db.getConnection().manager.transaction(async (tm) => {
+        await tm.delete(RoleMapping, { userId: currentUser.id });
+        await tm.insert(
+          RoleMapping,
+          user.roleMappings.map((rm) => ({ userId: currentUser.id, ...rm })),
+        );
+      });
+      currentUser.roleMappings = await RoleMapping.find({
+        where: { userId: currentUser.id },
+        relations: ['roleMappings', 'roleMappings.role', 'roleMappings.institution'],
+      });
+    }
+
     if (sessionId)
       redisClient.set(
         `${currentUser.id}:${sessionId}`,
@@ -76,14 +95,17 @@ class AuthService {
   }
 
   public async getAll(options?: FindManyOptions<User>): Promise<User[]> {
-    const result = await User.find({ relations: ['roles', 'roles.permissions'], ...options });
+    const result = await User.find({
+      relations: ['roleMappings', 'roleMappings.role', 'roleMappings.institution'],
+      ...options,
+    });
     return result.map((r) => _.omit(r, ['password']));
   }
 
   public async getOne({ id, username }: { id?: string; username?: string }): Promise<User> {
     const result = await User.findOneOrFail({
       where: { id, username },
-      relations: ['roles', 'roles.permissions'],
+      relations: ['roleMappings', 'roleMappings.role', 'roleMappings.institution'],
     });
     return _.omit(result, ['password']);
   }
@@ -113,7 +135,7 @@ class AuthService {
     const { username, password } = data;
     const user = await User.findOne({
       where: { username: username },
-      relations: ['roles', 'roles.permissions'],
+      relations: ['roleMappings', 'roleMappings.role', 'roleMappings.institution'],
     });
     if (user) {
       const correctPassword = await argon2.verify(user.password!, password);
@@ -140,22 +162,26 @@ class AuthService {
         'REFRESH_TOKEN_PUBLIC_KEY',
       );
       if (!decoded) {
-        logger.debug("error on decoded")
+        logger.debug('error on decoded');
         throw new BadRequest('Could not refresh access token');
       }
 
       // Check if the user has a valid session
       const session = await redisClient.get(`${decoded.id}:${decoded.sessionId}`);
       if (!session) {
-        logger.debug("error on session get")
+        logger.debug('error on session get');
         throw new BadRequest('Could not refresh access token');
       }
       const userPayload = JSON.parse(session);
 
       // Sign new access token
-      const accessToken = signJwt({ ...userPayload, sessionId: decoded.sessionId }, 'ACCESS_TOKEN_PRIVATE_KEY', {
-        expiresIn: `${config.ACCESS_TOKEN_EXPIRES_IN}m`,
-      });
+      const accessToken = signJwt(
+        { ...userPayload, sessionId: decoded.sessionId },
+        'ACCESS_TOKEN_PRIVATE_KEY',
+        {
+          expiresIn: `${config.ACCESS_TOKEN_EXPIRES_IN}m`,
+        },
+      );
 
       // Send the access token as cookie
       const result = userSessionSchema.parse({
@@ -196,34 +222,36 @@ class AuthService {
    * app.use('/', authSvc.authRequiredMiddleware([]));
    *
    */
-
-  public authRequiredMiddleware(requiredPermissionsName: string[]): RequestHandler {
+  public authRequiredMiddleware(requiredRoleName: string[]): RequestHandler {
     return handleErrorAsync(async (req: Request, res: Response, next: NextFunction) => {
-      const token = this.getTokenFromHeader(req);
-      if (token == null) throw new Forbidden();
-      const decoded: UserPayloadType | null = userPayloadSchema.parse(
-        verifyJwt(token, 'ACCESS_TOKEN_PUBLIC_KEY'),
-      );
+      if (req.headers.authorizationType === 'local') {
+        const token = this.getTokenFromHeader(req);
+        if (token == null) throw new Forbidden();
+        const decoded: UserPayloadType | null = userPayloadSchema.parse(
+          verifyJwt(token, 'ACCESS_TOKEN_PUBLIC_KEY'),
+        );
 
-      // Check if the user has a valid session
-      const session = await redisClient.get(`${decoded.id}:${decoded.sessionId}`);
-      if (!decoded || !session) throw new Forbidden();
-      const userPayload = JSON.parse(session) as UserPayloadType;
-      let result;
-      if (requiredPermissionsName.length) {
-        let userPermissions: string[] = [];
-        for (const role of userPayload.roles || []) {
-          if (role.permissions)
-            userPermissions = [...userPermissions, ...role.permissions.map((p: Role) => p.name)];
-        }
-        const validPermissions = requiredPermissionsName.filter((p) => userPermissions.includes(p));
-        if (requiredPermissionsName.length && !validPermissions.length) throw new Forbidden();
-        else result = userPayload;
+        // Check if the user has a valid session
+        const session = await redisClient.get(`${decoded.id}:${decoded.sessionId}`);
+        if (!decoded || !session) throw new Forbidden();
+        const userPayload = JSON.parse(session) as UserPayloadType;
+        let result;
+        if (requiredRoleName.length) {
+          const userRoles = userPayload.roleMappings.map((r) => r.role.name);
+          const hasRole = requiredRoleName.reduce(
+            (prev, current) => prev || userRoles.includes(current),
+            false,
+          );
+          if (!hasRole) throw new Unauthorized('Invalid permissions');
+          result = userPayload;
+        } else result = userPayload;
+        req.user = result;
+        return next();
+      } else if (req.headers.authorizationType === 'google') {
+        // TODO: Validate google user
       } else {
-        result = userPayload;
+        throw new Unauthorized('Invalid authorization provider');
       }
-      req.user = result;
-      return next();
     });
   }
 }

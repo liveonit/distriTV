@@ -182,7 +182,7 @@ public class MainFragment extends BrowseSupportFragment
                 .centerCrop()
                 .error(mDefaultBackground);
 
-        Glide.with(this)
+        Glide.with(getContext())
                 .asBitmap()
                 .load(uri)
                 .apply(options)

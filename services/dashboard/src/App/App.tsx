@@ -32,7 +32,7 @@ function App() {
          });
       };
       gapi.load('client:auth2', initClient);
-  });
+  }, []);
 
   React.useEffect(() => {
     i18n.changeLanguage(language)

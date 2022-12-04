@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 import path from 'path';
 import { z } from 'zod';
 
-dotenv.config({path:path.resolve(__dirname, "../../../.env")});
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 export const configSchema = z.object({
   ENVIRONMENT: z.enum(['development', 'staging', 'testing', 'production']),
@@ -24,6 +24,7 @@ export const configSchema = z.object({
   REDIS_PORT: z.string().transform((v) => +v),
   REDIS_PASSWORD: z.string(),
   API_PREFIX: z.string(),
+  GOOGLE_CLIENT_ID: z.string(),
 });
 export type ConfigType = z.infer<typeof configSchema>;
 

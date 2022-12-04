@@ -11,11 +11,12 @@ import Container from '@material-ui/core/Container'
 // material icon
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 // actions
-import { login } from '@store/action/auth.action'
+import { googleLogin, login } from '@store/action/auth.action'
 import { VisibilityOff, Visibility } from '@material-ui/icons'
 import { InputAdornment, IconButton } from '@mui/material'
 import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login'
 import { GOOGLE_CONFIGS } from 'src/App/configs'
+import { useUser } from 'src/App/hooks/useUser'
 
 type State = {
   username: string
@@ -54,6 +55,8 @@ export default function SignIn() {
   })
   const { username, password, showPassword } = values
 
+  const user = useUser()
+
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
@@ -73,8 +76,10 @@ export default function SignIn() {
     e.preventDefault()
     dispatch(login(username, password))
   }
-  const onGoogleLoginSuccess: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void = (res) => {
-    console.log('success:', res);
+  const onGoogleLoginSuccess: (response: GoogleLoginResponse | GoogleLoginResponseOffline) => void = (response) => {
+    console.log(response);
+    const res = response as GoogleLoginResponse
+    dispatch(googleLogin(res.googleId, res.tokenId, res.accessToken))
 };
   const onGoogleLoginFailure: (error: any) => void = (err) => {
       console.log('failed:', err);
@@ -142,7 +147,7 @@ export default function SignIn() {
           onSuccess={onGoogleLoginSuccess}
           onFailure={onGoogleLoginFailure}
           cookiePolicy={'single_host_origin'}
-          isSignedIn={true}
+          isSignedIn={!!user?.id}
       />
       </div>
     </Container>

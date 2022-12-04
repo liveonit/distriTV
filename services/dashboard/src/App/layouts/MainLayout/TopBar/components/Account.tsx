@@ -1,51 +1,72 @@
-import React, { useState, memo } from 'react';
-import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import React, { useState, memo } from 'react'
+import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 // material core
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import Divider from '@material-ui/core/Divider'
 // material icon
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import AccountCircle from '@material-ui/icons/AccountCircle'
 // configs
-import { USER_ROLE } from '@app/configs';
+import { GOOGLE_CONFIGS, USER_ROLE } from '@app/configs'
 // actions
-import { logout } from '@store/action/auth.action';
-
+import { logout } from '@store/action/auth.action'
+import { SessionT } from 'src/store/models/Global'
+import { useGoogleLogout } from 'react-google-login'
+import { storage } from 'src/utils/general/Storage'
 
 function Account({ ...classes }) {
-  const { t: translate } = useTranslation();
-  const dispatch = useDispatch();
-  const role = USER_ROLE.ADMIN;
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { t: translate } = useTranslation()
+  const dispatch = useDispatch()
+  const role = USER_ROLE.ADMIN
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
+  const onGoogleLogoutFailure = () => {
+    console.log('logout failed')
+  }
+  const onGoogleLogoutSuccess = () => {
+    console.log('============ googleLogout ===============')
+    storage.set('session', null)
+  }
+  const { signOut } = useGoogleLogout({
+    onFailure: onGoogleLogoutFailure,
+    clientId: GOOGLE_CONFIGS.clientId,
+    onLogoutSuccess: onGoogleLogoutSuccess,
+  })
 
   const _handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const _handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
   const _handleLogout = () => {
-    dispatch(logout());
-    setAnchorEl(null);
-  };
+    const session = storage.get<SessionT>('session')
+    if (session?.session.type === 'local') {
+      dispatch(logout())
+    }
+    if (session?.session.type === 'google') {
+      signOut()
+    }
+    setAnchorEl(null)
+  }
 
   return (
     <>
       <IconButton
-        aria-label="account of current user"
-        aria-controls="menu-appbar"
-        aria-haspopup="true"
+        aria-label='account of current user'
+        aria-controls='menu-appbar'
+        aria-haspopup='true'
         onClick={_handleMenu}
-        color="inherit"
+        color='inherit'
       >
         <AccountCircle />
       </IconButton>
       <Menu
-        id="menu-appbar"
+        id='menu-appbar'
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: 'top',
@@ -67,7 +88,7 @@ function Account({ ...classes }) {
         </MenuItem>
       </Menu>
     </>
-  );
+  )
 }
 
-export default memo(Account);
+export default memo(Account)

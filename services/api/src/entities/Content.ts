@@ -14,15 +14,15 @@ export class Content extends BaseEntity {
   id!: number;
 
   @Column()
-  nombre!: String;
+  name!: String;
 
   @Column()
-  tipo!: String;
+  type!: String;
 
   @Column()
-  duracion!: number;
+  duration!: number;
 
   @ManyToMany(() => Television, (tv) => tv.id)
   @JoinTable({ name: 'content_has_television'})
-  tvs?: Television[];
+  televisions?: Television[];
 }

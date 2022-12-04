@@ -4,9 +4,11 @@ import { defer, of } from 'rxjs'
 import { IAuthActionTypes } from '@store/models/IAuthState'
 import { storage } from '@utils/general/Storage'
 import { checkOrRefreshToken } from 'src/services/auth'
+import { parseJwt } from 'src/App/helpers'
 
 import { enqueueSnackbarAction } from '../action/app.action'
 import apiSvc from '../../services/api'
+import { UserT } from '../models/Global'
 
 const refreshToken$ = defer(() => checkOrRefreshToken())
 
@@ -16,7 +18,37 @@ const login: Epic = (action$) =>
     mergeMap(({ payload }) => {
       return apiSvc.request({ method: 'POST', path: '/user/login', body: payload }).pipe(
         map(({ response }) => {
-          storage.set('session', response)
+          const userPayload = parseJwt<UserT>((response as any).refreshToken)
+          if (!userPayload) throw Error('Invalid user payload')
+          storage.set('session', {
+            session: { ...(response as any), type: 'local' },
+            roleMappings: userPayload.roleMappings,
+          })
+          return {
+            type: IAuthActionTypes.LOGIN_SUCCESS,
+            payload: response,
+          }
+        }),
+        catchError((err) => {
+          return of({
+            type: IAuthActionTypes.LOGIN_FAILURE,
+            payload: err,
+          })
+        }),
+      )
+    }),
+  )
+
+const googleLogin: Epic = (action$) =>
+  action$.pipe(
+    ofType(IAuthActionTypes.GOOGLE_LOGIN_REQUEST),
+    mergeMap(({ payload }) => {
+      return apiSvc.request({ method: 'POST', path: '/user/googlelogin', body: { tokenId: payload.tokenId } }).pipe(
+        map(({ response }) => {
+          storage.set('session', {
+            session: { ...payload, type: 'google' },
+            roleMappings: (response as any).roleMappings,
+          })
           return {
             type: IAuthActionTypes.LOGIN_SUCCESS,
             payload: response,
@@ -35,16 +67,15 @@ const login: Epic = (action$) =>
 const loginFailed: Epic = (action$) =>
   action$.pipe(
     ofType(IAuthActionTypes.LOGIN_FAILURE),
-    map(() => enqueueSnackbarAction({ variant: 'error', message: 'Invalid credentials.', key: 'INVALID_CREDENTIALS' }))
+    map(() => enqueueSnackbarAction({ variant: 'error', message: 'Invalid credentials.', key: 'INVALID_CREDENTIALS' })),
   )
-
 const logout: Epic = (action$) =>
   action$.pipe(
     ofType(IAuthActionTypes.LOGOUT_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(() => {
-      return apiSvc.request({ method: 'POST', path: '/user/logout', requireAuth: true }).pipe(
+      return apiSvc.request({ method: 'POST', path: '/user/logout', requireAuthType: 'local' }).pipe(
         map(() => {
           storage.remove('session')
           return {
@@ -61,4 +92,4 @@ const logout: Epic = (action$) =>
     }),
   )
 
-export const authEpics = [login, loginFailed, logout]
+export const authEpics = [login, loginFailed, logout, googleLogin]

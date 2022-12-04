@@ -11,6 +11,7 @@ import {
   UserPayloadType,
   userPayloadSchema,
   userSessionSchema,
+  mapFromGoogleToPayload,
 } from '@typeDefs/User';
 import _ from 'lodash';
 import { redisClient } from '@src/redisCient';
@@ -22,6 +23,8 @@ import { handleErrorAsync } from '@middlewares/errorCatcher';
 import { uuid } from '@src/utils/helpers/uuid';
 import { RoleMapping } from '@src/entities/RoleMapping';
 import { db } from '@src/db';
+import { googleAuthSvc } from '../GoogleAuthService';
+import { TokenPayload } from 'google-auth-library';
 export interface CustomContext {
   req: Request;
   res: Response;
@@ -79,7 +82,7 @@ class AuthService {
     if (sessionId)
       redisClient.set(
         `${currentUser.id}:${sessionId}`,
-        JSON.stringify(_.omit(currentUser, ['password'])),
+        JSON.stringify({..._.omit(currentUser, ['password']), sessionId }),
         {
           EX: config.REFRESH_TOKEN_EXPIRES_IN * 60,
         },
@@ -123,7 +126,7 @@ class AuthService {
     });
 
     // Create a Session
-    redisClient.set(`${user.id}:${sessionId}`, JSON.stringify(user), {
+    redisClient.set(`${user.id}:${sessionId}`, JSON.stringify({...user, sessionId }), {
       EX: config.REFRESH_TOKEN_EXPIRES_IN * 60,
     });
     const result = userSessionSchema.parse({ id: user.id, accessToken, refreshToken });
@@ -162,14 +165,12 @@ class AuthService {
         'REFRESH_TOKEN_PUBLIC_KEY',
       );
       if (!decoded) {
-        logger.debug('error on decoded');
         throw new BadRequest('Could not refresh access token');
       }
 
       // Check if the user has a valid session
       const session = await redisClient.get(`${decoded.id}:${decoded.sessionId}`);
       if (!session) {
-        logger.debug('error on session get');
         throw new BadRequest('Could not refresh access token');
       }
       const userPayload = JSON.parse(session);
@@ -222,36 +223,44 @@ class AuthService {
    * app.use('/', authSvc.authRequiredMiddleware([]));
    *
    */
-  public authRequiredMiddleware(requiredRoleName: string[]): RequestHandler {
+  public authRequiredMiddleware(requiredRoleNames: string[]): RequestHandler {
     return handleErrorAsync(async (req: Request, res: Response, next: NextFunction) => {
-      if (req.headers.authorizationType === 'local') {
+      let userPayload;
+      const authorizationType = req.headers['auth-type'];
+      if (authorizationType === 'local') {
         const token = this.getTokenFromHeader(req);
         if (token == null) throw new Forbidden();
         const decoded: UserPayloadType | null = userPayloadSchema.parse(
           verifyJwt(token, 'ACCESS_TOKEN_PUBLIC_KEY'),
         );
-
-        // Check if the user has a valid session
         const session = await redisClient.get(`${decoded.id}:${decoded.sessionId}`);
         if (!decoded || !session) throw new Forbidden();
-        const userPayload = JSON.parse(session) as UserPayloadType;
-        let result;
-        if (requiredRoleName.length) {
+        userPayload = JSON.parse(session) as UserPayloadType;
+      }
+
+      if (authorizationType === 'google') {
+        const token = req.headers.authorization?.toString();
+        if (!token) throw new Unauthorized('Invalid credentials');
+        const user = await googleAuthSvc.verify(token);
+        if (!user) throw new Unauthorized('Invalid credentials');
+        const localUser = await User.findOneOrFail({
+          where: { id: user.sub },
+          relations: ['roleMappings', 'roleMappings.role', 'roleMappings.institution'],
+        });
+        userPayload = mapFromGoogleToPayload(user, localUser.roleMappings);
+      }
+      if (userPayload) {
+        if (requiredRoleNames && requiredRoleNames.length) {
           const userRoles = userPayload.roleMappings.map((r) => r.role.name);
-          const hasRole = requiredRoleName.reduce(
+          const hasRole = requiredRoleNames.reduce(
             (prev, current) => prev || userRoles.includes(current),
             false,
           );
           if (!hasRole) throw new Unauthorized('Invalid permissions');
-          result = userPayload;
-        } else result = userPayload;
-        req.user = result;
+        }
+        req.user = userPayload;
         return next();
-      } else if (req.headers.authorizationType === 'google') {
-        // TODO: Validate google user
-      } else {
-        throw new Unauthorized('Invalid authorization provider');
-      }
+      } else throw new Unauthorized('Invalid authorization provider');
     });
   }
 }

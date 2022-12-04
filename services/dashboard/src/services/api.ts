@@ -2,13 +2,13 @@ import { Observable } from 'rxjs'
 import { ajax, AjaxResponse } from 'rxjs/ajax'
 import { timeout as timeoutOp, retry } from 'rxjs/operators'
 import { GLOBAL_CONFIGS } from 'src/App/configs'
-import { SessionT } from 'src/store/models/IUser'
+import { SessionT } from 'src/store/models/Global'
 import { storage } from 'src/utils/general/Storage'
 
 interface RequestProps<Body> {
   path: string
   method?: 'POST' | 'GET' | 'PUT' | 'DELETE'
-  requireAuth?: boolean
+  requireAuthType?: 'local' | 'google'
   body?: Body
   headers?: Readonly<Record<string, any>>
   retries?: number
@@ -16,28 +16,31 @@ interface RequestProps<Body> {
 }
 
 const apiSvc = {
-  request: <Body, Response>(
-    props: RequestProps<Body>,
-  ): Observable<AjaxResponse<Response>> => {
-    const { body, method, path, requireAuth, retries, timeout } = {
+  request: <Body, Response>(props: RequestProps<Body>): Observable<AjaxResponse<Response>> => {
+    const { body, method, path, requireAuthType, retries, timeout } = {
       method: 'GET',
-      requireAuth: false,
       retries: 0,
       timeout: 2000,
-      ...props
+      ...props,
     }
 
     let headers = {
       ...props.headers,
     }
 
-    if (requireAuth)
+    if (requireAuthType === 'local')
       headers = {
         ...headers,
-        // FIXME: get and set token
-        Authorization: `Bearer ${storage.get<SessionT>('session')?.accessToken}`,
+        authorization: `Bearer ${storage.get<SessionT>('session')?.session.accessToken}`,
+        'auth-type': 'local',
       }
-      
+    if (requireAuthType === 'google')
+      headers = {
+        ...headers,
+        'auth-type': 'google',
+        authorization: `Bearer ${storage.get<SessionT>('session')?.session.tokenId}`,
+      }
+
     return ajax<Response>({
       url: `${GLOBAL_CONFIGS.API_URL || ''}${path}`,
       method: method,

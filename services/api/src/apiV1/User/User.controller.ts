@@ -1,6 +1,7 @@
 import { handleErrorAsync } from '@src/middlewares/errorCatcher';
 import {
   createUserBodySchema,
+  googleLoginBodySchema,
   loginBodySchema,
   refreshTokenBodySchema,
   updateUserBodySchema,
@@ -11,6 +12,7 @@ import _ from 'lodash';
 import { BadRequest, Unauthorized } from '@src/utils/errors';
 import { authSvc } from '@src/services/auth';
 import { paginationQuerySchema } from '@src/typeDefs/PaginationQueryType';
+import { googleAuthSvc } from '@src/services/GoogleAuthService';
 
 class AuthorController {
   /**
@@ -91,26 +93,35 @@ class AuthorController {
   });
 
   /*
-   * Autenticar usuario
+   * Authorize local user
    */
-  public logIn = handleErrorAsync(async (req: Request, res: Response) => {
+  public localLogin = handleErrorAsync(async (req: Request, res: Response) => {
     const loginData = loginBodySchema.parse(req.body);
     const result = await authSvc.login(loginData);
     return res.status(200).json(result);
   });
 
+    /*
+   * Authorize google user
+   */
+    public googleLogin = handleErrorAsync(async (req: Request, res: Response) => {
+      const loginData = googleLoginBodySchema.parse(req.body);
+      const result = await googleAuthSvc.login(loginData.tokenId);
+      return res.status(200).json(result);
+    });
+
   /*
-   * Finalizar la sesion del usuario
+   * Finish user session
    */
   public logout = handleErrorAsync(async (req: Request, res: Response) => {
-    if (!req.user?.id) throw new Unauthorized('Invalid credentials');
+    if (!req.user?.id || !req.user?.sessionId) throw new Unauthorized('Invalid credentials');
     const { id, sessionId } = req.user;
     await authSvc.logout(id, sessionId);
     return res.status(200).send();
   });
 
   /*
-   * Refrescar el access token
+   * Refresh Access token
    */
   public refreshToken = handleErrorAsync(async (req: Request, res: Response) => {
     const body = refreshTokenBodySchema.parse(req.body);

@@ -7,6 +7,9 @@ export enum IAuthActionTypes {
   LOGOUT_SUCCESS = 'AUTH/LOGOUT_SUCCESS',
   LOGOUT_FAILURE = 'AUTH/LOGOUT_FAILURE',
   SET_USER_DATA = 'AUTH/SET_USER_DATA',
+  GOOGLE_LOGIN_REQUEST = 'AUTH/GOOGLE_LOGIN_REQUEST',
+  GOOGLE_LOGIN_SUCCESS = 'AUTH/GOOGLE_LOGIN_SUCCESS',
+  GOOGLE_LOGIN_FAILURE = 'AUTH/GOOGLE_LOGIN_FAILURE',
 }
 
 export type IAuthState = {
@@ -18,4 +21,12 @@ export type IAuthActionCreatorPayload = { username: string, password: string};
 export type IAuthActionCreator = {
   type: string;
   payload: IAuthActionCreatorPayload
+};
+
+
+export type IGoogleAuthActionCreatorPayload = { id: string, tokenId: string, accessToken: string };
+
+export type IGoogleAuthActionCreator = {
+  type: string;
+  payload: IGoogleAuthActionCreatorPayload
 };

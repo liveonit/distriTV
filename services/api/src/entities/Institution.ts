@@ -7,18 +7,20 @@ import {
 } from 'typeorm';
 import { RoleMapping } from './RoleMapping';
 import { Television } from './Television';
-import { User } from './User';
 
 @Entity()
 export class Institution extends BaseCustomEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
   @Column()
   name!: string;
 
+  @Column({ nullable: true})
+  city?: string;
+
   @Column({ nullable: true })
-  description?: string;
+  locality?: string;
 
   @OneToMany(() => RoleMapping, rm => rm.institution)
   public team?: RoleMapping[];

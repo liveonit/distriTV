@@ -8,12 +8,11 @@ export class Notification extends BaseEntity {
   id!: number;
 
   @Column()
-  mensaje!: String;
-  
+  message!: String;
+
   @Column()
-  titulo!: String;
+  title!: String;
 
   @ManyToMany(() => Television, (tv) => tv.id) // Entidad fuerte TV por eso va acá.
-  tvs?: Television[];
-    
+  televisions?: Television[];
 }

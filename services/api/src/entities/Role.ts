@@ -1,5 +1,5 @@
 import { BaseCustomEntity } from '@src/utils/BaseCustomEntity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Permission } from './Permission';
 import { RoleMapping } from './RoleMapping';
 
@@ -14,7 +14,7 @@ export class Role extends BaseCustomEntity {
   @Column({ nullable: true })
   description?: string;
 
-  @ManyToOne(() => RoleMapping, rm => rm.role)
+  @OneToMany(() => RoleMapping, rm => rm.role)
   mapping!: RoleMapping[]
 
   @ManyToMany(() => Permission, (permission) => permission.roles, {

@@ -4,7 +4,7 @@ import { catchError, debounceTime, map, switchMap, concatMap } from 'rxjs/operat
 import { Epic, ofType } from 'redux-observable'
 import { checkOrRefreshToken } from '@services/auth'
 import { storage } from 'src/utils/general/Storage'
-import { SessionT } from 'src/store/models/IUser'
+import { SessionT } from 'src/store/models/Global'
 
 import { ICreateActions } from './ICreateActions'
 
@@ -77,6 +77,7 @@ export const restEpicFactory = <T>(options: IOptions<T> & { method: string; acti
       debounceTime(0),
       concatMap((act) => refreshToken$.pipe(map(() => act))),
       switchMap(({ payload }) => {
+        const {session} = storage.get<SessionT>('session') || {}
         const ajax$ = ajax({
           url: `${options.apiUrl ? options.apiUrl + '/' : ''}${options.apiPrefix ? options.apiPrefix + '/' : ''}${
             options.entityName
@@ -84,7 +85,8 @@ export const restEpicFactory = <T>(options: IOptions<T> & { method: string; acti
           method: options.method,
           headers: options.headers || {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${storage.get<SessionT>('session')?.accessToken}`,
+            authorization: session?.type === 'google' ? session.tokenId : `Bearer ${session?.accessToken}`,
+            'auth-type': session?.type
           },
           body: payload,
         }).pipe(

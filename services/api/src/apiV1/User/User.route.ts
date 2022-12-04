@@ -47,9 +47,14 @@ router.delete('/:id', authSvc.authRequiredMiddleware(['manageUsers']), authorCon
 router.delete('/', authSvc.authRequiredMiddleware([]), authorController.deleteMe);
 
 /**
- * Autenticar usuario
+ * Authenticate local user
  */
-router.post('/login', authorController.logIn);
+router.post('/login', authorController.localLogin);
+
+/**
+ * Authenticate google user
+ */
+ router.post('/googlelogin', authorController.googleLogin);
 
 /**
  * Finalizar sesion de usuario

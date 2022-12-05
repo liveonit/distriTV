@@ -1,4 +1,4 @@
-import { ErrorCode, ErrorName } from "./types";
+import { ErrorCode, ErrorName } from "../errors/types";
 
 export type BaseErrorType = {
   code: ErrorCode;

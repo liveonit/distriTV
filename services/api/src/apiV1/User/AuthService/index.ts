@@ -12,18 +12,21 @@ import {
   userPayloadSchema,
   userSessionSchema,
   mapFromGoogleToPayload,
-} from '@typeDefs/User';
+  LoginBodyType,
+  CreateUserBodyType,
+  RefreshTokenBodyType,
+  UpdateUserBodyType,
+} from '../';
 import _ from 'lodash';
 import { redisClient } from '@src/redisCient';
-import { CreateUserBodyType, RefreshTokenBodyType, UpdateUserBodyType } from '@src/typeDefs/User';
-import { LoginBodyType } from '@src/typeDefs/User/LoginBody';
+
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { BadRequest, Forbidden, NotFound, Unauthorized } from '@src/utils/errors';
 import { handleErrorAsync } from '@middlewares/errorCatcher';
 import { uuid } from '@src/utils/helpers/uuid';
 import { RoleMapping } from '@src/entities/RoleMapping';
 import { db } from '@src/db';
-import { googleAuthSvc } from '../GoogleAuthService';
+import { googleAuthSvc } from './GoogleAuthService';
 import { TokenPayload } from 'google-auth-library';
 export interface CustomContext {
   req: Request;
@@ -82,7 +85,7 @@ class AuthService {
     if (sessionId)
       redisClient.set(
         `${currentUser.id}:${sessionId}`,
-        JSON.stringify({..._.omit(currentUser, ['password']), sessionId }),
+        JSON.stringify({ ..._.omit(currentUser, ['password']), sessionId }),
         {
           EX: config.REFRESH_TOKEN_EXPIRES_IN * 60,
         },
@@ -126,7 +129,7 @@ class AuthService {
     });
 
     // Create a Session
-    redisClient.set(`${user.id}:${sessionId}`, JSON.stringify({...user, sessionId }), {
+    redisClient.set(`${user.id}:${sessionId}`, JSON.stringify({ ...user, sessionId }), {
       EX: config.REFRESH_TOKEN_EXPIRES_IN * 60,
     });
     const result = userSessionSchema.parse({ id: user.id, accessToken, refreshToken });

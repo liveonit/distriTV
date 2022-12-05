@@ -1,4 +1,4 @@
-import { BaseCustomEntity } from '@src/utils/BaseCustomEntity';
+import { BaseCustomEntity } from '@src/utils/BaseClasses/BaseCustomEntity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Author } from './Author';
 

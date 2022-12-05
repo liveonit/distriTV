@@ -5,14 +5,14 @@ import {
   loginBodySchema,
   refreshTokenBodySchema,
   updateUserBodySchema,
-} from '@src/typeDefs/User';
+} from '.';
 import { Request, Response } from 'express';
 
 import _ from 'lodash';
 import { BadRequest, Unauthorized } from '@src/utils/errors';
-import { authSvc } from '@src/services/auth';
-import { paginationQuerySchema } from '@src/typeDefs/PaginationQueryType';
-import { googleAuthSvc } from '@src/services/GoogleAuthService';
+import { authSvc } from '@src/apiV1/User/AuthService';
+import { paginationQuerySchema } from '@src/utils/BaseClasses/QueryType';
+import { googleAuthSvc } from '@src/apiV1/User/AuthService/GoogleAuthService';
 
 class AuthorController {
   /**

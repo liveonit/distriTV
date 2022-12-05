@@ -1,6 +1,6 @@
 import { Author } from '@src/entities/Author';
 import { Book } from '@src/entities/Book';
-import { CreateAuthorBodyType, UpdateAuthorBodyType } from '@src/typeDefs/Author';
+import { CreateAuthorBodyType, UpdateAuthorBodyType } from '.';
 import { NotFound } from '@src/utils/errors';
 import { FindManyOptions } from 'typeorm';
 

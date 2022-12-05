@@ -1,6 +1,6 @@
 import { Author } from '@src/entities/Author';
 import { Book } from '@src/entities/Book';
-import { CreateBookBodyType, UpdateBookBodyType } from '@src/typeDefs/Book';
+import { CreateBookBodyType, UpdateBookBodyType } from '.';
 import { FindManyOptions } from 'typeorm';
 
 export class BookSvc {

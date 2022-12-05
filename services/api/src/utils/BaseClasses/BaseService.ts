@@ -1,5 +1,5 @@
 import { db, Db } from '@src/db';
-import { BaseCustomEntity } from '@src/utils/BaseCustomEntity';
+import { BaseCustomEntity } from '@src/utils/BaseClasses/BaseCustomEntity';
 import { NotFound } from '@src/utils/errors';
 import {
   FindManyOptions,
@@ -23,6 +23,7 @@ export class BaseService<T extends BaseCustomEntity> {
     return this.getEntity().findOneOrFail({ ...options });
   };
 
+
   public readonly getMany = async (options?: FindManyOptions<T>) => {
     return this.getEntity().find(options);
   };
@@ -44,11 +45,11 @@ export class BaseService<T extends BaseCustomEntity> {
     else return id;
   };
 
-  public readonly update = async (data: Partial<T>) => {
+  public readonly update = async (id: string | number, data: Partial<T>, options?: FindOneOptions<T>) => {
     await this.getEntity().update(
-      this.getEntity().getId(data as T),
+      id,
       data as QueryDeepPartialEntity<T>,
     );
-    return this.getEntity().findOneByOrFail(data as FindOptionsWhere<T>);
+    return await this.getEntity().findOneOrFail({ ...options, where: {id} as FindOptionsWhere<T> });
   };
 }

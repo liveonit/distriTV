@@ -1,4 +1,4 @@
-import { authSvc } from '@src/services/auth';
+import { authSvc } from '@src/apiV1/User/AuthService';
 import { Router } from 'express';
 import { authorController } from './User.controller';
 

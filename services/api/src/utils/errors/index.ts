@@ -1,4 +1,4 @@
-export * from './BaseError';
+export * from '../BaseClasses/BaseError';
 export * from './BadRequest';
 export * from './NotFound';
 export * from './Unauthorized';

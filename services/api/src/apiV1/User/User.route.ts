@@ -10,7 +10,7 @@ const router = Router();
 /**
  * Devuelve una lista de usuarios
  */
-router.get('/', authSvc.authRequiredMiddleware(['manageUsers']), authorController.getMany);
+router.get('/', authSvc.authRequiredMiddleware(['admin']), authorController.getMany);
 
 /**
  * Lee los datos del usuario autenticado
@@ -25,21 +25,21 @@ router.put('/me', authSvc.authRequiredMiddleware([]), authorController.updatePro
 /**
  * Devuelve un usuario según su ID
  */
-router.get('/:id', authSvc.authRequiredMiddleware(['manageUsers']), authorController.getById);
+router.get('/:id', authSvc.authRequiredMiddleware(['admin']), authorController.getById);
 /**
  * Crea un nuevo usuario
  */
-router.post('/', authSvc.authRequiredMiddleware(['manageUsers']), authorController.create);
+router.post('/', authSvc.authRequiredMiddleware(['admin']), authorController.create);
 /*
  * Actualiza los datos de un usuario. Este endpoint también se encarga de la gestión
  * de su contraseña.
  */
-router.put('/:id', authSvc.authRequiredMiddleware(['manageUsers']), authorController.update);
+router.put('/:id', authSvc.authRequiredMiddleware(['admin']), authorController.update);
 
 /*
  * Elimina un usuario
  */
-router.delete('/:id', authSvc.authRequiredMiddleware(['manageUsers']), authorController.delete);
+router.delete('/:id', authSvc.authRequiredMiddleware(['admin']), authorController.delete);
 
 /*
  * Elimina el usuario autenticado

@@ -21,7 +21,7 @@ class AuthorController {
   public getMany = handleErrorAsync(async (req: Request, res: Response) => {
     const { skip, take } = paginationQuerySchema.parse(req.params);
     const users = await authSvc.getAll({ skip, take });
-    return users;
+    return res.status(200).json(users);
   });
 
   public getById = handleErrorAsync(async (req: Request, res: Response) => {

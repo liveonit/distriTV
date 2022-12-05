@@ -24,6 +24,8 @@ const apiSvc = {
       ...props,
     }
 
+    const session = storage.get<SessionT>('session')?.session
+
     let headers = {
       ...props.headers,
     }
@@ -31,16 +33,17 @@ const apiSvc = {
     if (requireAuthType === 'local')
       headers = {
         ...headers,
-        authorization: `Bearer ${storage.get<SessionT>('session')?.session.accessToken}`,
+        authorization: `Bearer ${session?.accessToken}`,
         'auth-type': 'local',
       }
     if (requireAuthType === 'google')
       headers = {
         ...headers,
         'auth-type': 'google',
-        authorization: `Bearer ${storage.get<SessionT>('session')?.session.tokenId}`,
+        authorization: `Bearer ${session?.tokenId}`,
       }
 
+    console.log({ beforeSendRequest: { headers, session, requireAuthType }})
     return ajax<Response>({
       url: `${GLOBAL_CONFIGS.API_URL || ''}${path}`,
       method: method,

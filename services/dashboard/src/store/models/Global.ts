@@ -21,6 +21,7 @@ export type UserT = {
   email: string
   sessionId: string
   roleMappings: RoleMapping[]
+  loginType: string
   exp: number
   iat: number
 }

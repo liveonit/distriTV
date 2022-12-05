@@ -20,7 +20,12 @@ export const checkOrRefreshToken = async () => {
         body: JSON.stringify({ refreshToken: session.session.refreshToken }),
       })
       const response = await result.json()
-      storage.set('session', response)
+      const userPayload = parseJwt<UserT>(response.refreshToken)
+      if (!userPayload) throw Error('Invalid user payload')
+      storage.set('session', {
+        session: { ...(response as any), type: 'local' },
+        roleMappings: userPayload.roleMappings,
+      })
     }
   }
   return session

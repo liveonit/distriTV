@@ -12,13 +12,8 @@ function defineAbilitiesFor(type: string) {
       break;
     case USER_ROLE.LEAD:
       // menu
-      can('view', DRAWER_MENU_LABEL.PLAY_BACKGROUND);
       can('view', DRAWER_MENU_LABEL.DASHBOARD);
-
-      can('view', DRAWER_MENU_LABEL.PRODUCT);
-      can('view', DRAWER_MENU_LABEL.PRODUCT_LIST);
-
-      can('view', DRAWER_MENU_LABEL.KANBAN);
+      can('view', DRAWER_MENU_LABEL.INSTITUTIONS);
       can('view', DRAWER_MENU_LABEL.USERS);
 
       // action

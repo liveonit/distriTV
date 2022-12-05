@@ -9,7 +9,7 @@ export const querySchema = z.object({
     .string()
     .or(z.undefined())
     .transform((v) => (typeof v === 'string' ? +v : undefined)),
-  relations: z.string().transform((v) => typeof v === 'string' && v.split(',')),
+  relations: z.string().optional().transform((v) => typeof v === 'string' && v.split(',')),
   search: z
     .string()
     .or(z.undefined())

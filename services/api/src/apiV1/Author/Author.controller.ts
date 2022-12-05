@@ -1,7 +1,7 @@
 import { handleErrorAsync } from '@src/middlewares/errorCatcher';
 import { authorSvc } from '@src/apiV1/Author/AuthorService';
 import { createAuthorBodySchema, updateAuthorBodySchema } from '.';
-import { paginationQuerySchema } from '@src/utils/BaseClasses/QueryType';
+import { querySchema } from '@src/utils/BaseClasses/QueryType';
 import { BadRequest } from '@src/utils/errors';
 import { Request, Response } from 'express';
 
@@ -13,7 +13,7 @@ class AuthorController {
   });
 
   public getMany = handleErrorAsync(async (req: Request, res: Response) => {
-    const {skip, take } = paginationQuerySchema.parse(req.params);
+    const {skip, take } = querySchema.parse(req.params);
     const result = await authorSvc.getMany({ skip, take });
     return res.status(200).json({ data: result});
   });

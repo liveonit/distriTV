@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const paginationQuerySchema = z.object({
+export const querySchema = z.object({
   skip: z
     .string()
     .or(z.undefined())
@@ -21,4 +21,4 @@ export const paginationQuerySchema = z.object({
       }
     }),
 });
-export type PaginationQueryType = z.infer<typeof paginationQuerySchema>;
+export type PaginationQueryType = z.infer<typeof querySchema>;

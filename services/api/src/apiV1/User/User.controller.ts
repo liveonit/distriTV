@@ -11,7 +11,7 @@ import { Request, Response } from 'express';
 import _ from 'lodash';
 import { BadRequest, Unauthorized } from '@src/utils/errors';
 import { authSvc } from '@src/apiV1/User/AuthService';
-import { paginationQuerySchema } from '@src/utils/BaseClasses/QueryType';
+import { querySchema } from '@src/utils/BaseClasses/QueryType';
 import { googleAuthSvc } from '@src/apiV1/User/AuthService/GoogleAuthService';
 
 class AuthorController {
@@ -19,7 +19,7 @@ class AuthorController {
    * Devuelve una lista de usuarios
    */
   public getMany = handleErrorAsync(async (req: Request, res: Response) => {
-    const { skip, take } = paginationQuerySchema.parse(req.params);
+    const { skip, take } = querySchema.parse(req.query);
     const users = await authSvc.getAll({ skip, take });
     return res.status(200).json(users);
   });
@@ -130,4 +130,4 @@ class AuthorController {
   });
 }
 
-export const authorController = new AuthorController();
+export const userController = new AuthorController();

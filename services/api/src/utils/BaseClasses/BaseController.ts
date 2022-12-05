@@ -26,7 +26,7 @@ class BaseController<T extends BaseCustomEntity> {
     this.createSchema = createSchema;
     this.updateSchema = updateSchema;
     this.responseSchema = responseSchema;
-    this
+    this.querySchema = querySchema
   }
 
   public create = handleErrorAsync(async (req: Request, res: Response) => {

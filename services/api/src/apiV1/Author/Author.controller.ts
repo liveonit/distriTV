@@ -13,7 +13,7 @@ class AuthorController {
   });
 
   public getMany = handleErrorAsync(async (req: Request, res: Response) => {
-    const {skip, take } = querySchema.parse(req.params);
+    const {skip, take } = querySchema.parse(req.query);
     const result = await authorSvc.getMany({ skip, take });
     return res.status(200).json({ data: result});
   });

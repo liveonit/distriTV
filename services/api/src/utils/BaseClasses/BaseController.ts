@@ -66,7 +66,7 @@ class BaseController<T extends BaseCustomEntity> {
     let id: string | number = req.params.id?.toString();
     if (!id) throw new BadRequest('Id is required');
     if (!isNaN(+id)) id = +id
-    await authorSvc.deleteAuthor(+id);
+    await this.service.delete(id);
     return res.status(200).json();
   });
 }

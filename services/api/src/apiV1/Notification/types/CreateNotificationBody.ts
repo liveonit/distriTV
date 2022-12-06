@@ -1,9 +1,8 @@
 import { z } from 'zod';
 
 export const createNotificationBody = z.object({
-  name: z.string(),
-  city: z.string(),
-  locality: z.string(),
+  message: z.string(),
+  title: z.string(),
 });
 
 export type CreateNotificationBodyType = z.infer<typeof createNotificationBody>;

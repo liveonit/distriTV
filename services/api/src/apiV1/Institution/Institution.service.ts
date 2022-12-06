@@ -3,4 +3,4 @@ import { BaseService } from '@src/utils/BaseClasses/BaseService';
 
 class InstitutionSvc extends BaseService<Institution> {}
 
-export const institutionSvc = new InstitutionSvc(BaseService);
+export const institutionSvc = new InstitutionSvc(Institution);

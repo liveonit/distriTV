@@ -1,7 +1,7 @@
 import { authSvc } from '@src/apiV1/User/AuthService';
 import { Router } from 'express';
 import { contentController } from './Content.controller';
-
+import fileUpload from 'express-fileupload';
 /**
  * Api permite leer y manipular datos de usuarios
  */
@@ -30,5 +30,20 @@ router.put('/:id', authSvc.authRequiredMiddleware(['admin']), contentController.
  * Elimina un usuario
  */
 router.delete('/:id', authSvc.authRequiredMiddleware(['admin']), contentController.delete);
+
+/*
+ * Elimina un usuario
+ */
+router.post(
+  '/upload',
+  authSvc.authRequiredMiddleware(['admin']),
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/',
+  }),
+  contentController.uploadFiles,
+);
+
+router.get('/download/:path', contentController.downloadFile);
 
 export default router;

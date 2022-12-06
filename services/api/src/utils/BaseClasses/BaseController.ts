@@ -7,8 +7,8 @@ import { BaseCustomEntity } from './BaseCustomEntity';
 import { z } from 'zod';
 import { DeepPartial, FindOptionsWhere } from 'typeorm';
 
-class BaseController<T extends BaseCustomEntity> {
-  public readonly service: BaseService<T>;
+class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
+  public readonly service: S;
 
   public readonly createSchema?: z.ZodObject<any>;
   public readonly updateSchema?: z.ZodObject<any>;
@@ -16,7 +16,7 @@ class BaseController<T extends BaseCustomEntity> {
   public readonly querySchema?: z.ZodObject<any>;
 
   constructor(
-    service: BaseService<T>,
+    service: S,
     createSchema?: z.ZodObject<any>,
     updateSchema?: z.ZodObject<any>,
     responseSchema?: z.ZodObject<any>,

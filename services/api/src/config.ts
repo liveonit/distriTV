@@ -25,6 +25,7 @@ export const configSchema = z.object({
   REDIS_PASSWORD: z.string(),
   API_PREFIX: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
+  PATH_TO_UPLOAD_FILES: z.string(),
 });
 export type ConfigType = z.infer<typeof configSchema>;
 

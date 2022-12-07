@@ -1,8 +1,10 @@
 import { z } from 'zod';
 
 export const updateTelevisionBodySchema = z.object({
-  ip: z.string(),
-  mac: z.string(),
+  institutionId: z.number().optional(),
+  ip: z.string().optional(),
+  mac: z.string().optional(),
+
 });
 
 export type UpdateTelevisionBodyType = z.infer<typeof updateTelevisionBodySchema>;

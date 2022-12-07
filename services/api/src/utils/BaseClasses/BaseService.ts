@@ -1,9 +1,11 @@
 import { db, Db } from '@src/db';
 import { BaseCustomEntity } from '@src/utils/BaseClasses/BaseCustomEntity';
 import { NotFound } from '@src/utils/errors';
+import _ from 'lodash';
 import {
   FindManyOptions,
   FindOneOptions,
+  FindOptionsUtils,
   FindOptionsWhere,
   ObjectID,
   ObjectType,
@@ -23,13 +25,29 @@ export class BaseService<T extends BaseCustomEntity> {
     return this.getEntity().findOneOrFail({ ...options });
   };
 
-
   public readonly getMany = async (options?: FindManyOptions<T>) => {
     return this.getEntity().find(options);
   };
 
-  public readonly create = async (data: T) => {
-    return this.getEntity().create(data).save();
+  public readonly create = async (
+    data: T,
+    m2mRelations: { [k in keyof T]?: (number | string)[] } = {},
+    options?: FindOneOptions<T>,
+  ) => {
+    const entity = await this.getEntity().create(data).save();
+    if (m2mRelations) {
+      await Promise.all(
+        Object.entries(m2mRelations).map(
+          async ([relatedEntity, ids]) =>
+            await this.getEntity()
+              .createQueryBuilder()
+              .relation(this.model, relatedEntity)
+              .of(entity.id)
+              .add(ids),
+        ),
+      );
+    }
+    return this.get({ ...options, where: { id: entity.id } as FindOptionsWhere<T> });
   };
 
   public readonly insertMany = async (entities: T[]) => {
@@ -45,11 +63,43 @@ export class BaseService<T extends BaseCustomEntity> {
     else return id;
   };
 
-  public readonly update = async (id: string | number, data: Partial<T>, options?: FindOneOptions<T>) => {
-    await this.getEntity().update(
-      id,
-      data as QueryDeepPartialEntity<T>,
-    );
-    return await this.getEntity().findOneOrFail({ ...options, where: {id} as FindOptionsWhere<T> });
+  public readonly update = async (
+    id: string | number,
+    data: Partial<T>,
+    options?: FindOneOptions<T>,
+  ) => {
+    const { m2mRelations } = data as any;
+    data = _.omit(data, ['m2mRelations']);
+    const queryRunner = this.db.getConnection().createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    const queryBuilder = queryRunner.manager.createQueryBuilder();
+    try {
+      await queryRunner.manager.update(this.model, id, data as QueryDeepPartialEntity<T>);
+      const updatedEntity = await queryRunner.manager.findOneOrFail(this.model, {
+        where: { id } as FindOptionsWhere<T>,
+        relations: [...new Set([...Object.keys(m2mRelations)])],
+      });
+      if (m2mRelations) {
+        await Promise.all(
+          Object.entries(m2mRelations).map(async ([relatedEntity, ids]) => {
+            await queryBuilder
+              .relation(this.model, relatedEntity)
+              .of(updatedEntity.id)
+              .remove((updatedEntity as any)[relatedEntity] as any[]);
+            await queryBuilder.relation(this.model, relatedEntity).of(updatedEntity.id).add(ids);
+          }),
+        );
+      }
+      await queryRunner.commitTransaction();
+      return await queryRunner.manager.findOneOrFail(this.model, {
+        ...options,
+        where: { id } as FindOptionsWhere<T>,
+      });
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   };
 }

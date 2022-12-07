@@ -9,9 +9,7 @@ export class Label extends BaseEntity {
 
   @Column()
   description!: String;
-    
-  @ManyToMany(() => Television, (tv) => tv.id) // Entidad fuerte TV por eso va acá.
-  tvs?: Television[];
-    
 
+  @ManyToMany(() => Television, (tv) => tv.id)
+  tvs?: Television[];
 }

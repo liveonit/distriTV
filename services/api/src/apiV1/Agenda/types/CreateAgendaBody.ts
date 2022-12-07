@@ -1,10 +1,11 @@
 import { z } from 'zod';
 
 export const createAgendaBody = z.object({
-  contenid: z.number(),
+  contentid: z.number(),
   televisionid: z.number(),
-  ip: z.string(),
-  mac: z.string(),
+  fechaInicioAgenda: z.date(),
+  fechaFinAgenda: z.date(),
+  cron: z.string(),
   
 });
 

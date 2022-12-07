@@ -4,6 +4,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Television } from './Television';
 import { Content } from './Content';
@@ -12,7 +13,7 @@ import { Content } from './Content';
 @Entity({ name: 'content_has_television' })
 export class Agenda extends BaseEntity {
 
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id!: number;
 
   @PrimaryColumn()
@@ -32,11 +33,11 @@ export class Agenda extends BaseEntity {
   cron!: string;
 
   @ManyToOne(() => Television, (tv) => tv.id)
-  @JoinColumn({ name: 'roleId' })
+  @JoinColumn({ name: 'televisionId' })
   televisions!: Television;
 
   @ManyToOne(() => Content, (content) => content.id)
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'contentId' })
   content!: Content;
 
 

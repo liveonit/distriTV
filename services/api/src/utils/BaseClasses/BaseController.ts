@@ -39,7 +39,6 @@ class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
 
   public getMany = handleErrorAsync(async (req: Request, res: Response) => {
     const { skip, take, relations } = this.querySchema?.parse(req.query) || {};
-    logger.debug({ skip, take, relations })
     const result = await this.service.getMany({ skip, take, relations });
     return res.status(200).json({ data: result });
   });

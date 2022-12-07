@@ -2,13 +2,7 @@ import { db, Db } from '@src/db';
 import { BaseCustomEntity } from '@src/utils/BaseClasses/BaseCustomEntity';
 import { NotFound } from '@src/utils/errors';
 import _ from 'lodash';
-import {
-  FindManyOptions,
-  FindOneOptions,
-  FindOptionsWhere,
-  ObjectID,
-  ObjectType,
-} from 'typeorm';
+import { FindManyOptions, FindOneOptions, FindOptionsWhere, ObjectID, ObjectType } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export class BaseService<T extends BaseCustomEntity> {
@@ -28,10 +22,7 @@ export class BaseService<T extends BaseCustomEntity> {
     return this.getEntity().find(options);
   };
 
-  public readonly create = async (
-    data: T,
-    options?: FindOneOptions<T>,
-  ) => {
+  public readonly create = async (data: T, options?: FindOneOptions<T>) => {
     const { m2mRelations } = data as any;
     data = _.omit(data, ['m2mRelations']) as T;
     const entity = await this.getEntity().create(data).save();
@@ -75,7 +66,7 @@ export class BaseService<T extends BaseCustomEntity> {
     await queryRunner.startTransaction();
     const queryBuilder = queryRunner.manager.createQueryBuilder();
     try {
-      await queryRunner.manager.update(this.model, {id}, data as QueryDeepPartialEntity<T>);
+      await queryRunner.manager.update(this.model, { id }, data as QueryDeepPartialEntity<T>);
 
       if (m2mRelations) {
         const updatedEntity = await queryRunner.manager.findOneOrFail(this.model, {
@@ -87,8 +78,7 @@ export class BaseService<T extends BaseCustomEntity> {
             await queryBuilder
               .relation(this.model, relatedEntity.toLowerCase())
               .of(updatedEntity.id)
-              .remove((updatedEntity as any)[relatedEntity.toLowerCase()] as any[]);
-            await queryBuilder.relation(this.model, relatedEntity.toLowerCase()).of(updatedEntity.id).add(ids);
+              .addAndRemove(ids, (updatedEntity as any)[relatedEntity.toLowerCase()] as any[]);
           }),
         );
       }
@@ -98,7 +88,6 @@ export class BaseService<T extends BaseCustomEntity> {
         where: { id } as FindOptionsWhere<T>,
       });
     } catch (err) {
-      logger.debug({err})
       await queryRunner.rollbackTransaction();
     } finally {
       await queryRunner.release();

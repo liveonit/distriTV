@@ -1,5 +1,4 @@
-INSERT INTO
-  `user`(
+INSERT INTO `user`(
     `id`,
     `username`,
     `password`,
@@ -8,8 +7,7 @@ INSERT INTO
     `lastName`,
     `email`
   )
-VALUES
-  (
+VALUES (
     '06ab86cb-52cf-4b6a-ac19-0d62e0307dc6',
     'admin',
     '$argon2i$v=19$m=4096,t=3,p=1$MTBKRkhlMXlrNU9hVWZBTQ$0++JDeYSWZ0GkXXKgvZMgA',
@@ -18,18 +16,14 @@ VALUES
     'user',
     'admin@example.com'
   );
-
-INSERT INTO
-  `user_has_roles`(`userId`, `roleId`, `institutionId`)
-VALUES
-  (
+INSERT INTO `user_has_roles`(`id`, `userId`, `roleId`, `institutionId`)
+VALUES (
+    '06ab86cb-52cf-4b6a-ac19-0d62e0307132',
     '06ab86cb-52cf-4b6a-ac19-0d62e0307dc6',
     '48f76d11-2932-4536-9198-7ce0ce4bb1c7',
     1
   );
-
-INSERT INTO
-  `user`(
+INSERT INTO `user`(
     `id`,
     `username`,
     `password`,
@@ -38,8 +32,7 @@ INSERT INTO
     `lastName`,
     `email`
   )
-VALUES
-  (
+VALUES (
     '48f75e89-0f7f-4d82-8c3a-8a2a45ecdd09',
     'user1',
     '$argon2i$v=19$m=4096,t=3,p=1$N0pNbWJzSnZoSk9ubFdJVw$7p4JA2zUyeUurWHSZ1PQ1A',
@@ -48,19 +41,14 @@ VALUES
     'uno',
     'user1@example.com'
   );
-
-INSERT INTO
-  `user_has_roles`(`userId`, `roleId`, `institutionId`)
-VALUES
-  (
+INSERT INTO `user_has_roles`(`id`, `userId`, `roleId`, `institutionId`)
+VALUES (
+    '06ab86cb-52cf-4b6a-ac19-0d62e0307134',
     '48f75e89-0f7f-4d82-8c3a-8a2a45ecdd09',
     '7b5ec802-5923-4a1b-b9d1-2f522ad6c6a3',
     1
   );
-
-
-INSERT INTO
-  `user`(
+INSERT INTO `user`(
     `id`,
     `username`,
     `password`,
@@ -69,8 +57,7 @@ INSERT INTO
     `lastName`,
     `email`
   )
-VALUES
-  (
+VALUES (
     'eb273257-f77a-493b-a10b-5f7e874e41c6',
     'user2',
     '$argon2i$v=19$m=4096,t=3,p=1$TEgzU0pBMGswcm5qaVVhNg$U+R7nIGEQDgOPsJpQQejlA',
@@ -79,11 +66,9 @@ VALUES
     'two',
     'usuario2@example.com'
   );
-
-INSERT INTO
-  `user_has_roles`(`userId`, `roleId`, `institutionId`)
-VALUES
-  (
+INSERT INTO `user_has_roles`(`id`, `userId`, `roleId`, `institutionId`)
+VALUES (
+    '06ab86cb-52cf-4b6a-ac19-0d62e0307136',
     'eb273257-f77a-493b-a10b-5f7e874e41c6',
     '7b5ec802-5923-4a1b-b9d1-2f522ad6c6a3',
     1

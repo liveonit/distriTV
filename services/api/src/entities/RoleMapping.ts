@@ -5,7 +5,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Institution } from './Institution';
 import { Role } from './Role';
@@ -13,7 +13,7 @@ import { User } from './User';
 
 @Entity({ name: 'user_has_roles' })
 export class RoleMapping extends BaseCustomEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column()

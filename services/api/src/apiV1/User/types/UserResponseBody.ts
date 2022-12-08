@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
-export const updateUserBody = z.object({
+export const userResponseBody = z.object({
   username: z.string().optional(),
-  password: z.string().optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   enabled: z.boolean().optional(),
@@ -12,4 +11,4 @@ export const updateUserBody = z.object({
   })).optional()
 });
 
-export type UpdateUserBodyType = z.infer<typeof updateUserBody>;
+export type UserResponseBodyType = z.infer<typeof userResponseBody>;

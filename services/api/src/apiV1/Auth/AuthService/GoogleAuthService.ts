@@ -1,7 +1,7 @@
 import { config } from '@src/config';
 import { RoleMapping } from '@src/entities/RoleMapping';
 import { User } from '@src/entities/User';
-import { mapFromGoogleToPayload } from '../';
+import { mapFromGoogleToPayload } from '..';
 import { Unauthorized } from '@src/utils/errors';
 import { OAuth2Client } from 'google-auth-library';
 

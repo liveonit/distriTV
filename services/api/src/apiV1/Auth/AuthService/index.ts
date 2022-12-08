@@ -7,16 +7,12 @@ import { FindManyOptions, In } from 'typeorm';
 
 import { signJwt, verifyJwt } from './jwt';
 import {
-  UserSessionType,
-  UserPayloadType,
-  userPayloadSchema,
-  userSessionSchema,
+  AuthSessionType,
+  AuthPayloadType,
   mapFromGoogleToPayload,
   LoginBodyType,
-  CreateUserBodyType,
   RefreshTokenBodyType,
-  UpdateUserBodyType,
-} from '../';
+} from '..';
 import _ from 'lodash';
 import { redisClient } from '@src/redisCient';
 
@@ -24,10 +20,9 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { BadRequest, Forbidden, NotFound, Unauthorized } from '@src/utils/errors';
 import { handleErrorAsync } from '@middlewares/errorCatcher';
 import { uuid } from '@src/utils/helpers/uuid';
-import { RoleMapping } from '@src/entities/RoleMapping';
-import { db } from '@src/db';
 import { googleAuthSvc } from './GoogleAuthService';
-import { TokenPayload } from 'google-auth-library';
+import { authPayloadSchema, authSessionSchema } from '../types/AuthSessionBody';
+import { UpdateProfileBodyType } from '../types/UpdateProfileBody';
 export interface CustomContext {
   req: Request;
   res: Response;
@@ -36,27 +31,23 @@ export interface CustomContext {
 declare global {
   namespace Express {
     interface Request {
-      user: UserPayloadType;
+      user: AuthPayloadType;
     }
   }
 }
 
 class AuthService {
-  public async createUser(user: CreateUserBodyType): Promise<Omit<User, 'password'>> {
-    let newUser = User.create(_.omit(user, ['roleMappings']) as User);
-    newUser.password = await argon2.hash(user.password);
-    newUser = await newUser.save();
-    if (user.roleMappings) {
-      newUser.roleMappings = user.roleMappings.map((rm) =>
-        RoleMapping.create({ userId: newUser.id, ...rm }),
-      );
-    }
-    return _.omit(newUser, ['password']);
+  public async getOne({ id, username }: { id?: string; username?: string }): Promise<User> {
+    const result = await User.findOneOrFail({
+      where: { id, username },
+      relations: ['roleMappings', 'roleMappings.role', 'roleMappings.institution'],
+    });
+    return _.omit(result, ['password']);
   }
 
   public async updateUser(
     id: string,
-    user: UpdateUserBodyType,
+    user: UpdateProfileBodyType,
     sessionId?: string,
   ): Promise<Omit<User, 'password'>> {
     let currentUser = await User.findOneOrFail({
@@ -68,19 +59,6 @@ class AuthService {
       await redisClient.del(`${id}:*`);
     }
     currentUser = await currentUser.save();
-    if (user.roleMappings) {
-      db.getConnection().manager.transaction(async (tm) => {
-        await tm.delete(RoleMapping, { userId: currentUser.id });
-        await tm.insert(
-          RoleMapping,
-          user.roleMappings.map((rm) => ({ userId: currentUser.id, ...rm })),
-        );
-      });
-      currentUser.roleMappings = await RoleMapping.find({
-        where: { userId: currentUser.id },
-        relations: ['roleMappings', 'roleMappings.role', 'roleMappings.institution'],
-      });
-    }
 
     if (sessionId)
       redisClient.set(
@@ -91,29 +69,6 @@ class AuthService {
         },
       );
     return _.omit(currentUser, ['password']);
-  }
-
-  public async delete(id: string): Promise<boolean> {
-    const result = await User.delete({ id });
-    await redisClient.del(`${id}:*`);
-    if (!result.affected) throw new NotFound();
-    return !!result.affected;
-  }
-
-  public async getAll(options?: FindManyOptions<User>): Promise<User[]> {
-    const result = await User.find({
-      relations: ['roleMappings', 'roleMappings.role', 'roleMappings.institution'],
-      ...options,
-    });
-    return result.map((r) => _.omit(r, ['password']));
-  }
-
-  public async getOne({ id, username }: { id?: string; username?: string }): Promise<User> {
-    const result = await User.findOneOrFail({
-      where: { id, username },
-      relations: ['roleMappings', 'roleMappings.role', 'roleMappings.institution'],
-    });
-    return _.omit(result, ['password']);
   }
 
   public signToken = async (user: _.Omit<User, 'password'>) => {
@@ -132,12 +87,12 @@ class AuthService {
     redisClient.set(`${user.id}:${sessionId}`, JSON.stringify({ ...user, sessionId }), {
       EX: config.REFRESH_TOKEN_EXPIRES_IN * 60,
     });
-    const result = userSessionSchema.parse({ id: user.id, accessToken, refreshToken });
+    const result = authSessionSchema.parse({ id: user.id, accessToken, refreshToken });
     // Return access token
     return result;
   };
 
-  public async login(data: LoginBodyType): Promise<UserSessionType> {
+  public async login(data: LoginBodyType): Promise<AuthSessionType> {
     const { username, password } = data;
     const user = await User.findOne({
       where: { username: username },
@@ -152,7 +107,7 @@ class AuthService {
       throw new Unauthorized();
     }
     const signedToken = await this.signToken(_.omit(user, ['password']));
-    const result = userSessionSchema.parse(signedToken);
+    const result = authSessionSchema.parse(signedToken);
     return result;
   }
 
@@ -160,10 +115,10 @@ class AuthService {
     await redisClient.del(`${id}:${sessionId}`);
   }
 
-  public async refreshToken(refreshTokenInput: RefreshTokenBodyType): Promise<UserSessionType> {
+  public async refreshToken(refreshTokenInput: RefreshTokenBodyType): Promise<AuthSessionType> {
     try {
       // Validate the Refresh token
-      const decoded = verifyJwt<UserPayloadType>(
+      const decoded = verifyJwt<AuthPayloadType>(
         refreshTokenInput.refreshToken,
         'REFRESH_TOKEN_PUBLIC_KEY',
       );
@@ -188,7 +143,7 @@ class AuthService {
       );
 
       // Send the access token as cookie
-      const result = userSessionSchema.parse({
+      const result = authSessionSchema.parse({
         ...refreshTokenInput,
         accessToken,
         id: userPayload.id,
@@ -233,12 +188,12 @@ class AuthService {
       if (authorizationType === 'local') {
         const token = this.getTokenFromHeader(req);
         if (token == null) throw new Forbidden();
-        const decoded: UserPayloadType | null = userPayloadSchema.parse(
+        const decoded: AuthPayloadType | null = authPayloadSchema.parse(
           verifyJwt(token, 'ACCESS_TOKEN_PUBLIC_KEY'),
         );
         const session = await redisClient.get(`${decoded.id}:${decoded.sessionId}`);
         if (!decoded || !session) throw new Forbidden();
-        userPayload = JSON.parse(session) as UserPayloadType;
+        userPayload = JSON.parse(session) as AuthPayloadType;
       }
 
       if (authorizationType === 'google') {
@@ -246,11 +201,11 @@ class AuthService {
         if (!token) throw new Unauthorized('Invalid credentials');
         const user = await googleAuthSvc.verify(token);
         if (!user) throw new Unauthorized('Invalid credentials');
-        const localUser = await User.findOneOrFail({
+        const localAuth = await User.findOneOrFail({
           where: { id: user.sub },
           relations: ['roleMappings', 'roleMappings.role', 'roleMappings.institution'],
         });
-        userPayload = mapFromGoogleToPayload(user, localUser.roleMappings);
+        userPayload = mapFromGoogleToPayload(user, localAuth.roleMappings);
       }
       if (userPayload) {
         if (requiredRoleNames && requiredRoleNames.length) {

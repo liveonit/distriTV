@@ -19,7 +19,7 @@ const getUsers: Epic = (action$) =>
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(() => {
       const {session} = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ path: '/user', requireAuthType: session?.type }).pipe(
+      return apiSvc.request({ path: '/user?relations=roleMappings,roleMappings.role,roleMappings.institution', requireAuthType: session?.type }).pipe(
         map(({ response }) => {
           return {
             type: IUserActionTypes.LIST_ALL_SUCCESS,

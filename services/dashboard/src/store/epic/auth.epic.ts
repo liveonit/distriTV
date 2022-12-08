@@ -16,7 +16,7 @@ const login: Epic = (action$) =>
   action$.pipe(
     ofType(IAuthActionTypes.LOGIN_REQUEST),
     mergeMap(({ payload }) => {
-      return apiSvc.request({ method: 'POST', path: '/user/login', body: payload }).pipe(
+      return apiSvc.request({ method: 'POST', path: '/auth/login', body: payload }).pipe(
         map(({ response }) => {
           const userPayload = parseJwt<UserT>((response as any).refreshToken)
           if (!userPayload) throw Error('Invalid user payload')
@@ -43,7 +43,7 @@ const googleLogin: Epic = (action$) =>
   action$.pipe(
     ofType(IAuthActionTypes.GOOGLE_LOGIN_REQUEST),
     mergeMap(({ payload }) => {
-      return apiSvc.request({ method: 'POST', path: '/user/googlelogin', body: { tokenId: payload.tokenId } }).pipe(
+      return apiSvc.request({ method: 'POST', path: '/auth/googlelogin', body: { tokenId: payload.tokenId } }).pipe(
         map(({ response }) => {
           storage.set('session', {
             session: { ...payload, type: 'google' },
@@ -74,20 +74,24 @@ const logout: Epic = (action$) =>
     ofType(IAuthActionTypes.LOGOUT_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
+    catchError((err) => {
+      storage.remove('session')
+      return err
+    }),
     mergeMap(() => {
-      return apiSvc.request({ method: 'POST', path: '/user/logout', requireAuthType: 'local' }).pipe(
+      return apiSvc.request({ method: 'POST', path: '/auth/logout', requireAuthType: 'local' }).pipe(
         map(() => {
           storage.remove('session')
           return {
             type: IAuthActionTypes.LOGOUT_SUCCESS,
           }
         }),
-        catchError((err) =>
-          of({
+        catchError((err) => {
+          return of({
             type: IAuthActionTypes.LOGOUT_FAILURE,
             payload: err,
-          }),
-        ),
+          })
+        }),
       )
     }),
   )

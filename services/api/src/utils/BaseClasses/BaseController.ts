@@ -34,13 +34,13 @@ class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
     const { relations } = this.querySchema?.parse(req.query) || {};
     let result = await this.service.create(body as T, { relations });
     if (this.responseSchema) result = this.responseSchema.parse(result) as T;
-    return res.status(200).json({ data: result });
+    return res.status(200).json(result);
   });
 
   public getMany = handleErrorAsync(async (req: Request, res: Response) => {
     const { skip, take, relations } = this.querySchema?.parse(req.query) || {};
     const result = await this.service.getMany({ skip, take, relations });
-    return res.status(200).json({ data: result });
+    return res.status(200).json(result);
   });
 
   public update = handleErrorAsync(async (req: Request, res: Response) => {
@@ -51,7 +51,7 @@ class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
     const { relations } = this.querySchema?.parse(req.query) || {};
     let result = await this.service.update(id, body as T, { relations });
     if (this.responseSchema) result = this.responseSchema.parse(result) as T;
-    return res.status(200).json({ data: result });
+    return res.status(200).json(result);
   });
 
   public getById = handleErrorAsync(async (req: Request, res: Response) => {
@@ -60,7 +60,7 @@ class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
     if (!isNaN(+id)) id = +id
     const { relations } = this.querySchema?.parse(req.query) || {};
     const result = await this.service.get({where: {id} as  FindOptionsWhere<T>, relations});
-    return res.status(200).json({ data: result });
+    return res.status(200).json(result);
   });
 
   public delete = handleErrorAsync(async (req: Request, res: Response) => {

@@ -1,4 +1,4 @@
-import { authSvc } from '@src/apiV1/User/AuthService';
+import { authSvc } from '@src/apiV1/Auth/AuthService';
 import { Router } from 'express';
 import { televisionController } from './Television.controller';
 

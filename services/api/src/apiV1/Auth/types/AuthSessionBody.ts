@@ -2,7 +2,7 @@ import { RoleMapping } from '@src/entities/RoleMapping';
 import { TokenPayload } from 'google-auth-library';
 import { z } from 'zod';
 
-export const userPayloadSchema = z.object({
+export const authPayloadSchema = z.object({
   id: z.string(),
   username: z.string(),
   enabled: z.boolean(),
@@ -13,14 +13,14 @@ export const userPayloadSchema = z.object({
   roleMappings: z.array(z.any()),
   sessionId: z.string().optional(),
 });
-export type UserPayloadType = z.infer<typeof userPayloadSchema>;
+export type AuthPayloadType = z.infer<typeof authPayloadSchema>;
 
-export const userSessionSchema = z.object({
+export const authSessionSchema = z.object({
   id: z.string(),
   accessToken: z.string(),
   refreshToken: z.string(),
 });
-export type UserSessionType = z.infer<typeof userSessionSchema>;
+export type AuthSessionType = z.infer<typeof authSessionSchema>;
 
 
 export const mapFromGoogleToPayload = (googlePayload: TokenPayload, roleMappings?: RoleMapping[]) => {
@@ -32,5 +32,5 @@ export const mapFromGoogleToPayload = (googlePayload: TokenPayload, roleMappings
     lastName: googlePayload.family_name,
     emailVerified: googlePayload.email_verified,
     roleMappings
-  } as UserPayloadType
+  } as AuthPayloadType
 }

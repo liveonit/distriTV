@@ -27,7 +27,7 @@ export const navBarCommon = [
       {
         title: 'Institutions',
         icon: ShopIcon,
-        href: PATH_NAME.PRODUCT_LIST,
+        href: PATH_NAME.INSTITUTION,
         label: DRAWER_MENU_LABEL.INSTITUTIONS,
       },
     ],

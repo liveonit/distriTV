@@ -8,7 +8,7 @@ export type SessionT = {
     refreshToken?: string
     tokenId?: string
   }
-  roleMappings: RoleMapping[]
+  roleMappings: RoleMappingT[]
 }
 
 export type UserT = {
@@ -20,7 +20,7 @@ export type UserT = {
   lastName: string
   email: string
   sessionId: string
-  roleMappings: RoleMapping[]
+  roleMappings: RoleMappingT[]
   loginType: string
   exp: number
   iat: number
@@ -33,38 +33,38 @@ export type Role = {
   permissions: PermissionT[]
 }
 
-export type Label = {
+export type LabelT = {
   id: number
   description: string
 }
 
-export type Content = {
+export type ContentT = {
   id: number
   name: string
   type: string
   duration: number
 }
 
-export type Television = {
+export type TelevisionT = {
   id: number
   ip: string
   mac: string
   notifications?: Notification[]
-  labels?: Label[]
-  contents?: Content[]
+  labels?: LabelT[]
+  contents?: ContentT[]
 }
 
-export type Institution = {
+export type InstitutionT = {
   id: number
   name: string
   city?: string
   locality?: string
-  televisions?: Television[]
+  televisions?: TelevisionT[]
 }
 
-export type RoleMapping = {
+export type RoleMappingT = {
   role: Role
-  institution: Institution
+  institution: InstitutionT
 }
 export type PermissionT = {
   id: string
@@ -72,7 +72,7 @@ export type PermissionT = {
   description: string
 }
 
-export const mapFromGoogleToPayload = (tokenId: string, roleMappings: RoleMapping[]) => {
+export const mapFromGoogleToPayload = (tokenId: string, roleMappings: RoleMappingT[]) => {
   const googlePayload = parseJwt(tokenId) as any
   return {
     id: googlePayload.sub,

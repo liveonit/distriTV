@@ -11,7 +11,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle'
 // configs
 import { GOOGLE_CONFIGS, USER_ROLE } from '@app/configs'
 // actions
-import { logout } from '@store/action/auth.action'
+import { logout } from 'src/store/auth/auth.action'
 import { SessionT } from 'src/store/models/Global'
 import { useGoogleLogout } from 'react-google-login'
 import { storage } from 'src/utils/general/Storage'

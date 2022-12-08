@@ -6,7 +6,7 @@ import institutionRoute from './Institution/Institution.routes'
 import labelRoute from './Label/Label.routes'
 import notificationRoute from './Notification/Notification.routes'
 import televisionRoute from './Television/Television.routes'
-import agendaRoute  from './Agenda/Agenda.routes';
+import scheduleRoute  from './Agenda/Schedule.routes';
 
 const router: Router = Router();
 
@@ -17,5 +17,5 @@ router.use('/institution', institutionRoute);
 router.use('/label', labelRoute);
 router.use('/notification', notificationRoute);
 router.use('/television', televisionRoute);
-router.use('/agenda',agendaRoute);
+router.use('/schedule',scheduleRoute);
 export default router;

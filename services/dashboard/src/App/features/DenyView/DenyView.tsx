@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Box, Button, Container, Typography, Grid, useTheme, useMediaQuery, makeStyles } from '@material-ui/core'
 // configs
-import { logout } from '@store/action/auth.action'
+import { logout } from 'src/store/auth/auth.action'
 import { storage } from 'src/utils/general/Storage'
 import { SessionT } from 'src/store/models/Global'
 import { useGoogleLogout } from 'react-google-login'

@@ -8,12 +8,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 // types
-import { INavBarExpandItem } from 'src/store/models/INavBar';
+import { NavBarExpandItem } from 'src/store/models/NavBar';
 
 // styles
 import useStyles from './styles';
 
-function NavBarExpandItem({ title, icon: Icon, open = false, children, style }: INavBarExpandItem) {
+function NavBarExpandItem({ title, icon: Icon, open = false, children, style }: NavBarExpandItem) {
   const classes = useStyles();
   const [isExpand, setIsExpand] = useState(open);
 

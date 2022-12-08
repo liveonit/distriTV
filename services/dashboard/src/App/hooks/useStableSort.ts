@@ -1,9 +1,9 @@
 import { useState } from 'react';
 // types
-import { IOrder } from 'src/store/models/ICommon';
+import { Order } from 'src/store/models/Common';
 
 const useStableSort = () => {
-  const [order, setOrder] = useState<IOrder>('asc');
+  const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<string>('name');
   const [page, setPage] = useState(0);
   const [perPage, setPerPage] = useState(20);

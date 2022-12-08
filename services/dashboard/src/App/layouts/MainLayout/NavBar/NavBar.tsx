@@ -10,7 +10,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import { navBarCommon } from '@app/routes/navBarCommon';
 import { PATH_NAME, VERSION_PROJECT } from '@app/configs';
 // types
-import { IChildNavBar } from 'src/store/models/INavBar';
+import { ChildNavBar } from 'src/store/models/NavBar';
 
 import NavBarItem from './NavBarItem';
 // styles
@@ -32,7 +32,7 @@ function NavBar({ isDrawer }: IProps) {
   const classes = useStyles();
   const location = useLocation();
 
-  const renderNavItems = ({ items, pathname, depth }: IChildNavBar) => {
+  const renderNavItems = ({ items, pathname, depth }: ChildNavBar) => {
     return <List disablePadding>{items?.reduce((acc, curr) => renderChildRoutes({ acc, curr, pathname, depth }), [])}</List>;
   };
 

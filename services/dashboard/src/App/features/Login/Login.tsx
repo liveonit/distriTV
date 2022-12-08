@@ -11,7 +11,7 @@ import Container from '@material-ui/core/Container'
 // material icon
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 // actions
-import { googleLogin, login } from '@store/action/auth.action'
+import { googleLogin, login } from 'src/store/auth/auth.action'
 import { VisibilityOff, Visibility } from '@material-ui/icons'
 import { InputAdornment, IconButton } from '@mui/material'
 import { GoogleLoginResponse, GoogleLoginResponseOffline, useGoogleLogin } from 'react-google-login'

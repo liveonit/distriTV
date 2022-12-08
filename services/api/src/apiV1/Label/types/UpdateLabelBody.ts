@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
-export const updateLabelBodySchema = z.object({
-  description: z.string(),
+export const updateLabelBody = z.object({
+  name: z.string().optional(),
+  description: z.string().optional(),
 });
 
-export type UpdateLabelBodyType = z.infer<typeof updateLabelBodySchema>;
+export type UpdateLabelBodyType = z.infer<typeof updateLabelBody>;

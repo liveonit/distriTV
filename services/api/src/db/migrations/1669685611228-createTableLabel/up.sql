@@ -1,4 +1,5 @@
 CREATE TABLE IF NOT EXISTS `label` (
   `id` INT NOT NULL,
-  `description` VARCHAR(45) NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `description` VARCHAR(255),
   PRIMARY KEY (`id`));

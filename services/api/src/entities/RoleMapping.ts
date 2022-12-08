@@ -1,5 +1,7 @@
+import { BaseCustomEntity } from '@src/utils/BaseClasses/BaseCustomEntity';
 import {
   BaseEntity,
+  Column,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -10,14 +12,17 @@ import { Role } from './Role';
 import { User } from './User';
 
 @Entity({ name: 'user_has_roles' })
-export class RoleMapping extends BaseEntity {
+export class RoleMapping extends BaseCustomEntity {
   @PrimaryColumn()
+  id!: string;
+
+  @Column()
   userId!: string;
 
-  @PrimaryColumn()
+  @Column()
   roleId!: string;
 
-  @PrimaryColumn()
+  @Column()
   institutionId!: number;
 
   @ManyToOne(() => Role, (role) => role.mapping)

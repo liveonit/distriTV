@@ -1,4 +1,5 @@
 export type LabelT = {
   id: number
-  description: string
+  name: string
+  description?: string
 }

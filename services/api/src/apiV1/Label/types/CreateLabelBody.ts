@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 export const createLabelBody = z.object({
-  description: z.string(),
-  
+  name: z.string(),
+  description: z.string().optional(),
 });
 
 export type CreateLabelBodyType = z.infer<typeof createLabelBody>;

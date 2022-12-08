@@ -1,9 +1,14 @@
 CREATE TABLE `user_has_roles` (
+  `id` varchar(36) NOT NULL,
   `userId` varchar(36) NOT NULL,
   `roleId` varchar(36) NOT NULL,
   `institutionId` int NOT NULL,
-  PRIMARY KEY (`userId`, `roleId`, `institutionId`)
+  PRIMARY KEY (`id`)
+
 );
+
+CREATE UNIQUE INDEX user_role_institucion
+ON user_has_roles(`userId`,`roleId`,`institutionId`);
 
 ALTER TABLE
   `user_has_roles`

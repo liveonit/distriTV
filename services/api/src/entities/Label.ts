@@ -8,6 +8,9 @@ export class Label extends BaseEntity {
   id!: number;
 
   @Column()
+  name!: String;
+
+  @Column()
   description!: String;
 
   @ManyToMany(() => Television, (tv) => tv.id)

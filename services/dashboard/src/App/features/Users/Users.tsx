@@ -12,9 +12,9 @@ import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
 import { useDispatch, useSelector } from 'react-redux'
 import { listUsers } from 'src/store/user/user.action'
-import { usersIsLoadingSelector, usersSelector } from 'src/store/user/users.selector'
+import { usersIsLoadingSelector, usersSelector } from 'src/store/user/user.selector'
 import { Chip, CircularProgress } from 'node_modules/@mui/material'
-import { UserT } from 'src/store/models/Global'
+import { UserT } from 'src/store/user/user.type'
 
 import UserEditModal from './UserEditModal'
 

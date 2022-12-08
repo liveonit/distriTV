@@ -2,14 +2,25 @@ import { combineReducers } from 'redux';
 
 import auth from './auth/auth.reducer';
 import app from './app/app.reducer';
-import users from './user/users.reducer'
-import institutions from './institution/institutions.reducer'
-
+import user from './user/user.reducer'
+import institution from './institution/institutions.reducer'
+import roleMapping from './roleMapping/roleMapping.reducer'
+import role from './role/role.reducer'
+import permission from './permission/permission.reducer'
+import content from './content/content.reducer'
+import label from './label/label.reducer'
+import television from './television/television.reducer'
 export const rootReducer = combineReducers({
   auth,
   app,
-  users,
-  institutions
+  user,
+  institution,
+  roleMapping,
+  role,
+  permission,
+  content,
+  label,
+  television
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

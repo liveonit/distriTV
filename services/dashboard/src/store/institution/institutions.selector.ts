@@ -1,14 +1,14 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-import { InstitutionT } from '../models/Global';
 import { RootState } from '../rootReducer';
+import { InstitutionT } from './institution.type';
 
 export const institutionsIsLoadingSelector = createSelector(
-  (state: RootState) => state.institutions,
-  (institutions) => institutions.isLoading,
+  (state: RootState) => state.institution,
+  (institution) => institution.isLoading,
 );
 
 export const institutionsSelector = createSelector(
-  (state: RootState) => state.institutions,
-  (institutions) => institutions.institutions as InstitutionT[],
+  (state: RootState) => state.institution,
+  (institution) => institution.items as InstitutionT[],
   );

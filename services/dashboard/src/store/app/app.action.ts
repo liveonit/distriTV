@@ -1,4 +1,4 @@
-import { AppActionTypes, Notifer } from 'src/store/app/AppState';
+import { AppActionTypes, Notifer } from 'src/store/app/app.state';
 
 export const setLoading = (isLoading: boolean) => ({
   type: AppActionTypes.SET_LOADING,

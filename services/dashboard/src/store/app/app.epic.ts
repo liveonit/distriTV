@@ -2,7 +2,7 @@ import { Epic, ofType } from 'redux-observable'
 import { map } from 'rxjs'
 import { storage } from 'src/utils/general/Storage'
 
-import { AppActionTypes } from './AppState'
+import { AppActionTypes } from './app.state'
 
 const setTheme: Epic = (action$) =>
   action$.pipe(

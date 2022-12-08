@@ -4,9 +4,9 @@ import { Box, Button, Container, Typography, Grid, useTheme, useMediaQuery, make
 // configs
 import { logout } from 'src/store/auth/auth.action'
 import { storage } from 'src/utils/general/Storage'
-import { SessionT } from 'src/store/models/Global'
 import { useGoogleLogout } from 'react-google-login'
 import { GOOGLE_CONFIGS } from 'src/App/configs'
+import { SessionT } from 'src/store/auth/auth.type'
 // actions
 
 const useStyles = makeStyles((theme) => ({

@@ -7,8 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import Link from '@material-ui/core/Link';
 // types
 import { canAction } from '@app/helpers';
-// components
-import { NavBarItem } from 'src/store/models/NavBar';
+import { NavBarItem } from 'src/store/app/app.type';
 
 import NavBarExpandItem from './NavBarExpandItem';
 // styles

@@ -1,28 +1,28 @@
-import { UserActionTypes, UsersState } from './UsersState'
+import { ContentActionTypes, ContentState } from './content.state'
 
-const initialState: UsersState = {
-  users: [],
+const initialState: ContentState = {
+  items: [],
   isLoading: false,
 }
 
 const reducer = (state = initialState, { type, payload }: any) => {
   switch (type) {
-    case UserActionTypes.LIST_ALL_REQUEST:
+    case ContentActionTypes.LIST_ALL_REQUEST:
       return {
         ...state,
         isLoading: true,
       }
-    case UserActionTypes.LIST_ALL_FAILURE:
+    case ContentActionTypes.LIST_ALL_FAILURE:
       return {
         ...state,
         isLoading: false,
-        users: [],
+        items: [],
       }
-    case UserActionTypes.LIST_ALL_SUCCESS:
+    case ContentActionTypes.LIST_ALL_SUCCESS:
       return {
         ...state,
         isLoading: false,
-        users: payload,
+        items: payload,
       }
     default:
       return state

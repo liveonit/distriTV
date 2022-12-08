@@ -1,7 +1,7 @@
-import { InstitutionActionTypes, InstitutionsState } from './InstitutionState'
+import { InstitutionActionTypes, InstitutionsState } from './institution.state'
 
 const initialState: InstitutionsState = {
-  institutions: [],
+  items: [],
   isLoading: false,
 }
 
@@ -16,13 +16,13 @@ const reducer = (state = initialState, { type, payload }: any) => {
       return {
         ...state,
         isLoading: false,
-        institutions: [],
+        items: [],
       }
     case InstitutionActionTypes.LIST_ALL_SUCCESS:
       return {
         ...state,
         isLoading: false,
-        institutions: payload,
+        items: payload,
       }
     default:
       return state

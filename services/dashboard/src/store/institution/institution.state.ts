@@ -1,4 +1,4 @@
-import { InstitutionT } from '../models/Global'
+import { InstitutionT } from './institution.type'
 
 export enum InstitutionActionTypes {
   LIST_ALL_REQUEST = 'INSTITUTION/LIST_ALL_REQUEST',
@@ -17,5 +17,5 @@ export enum InstitutionActionTypes {
 
 export type InstitutionsState = {
   isLoading: boolean
-  institutions: InstitutionT[]
+  items: InstitutionT[]
 }

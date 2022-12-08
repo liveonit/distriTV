@@ -1,7 +1,8 @@
 import { storage } from 'src/utils/general/Storage'
-import { SessionT, UserT } from 'src/store/models/Global'
 import { parseJwt } from 'src/App/helpers'
 import { GLOBAL_CONFIGS } from 'src/App/configs'
+import { SessionT } from 'src/store/auth/auth.type'
+import { UserT } from 'src/store/user/user.type'
 
 export const checkOrRefreshToken = async () => {
   const session = storage.get<SessionT>('session')

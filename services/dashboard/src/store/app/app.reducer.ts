@@ -1,4 +1,4 @@
-import { AppActionTypes, AppActionCreator, AppState } from 'src/store/app/AppState';
+import { AppActionTypes, AppActionCreator, AppState } from 'src/store/app/app.state';
 
 const initialState: AppState = {
   isLoading: false,

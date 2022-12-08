@@ -1,14 +1,14 @@
 import { Epic, ofType } from 'redux-observable'
 import { map, mergeMap, catchError, debounceTime, concatMap } from 'rxjs/operators'
 import { defer, of } from 'rxjs'
-import { AuthActionTypes } from 'src/store/auth/AuthState'
+import { AuthActionTypes } from 'src/store/auth/auth.state'
 import { storage } from '@utils/general/Storage'
 import { checkOrRefreshToken } from 'src/services/auth'
 import { parseJwt } from 'src/App/helpers'
 
 import { enqueueSnackbarAction } from '../app/app.action'
 import apiSvc from '../../services/api'
-import { UserT } from '../models/Global'
+import { UserT } from '../user/user.type'
 
 const refreshToken$ = defer(() => checkOrRefreshToken())
 

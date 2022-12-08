@@ -2,13 +2,12 @@ import React, { Fragment, lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 // configs
 import { PATH_NAME, USER_ROLE } from '@app/configs';
-// types
-import { RoutesT } from 'src/store/models/Routes';
 // layouts
 import MainLayout from '@app/layouts/MainLayout';
 // containers
 import AuthGuard from '@app/guards/AuthGuard';
 import GuestGuard from '@app/guards/GuestGuard';
+import { RoutesT } from 'src/store/app/app.type';
 
 import RoleRoute from './RoleRoute';
 

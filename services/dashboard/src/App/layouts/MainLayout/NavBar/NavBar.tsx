@@ -9,8 +9,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 // configs
 import { navBarCommon } from '@app/routes/navBarCommon';
 import { PATH_NAME, VERSION_PROJECT } from '@app/configs';
-// types
-import { ChildNavBar } from 'src/store/models/NavBar';
+import { ChildNavBar } from 'src/store/app/app.type';
 
 import NavBarItem from './NavBarItem';
 // styles

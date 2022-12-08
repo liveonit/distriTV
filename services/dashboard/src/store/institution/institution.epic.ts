@@ -7,8 +7,8 @@ import { checkOrRefreshToken } from 'src/services/auth'
 
 import { enqueueSnackbarAction } from '../app/app.action'
 import apiSvc from '../../services/api'
-import { SessionT } from '../models/Global'
-import { InstitutionActionTypes } from './InstitutionState'
+import { InstitutionActionTypes } from './institution.state'
+import { SessionT } from '../auth/auth.type'
 
 const refreshToken$ = defer(() => checkOrRefreshToken())
 

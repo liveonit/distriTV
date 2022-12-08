@@ -7,8 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 // material icon
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-// types
-import { NavBarExpandItem } from 'src/store/models/NavBar';
+import { NavBarExpandItem } from 'src/store/app/app.type';
 
 // styles
 import useStyles from './styles';

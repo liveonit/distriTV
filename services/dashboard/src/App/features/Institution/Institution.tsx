@@ -13,10 +13,11 @@ import EditIcon from '@material-ui/icons/Edit'
 import { useDispatch, useSelector } from 'react-redux'
 import { institutionsIsLoadingSelector, institutionsSelector } from 'src/store/institution/institutions.selector'
 import { CircularProgress } from 'node_modules/@mui/material'
-import { InstitutionT } from 'src/store/models/Global'
 import { listInstitutions } from 'src/store/institution/institution.action'
+import { InstitutionT } from 'src/store/institution/institution.type'
 
 import InstitutionEditModal from './InstitutionEditModal'
+
 
 const useStyles = makeStyles({
   table: {

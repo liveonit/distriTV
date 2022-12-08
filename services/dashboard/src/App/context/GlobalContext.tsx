@@ -1,6 +1,6 @@
 import React, { useContext, createContext, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { AppActionTypes } from 'src/store/app/AppState'
+import { AppActionTypes } from 'src/store/app/app.state'
 
 import { GLOBAL_CONFIGS } from '../configs'
 import { useStoredLanguage } from '../hooks/useLanguage'

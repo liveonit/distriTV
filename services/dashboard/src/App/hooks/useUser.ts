@@ -1,5 +1,7 @@
 import { useMemo } from 'react'
-import { mapFromGoogleToPayload, SessionT, UserT } from 'src/store/models/Global'
+import { mapFromGoogleToPayload } from 'src/store/auth/auth.state'
+import { SessionT } from 'src/store/auth/auth.type'
+import { UserT } from 'src/store/user/user.type'
 
 import { parseJwt } from '../helpers'
 import { useStorageValue } from './useStorageValue'

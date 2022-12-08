@@ -4,11 +4,10 @@ import { defer, of } from 'rxjs'
 import { storage } from '@utils/general/Storage'
 import { checkOrRefreshToken } from 'src/services/auth'
 
-
 import { enqueueSnackbarAction } from '../app/app.action'
 import apiSvc from '../../services/api'
-import { SessionT } from '../models/Global'
-import { UserActionTypes } from './UsersState'
+import { UserActionTypes } from './user.state'
+import { SessionT } from '../auth/auth.type'
 
 const refreshToken$ = defer(() => checkOrRefreshToken())
 

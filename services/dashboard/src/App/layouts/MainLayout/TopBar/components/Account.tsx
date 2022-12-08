@@ -12,9 +12,9 @@ import AccountCircle from '@material-ui/icons/AccountCircle'
 import { GOOGLE_CONFIGS, USER_ROLE } from '@app/configs'
 // actions
 import { logout } from 'src/store/auth/auth.action'
-import { SessionT } from 'src/store/models/Global'
 import { useGoogleLogout } from 'react-google-login'
 import { storage } from 'src/utils/general/Storage'
+import { SessionT } from 'src/store/auth/auth.type'
 
 function Account({ ...classes }) {
   const { t: translate } = useTranslation()

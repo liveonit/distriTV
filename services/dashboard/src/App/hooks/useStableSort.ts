@@ -1,6 +1,6 @@
 import { useState } from 'react';
-// types
-import { Order } from 'src/store/models/Common';
+import { Order } from 'src/store/app/app.type';
+
 
 const useStableSort = () => {
   const [order, setOrder] = useState<Order>('asc');

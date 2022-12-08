@@ -1,4 +1,4 @@
-import { AuthActionCreator, AuthActionTypes, GoogleAuthActionCreator } from './AuthState'
+import { AuthActionCreator, AuthActionTypes, GoogleAuthActionCreator } from './auth.state'
 
 export const login: (username: string, password: string) => AuthActionCreator = (username, password) => ({
   type: AuthActionTypes.LOGIN_REQUEST,

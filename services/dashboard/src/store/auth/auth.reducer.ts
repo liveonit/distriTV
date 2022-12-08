@@ -1,4 +1,4 @@
-import { AuthActionTypes, AuthActionCreator, AuthState } from 'src/store/auth/AuthState'
+import { AuthActionTypes, AuthActionCreator, AuthState } from 'src/store/auth/auth.state'
 
 const initialState: AuthState = {
   user: null,

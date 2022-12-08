@@ -1,4 +1,4 @@
-import { UserT } from '../models/Global'
+import { UserT } from './user.type'
 
 export enum UserActionTypes {
   LIST_ALL_REQUEST = 'USER/LIST_ALL_REQUEST',
@@ -9,14 +9,14 @@ export enum UserActionTypes {
   EDIT_FAILURE = 'USER/EDIT_FAILURE',
 }
 
-export type EditRolePayload = { userId: string; roleMappings: { roleId: string; institutionId: number }[] }
+export type EditUserPayload = { userId: string; roleMappings: { roleId: string; institutionId: number }[] }
 
-export type EditRoleActionCreator = {
+export type EditUserActionCreator = {
   type: string
-  payload: EditRolePayload
+  payload: EditUserPayload
 }
 
 export type UsersState = {
   isLoading: boolean
-  users: UserT[]
+  items: UserT[]
 }

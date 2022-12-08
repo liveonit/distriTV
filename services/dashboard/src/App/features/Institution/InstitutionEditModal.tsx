@@ -11,7 +11,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
-import { InstitutionT } from 'src/store/models/Global'
+import { InstitutionT } from 'src/store/institution/institution.type'
 
 type IProps = {
   isOpen: boolean

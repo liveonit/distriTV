@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         val fileDbService = FileDbService(this@MainActivity)
-                        val idBD = fileDbService.insert(FileDownload("","","",""))
+                        val idBD = fileDbService.insert(FileDownload(null, "","","",""))
                         Log.d(TAG, "server contacted and has file")
                         val writtenToDisk: Boolean = response.body()
                             ?.let { writeResponseBodyToDisk(it, idBD) } == true
@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                 File(getExternalFilesDir(null), File.separator.toString() + fileNameWithExtension)
 
             val fileDbService = FileDbService(this@MainActivity)
-            fileDbService.update(idBD, FileDownload(fileNameWithExtension, futureStudioIconFile.path, "", ""))
+            fileDbService.update(idBD, FileDownload(null, fileNameWithExtension, futureStudioIconFile.path, "", ""))
 
             var inputStream: InputStream? = null
             var outputStream: OutputStream? = null

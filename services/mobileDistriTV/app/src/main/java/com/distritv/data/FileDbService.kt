@@ -67,9 +67,9 @@ class FileDbService(context: Context) {
         val items = mutableListOf<FileDownload>()
         with(cursor) {
             while (moveToNext()) {
-                val itemId = getLong(getColumnIndexOrThrow(BaseColumns._ID))
                 items.add(
                     FileDownload(
+                        getLong(getColumnIndexOrThrow(BaseColumns._ID)),
                         getString(getColumnIndexOrThrow(FileContract.FileEntry.COLUMN_FILE_NAME)),
                         getString(getColumnIndexOrThrow(FileContract.FileEntry.COLUMN_FILE_LOCAL_PATH)),
                         getString(getColumnIndexOrThrow(FileContract.FileEntry.COLUMN_FILE_URL)),
@@ -94,8 +94,8 @@ class FileDbService(context: Context) {
             FileContract.FileEntry.COLUMN_FILE_CONTENT_TYPE
         )
 
-        // Filter results WHERE "title" = 'My Title'
-        val selection = "${FileContract.FileEntry.COLUMN_FILE_NAME} = ?"
+        // Filter results WHERE "_id" = 'id'
+        val selection = "${BaseColumns._ID} = ?"
         val selectionArgs = arrayOf(id.toString())
 
         // How you want the results sorted in the resulting Cursor

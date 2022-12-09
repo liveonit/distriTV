@@ -8,11 +8,12 @@ import android.content.pm.PackageManager
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.distritv.data.FileDbService
 import com.distritv.databinding.ActivityMainBinding
+import com.distritv.model.FileDownload
 import com.distritv.service.FileDownloadClient
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -50,7 +51,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnPlay.setOnClickListener {
-            play()
+            val intent = Intent(this, ImageActivity::class.java)
+            startActivity(intent)
         }
 
     }
@@ -66,9 +68,11 @@ class MainActivity : AppCompatActivity() {
             ) {
                 if (response != null) {
                     if (response.isSuccessful()) {
+                        val fileDbService = FileDbService(this@MainActivity)
+                        val idBD = fileDbService.insert(FileDownload("","","",""))
                         Log.d(TAG, "server contacted and has file")
                         val writtenToDisk: Boolean = response.body()
-                            ?.let { writeResponseBodyToDisk(it) } == true
+                            ?.let { writeResponseBodyToDisk(it, idBD) } == true
                         Log.d(TAG, "file download was a success? $writtenToDisk")
                     } else {
                         Log.d(TAG, "server contact failed")
@@ -82,13 +86,16 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun writeResponseBodyToDisk(body: ResponseBody): Boolean {
+    private fun writeResponseBodyToDisk(body: ResponseBody, idBD: Long): Boolean {
         return try {
             // todo change the file location/name according to your needs
+            val fileName = "Descarga "+ idBD +".png"
             val futureStudioIconFile =
-                File(getExternalFilesDir(null), File.separator.toString() + "Descarga.png")
+                File(getExternalFilesDir(null), File.separator.toString() + fileName)
 
             imagePath = futureStudioIconFile.path
+            val fileDbService = FileDbService(this@MainActivity)
+            fileDbService.update(idBD, FileDownload(fileName, futureStudioIconFile.path, "", ""))
 
             var inputStream: InputStream? = null
             var outputStream: OutputStream? = null
@@ -125,17 +132,6 @@ class MainActivity : AppCompatActivity() {
             }
         } catch (e: IOException) {
             false
-        }
-    }
-
-
-    fun play() {
-        if (imagePath.isNullOrEmpty()) {
-            Toast.makeText(this, "No hay contenido disponible. Vuelva a descargar.", Toast.LENGTH_SHORT).show()
-        } else {
-            val intent = Intent(this, ImageActivity::class.java)
-            intent.putExtra(IMAGE_PATH, imagePath)
-            startActivity(intent)
         }
     }
 

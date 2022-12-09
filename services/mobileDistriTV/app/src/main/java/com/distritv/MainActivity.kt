@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -27,8 +28,6 @@ class MainActivity : AppCompatActivity() {
     private val MY_PERMISSIONS_REQUEST = 100
 
     private lateinit var binding: ActivityMainBinding
-
-    var imagePath = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +73,11 @@ class MainActivity : AppCompatActivity() {
                         val writtenToDisk: Boolean = response.body()
                             ?.let { writeResponseBodyToDisk(it, idBD) } == true
                         Log.d(TAG, "file download was a success? $writtenToDisk")
+                        if (writtenToDisk) {
+                            Toast.makeText(this@MainActivity, "Se descargó con éxito.", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this@MainActivity, "No se pudo realizar la descarga.", Toast.LENGTH_SHORT).show()
+                        }
                     } else {
                         Log.d(TAG, "server contact failed")
                     }
@@ -89,13 +93,13 @@ class MainActivity : AppCompatActivity() {
     private fun writeResponseBodyToDisk(body: ResponseBody, idBD: Long): Boolean {
         return try {
             // todo change the file location/name according to your needs
-            val fileName = "Descarga "+ idBD +".png"
+            val fileExtension = body.contentType()?.subtype
+            val fileNameWithExtension = "Descarga $idBD.$fileExtension"
             val futureStudioIconFile =
-                File(getExternalFilesDir(null), File.separator.toString() + fileName)
+                File(getExternalFilesDir(null), File.separator.toString() + fileNameWithExtension)
 
-            imagePath = futureStudioIconFile.path
             val fileDbService = FileDbService(this@MainActivity)
-            fileDbService.update(idBD, FileDownload(fileName, futureStudioIconFile.path, "", ""))
+            fileDbService.update(idBD, FileDownload(fileNameWithExtension, futureStudioIconFile.path, "", ""))
 
             var inputStream: InputStream? = null
             var outputStream: OutputStream? = null

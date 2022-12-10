@@ -30,6 +30,12 @@ export const navBarCommon = [
         href: PATH_NAME.INSTITUTION,
         label: DRAWER_MENU_LABEL.INSTITUTIONS,
       },
+      {
+        title: 'Contents',
+        icon: ShopIcon,
+        href: PATH_NAME.CONTENT,
+        label: DRAWER_MENU_LABEL.CONTENTS,
+      },
     ],
   },
   {

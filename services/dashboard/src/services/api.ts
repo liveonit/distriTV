@@ -10,9 +10,11 @@ interface RequestProps<Body> {
   method?: 'POST' | 'GET' | 'PUT' | 'DELETE'
   requireAuthType?: 'local' | 'google'
   body?: Body
-  headers?: Readonly<Record<string, any>>
+  data?: FormData
+  headers?: Readonly<Record<string, any>>,
   retries?: number
   timeout?: number
+  extraConfig?: any
 }
 
 const apiSvc = {
@@ -26,7 +28,8 @@ const apiSvc = {
 
     const session = storage.get<SessionT>('session')?.session
 
-    let headers = {
+    let headers: Readonly<Record<string, any>> = {
+      'Content-Type': 'application/json',
       ...props.headers,
     }
 
@@ -43,18 +46,15 @@ const apiSvc = {
         authorization: `Bearer ${session?.tokenId}`,
       }
 
-    console.log({ beforeSendRequest: { headers, session, requireAuthType }})
     return ajax<Response>({
+      ...props.extraConfig,
       url: `${GLOBAL_CONFIGS.API_URL || ''}${path}`,
       method: method,
-      headers: {
-        'Content-Type': 'application/json',
-        ...headers,
-      },
+      headers,
       body,
     }).pipe(
-      timeoutOp(timeout), // after 2s abort
-      retry(retries), // retry 3x.
+      timeoutOp(timeout),
+      retry(retries),
     )
   },
 }

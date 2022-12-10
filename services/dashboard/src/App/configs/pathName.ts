@@ -6,6 +6,7 @@ export const PATH_NAME = {
   PLAY_BACKGROUND: '/playbackground',
   LOGIN: '/login',
   INSTITUTION: '/institutions',
+  CONTENT: '/contents',
   USERS: '/users',
   KANBAN: '/kanban',
 };

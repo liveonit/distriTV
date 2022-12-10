@@ -10,6 +10,7 @@ import GuestGuard from '@app/guards/GuestGuard';
 import { RoutesT } from 'src/store/app/app.type';
 
 import RoleRoute from './RoleRoute';
+import Content from '../features/Content';
 
 // modules
 const Error404View = lazy(() => import('../features/Error404View'));
@@ -57,6 +58,11 @@ const routesConfig: RoutesT[] = [
       {
         path: PATH_NAME.INSTITUTION,
         component: Institutions,
+        requireRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
+      },
+      {
+        path: PATH_NAME.CONTENT,
+        component: Content,
         requireRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
       },
       {

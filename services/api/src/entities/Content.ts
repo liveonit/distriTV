@@ -17,10 +17,10 @@ export class Content extends BaseEntity {
   name!: String;
 
   @Column()
-  type!: String;
+  url!: string;
 
   @Column()
-  duration!: number;
+  type!: string;
 
   @ManyToMany(() => Television, (tv) => tv.id)
   @JoinTable({ name: 'content_has_television'})

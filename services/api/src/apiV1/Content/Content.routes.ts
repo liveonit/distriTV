@@ -36,11 +36,6 @@ router.delete('/:id', authSvc.authRequiredMiddleware(['admin']), contentControll
  */
 router.post(
   '/upload',
-  authSvc.authRequiredMiddleware(['admin']),
-  fileUpload({
-    useTempFiles: true,
-    tempFileDir: '/tmp/',
-  }),
   contentController.uploadFiles,
 );
 

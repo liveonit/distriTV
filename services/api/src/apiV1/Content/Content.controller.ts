@@ -8,13 +8,13 @@ import { Request, Response } from 'express';
 import path from 'path';
 import { ContentSvc, contentSvc } from './Content.service';
 import { createContentBody } from './types/CreateContentBody';
-import { updateContentBodySchema } from './types/UpdateContentBody';
+import { updateContentBody } from './types/UpdateContentBody';
 
 class ContentController extends BaseController<Content, ContentSvc> {
   public uploadFiles = handleErrorAsync(async (req: Request, res: Response) => {
-    const { files, user } = req;
+    const { files } = req;
     if (files && Object.keys(files).length !== 0) {
-      const result = await this.service.uploadFiles(user.id, files);
+      const result = await this.service.uploadFiles(files);
       res.json(result);
     } else throw new BadRequest('Files must be provided');
   });
@@ -28,7 +28,7 @@ class ContentController extends BaseController<Content, ContentSvc> {
 export const contentController = new ContentController(
   contentSvc,
   createContentBody,
-  updateContentBodySchema,
+  updateContentBody,
   undefined,
   querySchema,
 );

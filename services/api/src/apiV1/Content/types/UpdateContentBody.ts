@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-export const updateContentBodySchema = z.object({
+export const updateContentBody = z.object({
   name: z.string().optional(),
-  city: z.string().optional(),
-  locality: z.string().optional(),
+  url: z.string().optional(),
+  type: z.string().optional()
 });
 
-export type UpdateContentBodyType = z.infer<typeof updateContentBodySchema>;
+export type UpdateContentBodyType = z.infer<typeof updateContentBody>;

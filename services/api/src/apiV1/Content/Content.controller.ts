@@ -13,6 +13,11 @@ import { updateContentBody } from './types/UpdateContentBody';
 class ContentController extends BaseController<Content, ContentSvc> {
   public uploadFiles = handleErrorAsync(async (req: Request, res: Response) => {
     const { files } = req;
+    logger.debug({
+      name: req.body.name,
+      type: req.body.type,
+      url: req.body.url,
+    })
     if (files && Object.keys(files).length !== 0) {
       const result = await this.service.uploadFiles(files);
       res.json(result);

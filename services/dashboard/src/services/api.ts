@@ -29,7 +29,6 @@ const apiSvc = {
     const session = storage.get<SessionT>('session')?.session
 
     let headers: Readonly<Record<string, any>> = {
-      'Content-Type': 'application/json',
       ...props.headers,
     }
 

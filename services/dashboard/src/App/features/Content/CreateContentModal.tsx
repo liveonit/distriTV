@@ -6,8 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
-import axios from 'axios'
-import { createContent } from 'src/store/content/content.action'
+import { uploadContent } from 'src/store/content/content.action'
 import { useDispatch } from 'react-redux'
 
 type IProps = {
@@ -31,18 +30,21 @@ export default function CreateContentModal({ isOpen, handleCloseEditModal }: IPr
   const handleSave = async () => {
     if (files?.length && files?.length === 1) {
       setUploadingFile(true)
-      const formData = new FormData()
-      formData.append('file', files[0], files[0].name)
-      const result = await axios.post('/api/v1/content/upload', formData)
-      if (result.status === 200) {
-        dispatch(createContent({ name, url: `${window.location.protocol}//${window.location.host}/api/v1/content/download/${files[0].name}`, type: files[0].type }))
-      }
+      
+      // const result = await axios.post('/api/v1/content/upload', formData)
+      dispatch(
+        uploadContent({
+          name,
+          type: files[0].type,
+          files,
+        }),
+      )
     }
     setName('')
     setFiles(null)
     handleCloseEditModal()
   }
-  console.log(uploadingFile);
+  console.log(uploadingFile)
 
   return (
     <>

@@ -28,7 +28,7 @@ export class ContentSvc extends BaseService<Content> {
       if (res.status === 'fulfilled')
         return {
           status: 'uploaded',
-          filePath: `${config.API_PREFIX}/v1/download/${res.value.replace(config.PATH_TO_UPLOAD_FILES, '')}`,
+          filePath: `${config.API_PREFIX}/v1/content/download${res.value.replace(config.PATH_TO_UPLOAD_FILES, '')}`,
         };
       return {
         status: 'failed',

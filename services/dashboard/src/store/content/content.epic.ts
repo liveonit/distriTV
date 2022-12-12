@@ -54,27 +54,38 @@ const uploadContent: Epic = (action$) => {
       return err
     }),
     mergeMap(({ payload }) => {
-      console.log({ payload })
+      const { files } = payload
+      console.log({ filesLength: files?.length })
+      const formData = new FormData()
+      formData.append('file', files[0], files[0].name)
+      formData.append('type', files[0].type)
+      formData.append('name', payload.name)
+
       return apiSvc
         .request({
           method: 'POST',
           path: '/content/upload',
           requireAuthType: session?.type,
-          headers: { 'Content-Type': 'application/octet-stream' },
-          extraConfig: { progressSubscriber: progressSubscriber$ },
-          body: payload.file,
+          extraConfig: {
+            progressSubscriber: progressSubscriber$,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+          },
+          body: formData,
         })
         .pipe(takeUntil(action$.pipe(ofType(ContentActionTypes.CANCEL_VIDEO_UPLOAD))))
         .pipe(
-          map((response) => {
-            console.log(response)
+          mergeMap(({response}) => {
+            console.log('path ========>>>>>>>>>', `${window.location.protocol}//${window.location.host}${(response as any).filePath}`)
             return of(
               {
                 type: ContentActionTypes.UPLOAD_FILE_SUCCESS,
               },
               {
                 type: ContentActionTypes.CREATE_REQUEST,
-                payload,
+                payload: { ...payload, url: `${window.location.protocol}//${window.location.host}${(response as any)[0].filePath}`},
               },
             )
           }),
@@ -97,7 +108,7 @@ const createContent: Epic = (action$) =>
     mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
       return apiSvc.request({ method: 'POST', path: '/content', requireAuthType: session?.type, body: payload }).pipe(
-        map(({ response }) => {
+        mergeMap(({ response }) => {
           return of(
             {
               type: ContentActionTypes.CREATE_SUCCESS,

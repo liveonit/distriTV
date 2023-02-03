@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Role } from './Role';
+
+import { RoleMapping } from './RoleMapping';
 
 @Entity()
 export class User extends BaseEntity {
@@ -12,6 +13,9 @@ export class User extends BaseEntity {
 
   @Column()
   password?: string;
+
+  @Column({ type: 'enum', enum: ['local', 'google']})
+  loginType?: 'local' | 'google';
 
   @Column()
   enabled!: boolean;
@@ -28,9 +32,6 @@ export class User extends BaseEntity {
   @Column()
   email?: string;
 
-  @ManyToMany(() => Role, (role) => role.users, {
-    cascade: true,
-  })
-  @JoinTable()
-  roles?: Role[];
+  @OneToMany(() => RoleMapping, (role) => role.user)
+  roleMappings?: RoleMapping[];
 }

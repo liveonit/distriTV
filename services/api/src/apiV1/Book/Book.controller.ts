@@ -1,7 +1,7 @@
 import { handleErrorAsync } from '@src/middlewares/errorCatcher';
-import { bookSvc } from '@src/services/BookService';
-import { createBookBodySchema, updateBookBodySchema } from '@src/typeDefs/Book';
-import { paginationQuerySchema } from '@src/typeDefs/PaginationQueryType';
+import { bookSvc } from '@src/apiV1/Book/BookService';
+import { createBookBodySchema, updateBookBodySchema } from '.';
+import { querySchema } from '@src/utils/BaseClasses/QueryType';
 import { BadRequest } from '@src/utils/errors';
 import { Request, Response } from 'express';
 
@@ -13,8 +13,8 @@ class BookController {
   });
 
   public getMany = handleErrorAsync(async (req: Request, res: Response) => {
-    const pagination = paginationQuerySchema.parse(req.params);
-    const result = await bookSvc.getMany({ ...pagination });
+    const {skip, take } = querySchema.parse(req.params);
+    const result = await bookSvc.getMany({ skip, take });
     return res.status(200).json(result);
   });
 

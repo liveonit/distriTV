@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS `auditory` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user` VARCHAR(45) NULL,
+  `ipUser` VARCHAR(45) NULL,
+  `action` VARCHAR(100) NULL,
+  `date` DATETIME NULL,
+  PRIMARY KEY (`id`));

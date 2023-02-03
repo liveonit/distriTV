@@ -7,14 +7,13 @@ import ListItem from '@material-ui/core/ListItem';
 import Link from '@material-ui/core/Link';
 // types
 import { canAction } from '@app/helpers';
-// components
-import { INavBarItem } from 'src/store/models/INavBar';
+import { NavBarItem } from 'src/store/app/app.type';
 
 import NavBarExpandItem from './NavBarExpandItem';
 // styles
 import useStyles from './styles';
 
-const NavBarItem: FC<INavBarItem> = ({
+const NavBarItem: FC<NavBarItem> = ({
   depth,
   icon: Icon,
   title,

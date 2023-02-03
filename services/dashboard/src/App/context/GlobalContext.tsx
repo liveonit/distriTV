@@ -1,6 +1,6 @@
 import React, { useContext, createContext, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { IAppActionTypes } from 'src/store/models/IAppState'
+import { AppActionTypes } from 'src/store/app/app.state'
 
 import { GLOBAL_CONFIGS } from '../configs'
 import { useStoredLanguage } from '../hooks/useLanguage'
@@ -37,14 +37,14 @@ const GlobalProvider = ({ children }: IProps) => {
 
   const handleSetModeTheme = useCallback((mode: string) => {
     dispatch({
-      type: IAppActionTypes.SET_THEME,
+      type: AppActionTypes.SET_THEME,
       payload: mode,
     })
   }, [])
 
   const handleChangeLanguage = useCallback((language: string) => {
     dispatch({
-      type: IAppActionTypes.SET_LANGUAGE,
+      type: AppActionTypes.SET_LANGUAGE,
       payload: language,
     })
   }, [])

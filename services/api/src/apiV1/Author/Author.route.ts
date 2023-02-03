@@ -1,5 +1,5 @@
 import { handleErrorAsync } from '@src/middlewares/errorCatcher';
-import { authSvc } from '@src/services/auth';
+import { authSvc } from '@src/apiV1/Auth/AuthService';
 import { Router } from 'express';
 import AuthorController from './Author.controller';
 

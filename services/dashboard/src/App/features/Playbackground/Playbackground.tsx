@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 // action
-import { enqueueSnackbarAction } from 'src/store/action/app.action';
+import { enqueueSnackbarAction } from 'src/store/app/app.action';
 
 
 function Playbackground() {

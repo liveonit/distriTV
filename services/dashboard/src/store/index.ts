@@ -4,7 +4,7 @@ import { monitorEnhancer } from '@utils/general/monitorEnhancer';
 import { loggerMiddleware } from '@utils/general/loggerMiddleware';
 
 import rootReducer from './rootReducer';
-import {rootEpic} from './rootEpic';
+import { rootEpic } from './rootEpic';
 
 declare global {
   interface Window { __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any; }

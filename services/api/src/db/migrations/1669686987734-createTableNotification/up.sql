@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS `notification` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `message` VARCHAR(100) NULL,
+  `title` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`));

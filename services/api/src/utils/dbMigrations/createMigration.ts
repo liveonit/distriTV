@@ -4,18 +4,18 @@ import path from 'path';
 
 const createMigration = (migrationName: string, type: string) => {
   const migrationType = `${type}s`;
-
+  const currentTime = Date.now()
   const directory = path.resolve(
     ((db.config.migrations as string[])?.find((m) => m.includes(`${migrationType}`)) as string)
       .split(`${migrationType}/`)[0]
       .concat(`${migrationType}`),
-    migrationName,
+    `${currentTime}-${migrationName}`,
   );
 
   const migrationFileContent = `import path from "path";
 import { TypeOrmMigrationFromFile } from "@utils/dbMigrations/TypeOrmMigrationFromFile";
 
-export class ${migrationName}${Date.now()} extends TypeOrmMigrationFromFile {
+export class ${migrationName}${currentTime} extends TypeOrmMigrationFromFile {
   constructor() {
     super(path.resolve(__dirname, 'up.sql'), path.resolve(__dirname, 'down.sql'))
   }
@@ -24,7 +24,7 @@ export class ${migrationName}${Date.now()} extends TypeOrmMigrationFromFile {
   if (!fs.existsSync(directory)) {
     fs.mkdirSync(directory, { recursive: true });
   }
-  const migrationFilePath = path.resolve(directory, `${Date.now()}-${migrationName}.ts`);
+  const migrationFilePath = path.resolve(directory, `${currentTime}-${migrationName}.ts`);
   const migrationUpFilePath = path.resolve(directory, `up.sql`);
   const migrationDownFilePath = path.resolve(directory, `down.sql`);
 

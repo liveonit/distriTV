@@ -5,9 +5,8 @@ export const PATH_NAME = {
   DASHBOARD: '/dashboard',
   PLAY_BACKGROUND: '/playbackground',
   LOGIN: '/login',
-  PRODUCT: '/product',
-  PRODUCT_LIST: '/product/list',
-  PRODUCT_ADD: '/product/add',
+  INSTITUTION: '/institutions',
+  CONTENT: '/contents',
   USERS: '/users',
   KANBAN: '/kanban',
 };

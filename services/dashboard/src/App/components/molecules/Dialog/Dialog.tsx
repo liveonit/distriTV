@@ -9,9 +9,9 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
 // actions
-import { setDialog } from 'src/store/action/app.action';
+import { setDialog } from 'src/store/app/app.action';
 // selectors
-import { dialogSelector } from 'src/store/selectors/app.selector';
+import { dialogSelector } from 'src/store/app/app.selector';
 
 export default function DialogError() {
   const dispatch = useDispatch();

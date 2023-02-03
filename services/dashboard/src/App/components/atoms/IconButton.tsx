@@ -1,8 +1,6 @@
 import React, { FC } from 'react';
 import clsx from 'clsx';
-
 import { makeStyles, Theme } from '@material-ui/core/styles';
-
 // material core
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip, { TooltipProps } from '@material-ui/core/Tooltip';

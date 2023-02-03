@@ -11,11 +11,14 @@ import Container from '@material-ui/core/Container'
 // material icon
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 // actions
-import { login } from '@store/action/auth.action'
+import { googleLogin, login } from 'src/store/auth/auth.action'
 import { VisibilityOff, Visibility } from '@material-ui/icons'
 import { InputAdornment, IconButton } from '@mui/material'
-import GoogleLogin, { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login'
+import { GoogleLoginResponse, GoogleLoginResponseOffline, useGoogleLogin } from 'react-google-login'
 import { GOOGLE_CONFIGS } from 'src/App/configs'
+import { useUser } from 'src/App/hooks/useUser'
+
+import GoogleIcon from './GoogleIcon.png'
 
 type State = {
   username: string
@@ -54,6 +57,8 @@ export default function SignIn() {
   })
   const { username, password, showPassword } = values
 
+  const user = useUser()
+
   const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
@@ -73,12 +78,24 @@ export default function SignIn() {
     e.preventDefault()
     dispatch(login(username, password))
   }
-  const onGoogleLoginSuccess: (res: GoogleLoginResponse | GoogleLoginResponseOffline) => void = (res) => {
-    console.log('success:', res);
-};
+  const onGoogleLoginSuccess: (response: GoogleLoginResponse | GoogleLoginResponseOffline) => void = (response) => {
+    console.log(response)
+    const res = response as GoogleLoginResponse
+    dispatch(googleLogin(res.googleId, res.tokenId, res.accessToken))
+  }
   const onGoogleLoginFailure: (error: any) => void = (err) => {
-      console.log('failed:', err);
-  };
+    console.log('failed:', err)
+  }
+
+  const { signIn } = useGoogleLogin({
+    clientId: GOOGLE_CONFIGS.clientId,
+    onFailure: onGoogleLoginFailure,
+    onSuccess: onGoogleLoginSuccess,
+    isSignedIn: !!user?.id,
+    cookiePolicy: 'single_host_origin',
+  })
+
+  const googleIcon = <img width={'25px'} src={GoogleIcon}/>
 
   return (
     <Container component='main' maxWidth='xs'>
@@ -135,15 +152,10 @@ export default function SignIn() {
           <Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
             Login
           </Button>
+          <Button onClick={signIn} startIcon={googleIcon} fullWidth variant='contained' color='primary' className={classes.submit}>
+            Login with google
+          </Button>
         </form>
-       <GoogleLogin
-          clientId={GOOGLE_CONFIGS.clientId}
-          buttonText="Sign in with Google"
-          onSuccess={onGoogleLoginSuccess}
-          onFailure={onGoogleLoginFailure}
-          cookiePolicy={'single_host_origin'}
-          isSignedIn={true}
-      />
       </div>
     </Container>
   )

@@ -93,6 +93,7 @@ services:
     tty: true
     volumes:
       - ./services/dashboard/src:/dashboard/src
+      - ./services/dashboard/public:/dashboard/public
     ports:
       - "3000:3000"
     networks:

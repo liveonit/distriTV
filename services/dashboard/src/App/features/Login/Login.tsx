@@ -63,6 +63,8 @@ export default function SignIn() {
     setValues({ ...values, [prop]: event.target.value })
   }
 
+  typeof handleChange('username')
+
   const handleClickShowPassword = () => {
     setValues({
       ...values,

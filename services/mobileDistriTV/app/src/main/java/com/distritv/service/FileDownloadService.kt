@@ -7,6 +7,7 @@ import retrofit2.http.GET
 
 interface FileDownloadService {
 
-    @GET("2018/07/happy-test-screen.jpg")
+    //@GET("2018/07/happy-test-screen.jpg")
+    @GET("Wallpaper-sirio.png")
     fun downloadFileWithFixedUrl(): Call<ResponseBody>
 }

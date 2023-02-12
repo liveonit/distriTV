@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.distritv.data.FileDbService
 import com.distritv.databinding.ActivityMainBinding
+import com.distritv.imageview.ImageActivity
 import com.distritv.model.FileDownload
 import com.distritv.service.FileDownloadClient
 import okhttp3.ResponseBody

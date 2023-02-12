@@ -1,18 +1,21 @@
-package com.distritv
+package com.distritv.imageview
 
 import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.distritv.MainActivity
 import com.distritv.data.FileDbService
 import com.distritv.databinding.ActivityImageBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 
 
 class ImageActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityImageBinding
+    private val viewModel by viewModel<ImageViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +32,19 @@ class ImageActivity : AppCompatActivity() {
 
     }
 
+    fun loadImage() {
+        viewModel.image.observe(this) {
+            if (it != null) {
+                binding.imageContainer.setImageBitmap(it)
+                Toast.makeText(this, "pasoooo", Toast.LENGTH_SHORT).show()
+
+            } else {
+                Toast.makeText(this, "No hay contenido disponible.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    /*
     fun loadImage() {
         val fileDbService = FileDbService(this@ImageActivity)
 
@@ -48,5 +64,5 @@ class ImageActivity : AppCompatActivity() {
             Toast.makeText(this, "No hay contenido disponible.", Toast.LENGTH_SHORT).show()
         }
 
-    }
+    }*/
 }

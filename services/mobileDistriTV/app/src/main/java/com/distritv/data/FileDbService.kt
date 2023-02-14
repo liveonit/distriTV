@@ -6,14 +6,10 @@ import android.provider.BaseColumns
 import com.distritv.model.FileDownload
 
 
-class FileDbService(context: Context) {
-
-    val dbWritable = FileDbHelper(context).writableDatabase
-    val dbReadable = FileDbHelper(context).readableDatabase
+class FileDbService(private val fileDbHelper: FileDbHelper) {
 
 
     fun insert(fileDownload: FileDownload): Long {
-
 
         // Create a new map of values, where column names are the keys
         val values = ContentValues().apply {
@@ -24,7 +20,7 @@ class FileDbService(context: Context) {
         }
 
         // Insert the new row, returning the primary key value of the new row
-        val newRowId = dbWritable?.insert(FileContract.FileEntry.TABLE_NAME, null, values)
+        val newRowId = fileDbHelper.writableDatabase.insert(FileContract.FileEntry.TABLE_NAME, null, values)
 
         return newRowId ?: -1
     }
@@ -54,7 +50,7 @@ class FileDbService(context: Context) {
             FileContract.FileEntry.COLUMN_FILE_CONTENT_TYPE
         )
 
-        val cursor = dbReadable.query(
+        val cursor = fileDbHelper.readableDatabase.query(
             FileContract.FileEntry.TABLE_NAME,   // The table to query
             projection,             // The array of columns to return (pass null to get all)
             null,              // The columns for the WHERE clause
@@ -101,7 +97,8 @@ class FileDbService(context: Context) {
         // How you want the results sorted in the resulting Cursor
         val sortOrder = "${FileContract.FileEntry.COLUMN_FILE_NAME} DESC"
 
-        val cursor = dbReadable.query(
+        //val cursor = dbReadable.query(
+        val cursor = fileDbHelper.readableDatabase.query(
             FileContract.FileEntry.TABLE_NAME,   // The table to query
             projection,             // The array of columns to return (pass null to get all)
             selection,              // The columns for the WHERE clause
@@ -134,7 +131,7 @@ class FileDbService(context: Context) {
         // Which row to update, based on the title
         val selection = "${BaseColumns._ID} = ?"
         val selectionArgs = arrayOf(id.toString())
-        val count = dbWritable.update(
+        val count = fileDbHelper.writableDatabase.update(
             FileContract.FileEntry.TABLE_NAME,
             values,
             selection,

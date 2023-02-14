@@ -3,6 +3,7 @@ package com.distritv
 import android.app.Application
 import com.distritv.di.servicesModule
 import com.distritv.di.viewModelsModule
+import com.distritv.di.networkModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -16,7 +17,8 @@ class DistriTVApp: Application() {
             modules(
                 listOf(
                     viewModelsModule,
-                    servicesModule
+                    servicesModule,
+                    networkModule
                 )
             )
         }

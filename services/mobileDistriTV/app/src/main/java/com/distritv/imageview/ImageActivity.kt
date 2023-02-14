@@ -1,15 +1,12 @@
 package com.distritv.imageview
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.distritv.MainActivity
-import com.distritv.data.FileDbService
+import com.distritv.home.HomeActivity
 import com.distritv.databinding.ActivityImageBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
 
 
 class ImageActivity : AppCompatActivity() {
@@ -22,47 +19,25 @@ class ImageActivity : AppCompatActivity() {
         binding = ActivityImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        loadImage()
+        loadImageObserver()
 
         binding.btnBack.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
             finish()
         }
 
+        viewModel.fetchImage()
     }
 
-    fun loadImage() {
+    private fun loadImageObserver() {
         viewModel.image.observe(this) {
             if (it != null) {
-                binding.imageContainer.setImageBitmap(it)
-                Toast.makeText(this, "pasoooo", Toast.LENGTH_SHORT).show()
-
+                binding.imageContainer.setImageBitmap(it.first)
+                Toast.makeText(this, "${it.second}", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "No hay contenido disponible.", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
-    /*
-    fun loadImage() {
-        val fileDbService = FileDbService(this@ImageActivity)
-
-        try {
-            val file = fileDbService.getLastFileDownload()
-            if (!file.localPath.isNullOrEmpty()) {
-                val imgFile = File(file.localPath)
-                if (imgFile.exists()) {
-                    val imgBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
-                    binding.imageContainer.setImageBitmap(imgBitmap)
-                    Toast.makeText(this, "${file.name}", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                RuntimeException()
-            }
-        } catch (e: Exception) {
-            Toast.makeText(this, "No hay contenido disponible.", Toast.LENGTH_SHORT).show()
-        }
-
-    }*/
 }

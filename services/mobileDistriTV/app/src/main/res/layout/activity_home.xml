@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.HomeActivity">
+    tools:context=".ui.home.HomeActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,6 +29,13 @@
         android:layout_height="wrap_content"
         android:text="@string/main_btn_play"
         android:layout_marginVertical="20dp"/>
+
+        <Button
+            android:id="@+id/btnPlayVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Video"
+            android:layout_marginVertical="20dp"/>
 
     </LinearLayout>
 

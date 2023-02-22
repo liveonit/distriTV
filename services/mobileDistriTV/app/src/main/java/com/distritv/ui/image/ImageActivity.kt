@@ -1,11 +1,12 @@
-package com.distritv.imageview
+package com.distritv.ui.image
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.distritv.home.HomeActivity
+import com.distritv.ui.home.HomeActivity
 import com.distritv.databinding.ActivityImageBinding
+import com.distritv.ui.FullscreenManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -14,12 +15,20 @@ class ImageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityImageBinding
     private val viewModel by viewModel<ImageViewModel>()
 
+    private val fullscreenManager by lazy {
+        FullscreenManager(window) {
+            (binding.imageContainer)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         loadImageObserver()
+
+        fullscreenManager.enterFullscreen()
 
         binding.btnBack.setOnClickListener {
             val intent = Intent(this, HomeActivity::class.java)

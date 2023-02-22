@@ -53,7 +53,7 @@ function NavBar({ isDrawer }: IProps) {
           title={curr.title}
           href={curr.href}
           label={curr.label}
-          isExternalx={curr.isExternalLink}
+          isExternalLink={curr.isExternalLink}
         >
           {renderNavItems({
             depth: depth + 1,

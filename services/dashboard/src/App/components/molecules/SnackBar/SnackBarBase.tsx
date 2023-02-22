@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 // selectors
-import { notificationsSelector } from 'src/store/selectors/app.selector';
+import { notificationsSelector } from 'src/store/app/app.selector';
 // actions
-import { removeSnackbar } from 'src/store/action/app.action';
+import { removeSnackbar } from 'src/store/app/app.action';
 
 let displayed: any[] = [];
 

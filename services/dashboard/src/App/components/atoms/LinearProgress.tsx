@@ -4,7 +4,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Backdrop from '@material-ui/core/Backdrop';
 import LinearProgress from '@material-ui/core/LinearProgress';
 // selectors
-import { isLoadingSelector } from 'src/store/selectors/app.selector';
+import { isLoadingSelector } from 'src/store/app/app.selector';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

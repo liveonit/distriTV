@@ -1,0 +1,263 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<!--
+3     Copyright (C) 2014 The Android Open Source Project
+4
+5     Licensed under the Apache License, Version 2.0 (the "License");
+6     you may not use this file except in compliance with the License.
+7     You may obtain a copy of the License at
+8
+9          http://www.apache.org/licenses/LICENSE-2.0
+10
+11     Unless required by applicable law or agreed to in writing, software
+12     distributed under the License is distributed on an "AS IS" BASIS,
+13     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+14     See the License for the specific language governing permissions and
+15     limitations under the License.
+16-->
+17<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+18    package="com.example.android.tvleanback"
+19    android:versionCode="2"
+20    android:versionName="1.3" >
+21
+22    <uses-sdk
+23        android:minSdkVersion="21"
+23-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml
+24        android:targetSdkVersion="28" />
+24-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml
+25
+26    <permission
+27        android:name="com.example.android.tvleanback.ACCESS_VIDEO_DATA"
+27-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:20:9-58
+28        android:protectionLevel="signature" />
+28-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:21:9-44
+29
+30    <uses-permission android:name="com.example.android.tvleanback.ACCESS_VIDEO_DATA" />
+30-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:23:22-71
+31    <uses-permission android:name="android.permission.INTERNET" />
+31-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:24:5-67
+31-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:24:22-64
+32    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+32-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:25:5-81
+32-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:25:22-78
+33    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+33-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:26:5-71
+33-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:26:22-68
+34
+35    <uses-feature
+35-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:28:5-30:36
+36        android:name="android.hardware.microphone"
+36-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:29:9-51
+37        android:required="false" />
+37-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:30:9-33
+38    <uses-feature
+38-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:31:5-33:36
+39        android:name="android.hardware.touchscreen"
+39-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:32:9-52
+40        android:required="false" />
+40-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:33:9-33
+41    <uses-feature
+41-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:34:5-36:35
+42        android:name="android.software.leanback"
+42-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:35:9-49
+43        android:required="true" />
+43-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:36:9-32
+44
+45    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+45-->[com.google.android.exoplayer:exoplayer-core:2.11.8] /Users/ignaciobarreto/.gradle/caches/transforms-3/805ed4b37c4d94d6a78fbb9b4435949b/transformed/jetified-exoplayer-core-2.11.8/AndroidManifest.xml:24:5-79
+45-->[com.google.android.exoplayer:exoplayer-core:2.11.8] /Users/ignaciobarreto/.gradle/caches/transforms-3/805ed4b37c4d94d6a78fbb9b4435949b/transformed/jetified-exoplayer-core-2.11.8/AndroidManifest.xml:24:22-76
+46
+47    <application
+47-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:38:5-139:19
+48        android:allowBackup="false"
+48-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:39:9-36
+49        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+49-->[androidx.core:core:1.0.1] /Users/ignaciobarreto/.gradle/caches/transforms-3/9d33c0d36e73a467246b76db7783c94c/transformed/core-1.0.1/AndroidManifest.xml:22:18-86
+50        android:banner="@drawable/videos_by_google_banner"
+50-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:40:9-59
+51        android:debuggable="true"
+52        android:icon="@drawable/app_icon_quantum"
+52-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:41:9-50
+53        android:label="@string/app_name"
+53-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:42:9-41
+54        android:logo="@drawable/videos_by_google_banner"
+54-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:43:9-57
+55        android:testOnly="true"
+56        android:theme="@style/Theme.Leanback" >
+56-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:44:9-46
+57        <activity
+57-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:46:9-58:20
+58            android:name="com.example.android.tvleanback.ui.MainActivity"
+58-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:47:13-44
+59            android:icon="@drawable/videos_by_google_banner"
+59-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:48:13-61
+60            android:label="@string/app_name"
+60-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:49:13-45
+61            android:logo="@drawable/videos_by_google_banner"
+61-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:50:13-61
+62            android:screenOrientation="landscape"
+62-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:51:13-50
+63            android:theme="@style/Theme.Leanback.Browse" >
+63-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:52:13-57
+64            <intent-filter>
+64-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:53:13-57:29
+65                <action android:name="android.intent.action.MAIN" />
+65-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:54:17-69
+65-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:54:25-66
+66
+67                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+67-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:56:17-86
+67-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:56:27-83
+68            </intent-filter>
+69        </activity>
+70        <activity android:name="com.example.android.tvleanback.mobile.MobileWelcomeActivity" >
+70-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:60:9-66:20
+70-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:60:19-63
+71            <intent-filter>
+71-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:61:13-65:29
+72                <action android:name="android.intent.action.MAIN" />
+72-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:54:17-69
+72-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:54:25-66
+73
+74                <category android:name="android.intent.category.LAUNCHER" />
+74-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:64:17-77
+74-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:64:27-74
+75            </intent-filter>
+76        </activity>
+77
+78        <meta-data
+78-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:68:9-69:56
+79            android:name="android.app.default_searchable"
+79-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:68:20-65
+80            android:value=".ui.VideoDetailsActivity" />
+80-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:69:13-53
+81
+82        <activity
+82-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:70:9-85:20
+83            android:name="com.example.android.tvleanback.ui.VideoDetailsActivity"
+83-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:71:13-52
+84            android:exported="true"
+84-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:72:13-36
+85            android:theme="@style/Theme.Leanback.Details" >
+85-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:73:13-58
+86
+87            <!-- Receives the search request. -->
+88            <intent-filter>
+88-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:76:13-79:29
+89                <action android:name="android.intent.action.SEARCH" />
+89-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:77:17-71
+89-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:77:25-68
+90                <!-- No category needed, because the Intent will specify this class component -->
+91            </intent-filter>
+92
+93            <!-- Points to searchable meta data. -->
+94            <meta-data
+94-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:82:13-84:54
+95                android:name="android.app.searchable"
+95-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:83:17-54
+96                android:resource="@xml/searchable" />
+96-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:84:17-51
+97        </activity>
+98        <activity
+98-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:86:9-90:49
+99            android:name="com.example.android.tvleanback.ui.PlaybackActivity"
+99-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:87:13-48
+100            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection"
+100-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:88:13-107
+101            android:launchMode="singleTask"
+101-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:89:13-44
+102            android:resizeableActivity="true" />
+102-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:90:13-46
+103        <activity
+103-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:91:9-95:66
+104            android:name="com.example.android.tvleanback.ui.VerticalGridActivity"
+104-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:92:13-52
+105            android:exported="true"
+105-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:93:13-36
+106            android:parentActivityName="com.example.android.tvleanback.ui.MainActivity"
+106-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:94:13-58
+107            android:theme="@style/Theme.Leanback.VerticalGrid" />
+107-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:95:13-63
+108        <activity android:name="com.example.android.tvleanback.ui.SearchActivity" />
+108-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:96:9-55
+108-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:96:19-52
+109        <activity
+109-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:97:9-99:72
+110            android:name="com.example.android.tvleanback.ui.GuidedStepActivity"
+110-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:98:13-50
+111            android:theme="@style/Theme.Example.Leanback.GuidedStep" />
+111-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:99:13-69
+112
+113        <!-- Provides search suggestions for keywords against video metadata. -->
+114        <provider
+115            android:name="com.example.android.tvleanback.data.VideoProvider"
+115-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:103:13-47
+116            android:authorities="com.example.android.tvleanback"
+116-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:104:13-49
+117            android:exported="true"
+117-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:106:13-36
+118            android:permission="com.example.android.tvleanback.ACCESS_VIDEO_DATA" >
+118-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:105:13-68
+119            <path-permission
+119-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:107:13-109:77
+120                android:pathPrefix="/search"
+120-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:108:17-45
+121                android:readPermission="android.permission.GLOBAL_SEARCH" />
+121-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:109:17-74
+122        </provider>
+123
+124        <receiver
+124-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:112:9-119:20
+125            android:name="com.example.android.tvleanback.recommendation.RecommendationReceiver"
+125-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:113:13-66
+126            android:enabled="true"
+126-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:114:13-35
+127            android:exported="false" >
+127-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:115:13-37
+128            <intent-filter>
+128-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:116:13-118:29
+129                <action android:name="android.intent.action.BOOT_COMPLETED" />
+129-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:117:17-79
+129-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:117:25-76
+130            </intent-filter>
+131        </receiver>
+132
+133        <service
+133-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:121:9-123:40
+134            android:name="com.example.android.tvleanback.data.FetchVideoService"
+134-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:122:13-51
+135            android:exported="false" />
+135-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:123:13-37
+136        <service
+136-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:124:9-126:38
+137            android:name="com.example.android.tvleanback.recommendation.UpdateRecommendationsService"
+137-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:125:13-72
+138            android:enabled="true" />
+138-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:126:13-35
+139
+140        <activity
+140-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:128:9-131:64
+141            android:name="com.example.android.tvleanback.ui.OnboardingActivity"
+141-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:128:19-56
+142            android:enabled="true"
+142-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:129:13-35
+143            android:exported="true"
+143-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:130:13-36
+144            android:theme="@style/Theme.Leanback.Onboarding" />
+144-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:131:13-61
+145        <activity
+145-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:132:9-135:15
+146            android:name="com.example.android.tvleanback.ui.SettingsActivity"
+146-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:132:19-54
+147            android:exported="true"
+147-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:133:13-36
+148            android:theme="@style/LeanbackPreferences" />
+148-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:134:13-55
+149        <activity
+149-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:136:9-138:72
+150            android:name="com.example.android.tvleanback.ui.AuthenticationActivity"
+150-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:137:13-54
+151            android:theme="@style/Theme.Example.Leanback.GuidedStep" />
+151-->/Users/ignaciobarreto/Documents/projects/distriTV/mobileApp/app/src/main/AndroidManifest.xml:138:13-69
+152    </application>
+153
+154</manifest>

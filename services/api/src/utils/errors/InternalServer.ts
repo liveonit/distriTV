@@ -1,5 +1,5 @@
 import { ErrorCode, ErrorName } from "./types";
-import { BaseError } from "./BaseError";
+import { BaseError } from "../BaseClasses/BaseError";
 
 export class InternalServer extends BaseError {
   constructor(message: string) {

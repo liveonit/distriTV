@@ -1,15 +1,26 @@
 import { combineReducers } from 'redux';
 
-import authors from './factory/entities/authors'
-import books from './factory/entities/books'
-import auth from './reducer/auth.reducer';
-import app from './reducer/app.reducer';
-
+import auth from './auth/auth.reducer';
+import app from './app/app.reducer';
+import user from './user/user.reducer'
+import institution from './institution/institutions.reducer'
+import roleMapping from './roleMapping/roleMapping.reducer'
+import role from './role/role.reducer'
+import permission from './permission/permission.reducer'
+import content from './content/content.reducer'
+import label from './label/label.reducer'
+import television from './television/television.reducer'
 export const rootReducer = combineReducers({
-  authors: authors.reducer,
-  books: books.reducer,
   auth,
-  app
+  app,
+  user,
+  institution,
+  roleMapping,
+  role,
+  permission,
+  content,
+  label,
+  television
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

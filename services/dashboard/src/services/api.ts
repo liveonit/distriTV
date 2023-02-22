@@ -2,53 +2,58 @@ import { Observable } from 'rxjs'
 import { ajax, AjaxResponse } from 'rxjs/ajax'
 import { timeout as timeoutOp, retry } from 'rxjs/operators'
 import { GLOBAL_CONFIGS } from 'src/App/configs'
-import { SessionT } from 'src/store/models/IUser'
+import { SessionT } from 'src/store/auth/auth.type'
 import { storage } from 'src/utils/general/Storage'
 
 interface RequestProps<Body> {
   path: string
   method?: 'POST' | 'GET' | 'PUT' | 'DELETE'
-  requireAuth?: boolean
+  requireAuthType?: 'local' | 'google'
   body?: Body
-  headers?: Readonly<Record<string, any>>
+  data?: FormData
+  headers?: Readonly<Record<string, any>>,
   retries?: number
   timeout?: number
+  extraConfig?: any
 }
 
 const apiSvc = {
-  request: <Body, Response>(
-    props: RequestProps<Body>,
-  ): Observable<AjaxResponse<Response>> => {
-    const { body, method, path, requireAuth, retries, timeout } = {
+  request: <Body, Response>(props: RequestProps<Body>): Observable<AjaxResponse<Response>> => {
+    const { body, method, path, requireAuthType, retries, timeout } = {
       method: 'GET',
-      requireAuth: false,
       retries: 0,
       timeout: 2000,
-      ...props
+      ...props,
     }
 
-    let headers = {
+    const session = storage.get<SessionT>('session')?.session
+
+    let headers: Readonly<Record<string, any>> = {
       ...props.headers,
     }
 
-    if (requireAuth)
+    if (requireAuthType === 'local')
       headers = {
         ...headers,
-        // FIXME: get and set token
-        Authorization: `Bearer ${storage.get<SessionT>('session')?.accessToken}`,
+        authorization: `Bearer ${session?.accessToken}`,
+        'auth-type': 'local',
       }
-      
+    if (requireAuthType === 'google')
+      headers = {
+        ...headers,
+        'auth-type': 'google',
+        authorization: `Bearer ${session?.tokenId}`,
+      }
+
     return ajax<Response>({
+      ...props.extraConfig,
       url: `${GLOBAL_CONFIGS.API_URL || ''}${path}`,
       method: method,
-      headers: {
-        'Content-Type': 'application/json',
-        ...headers,
-      },
+      headers,
       body,
     }).pipe(
-      timeoutOp(timeout), // after 2s abort
-      retry(retries), // retry 3x.
+      timeoutOp(timeout),
+      retry(retries),
     )
   },
 }

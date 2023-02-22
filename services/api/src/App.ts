@@ -9,6 +9,7 @@ import router from './apiV1';
 
 import { config } from './config';
 import { NotFound } from '@utils/errors';
+import fileUpload from 'express-fileupload';
 
 export class App {
   public readonly app = express();
@@ -22,8 +23,12 @@ export class App {
   }
 
   private setMiddlewares = (): void => {
+    this.app.use(fileUpload({
+      useTempFiles: true,
+      tempFileDir: '/tmp/',
+    }),)
     this.app.use(express.json());
-    this.app.use(urlencoded({ extended: false }));
+    this.app.use(urlencoded({ extended: true }));
     this.app.use(helmet());
     this.app.use(compression());
     this.app.use(loggerMiddleware);

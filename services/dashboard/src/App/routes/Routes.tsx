@@ -2,28 +2,27 @@ import React, { Fragment, lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 // configs
 import { PATH_NAME, USER_ROLE } from '@app/configs';
-// types
-import { IRoutes } from '@store/models/IRoutes';
 // layouts
 import MainLayout from '@app/layouts/MainLayout';
 // containers
 import AuthGuard from '@app/guards/AuthGuard';
 import GuestGuard from '@app/guards/GuestGuard';
+import { RoutesT } from 'src/store/app/app.type';
 
 import RoleRoute from './RoleRoute';
+import Content from '../features/Content';
 
 // modules
 const Error404View = lazy(() => import('../features/Error404View'));
 const DenyView = lazy(() => import('../features/DenyView'));
-const ProductAdd = lazy(() => import('../features/Product/ProductAdd'));
-const ProductList = lazy(() => import('../features/Product/ProductList'));
+const Institutions = lazy(() => import('../features/Institution/index'));
 const Users = lazy(() => import('../features/Users'));
 const Dashboard = lazy(() => import('../features/Dashboard'));
 const Playbackground = lazy(() => import('../features/Playbackground'));
 const Login = lazy(() => import('../features/Login'));
 const Kanban = lazy(() => import('../features/Kanban'));
 
-const routesConfig: IRoutes[] = [
+const routesConfig: RoutesT[] = [
   {
     path: '/',
     component: () => <Navigate to={PATH_NAME.DASHBOARD} replace />,
@@ -57,14 +56,14 @@ const routesConfig: IRoutes[] = [
         requireRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
       },
       {
-        path: PATH_NAME.PRODUCT_LIST,
-        component: ProductList,
+        path: PATH_NAME.INSTITUTION,
+        component: Institutions,
         requireRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
       },
       {
-        path: PATH_NAME.PRODUCT_ADD,
-        component: ProductAdd,
-        requireRoles: [USER_ROLE.ADMIN],
+        path: PATH_NAME.CONTENT,
+        component: Content,
+        requireRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
       },
       {
         path: PATH_NAME.KANBAN,
@@ -96,13 +95,13 @@ const routesConfig: IRoutes[] = [
   },
 ];
 
-const renderRoutes = (routes: IRoutes[]) => {
+const renderRoutes = (routes: RoutesT[]) => {
   return (
     <>
       {routes ? (
         <Suspense fallback={<div />}>
           <Routes>
-            {routes.map((route: IRoutes, idx: number) => {
+            {routes.map((route: RoutesT, idx: number) => {
               const Guard = route.guard || Fragment;
               const Layout = route.layout || Fragment;
               const Component = route.component;

@@ -1,4 +1,4 @@
-package com.distritv.home
+package com.distritv.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

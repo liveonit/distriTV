@@ -1,19 +1,16 @@
-package com.distritv.home
+package com.distritv.ui.home
 
-
-
-import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.distritv.databinding.ActivityHomeBinding
-import com.distritv.imageview.ImageActivity
+import com.distritv.ui.image.ImageActivity
+import com.distritv.ui.video.VideoPlaybackActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -48,6 +45,11 @@ class HomeActivity : AppCompatActivity() {
 
         binding.btnPlay.setOnClickListener {
             val intent = Intent(this, ImageActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnPlayVideo.setOnClickListener {
+            val intent = Intent(this, VideoPlaybackActivity::class.java)
             startActivity(intent)
         }
 

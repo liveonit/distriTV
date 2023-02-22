@@ -2,12 +2,13 @@ package com.distritv.di
 
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
-import com.distritv.imageview.ImageViewModel
-import com.distritv.home.HomeViewModel
+import com.distritv.ui.image.ImageViewModel
+import com.distritv.ui.home.HomeViewModel
 import com.distritv.data.FileDbService
 import com.distritv.data.FileDbHelper
 import com.distritv.service.FileDownloadService
 import com.distritv.data.ApiService
+import com.distritv.ui.video.VideoPlaybackViewModel
 import okhttp3.OkHttpClient
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
@@ -45,6 +46,7 @@ fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiServi
 val viewModelsModule = module {
     viewModelOf(::ImageViewModel)
     viewModelOf(::HomeViewModel)
+    viewModelOf(::VideoPlaybackViewModel)
 }
 
 val servicesModule = module {

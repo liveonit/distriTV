@@ -1,4 +1,4 @@
-package com.distritv.imageview
+package com.distritv.ui.image
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

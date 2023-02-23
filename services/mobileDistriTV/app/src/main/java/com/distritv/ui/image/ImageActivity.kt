@@ -14,6 +14,7 @@ class ImageActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityImageBinding
     private val viewModel by viewModel<ImageViewModel>()
+    lateinit var fileLocalPath: String
 
     private val fullscreenManager by lazy {
         FullscreenManager(window) {
@@ -26,6 +27,8 @@ class ImageActivity : AppCompatActivity() {
         binding = ActivityImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        fileLocalPath = intent.extras?.getString("localPath").toString()
+
         loadImageObserver()
 
         fullscreenManager.enterFullscreen()
@@ -36,14 +39,14 @@ class ImageActivity : AppCompatActivity() {
             finish()
         }
 
-        viewModel.fetchImage()
+        viewModel.fetchImage(fileLocalPath)
     }
 
     private fun loadImageObserver() {
         viewModel.image.observe(this) {
             if (it != null) {
-                binding.imageContainer.setImageBitmap(it.first)
-                Toast.makeText(this, "${it.second}", Toast.LENGTH_SHORT).show()
+                binding.imageContainer.setImageBitmap(it)
+                //Toast.makeText(this, "${it.second}", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "No hay contenido disponible.", Toast.LENGTH_SHORT).show()
             }

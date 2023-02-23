@@ -3,9 +3,11 @@ package com.distritv.di
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 import com.distritv.ui.image.ImageViewModel
-import com.distritv.ui.home.HomeViewModel
+import com.distritv.ui.home.ContentListViewModel
 import com.distritv.data.FileDbService
 import com.distritv.data.FileDbHelper
+import com.distritv.data.source.ContentRepository
+import com.distritv.data.source.IContentRepository
 import com.distritv.service.FileDownloadService
 import com.distritv.data.ApiService
 import com.distritv.ui.video.VideoPlaybackViewModel
@@ -14,6 +16,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import org.koin.core.module.dsl.bind
 
 val networkModule = module {
     singleOf(::OkHttpClient) {
@@ -34,8 +37,7 @@ fun provideOkHttpClient(): OkHttpClient {
 }
 
 fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder().baseUrl("https://freight.cargo.site/w/1366/q/94/i/0126efc3ae5caed95aee17fecb4ad8281e8251613e010208967096283b7e22ba/")
-        //.baseUrl("https://knowpathology.com.au/wp-content/uploads/")
+    return Retrofit.Builder().baseUrl("http://10.0.2.2/api/v1/")
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
@@ -43,9 +45,14 @@ fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
 
 fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
 
+val repositoriesModule = module {
+    singleOf(::ContentRepository) { bind<IContentRepository>() }
+}
+
+
 val viewModelsModule = module {
     viewModelOf(::ImageViewModel)
-    viewModelOf(::HomeViewModel)
+    viewModelOf(::ContentListViewModel)
     viewModelOf(::VideoPlaybackViewModel)
 }
 

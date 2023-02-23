@@ -22,9 +22,10 @@ class VideoPlaybackFragment : Fragment() {
     private var _binding: FragmentVideoPlaybackBinding? = null
     private val binding get() = _binding!!
 
-    private var listener: OnFragmentInteractionListener? = null
 
     private val viewModel by viewModel<VideoPlaybackViewModel>()
+
+    private var localPathParam = ""
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -43,6 +44,10 @@ class VideoPlaybackFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentVideoPlaybackBinding.inflate(layoutInflater, container, false)
+
+        arguments?.let {
+            localPathParam = it.getString("localPathParam", "")
+        }
         return binding.root
     }
 
@@ -50,15 +55,13 @@ class VideoPlaybackFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.videoPath.observe(viewLifecycleOwner) {
+/*
+        viewModel.video.observe(viewLifecycleOwner) {
             path = it
-        }
+        }*/
 
         viewModel.fetchVideoPath()
 
-        //setupHelpButton()
-        //setupStartButton()
     }
 
     override fun onResume() {
@@ -71,7 +74,7 @@ class VideoPlaybackFragment : Fragment() {
     private fun startVideo() {
         //val path = "/mnt/sdcard/Movies/ejemplo.mp4"
         // path = "/mnt/sdcard/Movies/ejemplo.mp4"
-        binding.videoContainer.setVideoPath(path)
+        binding.videoContainer.setVideoPath(localPathParam)
 
         // val videoUri = "android.resource://" + packageName + "/" + R.raw.ejemplo
         //val uri = Uri.parse(videoUri)
@@ -86,43 +89,25 @@ class VideoPlaybackFragment : Fragment() {
         binding.videoContainer.start()
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
 
 
-        } else {
-            throw ClassCastException("Must implement VideoPlaybackFragment.OnFragmentInteractionListener")
-        }
-    }
-
-    /*
-    private fun setupStartButton() {
-        binding.startButton.setOnClickListener {
-            listener?.onStartButtonPressed()
-        }
-    }
-
-    private fun setupHelpButton() {
-        binding.helpButton.setOnClickListener {
-            listener?.onHelpButtonPressed(1)
-        }
-    }
-    */
 
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
+
     }
 
-    interface OnFragmentInteractionListener {
-        fun onHelpButtonPressed(exampleParam: Int)
-        fun onStartButtonPressed()
-    }
 
     companion object {
         const val TAG = "VideoPlaybackFragment"
+
+
+        @JvmStatic
+        fun newInstance(localPath: String) = VideoPlaybackFragment().apply {
+            arguments = Bundle().apply {
+                putString("localPathParam", localPath)
+            }
+        }
     }
 }

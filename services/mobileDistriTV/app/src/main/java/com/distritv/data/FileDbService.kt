@@ -16,7 +16,7 @@ class FileDbService(private val fileDbHelper: FileDbHelper) {
             put(FileContract.FileEntry.COLUMN_FILE_NAME, fileDownload.name)
             put(FileContract.FileEntry.COLUMN_FILE_LOCAL_PATH, fileDownload.localPath)
             put(FileContract.FileEntry.COLUMN_FILE_URL, fileDownload.url)
-            put(FileContract.FileEntry.COLUMN_FILE_CONTENT_TYPE, fileDownload.contentType)
+            put(FileContract.FileEntry.COLUMN_FILE_CONTENT_TYPE, fileDownload.type)
         }
 
         // Insert the new row, returning the primary key value of the new row
@@ -116,6 +116,57 @@ class FileDbService(private val fileDbHelper: FileDbHelper) {
             }
         }
         cursor.close()
+
+
+    }
+
+    fun findFileById(id: Long): FileDownload {
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        val projection = arrayOf(
+            BaseColumns._ID,
+            FileContract.FileEntry.COLUMN_FILE_NAME,
+            FileContract.FileEntry.COLUMN_FILE_LOCAL_PATH,
+            FileContract.FileEntry.COLUMN_FILE_URL,
+            FileContract.FileEntry.COLUMN_FILE_CONTENT_TYPE
+        )
+
+        // Filter results WHERE "_id" = 'id'
+        val selection = "${BaseColumns._ID} = ?"
+        val selectionArgs = arrayOf(id.toString())
+
+        // How you want the results sorted in the resulting Cursor
+        val sortOrder = "${FileContract.FileEntry.COLUMN_FILE_NAME} DESC"
+
+        //val cursor = dbReadable.query(
+        val cursor = fileDbHelper.readableDatabase.query(
+            FileContract.FileEntry.TABLE_NAME,   // The table to query
+            projection,             // The array of columns to return (pass null to get all)
+            selection,              // The columns for the WHERE clause
+            selectionArgs,          // The values for the WHERE clause
+            null,                   // don't group the rows
+            null,                   // don't filter by row groups
+            sortOrder               // The sort order
+        )
+
+        val items = mutableListOf<FileDownload>()
+        with(cursor) {
+            while (moveToNext()) {
+                items.add(
+                    FileDownload(
+                        getLong(getColumnIndexOrThrow(BaseColumns._ID)),
+                        getString(getColumnIndexOrThrow(FileContract.FileEntry.COLUMN_FILE_NAME)),
+                        getString(getColumnIndexOrThrow(FileContract.FileEntry.COLUMN_FILE_LOCAL_PATH)),
+                        getString(getColumnIndexOrThrow(FileContract.FileEntry.COLUMN_FILE_URL)),
+                        getString(getColumnIndexOrThrow(FileContract.FileEntry.COLUMN_FILE_CONTENT_TYPE))
+                    )
+                )
+            }
+        }
+        cursor.close()
+
+        return items.first()
     }
 
     fun update(id: Long, fileDownload: FileDownload) {
@@ -125,7 +176,7 @@ class FileDbService(private val fileDbHelper: FileDbHelper) {
             put(FileContract.FileEntry.COLUMN_FILE_NAME, fileDownload.name)
             put(FileContract.FileEntry.COLUMN_FILE_LOCAL_PATH, fileDownload.localPath)
             put(FileContract.FileEntry.COLUMN_FILE_URL, fileDownload.url)
-            put(FileContract.FileEntry.COLUMN_FILE_CONTENT_TYPE, fileDownload.contentType)
+            put(FileContract.FileEntry.COLUMN_FILE_CONTENT_TYPE, fileDownload.type)
         }
 
         // Which row to update, based on the title

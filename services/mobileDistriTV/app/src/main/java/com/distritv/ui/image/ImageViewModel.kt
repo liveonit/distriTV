@@ -12,18 +12,22 @@ class ImageViewModel(
     private val fileDbService: FileDbService
 ) : ViewModel() {
 
-    private val _image = MutableLiveData<Pair<Bitmap, String>>()
-    val image: LiveData<Pair<Bitmap, String>>
+    private val _image = MutableLiveData<Bitmap>()
+    val image: LiveData<Bitmap>
         get() = _image
 
-    fun fetchImage() {
+    fun fetchImage(localPath: String) {
         try {
-            val file = fileDbService.getLastFileDownload()
-            if (!file.localPath.isNullOrEmpty()) {
-                val imgFile = File(file.localPath)
+           // val file = fileDbService.getLastFileDownload()
+
+            //if (!file.localPath.isNullOrEmpty()) {
+                //val imgFile = File(file.localPath)
+                if (!localPath.isNullOrEmpty()) {
+                val imgFile = File(localPath)
                 if (imgFile.exists()) {
                     val imgBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
-                    _image.postValue(Pair<Bitmap, String>(imgBitmap, file.name))
+                   // _image.postValue(Pair<Bitmap, String>(imgBitmap, file.name))
+                    _image.postValue(imgBitmap)
                 }
             } else {
                 RuntimeException()

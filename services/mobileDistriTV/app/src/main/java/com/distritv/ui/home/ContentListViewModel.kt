@@ -25,18 +25,9 @@ class ContentListViewModel(private val contentRepository: ContentRepository,
     val downloadFileList: LiveData<List<FileDownload>>
         get() = _downloadFileList
 
-
-    private val _downloadResult = MutableLiveData<Boolean>()
-    val downloadResult: LiveData<Boolean>
-        get() = _downloadResult
-
     private val _fileDownloaded = MutableLiveData<FileDownload>()
     val fileDownloaded: LiveData<FileDownload>
         get() = _fileDownloaded
-
-    private val _fileDownloadedPath = MutableLiveData<String>()
-    val fileDownloadedPath: LiveData<String>
-        get() = _fileDownloadedPath
 
     fun fetchFileDownloadList() {
         viewModelScope.launch {
@@ -48,7 +39,6 @@ class ContentListViewModel(private val contentRepository: ContentRepository,
 
             }
             _loading.value = false
-           // _downloadFileList.postValue(fileDownloadRepository.fetchFileDownloadList())
         }
     }
 
@@ -57,16 +47,14 @@ class ContentListViewModel(private val contentRepository: ContentRepository,
         val fileName = fileURI.lastPathSegment?:""
         Log.v(TAG, "nombreee $fileName")
         viewModelScope.launch {
+            _loading.value = true
             val response = contentRepository.getFileDownload(fileName)
             val result = fileDownloadService.downloadFile(fileDownload, response)
-            _downloadResult.postValue(!result.equals(-1))
             if(!result.equals(-1)){
-                _fileDownloaded.postValue(getPath(result))
+                _fileDownloaded.postValue(fileDbService.findFileById(result))
             }
+            _loading.value = false
         }
     }
 
-    fun getPath(id: Long): FileDownload {
-       return fileDbService.findFileById(id)
-    }
 }

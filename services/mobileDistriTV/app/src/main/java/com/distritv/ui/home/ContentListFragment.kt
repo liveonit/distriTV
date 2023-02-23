@@ -136,16 +136,6 @@ class ContentListFragment : Fragment() {
                     intent.putExtra("localPath", it.localPath)
                     startActivity(intent)
                 }
-
-
-            } else {
-                Toast.makeText(activity, "No se pudo realizar la descarga.", Toast.LENGTH_SHORT).show()
-            }
-        }
-        viewModel.downloadResult.observe(viewLifecycleOwner) {
-            if (it) {
-                Toast.makeText(activity, "Se descargó con éxito.", Toast.LENGTH_SHORT).show()
-
             } else {
                 Toast.makeText(activity, "No se pudo realizar la descarga.", Toast.LENGTH_SHORT).show()
             }

@@ -12,6 +12,7 @@ class VideoPlaybackViewModel: ViewModel() {
     val videoPath: LiveData<String> get() = _videoPath
 
     fun fetchVideoPath() {
+
         _videoPath.value = "/mnt/sdcard/Movies/ejemplo2.mp4"
     }
 }

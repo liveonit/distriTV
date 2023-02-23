@@ -13,32 +13,32 @@ import java.io.*
 class FileDownloadService(private val fileDbService: FileDbService,
                           private val context: Context, private val apiService: ApiService) {
 
-    suspend fun downloadFile(): Boolean {
+    fun downloadFile(fileDownload: FileDownload, response: ResponseBody): Long {
         return try {
-            val response = apiService.downloadFileWithFixedUrl()
             if (response != null) {
-                val idBD = fileDbService.insert(FileDownload(null, "", "", "", ""))
-                writeResponseBodyToDisk(response, idBD)
-                true
+                val idBD = fileDbService.insert(fileDownload)
+                writeResponseBodyToDisk(fileDownload, response, idBD)
+                idBD
             } else {
                 Log.d(TAG, "server contact failed")
-                false
+                -1
             }
         } catch (ex: Exception) {
-            false
+            -1
         }
     }
 
-    private fun writeResponseBodyToDisk(body: ResponseBody, idBD: Long): Boolean {
+    private fun writeResponseBodyToDisk(fileDownload: FileDownload, body: ResponseBody, idBD: Long): Boolean {
         return try {
             // todo change the file location/name according to your needs
-            val fileExtension = body.contentType()?.subtype
-            val fileNameWithExtension = "Descarga $idBD.$fileExtension"
+
+
             val futureStudioIconFile =
                 File(context.
-                    getExternalFilesDir(null), File.separator.toString() + fileNameWithExtension)
+                    getExternalFilesDir(null), File.separator.toString() + fileDownload.name)
 
-            fileDbService.update(idBD, FileDownload(null, fileNameWithExtension, futureStudioIconFile.path, "", ""))
+            fileDownload.localPath = futureStudioIconFile.path
+            fileDbService.update(idBD, fileDownload)
 
             var inputStream: InputStream? = null
             var outputStream: OutputStream? = null

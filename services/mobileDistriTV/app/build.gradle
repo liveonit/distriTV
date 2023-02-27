@@ -3,8 +3,13 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+Properties props = new Properties()
 
 android {
+    signingConfigs {
+        proyectoUCU {
+        }
+    }
     namespace 'com.distritv'
     compileSdk 32
 
@@ -22,13 +27,26 @@ android {
     }
 
     buildTypes {
+        debug {
+            try {
+                props.load(file('../config-debug.properties').newDataInputStream())
+            } catch (Exception ex) {
+                throw new GradleException("Missing keys.properties file.");
+            }
+            buildConfigField "String", "BASE_URL", "\"${props.getProperty("base_url")}\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig debug.signingConfig
+            try {
+                props.load(file('../config-release.properties').newDataInputStream())
+            } catch (Exception ex) {
+                throw new GradleException("Missing keys.properties file.");
+            }
+            buildConfigField "String", "BASE_URL", "\"${props.getProperty("base_url")}\""
         }
     }
-
-
 }
 
 
@@ -54,31 +72,5 @@ dependencies {
     implementation "io.insert-koin:koin-android:3.2.3"
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
-
-
-    // ExoPlayer
-    //implementation group: 'com.devbrackets.android', name: 'exomedia', version: '5.0.0'
-    //implementation 'com.devbrackets.android:exomedia:4.3.0'
-
-
-    // Playlist support
-  //  implementation 'com.devbrackets.android:playlistcore:2.1.0'
-   // implementation 'androidx.media:media:1.6.0'
-
-
-    //implementation "androidx.media3:media3-ui:1.0.0-beta01" // Subtitles
-   // implementation "androidx.media3:media3-datasource-okhttp:1.0.0-beta01" // Custom HTTP
-
-
-
-
-    // https://mvnrepository.com/artifact/com.devbrackets.android/exomedia
-   // implementation("com.devbrackets.android:exomedia:4.3.0")
-
-   // implementation 'com.devbrackets.android:playlistcore:2.1.0'
-
-   // implementation 'com.github.bumptech.glide:glide:4.14.2'
-  //  annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
-
 
 }

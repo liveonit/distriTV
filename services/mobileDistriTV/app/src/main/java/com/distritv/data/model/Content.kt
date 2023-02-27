@@ -1,6 +1,6 @@
-package com.distritv.model
+package com.distritv.data.model
 
-data class FileDownload(
+data class Content(
     val id: Long?,
     val name: String,
     var localPath: String,

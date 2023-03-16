@@ -17,10 +17,8 @@ class ContentService(private val contentDbService: ContentDbService,
     fun downloadContent(content: Content, response: ResponseBody): Long {
         return try {
             if (response == null) -1
-            val idBD = contentDbService.insert(content)
             if (writeContentToLocalStorage(content, response)) {
-                contentDbService.update(idBD, content)
-                idBD
+                contentDbService.insert(content)
             } else {
                 Log.d(TAG, "Server contact failed")
                 -1

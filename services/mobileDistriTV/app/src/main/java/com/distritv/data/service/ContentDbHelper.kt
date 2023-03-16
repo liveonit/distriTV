@@ -8,7 +8,7 @@ import com.distritv.data.ContentContract
 
 private const val SQL_CREATE_ENTRIES =
     "CREATE TABLE ${ContentContract.ContentEntry.TABLE_NAME} (" +
-            "${BaseColumns._ID} INTEGER PRIMARY KEY," +
+            "${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
             "${ContentContract.ContentEntry.COLUMN_CONTENT_NAME} TEXT," +
             "${ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH} TEXT," +
             "${ContentContract.ContentEntry.COLUMN_CONTENT_URL} TEXT," +

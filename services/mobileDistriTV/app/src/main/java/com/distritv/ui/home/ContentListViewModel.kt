@@ -38,7 +38,7 @@ class ContentListViewModel(private val contentRepository: ContentRepository,
                     _contentList.postValue(this)
                 }
             } catch (e: Exception) {
-                Log.v(TAG, "Could not connect to the server.")
+                Log.v(TAG, "Could not connect to the server.", e)
             }
             _loading.value = false
         }

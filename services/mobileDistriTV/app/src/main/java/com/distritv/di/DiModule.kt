@@ -1,16 +1,16 @@
 package com.distritv.di
 
+import com.distritv.BuildConfig
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 import com.distritv.ui.image.ImageViewModel
 import com.distritv.ui.home.ContentListViewModel
-import com.distritv.data.FileDbService
-import com.distritv.data.FileDbHelper
-import com.distritv.data.source.ContentRepository
-import com.distritv.data.source.IContentRepository
-import com.distritv.service.FileDownloadService
+import com.distritv.data.service.ContentDbService
+import com.distritv.data.service.ContentDbHelper
+import com.distritv.data.repositories.ContentRepository
+import com.distritv.data.repositories.IContentRepository
+import com.distritv.data.service.ContentService
 import com.distritv.data.ApiService
-import com.distritv.ui.video.VideoPlaybackViewModel
 import okhttp3.OkHttpClient
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
@@ -37,7 +37,7 @@ fun provideOkHttpClient(): OkHttpClient {
 }
 
 fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder().baseUrl("http://10.0.2.2/api/v1/")
+    return Retrofit.Builder().baseUrl("${BuildConfig.BASE_URL}")
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
@@ -53,11 +53,10 @@ val repositoriesModule = module {
 val viewModelsModule = module {
     viewModelOf(::ImageViewModel)
     viewModelOf(::ContentListViewModel)
-    viewModelOf(::VideoPlaybackViewModel)
 }
 
 val servicesModule = module {
-    factoryOf(::FileDbService)
-    factoryOf(::FileDbHelper)
-    factoryOf(::FileDownloadService)
+    factoryOf(::ContentDbService)
+    factoryOf(::ContentDbHelper)
+    factoryOf(::ContentService)
 }

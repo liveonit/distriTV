@@ -1,55 +1,31 @@
 package com.distritv.ui.image
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import com.distritv.ui.home.HomeActivity
+import com.distritv.R
 import com.distritv.databinding.ActivityImageBinding
-import com.distritv.ui.FullscreenManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.distritv.utils.LOCAL_PATH_PARAM
+import com.distritv.utils.addFragment
 
 
 class ImageActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityImageBinding
-    private val viewModel by viewModel<ImageViewModel>()
-    lateinit var fileLocalPath: String
-
-    private val fullscreenManager by lazy {
-        FullscreenManager(window) {
-            (binding.imageContainer)
-        }
-    }
+    lateinit var contentLocalPath: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        fileLocalPath = intent.extras?.getString("localPath").toString()
+        contentLocalPath = intent.extras?.getString(LOCAL_PATH_PARAM).toString()
 
-        loadImageObserver()
-
-        fullscreenManager.enterFullscreen()
-
-        binding.btnBack.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-
-        viewModel.fetchImage(fileLocalPath)
+        supportFragmentManager.addFragment(
+            R.id.image_fragment_container,
+            ImageFragment.newInstance(contentLocalPath),
+            false,
+            ImageFragment.TAG
+        )
     }
 
-    private fun loadImageObserver() {
-        viewModel.image.observe(this) {
-            if (it != null) {
-                binding.imageContainer.setImageBitmap(it)
-                //Toast.makeText(this, "${it.second}", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "No hay contenido disponible.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
 }

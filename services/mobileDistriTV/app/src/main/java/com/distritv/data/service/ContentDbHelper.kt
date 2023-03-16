@@ -1,21 +1,22 @@
-package com.distritv.data
+package com.distritv.data.service
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
+import com.distritv.data.ContentContract
 
 private const val SQL_CREATE_ENTRIES =
-    "CREATE TABLE ${FileContract.FileEntry.TABLE_NAME} (" +
-            "${BaseColumns._ID} INTEGER PRIMARY KEY," +
-            "${FileContract.FileEntry.COLUMN_FILE_NAME} TEXT," +
-            "${FileContract.FileEntry.COLUMN_FILE_LOCAL_PATH} TEXT," +
-            "${FileContract.FileEntry.COLUMN_FILE_URL} TEXT," +
-            "${FileContract.FileEntry.COLUMN_FILE_CONTENT_TYPE} TEXT)"
+    "CREATE TABLE ${ContentContract.ContentEntry.TABLE_NAME} (" +
+            "${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "${ContentContract.ContentEntry.COLUMN_CONTENT_NAME} TEXT," +
+            "${ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH} TEXT," +
+            "${ContentContract.ContentEntry.COLUMN_CONTENT_URL} TEXT," +
+            "${ContentContract.ContentEntry.COLUMN_CONTENT_TYPE} TEXT)"
 
-private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ${FileContract.FileEntry.TABLE_NAME}"
+private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ${ContentContract.ContentEntry.TABLE_NAME}"
 
-class FileDbHelper(context: Context) :
+class ContentDbHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {

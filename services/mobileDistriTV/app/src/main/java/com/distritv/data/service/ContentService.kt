@@ -1,44 +1,44 @@
-package com.distritv.service
+package com.distritv.data.service
 
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
-import com.distritv.data.ApiService
-import com.distritv.data.FileDbService
-import com.distritv.model.FileDownload
+import com.distritv.data.model.Content
 import okhttp3.ResponseBody
 import java.io.*
+import java.util.*
 
-class FileDownloadService(private val fileDbService: FileDbService,
-                          private val context: Context, private val apiService: ApiService) {
+class ContentService(private val contentDbService: ContentDbService,
+                     private val context: Context) {
 
-    fun downloadFile(fileDownload: FileDownload, response: ResponseBody): Long {
+    /**
+     * Download content to local storage and insert into DB
+     */
+    fun downloadContent(content: Content, response: ResponseBody): Long {
         return try {
-            if (response != null) {
-                val idBD = fileDbService.insert(fileDownload)
-                writeResponseBodyToDisk(fileDownload, response, idBD)
-                idBD
+            if (response == null) -1
+            if (writeContentToLocalStorage(content, response)) {
+                contentDbService.insert(content)
             } else {
-                Log.d(TAG, "server contact failed")
+                Log.d(TAG, "Server contact failed")
                 -1
             }
-        } catch (ex: Exception) {
+        } catch (e: Exception) {
+            Log.d(TAG, "${e.message}")
             -1
         }
     }
 
-    private fun writeResponseBodyToDisk(fileDownload: FileDownload, body: ResponseBody, idBD: Long): Boolean {
+    private fun writeContentToLocalStorage(content: Content, body: ResponseBody): Boolean {
         return try {
-            // todo change the file location/name according to your needs
 
+            val fileName = UUID.randomUUID().toString()
 
             val futureStudioIconFile =
                 File(context.
-                    getExternalFilesDir(null), File.separator.toString() + fileDownload.name)
+                    getExternalFilesDir(null), File.separator.toString() + fileName)
 
-            fileDownload.localPath = futureStudioIconFile.path
-            fileDbService.update(idBD, fileDownload)
+            content.localPath = futureStudioIconFile.path
 
             var inputStream: InputStream? = null
             var outputStream: OutputStream? = null
@@ -57,7 +57,7 @@ class FileDownloadService(private val fileDbService: FileDbService,
                         outputStream.write(fileReader, 0, read)
                     }
                     fileSizeDownloaded += read.toLong()
-                    Log.d(ContentValues.TAG, "file download: $fileSizeDownloaded of $fileSize")
+                    Log.d(TAG, "Content download: $fileSizeDownloaded of $fileSize")
                 }
                 if (outputStream != null) {
                     outputStream.flush()
@@ -66,15 +66,12 @@ class FileDownloadService(private val fileDbService: FileDbService,
             } catch (e: IOException) {
                 false
             } finally {
-                if (inputStream != null) {
-                    inputStream.close()
-                }
-                if (outputStream != null) {
-                    outputStream.close()
-                }
+                inputStream?.close()
+                outputStream?.close()
             }
         } catch (e: IOException) {
             false
         }
     }
+
 }

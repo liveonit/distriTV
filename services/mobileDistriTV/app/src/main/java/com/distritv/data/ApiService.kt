@@ -1,6 +1,6 @@
 package com.distritv.data
 
-import com.distritv.model.FileDownload
+import com.distritv.data.model.Content
 import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -9,8 +9,8 @@ import retrofit2.http.Path
 interface ApiService {
 
     @GET("content")
-    suspend fun downloadFileList(): List<FileDownload>
+    suspend fun fetchContentList(): List<Content>
 
-    @GET("content/download/{file}")
-    suspend fun downloadFile(@Path("file") file: String): ResponseBody
+    @GET("content/download/{content}")
+    suspend fun fetchContent(@Path("content") content: String): ResponseBody
 }

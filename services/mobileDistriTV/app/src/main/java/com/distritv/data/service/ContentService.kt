@@ -44,7 +44,7 @@ class ContentService(private val contentDbService: ContentDbService,
             var outputStream: OutputStream? = null
             try {
                 val fileReader = ByteArray(4096)
-                val fileSize = body.contentLength()
+                //val fileSize = body.contentLength()
                 var fileSizeDownloaded: Long = 0
                 inputStream = body.byteStream()
                 outputStream = FileOutputStream(futureStudioIconFile)
@@ -57,13 +57,15 @@ class ContentService(private val contentDbService: ContentDbService,
                         outputStream.write(fileReader, 0, read)
                     }
                     fileSizeDownloaded += read.toLong()
-                    Log.d(TAG, "Content download: $fileSizeDownloaded of $fileSize")
+                    //Log.d(TAG, "Content download: $fileSizeDownloaded of $fileSize")
                 }
                 if (outputStream != null) {
                     outputStream.flush()
                 }
+                Log.d(TAG, "Content download was successful from ${content.url} to ${content.localPath}")
                 true
             } catch (e: IOException) {
+                Log.d(TAG, "Content download failed from ${content.url}")
                 false
             } finally {
                 inputStream?.close()

@@ -26,7 +26,7 @@ class RequestService() : Service() {
     }
 
     override fun onCreate() {
-        Log.d(TAG, "Request service created...")
+        Log.i(TAG, "Request service created...")
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate({
             CoroutineScope(Dispatchers.Main).launch {
                 try {
@@ -35,23 +35,23 @@ class RequestService() : Service() {
                         val response = contentRepository.downloadContent(getResourceName(content))
                         val resultId = contentService.downloadContent(content, response)
                         if (!resultId.equals(-1)) {
-                            Log.v(TAG, "Content saved in BD with id: $resultId")
+                            Log.i(TAG, "Content saved in BD with id: $resultId")
                         }
                     }
                 } catch (e: Exception) {
-                    Log.v(TAG, "Could not connect to the server.", e)
+                    Log.e(TAG, "${RequestService.javaClass}: Could not connect to the server -> ${e.javaClass}: ${e.message}")
                 }
             }
         }, initialTime, periodTime, timeUnit)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        //Log.d(TAG, "Request service started...")
+        //Log.i(TAG, "Request service started...")
         return START_NOT_STICKY
     }
 
     override fun onDestroy() {
-        //Log.d(TAG, "Request service destroyed...")
+        //Log.i(TAG, "Request service destroyed...")
     }
 
     companion object {

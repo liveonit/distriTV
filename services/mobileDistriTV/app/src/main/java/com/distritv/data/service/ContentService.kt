@@ -20,7 +20,7 @@ class ContentService(private val contentDbService: ContentDbService,
             if (writeContentToLocalStorage(content, response)) {
                 contentDbService.insert(content)
             } else {
-                Log.d(TAG, "Server contact failed")
+                Log.e(TAG, "Server contact failed")
                 -1
             }
         } catch (e: Exception) {
@@ -62,10 +62,10 @@ class ContentService(private val contentDbService: ContentDbService,
                 if (outputStream != null) {
                     outputStream.flush()
                 }
-                Log.d(TAG, "Content download was successful from ${content.url} to ${content.localPath}")
+                Log.i(TAG, "Content download was successful from ${content.url} to ${content.localPath}")
                 true
             } catch (e: IOException) {
-                Log.d(TAG, "Content download failed from ${content.url}")
+                Log.e(TAG, "Content download failed from ${content.url}")
                 false
             } finally {
                 inputStream?.close()

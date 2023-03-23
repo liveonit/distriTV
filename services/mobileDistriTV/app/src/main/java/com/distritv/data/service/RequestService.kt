@@ -46,12 +46,12 @@ class RequestService() : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        //Log.i(TAG, "Request service started...")
+        Log.i(TAG, "Request service started...")
         return START_NOT_STICKY
     }
 
     override fun onDestroy() {
-        //Log.i(TAG, "Request service destroyed...")
+        Log.i(TAG, "Request service destroyed...")
     }
 
     companion object {

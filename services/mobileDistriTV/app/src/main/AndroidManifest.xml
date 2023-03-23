@@ -23,6 +23,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileDistriTV"
         android:usesCleartextTraffic="true">
+        <service
+            android:name=".data.service.RequestService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
         <activity
             android:name=".ui.image.ImageActivity"
             android:exported="false"

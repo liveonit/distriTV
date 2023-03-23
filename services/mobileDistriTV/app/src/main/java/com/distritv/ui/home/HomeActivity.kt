@@ -1,11 +1,13 @@
 package com.distritv.ui.home
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.distritv.R
+import com.distritv.data.service.RequestService
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.utils.addFragment
 import com.distritv.utils.replaceFragment
@@ -31,6 +33,9 @@ class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
             false,
             HomeFragment.TAG
         )
+
+        //Start request service in the background
+        startService(Intent(this, RequestService::class.java))
 
         actionBar?.hide()
     }

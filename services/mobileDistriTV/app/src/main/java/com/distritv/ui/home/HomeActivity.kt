@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.distritv.R
-import com.distritv.data.service.RequestService
+import com.distritv.bootup.RequestService
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.utils.addFragment
 import com.distritv.utils.replaceFragment

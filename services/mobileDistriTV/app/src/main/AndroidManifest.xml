@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="com.google.android.assistant.READ_HOTWORD_STATE" />
     <uses-permission android:name="com.google.android.assistant.WRITE_HOTWORD_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-feature android:name="android.software.leanback" />
     <uses-feature
@@ -24,10 +26,18 @@
         android:theme="@style/Theme.MobileDistriTV"
         android:usesCleartextTraffic="true">
         <service
-            android:name=".data.service.RequestService"
+            android:name=".bootup.RequestService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true" />
+        <service
+            android:name=".bootup.BootUpService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.softniels.autostartonboot.ForegroundService" />
+            </intent-filter>
         </service>
+
         <activity
             android:name=".ui.image.ImageActivity"
             android:exported="false"
@@ -45,7 +55,6 @@
 
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -58,6 +67,25 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <receiver
+            android:name=".bootup.BootUpReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.ACTION_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.REBOOT" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

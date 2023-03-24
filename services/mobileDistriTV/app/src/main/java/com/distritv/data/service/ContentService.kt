@@ -16,16 +16,16 @@ class ContentService(private val contentDbService: ContentDbService,
      */
     fun downloadContent(content: Content, response: ResponseBody): Long {
         return try {
-            if (response == null) -1
+            if (response == null) -1L
             if (writeContentToLocalStorage(content, response)) {
                 contentDbService.insert(content)
             } else {
                 Log.e(TAG, "Server contact failed")
-                -1
+                -1L
             }
         } catch (e: Exception) {
             Log.d(TAG, "${e.message}")
-            -1
+            -1L
         }
     }
 

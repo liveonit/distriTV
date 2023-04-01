@@ -1,11 +1,13 @@
 package com.distritv.ui.image
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.distritv.R
 import com.distritv.databinding.FragmentImageBinding
 import com.distritv.ui.FullscreenManager
 import com.distritv.utils.LOCAL_PATH_PARAM
@@ -48,14 +50,24 @@ class ImageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fullscreenManager?.enterFullscreen()
-        viewModel.fetchImage(localPathParam)
+
+        if (localPathParam.isNotBlank()) {
+            Log.d(TAG, "+++++++++++++ 111111111111 ++++++++++++++++ $localPathParam")
+            viewModel.fetchImage(localPathParam)
+        } else {
+            binding.imageContainer.setImageResource(R.drawable.wallpaper_sirio)
+        }
+
     }
 
     private fun loadImageObserver() {
         viewModel.image.observe(viewLifecycleOwner) {
             if (it != null) {
+                Log.d(TAG, "+++++++++++++ Antes ++++++++++++++++")
                 binding.imageContainer.setImageBitmap(it)
+                Log.d(TAG, "+++++++++++++ Despues ++++++++++++++++")
             } else {
+                Log.e(TAG, "No image available.")
                 Toast.makeText(activity, "There is no content available.", Toast.LENGTH_SHORT).show()
             }
         }

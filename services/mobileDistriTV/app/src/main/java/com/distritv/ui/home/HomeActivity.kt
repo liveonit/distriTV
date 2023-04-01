@@ -1,44 +1,117 @@
 package com.distritv.ui.home
 
+import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.distritv.DistriTVApp
 import com.distritv.R
 import com.distritv.bootup.RequestService
 import com.distritv.databinding.ActivityHomeBinding
-import com.distritv.utils.addFragment
-import com.distritv.utils.replaceFragment
+import com.distritv.ui.image.ImageFragment
+import com.distritv.ui.video.VideoPlaybackFragment
+import com.distritv.utils.*
 
 
 class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionListener,
     ContentListFragment.OnFragmentInteractionListener {
 
+    private val tag = "HomeActivity"
+
     private val MY_PERMISSIONS_REQUEST = 100
 
     private lateinit var binding: ActivityHomeBinding
+
+    private lateinit var myApp: DistriTVApp
+
+    private lateinit var contentLocalPath: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        Log.v(tag, "pasando por homeActivity")
+
         setPermission()
 
-        supportFragmentManager.addFragment(
-            R.id.home_fragment_container,
-            HomeFragment(),
-            false,
-            HomeFragment.TAG
-        )
+        myApp = this.applicationContext as DistriTVApp
+
+        contentLocalPath = intent.extras?.getString(LOCAL_PATH_PARAM).toString()
+
+        addFragment(intent.extras?.getString(CONTENT_TYPE_PARAM))
 
         //Start request service in the background
         startService(Intent(this, RequestService::class.java))
 
         actionBar?.hide()
+
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        myApp.setCurrentActivity(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        clearReferences()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        clearReferences()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        clearReferences()
+    }
+
+    private fun clearReferences() {
+        val currActivity: Activity? = myApp.getCurrentActivity()
+        if (this == currActivity) myApp.setCurrentActivity(null)
+    }
+
+    private fun addFragment(contentType: String?) {
+        if (contentType.isNullOrBlank()) {
+            //Default load
+            supportFragmentManager.addFragment(
+                R.id.home_fragment_container,
+                ImageFragment(),
+                false,
+                ImageFragment.TAG
+            )
+        } else {
+            //Content load
+            when (contentType) {
+                IMAGE ->
+                    supportFragmentManager.addFragment(
+                        R.id.home_fragment_container,
+                        ImageFragment.newInstance(contentLocalPath),
+                        false,
+                        ImageFragment.TAG
+                    )
+                VIDEO ->
+                    supportFragmentManager.addFragment(
+                        R.id.home_fragment_container,
+                        VideoPlaybackFragment.newInstance(contentLocalPath),
+                        false,
+                        VideoPlaybackFragment.TAG
+                    )
+                else -> {
+                    Log.e(tag, "Unsupported content type: $contentType")
+                }
+            }
+        }
+    }
+
 
     private fun setPermission() {
         if (ContextCompat.checkSelfPermission(

@@ -11,6 +11,17 @@ import java.util.*
 class ContentService(private val contentDbService: ContentDbService,
                      private val context: Context) {
 
+    fun existsContent(id: Long): Boolean {
+        return try {
+            val content = contentDbService.findFileByContentId(id)
+            Log.d(TAG, "cooooontent $content")
+            return content != null
+        } catch (e: Exception) {
+            Log.d(TAG, "${e.message}")
+            false
+        }
+    }
+
     /**
      * Download content to local storage and insert into DB
      */

@@ -13,6 +13,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
 
         // Create a new map of values, where column names are the keys
         val values = ContentValues().apply {
+            put(ContentContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER, content.id)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_NAME, content.name)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH, content.localPath)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_URL, content.url)
@@ -44,6 +45,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
         // you will actually use after this query.
         val projection = arrayOf(
             BaseColumns._ID,
+            ContentContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER,
             ContentContract.ContentEntry.COLUMN_CONTENT_NAME,
             ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH,
             ContentContract.ContentEntry.COLUMN_CONTENT_URL,
@@ -66,6 +68,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
                 items.add(
                     Content(
                         getLong(getColumnIndexOrThrow(BaseColumns._ID)),
+                        getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_NAME)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_URL)),
@@ -84,6 +87,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
         // you will actually use after this query.
         val projection = arrayOf(
             BaseColumns._ID,
+            ContentContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER,
             ContentContract.ContentEntry.COLUMN_CONTENT_NAME,
             ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH,
             ContentContract.ContentEntry.COLUMN_CONTENT_URL,
@@ -126,6 +130,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
         // you will actually use after this query.
         val projection = arrayOf(
             BaseColumns._ID,
+            ContentContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER,
             ContentContract.ContentEntry.COLUMN_CONTENT_NAME,
             ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH,
             ContentContract.ContentEntry.COLUMN_CONTENT_URL,
@@ -156,6 +161,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
                 items.add(
                     Content(
                         getLong(getColumnIndexOrThrow(BaseColumns._ID)),
+                        getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_NAME)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_URL)),
@@ -169,8 +175,61 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
         return items.first()
     }
 
+    fun findFileByContentId(id: Long): Content {
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        val projection = arrayOf(
+            BaseColumns._ID,
+            ContentContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER,
+            ContentContract.ContentEntry.COLUMN_CONTENT_NAME,
+            ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH,
+            ContentContract.ContentEntry.COLUMN_CONTENT_URL,
+            ContentContract.ContentEntry.COLUMN_CONTENT_TYPE
+        )
+
+        // Filter results WHERE "_id" = 'id'
+        val selection = "${ContentContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER} = ?"
+        val selectionArgs = arrayOf(id.toString())
+
+        // How you want the results sorted in the resulting Cursor
+        val sortOrder = "${ContentContract.ContentEntry.COLUMN_CONTENT_NAME} DESC"
+
+        //val cursor = dbReadable.query(
+        val cursor = contentDbHelper.readableDatabase.query(
+            ContentContract.ContentEntry.TABLE_NAME,   // The table to query
+            projection,             // The array of columns to return (pass null to get all)
+            selection,              // The columns for the WHERE clause
+            selectionArgs,          // The values for the WHERE clause
+            null,                   // don't group the rows
+            null,                   // don't filter by row groups
+            sortOrder               // The sort order
+        )
+
+        val items = mutableListOf<Content>()
+        with(cursor) {
+            while (moveToNext()) {
+                items.add(
+                    Content(
+                        getLong(getColumnIndexOrThrow(BaseColumns._ID)),
+                        getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_NAME)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_URL)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE))
+                    )
+                )
+            }
+        }
+        cursor.close()
+
+        return items.first()
+    }
+
+
     fun update(id: Long, content: Content) {
         val values = ContentValues().apply {
+            put(ContentContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER, content.id)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_NAME, content.name)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH, content.localPath)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_URL, content.url)

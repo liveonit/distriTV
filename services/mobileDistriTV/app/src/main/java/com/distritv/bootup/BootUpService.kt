@@ -8,6 +8,7 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 
 
 class BootUpService : Service() {
@@ -16,6 +17,8 @@ class BootUpService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.v(TAG, "pasando por boot up service")
+
         val channelId = "my_channel"
         val channel = NotificationChannel(
             channelId,

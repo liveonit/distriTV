@@ -10,7 +10,7 @@ const router = Router();
 /**
  * Devuelve una lista de usuarios
  */
-router.get('/', authSvc.authRequiredMiddleware([]), contentController.getMany);
+router.get('/', contentController.getMany, );
 
 /**
  * Devuelve un usuario según su ID

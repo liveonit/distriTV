@@ -47,6 +47,10 @@ android {
             buildConfigField "String", "BASE_URL", "\"${props.getProperty("base_url")}\""
         }
     }
+    buildToolsVersion '34.0.0 rc2'
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_11
+    }
 }
 
 

@@ -4,6 +4,7 @@ import android.net.Uri
 import com.distritv.data.model.Content
 
 const val LOCAL_PATH_PARAM = "localPath"
+const val TEXT_PARAM = "text"
 
 val VIDEO_TYPES = listOf("video/mp4")
 val IMAGE_TYPES = listOf("image/jpeg", "image/jpg", "image/png")

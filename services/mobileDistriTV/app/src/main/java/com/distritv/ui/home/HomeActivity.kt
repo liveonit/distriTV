@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.distritv.R
 import com.distritv.databinding.ActivityHomeBinding
+import com.distritv.ui.text.TextFragment
 import com.distritv.utils.addFragment
 import com.distritv.utils.replaceFragment
 
@@ -27,9 +28,9 @@ class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
 
         supportFragmentManager.addFragment(
             R.id.home_fragment_container,
-            HomeFragment(),
+            TextFragment.newInstance("text"),
             false,
-            HomeFragment.TAG
+            TextFragment.TAG
         )
 
         actionBar?.hide()

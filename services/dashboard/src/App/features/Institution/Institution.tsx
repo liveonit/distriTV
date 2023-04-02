@@ -12,9 +12,10 @@ import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
 import { useDispatch, useSelector } from 'react-redux'
 import { institutionsIsLoadingSelector, institutionsSelector } from 'src/store/institution/institutions.selector'
-import { CircularProgress } from 'node_modules/@mui/material'
+import { Button, CircularProgress } from 'node_modules/@mui/material'
 import { listInstitutions } from 'src/store/institution/institution.action'
 import { InstitutionT } from 'src/store/institution/institution.type'
+import AddIcon from '@material-ui/icons/Add'
 
 import InstitutionEditModal from './InstitutionEditModal'
 
@@ -35,17 +36,18 @@ export default function InstitutionList() {
 
   const isLoading = useSelector(institutionsIsLoadingSelector)
   const institutions = useSelector(institutionsSelector)
-
+  const [isModalCreate, setIsModalCreate] = React.useState(false)
   const [institutionToEdit, setInstitutionToEdit] = React.useState<InstitutionT | null>(null)
 
   function handleCloseEditInstitutionModal() {
     setInstitutionToEdit(null)
+    setIsModalCreate(false)
   }
 
-  function handleSaveEditedInstitution() {
-    //TODO: Save institution
-    setInstitutionToEdit(null)
-  }
+  var titleModal: string = 'test';
+
+
+  
 
   return isLoading ? (
     <CircularProgress />
@@ -53,7 +55,22 @@ export default function InstitutionList() {
     <>
       <Grid container alignItems='center'>
         <Grid sm={8}>
-          <h2>Institution</h2>
+          <h2>Instituciones</h2>
+        </Grid>
+        <Grid sm={4} container justifyContent='flex-end'>
+          <Button 
+            variant='contained'
+            color='primary'
+            size='small'
+            startIcon={<AddIcon />}
+            onClick={() => {
+              titleModal = 'Crear Institución'
+              setIsModalCreate(true)
+            console.log({titleModal})}
+            }
+          >
+            Nuevo
+          </Button>
         </Grid>
       </Grid>
       <TableContainer component={Paper}>
@@ -76,7 +93,10 @@ export default function InstitutionList() {
                 <TableCell>{institution.locality}</TableCell>
                 <TableCell>
                   <IconButton color='primary' aria-label='edit institution' component='span'>
-                    <EditIcon onClick={() => setInstitutionToEdit(institution)} />
+                    <EditIcon onClick={() => {
+                      titleModal = 'Editar Institución'
+                      setInstitutionToEdit(institution)}
+                      } />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -85,10 +105,11 @@ export default function InstitutionList() {
         </Table>
       </TableContainer>
       <InstitutionEditModal
-        isOpen={!!institutionToEdit}
+        titulo={titleModal}
+        isOpen={!!institutionToEdit || isModalCreate}
         institution={institutionToEdit!}
         handleCloseEditModal={handleCloseEditInstitutionModal}
-        handleSaveInstitution={handleSaveEditedInstitution}
+
       />
     </>
   )

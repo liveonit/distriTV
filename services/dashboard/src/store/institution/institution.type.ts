@@ -1,5 +1,5 @@
 export type InstitutionT = {
-  id: number
+  id?: number
   name: string
   city: string
   locality?: string

@@ -5,5 +5,6 @@ data class Content(
     val name: String,
     var localPath: String,
     val url: String,
-    val type: String
+    val type: String,
+    val text: String?
     )

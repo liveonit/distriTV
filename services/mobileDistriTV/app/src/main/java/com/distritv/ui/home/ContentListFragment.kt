@@ -13,9 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.distritv.databinding.FragmentContentListBinding
 import com.distritv.data.model.Content
 import com.distritv.ui.image.ImageActivity
+import com.distritv.ui.text.TextActivity
 import com.distritv.ui.video.VideoPlaybackActivity
 import com.distritv.utils.IMAGE_TYPES
 import com.distritv.utils.LOCAL_PATH_PARAM
+import com.distritv.utils.TEXT_PARAM
 import com.distritv.utils.VIDEO_TYPES
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -72,6 +74,8 @@ class ContentListFragment : Fragment() {
                     redirectView(it.localPath, VideoPlaybackActivity()::class.java)
                 } else if (IMAGE_TYPES.contains(it.type)) {
                     redirectView(it.localPath, ImageActivity()::class.java)
+                } else if (!it.text.isNullOrEmpty()){
+                    redirectViewText(it.text, TextActivity()::class.java)
                 }
             } else {
                 Toast.makeText(activity, "No se pudo realizar la descarga.", Toast.LENGTH_SHORT)
@@ -83,6 +87,12 @@ class ContentListFragment : Fragment() {
     private fun redirectView(contentLocalPath: String, cls: Class<out Any>) {
         val intent = Intent(context, cls)
         intent.putExtra(LOCAL_PATH_PARAM, contentLocalPath)
+        startActivity(intent)
+    }
+
+    private fun redirectViewText(text: String, cls: Class<out Any>) {
+        val intent = Intent(context, cls)
+        intent.putExtra(TEXT_PARAM, text)
         startActivity(intent)
     }
 

@@ -17,6 +17,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
             put(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH, content.localPath)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_URL, content.url)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE, content.type)
+            put(ContentContract.ContentEntry.COLUMN_CONTENT_TEXT, content.text)
         }
 
         // Insert the new row, returning the primary key value of the new row
@@ -47,7 +48,8 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
             ContentContract.ContentEntry.COLUMN_CONTENT_NAME,
             ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH,
             ContentContract.ContentEntry.COLUMN_CONTENT_URL,
-            ContentContract.ContentEntry.COLUMN_CONTENT_TYPE
+            ContentContract.ContentEntry.COLUMN_CONTENT_TYPE,
+            ContentContract.ContentEntry.COLUMN_CONTENT_TEXT
         )
 
         val cursor = contentDbHelper.readableDatabase.query(
@@ -69,7 +71,8 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_NAME)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_URL)),
-                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE))
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TEXT))
                     )
                 )
             }
@@ -87,7 +90,8 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
             ContentContract.ContentEntry.COLUMN_CONTENT_NAME,
             ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH,
             ContentContract.ContentEntry.COLUMN_CONTENT_URL,
-            ContentContract.ContentEntry.COLUMN_CONTENT_TYPE
+            ContentContract.ContentEntry.COLUMN_CONTENT_TYPE,
+            ContentContract.ContentEntry.COLUMN_CONTENT_TEXT
         )
 
         // Filter results WHERE "_id" = 'id'
@@ -129,7 +133,8 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
             ContentContract.ContentEntry.COLUMN_CONTENT_NAME,
             ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH,
             ContentContract.ContentEntry.COLUMN_CONTENT_URL,
-            ContentContract.ContentEntry.COLUMN_CONTENT_TYPE
+            ContentContract.ContentEntry.COLUMN_CONTENT_TYPE,
+            ContentContract.ContentEntry.COLUMN_CONTENT_TEXT
         )
 
         // Filter results WHERE "_id" = 'id'
@@ -159,7 +164,8 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_NAME)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_URL)),
-                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE))
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TEXT))
                     )
                 )
             }
@@ -175,6 +181,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
             put(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH, content.localPath)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_URL, content.url)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE, content.type)
+            put(ContentContract.ContentEntry.COLUMN_CONTENT_TEXT, content.text)
         }
 
         // Which row to update, based on the title

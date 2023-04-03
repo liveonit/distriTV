@@ -1,16 +1,22 @@
 package com.distritv.ui.home
 
+import android.bluetooth.BluetoothAdapter
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.distritv.R
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.ui.text.TextFragment
-import com.distritv.utils.addFragment
-import com.distritv.utils.replaceFragment
+import com.distritv.utils.*
 
+import android.provider.Settings.Secure;
+import java.security.AccessController.getContext
 
 class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionListener,
     ContentListFragment.OnFragmentInteractionListener {
@@ -26,11 +32,14 @@ class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
 
         setPermission()
 
+        val iDTV = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID)
+
+
         supportFragmentManager.addFragment(
             R.id.home_fragment_container,
-            TextFragment.newInstance("text"),
+            HomeFragment(),
             false,
-            TextFragment.TAG
+            HomeFragment.TAG
         )
 
         actionBar?.hide()
@@ -68,3 +77,10 @@ class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
     }
 
 }
+
+
+
+
+
+
+

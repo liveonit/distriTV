@@ -48,12 +48,13 @@ class ContentListViewModel(private val contentRepository: ContentRepository,
         viewModelScope.launch {
             _loading.value = true
             if(!content.text.isNullOrEmpty()){
-                _contentDownloaded.postValue(content)
+                val resultId = contentService.saveContent(content)
+                _contentDownloaded.postValue(contentDbService.findFileById(resultId))
             } else {
                 val response = contentRepository.downloadContent(getResourceName(content))
-                val result = contentService.downloadContent(content, response)
-                if (!result.equals(-1)) {
-                    _contentDownloaded.postValue(contentDbService.findFileById(result))
+                val resultId = contentService.saveContent(content, response)
+                if ((resultId != null) && !resultId.equals(-1)) {
+                    _contentDownloaded.postValue(contentDbService.findFileById(resultId))
                 }
             }
             _loading.value = false

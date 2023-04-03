@@ -71,9 +71,9 @@ class ContentListFragment : Fragment() {
             if (it != null) {
                 Toast.makeText(activity, "Se descargó con éxito.", Toast.LENGTH_SHORT).show()
                 if (VIDEO_TYPES.contains(it.type)) {
-                    redirectView(it.localPath, VideoPlaybackActivity()::class.java)
+                    it.localPath?.let { it1 -> redirectView(it1, VideoPlaybackActivity()::class.java) }
                 } else if (IMAGE_TYPES.contains(it.type)) {
-                    redirectView(it.localPath, ImageActivity()::class.java)
+                    it.localPath?.let { it1 -> redirectView(it1, ImageActivity()::class.java) }
                 } else if (!it.text.isNullOrEmpty()){
                     redirectViewText(it.text, TextActivity()::class.java)
                 }

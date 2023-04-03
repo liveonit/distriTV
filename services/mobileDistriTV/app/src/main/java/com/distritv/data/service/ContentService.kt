@@ -1,6 +1,5 @@
 package com.distritv.data.service
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
 import com.distritv.data.model.Content
@@ -12,20 +11,31 @@ class ContentService(private val contentDbService: ContentDbService,
                      private val context: Context) {
 
     /**
+     * Insert content into DB
+     */
+    fun saveContent(content: Content): Long {
+        return try {
+            contentDbService.insert(content)
+        } catch (e: Exception) {
+            Log.d(TAG, "${e.message}")
+            -1L
+        }
+    }
+
+    /**
      * Download content to local storage and insert into DB
      */
-    fun downloadContent(content: Content, response: ResponseBody): Long {
+    fun saveContent(content: Content, response: ResponseBody): Long? {
         return try {
-            if (response == null) -1
             if (writeContentToLocalStorage(content, response)) {
                 contentDbService.insert(content)
             } else {
-                Log.d(TAG, "Server contact failed")
-                -1
+                Log.e(TAG, "Server contact failed")
+                -1L
             }
         } catch (e: Exception) {
             Log.d(TAG, "${e.message}")
-            -1
+            -1L
         }
     }
 
@@ -72,6 +82,10 @@ class ContentService(private val contentDbService: ContentDbService,
         } catch (e: IOException) {
             false
         }
+    }
+
+    companion object {
+        const val TAG = "[ContentService]"
     }
 
 }

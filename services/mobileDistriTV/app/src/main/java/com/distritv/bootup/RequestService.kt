@@ -5,19 +5,15 @@
 
 package com.distritv.bootup
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
-import android.app.PendingIntent
 import android.app.Service
-import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
 import com.distritv.BuildConfig
+import com.distritv.DistriTVApp
 import com.distritv.data.repositories.ContentRepository
+import com.distritv.data.service.AlarmService
 import com.distritv.data.service.ContentService
 import com.distritv.utils.*
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import java.util.*
-
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -33,6 +28,7 @@ class RequestService : Service() {
 
     private val contentRepository: ContentRepository by inject()
     private val contentService: ContentService by inject()
+    private val alarmService: AlarmService by inject()
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -43,21 +39,29 @@ class RequestService : Service() {
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate({
             CoroutineScope(Dispatchers.Main).launch {
                 try {
+                    var minuto = 50
                     val contentList = contentRepository.getContentList()
                     contentList.forEach { content ->
 
                         if (!contentService.existsContent(content.id)) {
-                            val response = contentRepository.downloadContent(getResourceName(content))
+                            val response =
+                                contentRepository.downloadContent(getResourceName(content))
                             val resultId = contentService.downloadContent(content, response)
                             if (resultId != -1L) {
                                 Log.i(TAG, "Content saved in BD with id: $resultId")
+                                setAlarm(2023, Calendar.APRIL, 2, 18, minuto,
+                                    content.localPath, content.type, content.id.toInt(),
+                                    "Scheduled content: ${content.id}")
 
-
-                               // aaa(2023, Calendar.MARCH, 31, 11, 20, content.localPath, content.type, "ddd", 1  )
-
+                                /*setAlarm(
+                                    setCalendar(2023, Calendar.APRIL, 2, 10, minuto),
+                                    createPendingIntent(content.localPath, content.type, content.id.toInt()),
+                                    "Scheduled content: ${content.id}"
+                                )*/
+                                Log.v(TAG, "minuto: $minuto")
+                                minuto++
                             }
                         }
-
 
                     }
                 } catch (e: Exception) {
@@ -76,84 +80,19 @@ class RequestService : Service() {
         //Log.i(TAG, "Request service destroyed...")
     }
 
+    private fun setAlarm(year: Int, month: Int, day: Int, hour: Int, min: Int,
+                     localPath: String, contentType: String, requestCode: Int,
+                     msg: String) {
+        val calendar = alarmService.createCalendar(year, month, day, hour, min)
+        val pendingIntent = alarmService.createPendingIntent(localPath, contentType, requestCode)
+        alarmService.setAlarm(calendar, pendingIntent, 240000, msg)
+    }
+
     companion object {
         private val initialTime: Long = BuildConfig.REQUEST_SERVICE_TIME_INIT
         private val periodTime: Long = BuildConfig.REQUEST_SERVICE_TIME_PERIOD
         private val timeUnit = TimeUnit.SECONDS
+        const val TAG = "[RequestService]"
     }
-
-    private fun aaa(
-        year: Int,
-        month: Int,
-        day: Int,
-        hour: Int,
-        min: Int,
-        localPath: String,
-        contentType: String,
-        msg: String,
-        reqId: Int
-    ) {
-        val calendar: Calendar = Calendar.getInstance()
-        if (Build.VERSION.SDK_INT >= 23) {
-            calendar.set(
-                year,
-                month,
-                day,
-                hour,
-                min,
-                0
-            )
-        } else {
-            calendar.set(
-                year,
-                month,
-                day,
-                hour,
-                min,
-                0
-            )
-        }
-        setAlarm(calendar.timeInMillis, localPath, contentType, msg, reqId)
-    }
-
-
-    @SuppressLint("UnspecifiedImmutableFlag")
-    private fun setAlarm(timeInMillis: Long, localPath: String, contentType: String, msg: String, reqId: Int) {
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-
-        //val intent = Intent(localPath, null,this, Prueba::class.java)
-        //val intent = Intent(this, Prueba::class.java)
-        //  intent.putExtra(LOCAL_PATH_PARAM, localPath)
-
-        val intent = Intent(localPath, null,this, ScheduleReceiver::class.java)
-        intent.putExtra(LOCAL_PATH_PARAM, localPath)
-        intent.putExtra(CONTENT_TYPE_PARAM, contentType)
-        val pendingIntent = PendingIntent.getBroadcast(this, reqId, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-
-        /*  val pendingIntent = Intent(this, Prueba::class.java).let { intent ->
-              PendingIntent.getBroadcast(this, 0, intent, 0)
-          }*/
-
-        // Set the alarm to start at 8:30 a.m.
-        /*  val calendar: Calendar = Calendar.getInstance().apply {
-              setTimeInMillis(System.currentTimeMillis())
-              set(Calendar.HOUR_OF_DAY, 8)
-              set(Calendar.MINUTE, 30)
-          }*/
-
-        // val pendingIntent = PendingIntent.getBroadcast(this, reqId, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-
-
-
-        alarmManager.setRepeating(
-            AlarmManager.RTC,
-            timeInMillis,
-            AlarmManager.INTERVAL_DAY,
-            pendingIntent
-        )
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-    }
-
 
 }

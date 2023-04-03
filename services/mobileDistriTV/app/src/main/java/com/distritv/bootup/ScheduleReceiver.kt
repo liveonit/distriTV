@@ -7,34 +7,20 @@ import android.content.Intent
 import android.util.Log
 import com.distritv.DistriTVApp
 import com.distritv.R
+import com.distritv.data.service.AlarmService
 import com.distritv.ui.home.HomeActivity
 import com.distritv.ui.image.ImageFragment
 import com.distritv.ui.video.VideoPlaybackFragment
 import com.distritv.utils.*
-import okhttp3.internal.wait
-import java.lang.Thread.sleep
+import org.koin.java.KoinJavaComponent.inject
 
-const val TAG = "ScheduleReceiver"
-class ScheduleReceiver: BroadcastReceiver() {
+
+class ScheduleReceiver(): BroadcastReceiver() {
+
+
     override fun onReceive(context: Context, intent: Intent) {
 
         Log.v(TAG, "eetooo borad  111")
-
-
-        //sleep(2000)
-
-        if (intent?.action.equals(Intent.ACTION_BOOT_COMPLETED)) {
-            Log.v(TAG, "fwwwrgthtrhj575")
-            val i = context!!.packageManager.getLeanbackLaunchIntentForPackage(context.packageName)
-            i?.addFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK or
-                        Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
-            )
-            context.startActivity(i)
-        }
-
-       Log.v(TAG, "eetooo borad")
-        context?.startForegroundService(Intent(context, BootUpService::class.java))
 
 
         val contentLocalPath = intent.extras?.getString(LOCAL_PATH_PARAM)
@@ -42,8 +28,10 @@ class ScheduleReceiver: BroadcastReceiver() {
 
         val currentActivity: Activity? = (context.applicationContext as DistriTVApp).getCurrentActivity()
 
+        if (contentLocalPath.isNullOrBlank() || contentType.isNullOrBlank()) {
+            return
+        }
 
-        if(!contentLocalPath.isNullOrBlank() && !contentType.isNullOrBlank()) {
 
 
             if (currentActivity != null) {
@@ -92,10 +80,13 @@ class ScheduleReceiver: BroadcastReceiver() {
 
                 context.startActivity(scheduledIntent)
             }
-        }
 
 
         Log.d(TAG, "------------ Alarm just fired 2222222")
+    }
+
+    companion object {
+        const val TAG = "[ScheduleReceiver]"
     }
 
 }

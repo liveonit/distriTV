@@ -37,4 +37,8 @@ class BootUpService : Service() {
 
         return START_STICKY
     }
+
+    companion object {
+        const val TAG = "[BootUpService]"
+    }
 }

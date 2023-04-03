@@ -1,7 +1,6 @@
 package com.distritv.ui.home
 
 import android.app.Activity
-import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -12,16 +11,16 @@ import androidx.core.content.ContextCompat
 import com.distritv.DistriTVApp
 import com.distritv.R
 import com.distritv.bootup.RequestService
+import com.distritv.data.service.AlarmService
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.ui.image.ImageFragment
 import com.distritv.ui.video.VideoPlaybackFragment
 import com.distritv.utils.*
+import org.koin.android.ext.android.inject
 
 
 class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionListener,
     ContentListFragment.OnFragmentInteractionListener {
-
-    private val tag = "HomeActivity"
 
     private val MY_PERMISSIONS_REQUEST = 100
 
@@ -31,12 +30,14 @@ class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
 
     private lateinit var contentLocalPath: String
 
+    private val alarmService: AlarmService by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Log.v(tag, "pasando por homeActivity")
+        Log.v(TAG, "pasando por homeActivity")
 
         setPermission()
 
@@ -106,7 +107,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
                         VideoPlaybackFragment.TAG
                     )
                 else -> {
-                    Log.e(tag, "Unsupported content type: $contentType")
+                    Log.e(TAG, "Unsupported content type: $contentType")
                 }
             }
         }
@@ -142,6 +143,10 @@ class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
             true,
             HomeFragment.TAG
         )
+    }
+
+    companion object {
+        const val TAG = "[HomeActivity]"
     }
 
 }

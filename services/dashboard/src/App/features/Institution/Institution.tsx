@@ -18,6 +18,8 @@ import { InstitutionT } from 'src/store/institution/institution.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete';
 import InstitutionEditModal from './InstitutionEditModal'
+import InstitutionDeleteModal from './InstitutionDeleteModal'
+
 
 
 const useStyles = makeStyles({
@@ -38,11 +40,16 @@ export default function InstitutionList() {
   const institutions = useSelector(institutionsSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
   const [institutionToEdit, setInstitutionToEdit] = React.useState<InstitutionT | null>(null)
+  const [institutionToDelete, setInstitutionToDelete] = React.useState<InstitutionT | null>(null)
   const [titleModal, setModalTitle]  = React.useState('Titulo')
 
   function handleCloseEditInstitutionModal() {
     setInstitutionToEdit(null)
     setIsModalCreate(false)
+  }
+
+  function handleCloseDeleteInstitutionModal (){
+    setInstitutionToDelete(null)
   }
 
 
@@ -103,7 +110,7 @@ export default function InstitutionList() {
                   <IconButton color='primary' aria-label='delete institution' component='span'>
                     <DeleteIcon onClick={() => {
                      
-                    console.log(institution)}
+                     setInstitutionToDelete(institution)}
                       
                       } />
                   </IconButton>
@@ -118,6 +125,12 @@ export default function InstitutionList() {
         isOpen={!!institutionToEdit || isModalCreate}
         institution={institutionToEdit!}
         handleCloseEditModal={handleCloseEditInstitutionModal}
+      /> 
+      <InstitutionDeleteModal
+        
+        isOpen={!!institutionToDelete}
+        institution={institutionToDelete!}
+        handleCloseDeleteModal={handleCloseDeleteInstitutionModal}
 
       />
     </>

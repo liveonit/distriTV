@@ -21,36 +21,51 @@ type IProps = {
 
 const arr = ['Montevideo','Paysandú']
 
-const newInstitution: InstitutionT = {
+
+
+let newInstitution: InstitutionT = {
   name: '',
   city: '',
   locality: '',
 
 }
 
-let nombreInstitution = ''
-let cityInstitution = ''
-let localityInstitution = ''
 
 
 
 
 
 export default function InstitutionEditModal({ isOpen, handleCloseEditModal, institution, titulo }: IProps) {
-  const [localInstitution] = React.useState(institution) // si es nulo es create
+  
+
+
+  const [error, setError] = React.useState(false)
 
   function handleSaveInstitution() {
     //TODO: Save institution
-    if(institution){ //si es distinto de nulo es editar
-      console.log("EDITAR");
-    }else{
-      console.log("CREAR")
-
+    if(newInstitution.name.length==0 || newInstitution.city.length == 0){
+      setError(true)
     }
+
     
+    if(!error){
+
+      if(institution){ //si es distinto de nulo es editar
+        console.log("EDITAR");
+        console.log(newInstitution)
+        
+      }else{
+        console.log("CREAR")
+        console.log(newInstitution)
+        
+      }
+      handleCloseEditModal()
   }
 
-  const [departamento, setDepartamento] = React.useState('Artigas')
+
+  }
+
+  const [departamento, setDepartamento] = React.useState('')
 
 
   const handleChange : (event: React.ChangeEvent<{
@@ -59,6 +74,8 @@ export default function InstitutionEditModal({ isOpen, handleCloseEditModal, ins
 }>, child: React.ReactNode) => void = (e) => {
     
     setDepartamento(e.target.value as string);
+    newInstitution.city = e.target.value as string
+    
   }
 
 
@@ -66,19 +83,15 @@ export default function InstitutionEditModal({ isOpen, handleCloseEditModal, ins
     
    
     const { value, name } = e.target;
-    console.log("test"+name)
+    
     switch (name) {
       case "txtName":
         newInstitution.name=value;
-        console.log(">>>>>>>>>>"+newInstitution.name)
-        break;
-      case "txtCity":
-        newInstitution.city=value;
-        console.log(">>>>>>>>>>"+newInstitution.city)
+        
         break;
       case "txtLocality":
         newInstitution.locality=value;
-        console.log(">>>>>>>>>>"+newInstitution.locality)
+ 
         break;
       default:
         break;
@@ -87,9 +100,10 @@ export default function InstitutionEditModal({ isOpen, handleCloseEditModal, ins
   
   function institutionFieldsValues(){
     if (institution) {
-       nombreInstitution = institution.name
-       cityInstitution = institution.city
-       localityInstitution = institution.locality || ''
+      newInstitution.name = institution.name
+      setDepartamento(institution.city)
+      newInstitution.locality = institution.locality || ''
+      
   } 
 
   }
@@ -108,7 +122,8 @@ export default function InstitutionEditModal({ isOpen, handleCloseEditModal, ins
           <br />
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <TextField fullWidth id='txtName' name = 'txtName' label='Nombre' variant='outlined' defaultValue={nombreInstitution} onChange={handleInput} />
+              <TextField fullWidth id='txtName' name = 'txtName' label='Nombre' 
+               variant='outlined' defaultValue={newInstitution.name} onChange={handleInput} />
             </Grid>
            
             <Grid item xs={12}>
@@ -135,18 +150,16 @@ export default function InstitutionEditModal({ isOpen, handleCloseEditModal, ins
             </Grid>
           </Grid> <br />
           <Grid item xs={12}>
-              <TextField fullWidth id='txtLocality' label='Localidad' name = 'txtLocality' variant='outlined' defaultValue={localityInstitution}/>
+              <TextField fullWidth id='txtLocality' label='Localidad' 
+              name = 'txtLocality' variant='outlined' defaultValue={newInstitution.locality} onChange={handleInput}/>
             </Grid>
         </DialogContent>
         <DialogActions>
+          <label color='red'> Error: uno o más campos están sin completar</label>
           <Button onClick={handleCloseEditModal} color='primary'>
             Cerrar
           </Button>
-          <Button onClick={
-
-            () => handleSaveInstitution()
-            
-          }
+          <Button onClick={handleSaveInstitution}
             variant='contained' color='primary' size='small'>
             Guardar
           </Button>

@@ -102,8 +102,7 @@ export default function InstitutionList() {
                     <EditIcon onClick={() => {
                      
                     setModalTitle('Editar Institución')
-                    setInstitutionToEdit(institution)
-                    console.log(institution)}
+                    setInstitutionToEdit(institution)}
                       
                       } />
                   </IconButton>

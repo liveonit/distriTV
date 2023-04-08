@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -11,6 +11,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import { InstitutionT } from 'src/store/institution/institution.type'
+import { Alert } from '@mui/material'
 
 type IProps = {
   isOpen: boolean
@@ -34,38 +35,35 @@ let newInstitution: InstitutionT = {
 
 
 
-
 export default function InstitutionEditModal({ isOpen, handleCloseEditModal, institution, titulo }: IProps) {
   
 
-
-  const [error, setError] = React.useState(false)
+  const [error, setError] = useState(false)
 
   function handleSaveInstitution() {
-    //TODO: Save institution
-    if(newInstitution.name.length==0 || newInstitution.city.length == 0){
+
+
+    if(newInstitution.city.length == 0 || newInstitution.name.length == 0 || newInstitution.city != undefined){
       setError(true)
+    }
+    else{
+
+        if(institution){ //si es distinto de nulo es editar
+          console.log("EDITAR");
+          console.log(newInstitution)
+          
+        }else{
+          console.log("CREAR")
+          console.log(newInstitution)
+          
+        }
+        handleCloseEditModal()
     }
 
     
-    if(!error){
-
-      if(institution){ //si es distinto de nulo es editar
-        console.log("EDITAR");
-        console.log(newInstitution)
-        
-      }else{
-        console.log("CREAR")
-        console.log(newInstitution)
-        
-      }
-      handleCloseEditModal()
+    
   }
 
-
-  }
-
-  const [departamento, setDepartamento] = React.useState('')
 
 
   const handleChange : (event: React.ChangeEvent<{
@@ -73,10 +71,14 @@ export default function InstitutionEditModal({ isOpen, handleCloseEditModal, ins
     value: unknown;
 }>, child: React.ReactNode) => void = (e) => {
     
-    setDepartamento(e.target.value as string);
+    
     newInstitution.city = e.target.value as string
     
   }
+
+
+  
+
 
 
   const handleInput = (e: { target: { value: any; name: any } }) => {
@@ -101,10 +103,13 @@ export default function InstitutionEditModal({ isOpen, handleCloseEditModal, ins
   function institutionFieldsValues(){
     if (institution) {
       newInstitution.name = institution.name
-      setDepartamento(institution.city)
+      newInstitution.city = institution.city
       newInstitution.locality = institution.locality || ''
-      
-  } 
+  } else {
+      newInstitution.name = ''
+      newInstitution.city = ''
+      newInstitution.locality = ''
+  }
 
   }
   
@@ -134,9 +139,9 @@ export default function InstitutionEditModal({ isOpen, handleCloseEditModal, ins
                   labelId='demo-simple-select-outlined-label'
                   id='demo-simple-select-outlined'
                   label='Severity'
-                  defaultValue={departamento}
+                  defaultValue={newInstitution.city}
                   onChange={handleChange}
-                  name = 'txtCity'
+                  
                   
                 >
                   <MenuItem value=''>
@@ -155,8 +160,11 @@ export default function InstitutionEditModal({ isOpen, handleCloseEditModal, ins
             </Grid>
         </DialogContent>
         <DialogActions>
-          <label color='red'> Error: uno o más campos están sin completar</label>
-          <Button onClick={handleCloseEditModal} color='primary'>
+          {error?
+            <Alert severity="error">Error: uno o más campos no han sido completados</Alert>:""}
+          
+          <Button 
+          onClick={() => {handleCloseEditModal(); setError(false);}} color='primary'>
             Cerrar
           </Button>
           <Button onClick={handleSaveInstitution}

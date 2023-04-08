@@ -28,47 +28,87 @@ const newInstitution: InstitutionT = {
 
 }
 
+let nombreInstitution = ''
+let cityInstitution = ''
+let localityInstitution = ''
+
+
+
 
 
 export default function InstitutionEditModal({ isOpen, handleCloseEditModal, institution, titulo }: IProps) {
   const [localInstitution] = React.useState(institution) // si es nulo es create
 
-  const [tituloModal] = React.useState(titulo)
   function handleSaveInstitution() {
     //TODO: Save institution
-    if(localInstitution){ //si es distinto de nulo es editar
-  
+    if(institution){ //si es distinto de nulo es editar
+      console.log("EDITAR");
     }else{
-      console.log(newInstitution)
+      console.log("CREAR")
+
     }
-    console.log();
+    
   }
 
   const [departamento, setDepartamento] = React.useState('Artigas')
+
 
   const handleChange : (event: React.ChangeEvent<{
     name?: string | undefined;
     value: unknown;
 }>, child: React.ReactNode) => void = (e) => {
-    console.log(e);
+    
     setDepartamento(e.target.value as string);
   }
+
+
+  const handleInput = (e: { target: { value: any; name: any } }) => {
+    
+   
+    const { value, name } = e.target;
+    console.log("test"+name)
+    switch (name) {
+      case "txtName":
+        newInstitution.name=value;
+        console.log(">>>>>>>>>>"+newInstitution.name)
+        break;
+      case "txtCity":
+        newInstitution.city=value;
+        console.log(">>>>>>>>>>"+newInstitution.city)
+        break;
+      case "txtLocality":
+        newInstitution.locality=value;
+        console.log(">>>>>>>>>>"+newInstitution.locality)
+        break;
+      default:
+        break;
+    }
+  };
   
+  function institutionFieldsValues(){
+    if (institution) {
+       nombreInstitution = institution.name
+       cityInstitution = institution.city
+       localityInstitution = institution.locality || ''
+  } 
+
+  }
   
-  
+  institutionFieldsValues()
 
   return (
+    
     <>
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h6' color='textPrimary'>
-            {tituloModal}
+            {titulo}
             
           </Typography>
           <br />
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <TextField fullWidth id='name' label='Nombre' variant='outlined' />
+              <TextField fullWidth id='txtName' name = 'txtName' label='Nombre' variant='outlined' defaultValue={nombreInstitution} onChange={handleInput} />
             </Grid>
            
             <Grid item xs={12}>
@@ -79,9 +119,9 @@ export default function InstitutionEditModal({ isOpen, handleCloseEditModal, ins
                   labelId='demo-simple-select-outlined-label'
                   id='demo-simple-select-outlined'
                   label='Severity'
-                  value={departamento}
+                  defaultValue={departamento}
                   onChange={handleChange}
-
+                  name = 'txtCity'
                   
                 >
                   <MenuItem value=''>
@@ -95,7 +135,7 @@ export default function InstitutionEditModal({ isOpen, handleCloseEditModal, ins
             </Grid>
           </Grid> <br />
           <Grid item xs={12}>
-              <TextField fullWidth id='localidad' label='Localidad' variant='outlined' />
+              <TextField fullWidth id='txtLocality' label='Localidad' name = 'txtLocality' variant='outlined' defaultValue={localityInstitution}/>
             </Grid>
         </DialogContent>
         <DialogActions>

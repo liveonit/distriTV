@@ -16,7 +16,7 @@ import { Button, CircularProgress } from 'node_modules/@mui/material'
 import { listInstitutions } from 'src/store/institution/institution.action'
 import { InstitutionT } from 'src/store/institution/institution.type'
 import AddIcon from '@material-ui/icons/Add'
-
+import DeleteIcon from '@material-ui/icons/Delete';
 import InstitutionEditModal from './InstitutionEditModal'
 
 
@@ -38,13 +38,13 @@ export default function InstitutionList() {
   const institutions = useSelector(institutionsSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
   const [institutionToEdit, setInstitutionToEdit] = React.useState<InstitutionT | null>(null)
+  const [titleModal, setModalTitle]  = React.useState('Titulo')
 
   function handleCloseEditInstitutionModal() {
     setInstitutionToEdit(null)
     setIsModalCreate(false)
   }
 
-  var titleModal: string = 'test';
 
 
   
@@ -64,9 +64,8 @@ export default function InstitutionList() {
             size='small'
             startIcon={<AddIcon />}
             onClick={() => {
-              titleModal = 'Crear Institución'
-              setIsModalCreate(true)
-            console.log({titleModal})}
+              setModalTitle('Crear Institución')
+              setIsModalCreate(true)}
             }
           >
             Nuevo
@@ -94,8 +93,18 @@ export default function InstitutionList() {
                 <TableCell>
                   <IconButton color='primary' aria-label='edit institution' component='span'>
                     <EditIcon onClick={() => {
-                      titleModal = 'Editar Institución'
-                      setInstitutionToEdit(institution)}
+                     
+                    setModalTitle('Editar Institución')
+                    setInstitutionToEdit(institution)
+                    console.log(institution)}
+                      
+                      } />
+                  </IconButton>
+                  <IconButton color='primary' aria-label='delete institution' component='span'>
+                    <DeleteIcon onClick={() => {
+                     
+                    console.log(institution)}
+                      
                       } />
                   </IconButton>
                 </TableCell>

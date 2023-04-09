@@ -110,6 +110,13 @@ class HomeActivity : AppCompatActivity() {
                         false,
                         VideoFragment.TAG
                     )
+                TEXT ->
+                    supportFragmentManager.addFragment(
+                        R.id.home_fragment_container,
+                        TextFragment.newInstance(contentParam, contentDuration),
+                        false,
+                        TextFragment.TAG
+                    )
                 else -> {
                     Log.e(TAG, "Unsupported content type: $contentType")
                 }

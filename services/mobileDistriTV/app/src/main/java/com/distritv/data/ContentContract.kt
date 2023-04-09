@@ -9,5 +9,6 @@ object ContentContract {
         const val COLUMN_CONTENT_LOCAL_PATH = "local_path"
         const val COLUMN_CONTENT_URL = "url"
         const val COLUMN_CONTENT_TYPE = "type"
+        const val COLUMN_CONTENT_TEXT = "text"
     }
 }

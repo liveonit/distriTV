@@ -46,6 +46,10 @@ android {
             buildConfigField "Long", "REQUEST_SERVICE_TIME_PERIOD", "${props.getProperty("request_service_time_period")}L"
         }
     }
+    buildToolsVersion '34.0.0 rc2'
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_11
+    }
 }
 
 

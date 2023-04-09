@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+
     <uses-feature android:name="android.software.leanback" />
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -40,6 +41,14 @@
 
         <activity
             android:name=".ui.image.ImageActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.text.TextActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat">
             <meta-data

@@ -1,3 +1,8 @@
+/**
+ * This component is responsible for reproducing the contents, by replacing fragments
+ * or launching the HomeActivity with the corresponding fragment.
+ */
+
 package com.distritv.daemon
 
 import android.app.Activity
@@ -9,7 +14,8 @@ import com.distritv.DistriTVApp
 import com.distritv.R
 import com.distritv.ui.HomeActivity
 import com.distritv.ui.ImageFragment
-import com.distritv.ui.VideoPlaybackFragment
+import com.distritv.ui.TextFragment
+import com.distritv.ui.VideoFragment
 import com.distritv.utils.*
 
 
@@ -32,19 +38,26 @@ class ScheduleReceiver() : BroadcastReceiver() {
 
         if (currentActivity != null) {
 
-            if (VIDEO_TYPES.contains(contentType)) {
+            if (isVideo(contentType)) {
                 (currentActivity as HomeActivity).supportFragmentManager.replaceFragment(
                     R.id.home_fragment_container,
-                    VideoPlaybackFragment.newInstance(contentParam),
+                    VideoFragment.newInstance(contentParam, contentDuration),
                     true,
-                    VideoPlaybackFragment.TAG
+                    VideoFragment.TAG
                 )
-            } else if (IMAGE_TYPES.contains(contentType)) {
+            } else if (isImage(contentType)) {
                 (currentActivity as HomeActivity).supportFragmentManager.replaceFragment(
                     R.id.home_fragment_container,
                     ImageFragment.newInstance(contentParam, contentDuration),
                     true,
                     ImageFragment.TAG
+                )
+            } else if (isText(contentType)) {
+                (currentActivity as HomeActivity).supportFragmentManager.replaceFragment(
+                    R.id.home_fragment_container,
+                    TextFragment.newInstance(contentParam, contentDuration),
+                    true,
+                    TextFragment.TAG
                 )
             }
 
@@ -58,11 +71,14 @@ class ScheduleReceiver() : BroadcastReceiver() {
             )
 
             scheduledIntent.putExtra(CONTENT_PARAM, contentParam)
+            scheduledIntent.putExtra(CONTENT_DURATION_PARAM, contentDuration)
 
-            if (VIDEO_TYPES.contains(contentType)) {
+            if (isVideo(contentType)) {
                 scheduledIntent.putExtra(CONTENT_TYPE_PARAM, VIDEO)
-            } else if (IMAGE_TYPES.contains(contentType)) {
+            } else if (isImage(contentType)) {
                 scheduledIntent.putExtra(CONTENT_TYPE_PARAM, IMAGE)
+            } else if (isText(contentType)) {
+                scheduledIntent.putExtra(CONTENT_TYPE_PARAM, TEXT)
             }
 
             context.startActivity(scheduledIntent)

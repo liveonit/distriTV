@@ -11,7 +11,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.distritv.DistriTVApp
 import com.distritv.R
-import com.distritv.daemon.DaemonInactivateContent
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.daemon.DaemonRequest
 import com.distritv.daemon.DaemonSchedule
@@ -107,9 +106,9 @@ class HomeActivity : AppCompatActivity() {
                 VIDEO ->
                     supportFragmentManager.addFragment(
                         R.id.home_fragment_container,
-                        VideoPlaybackFragment.newInstance(contentParam),
+                        VideoFragment.newInstance(contentParam, contentDuration),
                         false,
-                        VideoPlaybackFragment.TAG
+                        VideoFragment.TAG
                     )
                 else -> {
                     Log.e(TAG, "Unsupported content type: $contentType")

@@ -36,7 +36,7 @@ class ContentService(private val contentDbService: ContentDbService,
     /**
      * Download content to local storage and insert into DB
      */
-    fun saveContent(content: Content, response: ResponseBody): Long? {
+    fun downloadAndSaveContent(content: Content, response: ResponseBody): Long? {
         return try {
 
             if (response == null) -1L

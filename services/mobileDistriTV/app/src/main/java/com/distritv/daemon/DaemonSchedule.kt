@@ -126,9 +126,25 @@ class DaemonSchedule: Service() {
         )
 
         if (isVideo(content.type) || isImage(content.type)) {
+            if (content.localPath.isNullOrBlank()) {
+                Log.e(TAG, ERROR_LOCAL_PATH_NULL_OR_BLANK)
+                return
+            }
             alarmService.createAllowWhileIdleAlarm(
                 calendarModel,
-                content.localPath,
+                content.localPath!!,
+                content.type,
+                content.durationInSeconds,
+                content.id.toInt()
+            )
+        } else if (isText(content.type)) {
+            if (content.text.isNullOrBlank()) {
+                Log.e(TAG, ERROR_TEXT_NULL_OR_BLANK)
+                return
+            }
+            alarmService.createAllowWhileIdleAlarm(
+                calendarModel,
+                content.text,
                 content.type,
                 content.durationInSeconds,
                 content.id.toInt()
@@ -144,12 +160,24 @@ class DaemonSchedule: Service() {
             .putExtra(IS_ALARM_PARAM, false)
 
         if (isVideo(content.type) || isImage(content.type)) {
+            if (content.localPath.isNullOrBlank()) {
+                Log.e(TAG, ERROR_LOCAL_PATH_NULL_OR_BLANK)
+                return
+            }
             sendBroadcast(intent.putExtra(CONTENT_PARAM, content.localPath))
+        } else if (isText(content.type)) {
+            if (content.text.isNullOrBlank()) {
+                Log.e(TAG, ERROR_TEXT_NULL_OR_BLANK)
+                return
+            }
+            sendBroadcast(intent.putExtra(CONTENT_PARAM, content.text))
         }
     }
 
     companion object {
         const val TAG = "[DaemonSchedule]"
         private val periodTimeInSecond: Long = BuildConfig.SCHEDULE_TIME_PERIOD
+        private const val ERROR_LOCAL_PATH_NULL_OR_BLANK = "It is not possible to schedule the reproduction of the content, it does not have any local path of the downloaded content"
+        private const val ERROR_TEXT_NULL_OR_BLANK = "It is not possible to schedule the reproduction of the content, it is of type TEXT but it does not have any text"
     }
 }

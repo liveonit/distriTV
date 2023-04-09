@@ -8,27 +8,31 @@ const val CONTENT_TYPE_PARAM = "contentType"
 const val CONTENT_ID_PARAM = "contentId"
 const val CONTENT_DURATION_PARAM = "contentPlaybackDuration"
 
-const val TEXT_PARAM = "text"//////////////
-
 const val IS_ALARM_PARAM = "isAnAlarm"
 
 const val VIDEO = "video"
 const val IMAGE = "image"
+const val TEXT = "text"
 
 const val ACTIVE_NO = 0
 const val ACTIVE_YES = 1
 
 val VIDEO_TYPES = listOf("video/mp4")
 val IMAGE_TYPES = listOf("image/jpeg", "image/jpg", "image/png")
+val TEXT_TYPES = listOf("text")
 
 fun getResourceName(content: Content): String {
     return Uri.parse(content.url).lastPathSegment ?: ""
 }
 
 fun isVideo(type: String): Boolean {
-    return (VIDEO_TYPES.contains(type) && !IMAGE_TYPES.contains(type))
+    return (VIDEO_TYPES.contains(type) && !IMAGE_TYPES.contains(type) && !TEXT_TYPES.contains(type))
 }
 
 fun isImage(type: String): Boolean {
-    return (IMAGE_TYPES.contains(type) && !VIDEO_TYPES.contains(type))
+    return (IMAGE_TYPES.contains(type) && !VIDEO_TYPES.contains(type) && !TEXT_TYPES.contains(type))
+}
+
+fun isText(type: String): Boolean {
+    return (TEXT_TYPES.contains(type) && !IMAGE_TYPES.contains(type) && !VIDEO_TYPES.contains(type))
 }

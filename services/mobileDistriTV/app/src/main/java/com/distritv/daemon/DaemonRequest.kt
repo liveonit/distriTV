@@ -49,7 +49,7 @@ class DaemonRequest: Service() {
         runnable = object : Runnable {
             override fun run() {
                 startRequest()
-                handler.postDelayed(this, TimeUnit.SECONDS.toMillis(periodTime)) // Schedule the next execution in 10 seconds
+                handler.postDelayed(this, TimeUnit.SECONDS.toMillis(periodTime)) // Schedule the next execution in periodTime milliseconds
             }
         }
     }
@@ -81,18 +81,25 @@ class DaemonRequest: Service() {
                 contentList.forEach { content ->
 
                     if (!contentService.existsContent(content.id)) {
-                        val response = contentRepository.downloadContent(getResourceName(content))
-
 
                         tempSetFields(content, minuto) //prueba
 
-                        val resultId = contentService.downloadContent(content, response)
+                        var resultId: Long? = -1L
+
+                        if (isImage(content.type) || isVideo(content.type)) {
+                            val response = contentRepository.fetchContent(getResourceName(content))
+                            resultId = contentService.downloadAndSaveContent(content, response)
+                        } else if (isText(content.type)) {
+                            resultId = contentService.saveContent(content)
+                        }
+
                         if (resultId != -1L) {
                             Log.i(TAG, "Content saved in BD with id: $resultId")
 
                             Log.v(TAG, "minuto: $minuto") //prueba
                             minuto++ //prueba
                         }
+
                     }
 
                 }
@@ -118,7 +125,8 @@ class DaemonRequest: Service() {
         val endDate = "2023-04-09 20:$minuto:00"
         content.endDate = LocalDateTime.parse(endDate, pattern)
 
-        content.cron = "0 0/2 * * * ?" //cada 2 minutos
+        //content.cron = "0 0/2 * * * ?" //cada 2 minutos
+        content.cron = "0 0/1 * * * ?" //cada 1 minuto
         content.durationInSeconds = 30
     }
 

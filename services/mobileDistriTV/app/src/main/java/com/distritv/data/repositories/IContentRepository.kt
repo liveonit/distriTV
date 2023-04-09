@@ -5,5 +5,5 @@ import okhttp3.ResponseBody
 
 interface IContentRepository {
     suspend fun getContentList(): List<Content>
-    suspend fun downloadContent(content: String): ResponseBody
+    suspend fun fetchContent(content: String): ResponseBody
 }

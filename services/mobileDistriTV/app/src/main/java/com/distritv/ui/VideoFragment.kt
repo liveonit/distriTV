@@ -11,17 +11,19 @@ import android.widget.MediaController
 import androidx.fragment.app.Fragment
 import com.distritv.DistriTVApp
 import com.distritv.R
-import com.distritv.databinding.FragmentVideoPlaybackBinding
+import com.distritv.databinding.FragmentVideoBinding
+import com.distritv.utils.CONTENT_DURATION_PARAM
 import com.distritv.utils.CONTENT_PARAM
 import com.distritv.utils.replaceFragment
 import java.util.concurrent.TimeUnit
 
-class VideoPlaybackFragment : Fragment() {
+class VideoFragment : Fragment() {
 
-    private var _binding: FragmentVideoPlaybackBinding? = null
+    private var _binding: FragmentVideoBinding? = null
     private val binding get() = _binding!!
 
     private var localPathParam = ""
+    private var durationAfterCompletion = 10L
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -36,10 +38,11 @@ class VideoPlaybackFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentVideoPlaybackBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentVideoBinding.inflate(layoutInflater, container, false)
 
         arguments?.let {
             localPathParam = it.getString(CONTENT_PARAM, "")
+            durationAfterCompletion = it.getLong(CONTENT_DURATION_PARAM, 10L)
         }
         return binding.root
     }
@@ -60,7 +63,7 @@ class VideoPlaybackFragment : Fragment() {
         binding.videoContainer.start()
 
         binding.videoContainer.setOnCompletionListener {
-            // Video is complete, after 5 seconds come back home
+            // Video is complete, after 10 seconds come back home
             Handler(Looper.getMainLooper()).postDelayed({
                 (context?.applicationContext as DistriTVApp).setContentCurrentlyPlaying(false)
                 activity?.supportFragmentManager?.replaceFragment(
@@ -70,17 +73,18 @@ class VideoPlaybackFragment : Fragment() {
                     ImageFragment.TAG
                 )
                 Log.i(TAG, "Playback finished, coming home...")
-            }, TimeUnit.SECONDS.toMillis(10))
+            }, TimeUnit.SECONDS.toMillis(durationAfterCompletion))
         }
     }
 
     companion object {
-        const val TAG = "[VideoPlaybackFragment]"
+        const val TAG = "[VideoFragment]"
 
         @JvmStatic
-        fun newInstance(localPath: String) = VideoPlaybackFragment().apply {
+        fun newInstance(localPath: String, durationAfterCompletion: Long) = VideoFragment().apply {
             arguments = Bundle().apply {
                 putString(CONTENT_PARAM, localPath)
+                putLong(CONTENT_DURATION_PARAM, durationAfterCompletion)
             }
         }
     }

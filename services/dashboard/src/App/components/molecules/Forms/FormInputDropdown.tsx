@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormControl, InputLabel, MenuItem, Select, SelectProps } from '@material-ui/core'
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, SelectProps } from '@material-ui/core'
 import { Control, Controller } from 'react-hook-form'
 
 type FormInputDropdownPropsT = {
@@ -25,10 +25,13 @@ export const FormInputDropdown: React.FC<FormInputDropdownPropsT> = ({ name, con
     <FormControl fullWidth variant='outlined'>
       <InputLabel id="demo-simple-select-label">{label}</InputLabel>
       <Controller
-        render={({ field: { onChange, value } }) => (
-          <Select {...otherProps} labelId="demo-simple-select-label" onChange={onChange} value={value} label={label}>
-            {generateSingleOptions()}
-          </Select>
+        render={({ field: { onChange, value }, fieldState: { error } }) => (
+          <>
+            <Select {...otherProps} labelId="demo-simple-select-label" onChange={onChange} error={!!error?.message} value={value} label={label}>
+              {generateSingleOptions()}
+            </Select>
+            <FormHelperText error={true}>{error?.message || ''}</FormHelperText>
+          </>
         )}
         control={control}
         name={name}

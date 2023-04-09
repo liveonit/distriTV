@@ -1,8 +1,7 @@
 package com.distritv.ui.home
 
-import android.bluetooth.BluetoothAdapter
-import android.content.Context
-import android.content.SharedPreferences
+
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.wifi.WifiManager
 import android.os.Bundle
@@ -11,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.distritv.R
+import com.distritv.bootup.RequestService
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.ui.text.TextFragment
 import com.distritv.utils.*
@@ -41,6 +41,9 @@ class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
             false,
             HomeFragment.TAG
         )
+
+        //Start request service in the background
+        startService(Intent(this, RequestService::class.java))
 
         actionBar?.hide()
     }

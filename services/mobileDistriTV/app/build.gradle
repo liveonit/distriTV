@@ -4,6 +4,11 @@ plugins {
 }
 
 Properties props = new Properties()
+try {
+    props.load(file('../config.properties').newDataInputStream())
+} catch (Exception ex) {
+    throw new GradleException("Missing keys.properties file.");
+}
 
 android {
     signingConfigs {
@@ -28,23 +33,17 @@ android {
 
     buildTypes {
         debug {
-            try {
-                props.load(file('../config-debug.properties').newDataInputStream())
-            } catch (Exception ex) {
-                throw new GradleException("Missing keys.properties file.");
-            }
-            buildConfigField "String", "BASE_URL", "\"${props.getProperty("base_url")}\""
+            buildConfigField "String", "BASE_URL", "\"${props.getProperty("base_url_local")}\""
+            buildConfigField "Long", "REQUEST_SERVICE_TIME_INIT", "${props.getProperty("request_service_time_init")}L"
+            buildConfigField "Long", "REQUEST_SERVICE_TIME_PERIOD", "${props.getProperty("request_service_time_period")}L"
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig debug.signingConfig
-            try {
-                props.load(file('../config-release.properties').newDataInputStream())
-            } catch (Exception ex) {
-                throw new GradleException("Missing keys.properties file.");
-            }
-            buildConfigField "String", "BASE_URL", "\"${props.getProperty("base_url")}\""
+            buildConfigField "String", "BASE_URL", "\"${props.getProperty("base_url_prod")}\""
+            buildConfigField "Long", "REQUEST_SERVICE_TIME_INIT", "${props.getProperty("request_service_time_init")}L"
+            buildConfigField "Long", "REQUEST_SERVICE_TIME_PERIOD", "${props.getProperty("request_service_time_period")}L"
         }
     }
     buildToolsVersion '34.0.0 rc2'

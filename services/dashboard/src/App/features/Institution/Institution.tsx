@@ -17,7 +17,8 @@ import { listInstitutions } from 'src/store/institution/institution.action'
 import { InstitutionT } from 'src/store/institution/institution.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete';
-import InstitutionEditModal from './InstitutionEditModal'
+
+import InstitutionCreateAndEditModal from './InstitutionCreateAndEditModal'
 import InstitutionDeleteModal from './InstitutionDeleteModal'
 
 
@@ -41,20 +42,20 @@ export default function InstitutionList() {
   const [isModalCreate, setIsModalCreate] = React.useState(false)
   const [institutionToEdit, setInstitutionToEdit] = React.useState<InstitutionT | null>(null)
   const [institutionToDelete, setInstitutionToDelete] = React.useState<InstitutionT | null>(null)
-  const [titleModal, setModalTitle]  = React.useState('Titulo')
+  const [titleModal, setModalTitle] = React.useState('Titulo')
 
   function handleCloseEditInstitutionModal() {
     setInstitutionToEdit(null)
     setIsModalCreate(false)
   }
 
-  function handleCloseDeleteInstitutionModal (){
+  function handleCloseDeleteInstitutionModal() {
     setInstitutionToDelete(null)
   }
 
 
 
-  
+
 
   return isLoading ? (
     <CircularProgress />
@@ -65,14 +66,15 @@ export default function InstitutionList() {
           <h2>Instituciones</h2>
         </Grid>
         <Grid sm={4} container justifyContent='flex-end'>
-          <Button 
+          <Button
             variant='contained'
             color='primary'
             size='small'
             startIcon={<AddIcon />}
             onClick={() => {
               setModalTitle('Crear Institución')
-              setIsModalCreate(true)}
+              setIsModalCreate(true)
+            }
             }
           >
             Nuevo
@@ -100,18 +102,20 @@ export default function InstitutionList() {
                 <TableCell>
                   <IconButton color='primary' aria-label='edit institution' component='span'>
                     <EditIcon onClick={() => {
-                     
-                    setModalTitle('Editar Institución')
-                    setInstitutionToEdit(institution)}
-                      
-                      } />
+
+                      setModalTitle('Editar Institución')
+                      setInstitutionToEdit(institution)
+                    }
+
+                    } />
                   </IconButton>
                   <IconButton color='primary' aria-label='delete institution' component='span'>
                     <DeleteIcon onClick={() => {
-                     
-                     setInstitutionToDelete(institution)}
-                      
-                      } />
+
+                      setInstitutionToDelete(institution)
+                    }
+
+                    } />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -119,18 +123,16 @@ export default function InstitutionList() {
           </TableBody>
         </Table>
       </TableContainer>
-      <InstitutionEditModal
-        titulo={titleModal}
-        isOpen={!!institutionToEdit || isModalCreate}
-        institution={institutionToEdit!}
-        handleCloseEditModal={handleCloseEditInstitutionModal}
-      /> 
+      {(!!institutionToEdit || isModalCreate) &&
+        <InstitutionCreateAndEditModal
+          titulo={titleModal}
+          institution={institutionToEdit!}
+          handleCloseEditModal={handleCloseEditInstitutionModal}
+        />}
       <InstitutionDeleteModal
-        
         isOpen={!!institutionToDelete}
         institution={institutionToDelete!}
         handleCloseDeleteModal={handleCloseDeleteInstitutionModal}
-
       />
     </>
   )

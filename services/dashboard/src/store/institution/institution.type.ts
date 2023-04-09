@@ -2,27 +2,9 @@ import * as z from 'zod'
 
 export const institutionSchema = z.object({
   id: z.number().optional(),
-  name: z.string().nonempty('Name is reqired').min(2, 'Name must have at least 2 caracters'),
-  city: z.string().nonempty('City is reqired'),
-  locality: z.string().nonempty('Name is reqired').min(2, 'Name must have at least 2 caracters'),
+  name: z.string().nonempty('Name is required').min(2, 'Name must have at least 2 characters'),
+  city: z.string().nonempty('City is required'),
+  locality: z.string().nonempty('Locality is reqired').min(2, 'Locality must have at least 2 characters'),
 })
 
-export type InstitutionT = {
-  id?: number
-  name: string
-  city: string
-  locality?: string
-}
-
-export type CreateInstitutionT = {
-  name: string
-  city: string
-  locality: string
-}
-
-export type UpdateInstitutionT = {
-  id: number
-  name?: string
-  city?: string
-  locality?: string
-}
+export type InstitutionT = z.TypeOf<typeof institutionSchema>

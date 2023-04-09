@@ -11,17 +11,20 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { CITIES } from 'src/utils/constants/Cities'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
+import { removeEmpty } from 'src/utils/removeEmpty'
 
 type IProps = {
   handleCloseEditModal: () => void
-  institution: InstitutionT
+  institution: Partial<InstitutionT>
   title: string
 }
 
 export default function InstitutionCreateAndEditModal({ handleCloseEditModal, institution, title }: IProps) {
+  const institutionInitialState: InstitutionT = { name: '', city: '', locality: '', ...removeEmpty(institution) }
+
   const methods = useForm<InstitutionT>({
     resolver: zodResolver(institutionSchema),
-    defaultValues: institution
+    defaultValues: institutionInitialState,
   })
 
   const { reset, handleSubmit, control } = methods

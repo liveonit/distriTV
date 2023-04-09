@@ -53,10 +53,6 @@ export default function InstitutionList() {
     setInstitutionToDelete(null)
   }
 
-
-
-
-
   return isLoading ? (
     <CircularProgress />
   ) : (
@@ -125,7 +121,7 @@ export default function InstitutionList() {
       </TableContainer>
       {(!!institutionToEdit || isModalCreate) &&
         <InstitutionCreateAndEditModal
-          titulo={titleModal}
+          title={titleModal}
           institution={institutionToEdit!}
           handleCloseEditModal={handleCloseEditInstitutionModal}
         />}

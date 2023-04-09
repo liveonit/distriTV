@@ -22,11 +22,25 @@ class ContentService(private val contentDbService: ContentDbService,
     }
 
     /**
+     * Insert content into DB
+     */
+    fun saveContent(content: Content): Long {
+        return try {
+            contentDbService.insert(content)
+        } catch (e: Exception) {
+            Log.d(TAG, "${e.message}")
+            -1L
+        }
+    }
+
+    /**
      * Download content to local storage and insert into DB
      */
-    fun downloadContent(content: Content, response: ResponseBody): Long {
+    fun saveContent(content: Content, response: ResponseBody): Long? {
         return try {
+
             if (response == null) -1L
+
             if (writeContentToLocalStorage(content, response)) {
                 contentDbService.insert(content)
             } else {

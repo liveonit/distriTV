@@ -9,6 +9,7 @@ data class Content(
     var localPath: String,
     val url: String,
     val type: String,
+    val text: String?,
     var active: Int?,
     var startDate: LocalDateTime?,
     var endDate: LocalDateTime?,

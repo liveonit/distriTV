@@ -23,6 +23,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
             put(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH, content.localPath)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_URL, content.url)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE, content.type)
+            put(ContentContract.ContentEntry.COLUMN_CONTENT_TEXT, content.text)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE, content.active)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE, localDateTimeToMillis(content.startDate))
             put(ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE, localDateTimeToMillis(content.endDate))
@@ -60,6 +61,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
             ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH,
             ContentContract.ContentEntry.COLUMN_CONTENT_URL,
             ContentContract.ContentEntry.COLUMN_CONTENT_TYPE,
+            ContentContract.ContentEntry.COLUMN_CONTENT_TEXT,
             ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE,
             ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE,
             ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE,
@@ -88,6 +90,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_URL)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TEXT)),
                         getInt(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE)),
                         millisToLocalDateTime(getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE))),
                         millisToLocalDateTime(getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE))),
@@ -112,6 +115,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
             ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH,
             ContentContract.ContentEntry.COLUMN_CONTENT_URL,
             ContentContract.ContentEntry.COLUMN_CONTENT_TYPE,
+            ContentContract.ContentEntry.COLUMN_CONTENT_TEXT,
             ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE,
             ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE,
             ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE,
@@ -160,11 +164,13 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
             ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH,
             ContentContract.ContentEntry.COLUMN_CONTENT_URL,
             ContentContract.ContentEntry.COLUMN_CONTENT_TYPE,
+            ContentContract.ContentEntry.COLUMN_CONTENT_TEXT,
             ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE,
             ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE,
             ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE,
             ContentContract.ContentEntry.COLUMN_CONTENT_CRON,
             ContentContract.ContentEntry.COLUMN_CONTENT_DURATION
+
         )
 
         // Filter results WHERE "_id" = 'id'
@@ -196,6 +202,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_URL)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TEXT)),
                         getInt(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE)),
                         millisToLocalDateTime(getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE))),
                         millisToLocalDateTime(getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE))),
@@ -221,6 +228,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
             ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH,
             ContentContract.ContentEntry.COLUMN_CONTENT_URL,
             ContentContract.ContentEntry.COLUMN_CONTENT_TYPE,
+            ContentContract.ContentEntry.COLUMN_CONTENT_TEXT,
             ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE,
             ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE,
             ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE,
@@ -257,6 +265,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_URL)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TEXT)),
                         getInt(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE)),
                         millisToLocalDateTime(getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE))),
                         millisToLocalDateTime(getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE))),
@@ -282,6 +291,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
             ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH,
             ContentContract.ContentEntry.COLUMN_CONTENT_URL,
             ContentContract.ContentEntry.COLUMN_CONTENT_TYPE,
+            ContentContract.ContentEntry.COLUMN_CONTENT_TEXT,
             ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE,
             ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE,
             ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE,
@@ -322,6 +332,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_URL)),
                         getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TEXT)),
                         getInt(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE)),
                         millisToLocalDateTime(getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE))),
                         millisToLocalDateTime(getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE))),
@@ -344,6 +355,7 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
             put(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH, content.localPath)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_URL, content.url)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE, content.type)
+            put(ContentContract.ContentEntry.COLUMN_CONTENT_TEXT, content.text)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE, content.active)
             put(ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE, localDateTimeToMillis(content.startDate))
             put(ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE, localDateTimeToMillis(content.endDate))

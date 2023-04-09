@@ -14,6 +14,7 @@ private const val SQL_CREATE_ENTRIES =
             "${ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH} TEXT," +
             "${ContentContract.ContentEntry.COLUMN_CONTENT_URL} TEXT," +
             "${ContentContract.ContentEntry.COLUMN_CONTENT_TYPE} TEXT," +
+            "${ContentContract.ContentEntry.COLUMN_CONTENT_TEXT} TEXT," +
             "${ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE} INTEGER," +
             "${ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE} LONG," +
             "${ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE} LONG," +

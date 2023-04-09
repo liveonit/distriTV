@@ -8,6 +8,8 @@ const val CONTENT_TYPE_PARAM = "contentType"
 const val CONTENT_ID_PARAM = "contentId"
 const val CONTENT_DURATION_PARAM = "contentPlaybackDuration"
 
+const val TEXT_PARAM = "text"//////////////
+
 const val IS_ALARM_PARAM = "isAnAlarm"
 
 const val VIDEO = "video"

@@ -1,6 +1,5 @@
 package com.distritv.data.service
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
 import com.distritv.data.model.Content
@@ -85,6 +84,14 @@ class ContentService(private val contentDbService: ContentDbService,
         } catch (e: IOException) {
             false
         }
+    }
+
+    fun getCurrentContents(currentMillisecond: Long): List<Content> {
+        return contentDbService.findCurrentContents(currentMillisecond)
+    }
+
+    companion object {
+        const val TAG = "[ContentService]"
     }
 
 }

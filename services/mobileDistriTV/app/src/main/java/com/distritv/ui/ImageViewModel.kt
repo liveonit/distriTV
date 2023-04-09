@@ -1,6 +1,5 @@
-package com.distritv.ui.image
+package com.distritv.ui
 
-import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
@@ -29,5 +28,9 @@ class ImageViewModel : ViewModel() {
         } catch (e: Exception) {
             Log.v(TAG, "Could not get image.")
         }
+    }
+
+    companion object {
+        const val TAG = "[ImageViewModel]"
     }
 }

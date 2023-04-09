@@ -10,5 +10,10 @@ object ContentContract {
         const val COLUMN_CONTENT_LOCAL_PATH = "local_path"
         const val COLUMN_CONTENT_URL = "url"
         const val COLUMN_CONTENT_TYPE = "type"
+        const val COLUMN_CONTENT_ACTIVE = "active"
+        const val COLUMN_CONTENT_START_DATE = "start_date_in_millis"
+        const val COLUMN_CONTENT_END_DATE = "end_date_in_millis"
+        const val COLUMN_CONTENT_CRON = "cron"
+        const val COLUMN_CONTENT_DURATION = "duration_in_seconds"
     }
 }

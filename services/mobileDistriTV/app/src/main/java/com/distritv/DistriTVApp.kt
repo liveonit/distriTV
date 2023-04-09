@@ -12,6 +12,7 @@ import org.koin.core.context.startKoin
 
 
 class DistriTVApp: Application() {
+
     override fun onCreate() {
         super.onCreate()
         startKoin {
@@ -29,6 +30,7 @@ class DistriTVApp: Application() {
     }
 
     private var currentActivity: Activity? = null
+    private var isContentCurrentlyPlaying = false
 
     fun getCurrentActivity(): Activity? {
         return currentActivity
@@ -36,6 +38,14 @@ class DistriTVApp: Application() {
 
     fun setCurrentActivity(currentActivity: Activity?) {
         this.currentActivity = currentActivity
+    }
+
+    fun isContentCurrentlyPlaying(): Boolean {
+        return this.isContentCurrentlyPlaying
+    }
+
+    fun setContentCurrentlyPlaying(isPlaying: Boolean) {
+        this.isContentCurrentlyPlaying = isPlaying
     }
 
 }

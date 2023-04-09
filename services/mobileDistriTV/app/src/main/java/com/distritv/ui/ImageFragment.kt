@@ -1,17 +1,22 @@
-package com.distritv.ui.image
+package com.distritv.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.distritv.DistriTVApp
 import com.distritv.R
 import com.distritv.databinding.FragmentImageBinding
-import com.distritv.ui.FullscreenManager
-import com.distritv.utils.LOCAL_PATH_PARAM
+import com.distritv.utils.CONTENT_DURATION_PARAM
+import com.distritv.utils.CONTENT_PARAM
+import com.distritv.utils.replaceFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 
 class ImageFragment : Fragment() {
@@ -22,6 +27,7 @@ class ImageFragment : Fragment() {
     private val viewModel by viewModel<ImageViewModel>()
 
     private var localPathParam = ""
+    private var contentDuration = -1L
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -39,7 +45,8 @@ class ImageFragment : Fragment() {
         _binding = FragmentImageBinding.inflate(layoutInflater, container, false)
 
         arguments?.let {
-            localPathParam = it.getString(LOCAL_PATH_PARAM, "")
+            localPathParam = it.getString(CONTENT_PARAM, "")
+            contentDuration = it.getLong(CONTENT_DURATION_PARAM, -1L)
         }
 
         loadImageObserver()
@@ -52,20 +59,28 @@ class ImageFragment : Fragment() {
         fullscreenManager?.enterFullscreen()
 
         if (localPathParam.isNotBlank()) {
-            Log.d(TAG, "+++++++++++++ 111111111111 ++++++++++++++++ $localPathParam")
             viewModel.fetchImage(localPathParam)
         } else {
-            binding.imageContainer.setImageResource(R.drawable.wallpaper_sirio)
+            binding.imageContainer.setImageResource(R.drawable.home_wallpaper)
         }
-
     }
 
     private fun loadImageObserver() {
         viewModel.image.observe(viewLifecycleOwner) {
             if (it != null) {
-                Log.d(TAG, "+++++++++++++ Antes ++++++++++++++++")
                 binding.imageContainer.setImageBitmap(it)
-                Log.d(TAG, "+++++++++++++ Despues ++++++++++++++++")
+
+                // Back home after end of the duration
+                Handler(Looper.getMainLooper()).postDelayed({
+                    (context?.applicationContext as DistriTVApp).setContentCurrentlyPlaying(false)
+                    activity?.supportFragmentManager?.replaceFragment(
+                        R.id.home_fragment_container,
+                        ImageFragment(),
+                        false,
+                        ImageFragment.TAG
+                    )
+                    Log.i(TAG, "Playback finished, coming home...")
+                }, TimeUnit.SECONDS.toMillis(contentDuration))
             } else {
                 Log.e(TAG, "No image available.")
                 Toast.makeText(activity, "There is no content available.", Toast.LENGTH_SHORT).show()
@@ -74,12 +89,13 @@ class ImageFragment : Fragment() {
     }
 
     companion object {
-        const val TAG = "ImageFragment"
+        const val TAG = "[ImageFragment]"
 
         @JvmStatic
-        fun newInstance(localPath: String) = ImageFragment().apply {
+        fun newInstance(localPath: String, duration: Long) = ImageFragment().apply {
             arguments = Bundle().apply {
-                putString(LOCAL_PATH_PARAM, localPath)
+                putString(CONTENT_PARAM, localPath)
+                putLong(CONTENT_DURATION_PARAM, duration)
             }
         }
     }

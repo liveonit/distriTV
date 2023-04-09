@@ -13,7 +13,12 @@ private const val SQL_CREATE_ENTRIES =
             "${ContentContract.ContentEntry.COLUMN_CONTENT_NAME} TEXT," +
             "${ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH} TEXT," +
             "${ContentContract.ContentEntry.COLUMN_CONTENT_URL} TEXT," +
-            "${ContentContract.ContentEntry.COLUMN_CONTENT_TYPE} TEXT)"
+            "${ContentContract.ContentEntry.COLUMN_CONTENT_TYPE} TEXT," +
+            "${ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE} INTEGER," +
+            "${ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE} LONG," +
+            "${ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE} LONG," +
+            "${ContentContract.ContentEntry.COLUMN_CONTENT_CRON} TEXT," +
+            "${ContentContract.ContentEntry.COLUMN_CONTENT_DURATION} LONG)"
 
 private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ${ContentContract.ContentEntry.TABLE_NAME}"
 

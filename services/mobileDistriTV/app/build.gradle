@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
 }
 
 Properties props = new Properties()
@@ -24,7 +25,6 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
-
     }
 
     viewBinding {
@@ -34,23 +34,37 @@ android {
     buildTypes {
         debug {
             buildConfigField "String", "BASE_URL", "\"${props.getProperty("base_url_local")}\""
-            buildConfigField "Long", "REQUEST_SERVICE_TIME_INIT", "${props.getProperty("request_service_time_init")}L"
-            buildConfigField "Long", "REQUEST_SERVICE_TIME_PERIOD", "${props.getProperty("request_service_time_period")}L"
+            buildConfigField "Long", "REQUEST_TIME_PERIOD", "${props.getProperty("request_time_period_in_seconds")}L"
+            buildConfigField "Long", "SCHEDULE_TIME_PERIOD", "${props.getProperty("schedule_time_period_in_seconds")}L"
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig debug.signingConfig
             buildConfigField "String", "BASE_URL", "\"${props.getProperty("base_url_prod")}\""
-            buildConfigField "Long", "REQUEST_SERVICE_TIME_INIT", "${props.getProperty("request_service_time_init")}L"
-            buildConfigField "Long", "REQUEST_SERVICE_TIME_PERIOD", "${props.getProperty("request_service_time_period")}L"
+            buildConfigField "Long", "REQUEST_TIME_PERIOD", "${props.getProperty("request_time_period_in_seconds")}L"
+            buildConfigField "Long", "SCHEDULE_TIME_PERIOD", "${props.getProperty("schedule_time_period_in_seconds")}L"
         }
+    }
+
+    packagingOptions {
+        pickFirst "**"
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE*'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude("META-INF/ASL-2.0.txt")
+        exclude("META-INF/LGPL-3.0.txt")
+        exclude 'META-INF/ASL2.0'
+        exclude("META-INF/*.kotlin_module")
     }
 }
 
 
 dependencies {
-
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.leanback:leanback:1.0.0'
@@ -70,6 +84,8 @@ dependencies {
     // DI
     implementation "io.insert-koin:koin-android:3.2.3"
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4'
+
+    implementation 'org.quartz-scheduler:quartz:2.3.2'
 
 }

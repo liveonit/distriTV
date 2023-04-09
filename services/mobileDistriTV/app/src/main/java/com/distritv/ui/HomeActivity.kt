@@ -1,6 +1,7 @@
-package com.distritv.ui.home
+package com.distritv.ui
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -10,17 +11,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.distritv.DistriTVApp
 import com.distritv.R
-import com.distritv.bootup.RequestService
-import com.distritv.data.service.AlarmService
+import com.distritv.daemon.DaemonInactivateContent
 import com.distritv.databinding.ActivityHomeBinding
-import com.distritv.ui.image.ImageFragment
-import com.distritv.ui.video.VideoPlaybackFragment
+import com.distritv.daemon.DaemonRequest
+import com.distritv.daemon.DaemonSchedule
 import com.distritv.utils.*
-import org.koin.android.ext.android.inject
 
 
-class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionListener,
-    ContentListFragment.OnFragmentInteractionListener {
+class HomeActivity : AppCompatActivity() {
 
     private val MY_PERMISSIONS_REQUEST = 100
 
@@ -28,35 +26,42 @@ class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
 
     private lateinit var myApp: DistriTVApp
 
-    private lateinit var contentLocalPath: String
+    private lateinit var contentParam: String
 
-    private val alarmService: AlarmService by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Log.v(TAG, "pasando por homeActivity")
-
         setPermission()
 
         myApp = this.applicationContext as DistriTVApp
 
-        contentLocalPath = intent.extras?.getString(LOCAL_PATH_PARAM).toString()
+        contentParam = intent.extras?.getString(CONTENT_PARAM).toString()
 
-        addFragment(intent.extras?.getString(CONTENT_TYPE_PARAM))
+        val contentType = intent.extras?.getString(CONTENT_TYPE_PARAM)
+        val contentDuration = intent.extras?.getLong(CONTENT_DURATION_PARAM) ?: -1L
 
-        //Start request service in the background
-        startService(Intent(this, RequestService::class.java))
+        addFragment(contentType, contentDuration)
+
+        if (!isServiceRunning(DaemonRequest::class.java)) {
+            ContextCompat.startForegroundService(this, Intent(this, DaemonRequest::class.java))
+        }
+
+        if (!isServiceRunning(DaemonSchedule::class.java)) {
+            ContextCompat.startForegroundService(this, Intent(this, DaemonSchedule::class.java))
+        }
+
+        //if (!isServiceRunning(DaemonInactivateContent::class.java)) {
+        //    ContextCompat.startForegroundService(this, Intent(this, DaemonInactivateContent::class.java))
+        //}
 
         actionBar?.hide()
-
     }
 
     override fun onResume() {
         super.onResume()
-
         myApp.setCurrentActivity(this)
     }
 
@@ -80,7 +85,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
         if (this == currActivity) myApp.setCurrentActivity(null)
     }
 
-    private fun addFragment(contentType: String?) {
+    private fun addFragment(contentType: String?, contentDuration: Long) {
         if (contentType.isNullOrBlank()) {
             //Default load
             supportFragmentManager.addFragment(
@@ -95,14 +100,14 @@ class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
                 IMAGE ->
                     supportFragmentManager.addFragment(
                         R.id.home_fragment_container,
-                        ImageFragment.newInstance(contentLocalPath),
+                        ImageFragment.newInstance(contentParam, contentDuration),
                         false,
                         ImageFragment.TAG
                     )
                 VIDEO ->
                     supportFragmentManager.addFragment(
                         R.id.home_fragment_container,
-                        VideoPlaybackFragment.newInstance(contentLocalPath),
+                        VideoPlaybackFragment.newInstance(contentParam),
                         false,
                         VideoPlaybackFragment.TAG
                     )
@@ -112,7 +117,6 @@ class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
             }
         }
     }
-
 
     private fun setPermission() {
         if (ContextCompat.checkSelfPermission(
@@ -127,22 +131,14 @@ class HomeActivity : AppCompatActivity(), HomeFragment.OnFragmentInteractionList
         }
     }
 
-    override fun onDownloadButtonPressed() {
-        supportFragmentManager.replaceFragment(
-            R.id.home_fragment_container,
-            ContentListFragment(),
-            true,
-            ContentListFragment.TAG
-        )
-    }
-
-    override fun onBackButtonPressed() {
-        supportFragmentManager.replaceFragment(
-            R.id.home_fragment_container,
-            HomeFragment(),
-            true,
-            HomeFragment.TAG
-        )
+    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
     }
 
     companion object {

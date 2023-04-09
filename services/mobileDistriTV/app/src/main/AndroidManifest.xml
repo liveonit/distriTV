@@ -9,12 +9,11 @@
     <uses-permission android:name="com.google.android.assistant.WRITE_HOTWORD_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
 
     <uses-feature android:name="android.software.leanback" />
-    <uses-feature
-        android:name="android.hardware.touchscreen"
-        android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <application
         android:name=".DistriTVApp"
@@ -26,52 +25,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileDistriTV"
         android:usesCleartextTraffic="true">
-        <service
-            android:name=".bootup.RequestService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name=".bootup.BootUpService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.softniels.autostartonboot.ForegroundService" />
-            </intent-filter>
-        </service>
 
         <activity
-            android:name=".ui.image.ImageActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ui.text.TextActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ui.home.HomeActivity"
+            android:name=".ui.HomeActivity"
+            android:enabled="true"
             android:exported="true"
             android:theme="@style/Theme.Material3.Dark.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ui.video.VideoPlaybackActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -82,7 +45,6 @@
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
-
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.ACTION_BOOT_COMPLETED" />
@@ -95,6 +57,39 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".daemon.ScheduleReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name=".bootup.BootUpService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.softniels.autostartonboot.ForegroundService" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".daemon.DaemonRequest"
+            android:label="Daemon Request Service"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name=".daemon.DaemonSchedule"
+            android:label="Daemon Schedule Service"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name=".daemon.DaemonInactivateContent"
+            android:label="Daemon Inactivate Content Service"
+            android:enabled="true"
+            android:exported="true" />
+
     </application>
 
 </manifest>

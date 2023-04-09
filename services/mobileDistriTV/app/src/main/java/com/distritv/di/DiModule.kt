@@ -3,8 +3,8 @@ package com.distritv.di
 import com.distritv.BuildConfig
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
-import com.distritv.ui.image.ImageViewModel
-import com.distritv.ui.home.ContentListViewModel
+import com.distritv.ui.ImageViewModel
+import com.distritv.data.service.AlarmService
 import com.distritv.data.service.ContentDbService
 import com.distritv.data.service.ContentDbHelper
 import com.distritv.data.repositories.ContentRepository
@@ -52,11 +52,11 @@ val repositoriesModule = module {
 
 val viewModelsModule = module {
     viewModelOf(::ImageViewModel)
-    viewModelOf(::ContentListViewModel)
 }
 
 val servicesModule = module {
     factoryOf(::ContentDbService)
     factoryOf(::ContentDbHelper)
     factoryOf(::ContentService)
+    factoryOf(::AlarmService)
 }

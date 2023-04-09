@@ -9,7 +9,7 @@ class ContentRepository(private val apiService: ApiService): IContentRepository 
        return apiService.fetchContentList()
     }
 
-    override suspend fun downloadContent(content: String): ResponseBody {
+    override suspend fun fetchContent(content: String): ResponseBody {
         return apiService.fetchContent(content)
     }
 }

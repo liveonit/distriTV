@@ -10,6 +10,17 @@ import java.util.*
 class ContentService(private val contentDbService: ContentDbService,
                      private val context: Context) {
 
+    fun existsContent(id: Long): Boolean {
+        return try {
+            val content = contentDbService.findFileByContentId(id)
+            Log.d(TAG, "cooooontent $content")
+            return content != null
+        } catch (e: Exception) {
+            Log.d(TAG, "${e.message}")
+            false
+        }
+    }
+
     /**
      * Insert content into DB
      */
@@ -25,7 +36,7 @@ class ContentService(private val contentDbService: ContentDbService,
     /**
      * Download content to local storage and insert into DB
      */
-    fun saveContent(content: Content, response: ResponseBody): Long? {
+    fun downloadAndSaveContent(content: Content, response: ResponseBody): Long? {
         return try {
 
             if (response == null) -1L
@@ -87,6 +98,10 @@ class ContentService(private val contentDbService: ContentDbService,
         } catch (e: IOException) {
             false
         }
+    }
+
+    fun getCurrentContents(currentMillisecond: Long): List<Content> {
+        return contentDbService.findCurrentContents(currentMillisecond)
     }
 
     companion object {

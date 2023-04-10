@@ -32,7 +32,7 @@ export default function LabelCreateAndEditModal({ handleCloseEditModal, label, t
     <>
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
-          <Typography variant='h6' color='textPrimary'>
+          <Typography variant='h4' color='textPrimary'>
             {title}
           </Typography>
           <br />
@@ -53,7 +53,7 @@ export default function LabelCreateAndEditModal({ handleCloseEditModal, label, t
               reset()
               handleCloseEditModal()
             }}
-            color='primary'
+            variant='contained' color='primary' size='small'
           >
             Cerrar
           </Button>

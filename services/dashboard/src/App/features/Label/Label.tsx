@@ -12,7 +12,8 @@ import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
 import { useDispatch, useSelector } from 'react-redux'
 import { labelsIsLoadingSelector, labelsSelector } from 'src/store/label/label.selector'
-import { Button, CircularProgress } from 'node_modules/@mui/material'
+import { CircularProgress } from 'node_modules/@mui/material'
+import Button from '@material-ui/core/Button'
 import { listLabels } from 'src/store/label/label.action'
 import { LabelT } from 'src/store/label/label.type'
 import AddIcon from '@material-ui/icons/Add'
@@ -25,8 +26,10 @@ import LabelDeleteModal from './LabelDeleteModal'
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
+
   },
 })
+
 
 export default function LabelList() {
   const classes = useStyles()
@@ -62,16 +65,12 @@ export default function LabelList() {
         </Grid>
         <Grid sm={4} container justifyContent='flex-end'>
           <Button
-            variant='contained'
-           
-            size='small'
-            startIcon={<AddIcon color='primary' />}
+           variant='contained' color='primary' size='small'
+            startIcon={<AddIcon/>}
             onClick={() => {
               setModalTitle('Crear Institución')
               setIsModalCreate(true)
-            }
-            
-            }color='primary'
+            }}
           >
             Nuevo
           </Button>
@@ -79,7 +78,7 @@ export default function LabelList() {
       </Grid>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
-          <TableHead>
+          <TableHead >
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>City</TableCell>
@@ -99,7 +98,7 @@ export default function LabelList() {
                   <IconButton color='primary' aria-label='edit label' component='span'>
                     <EditIcon onClick={() => {
 
-                      setModalTitle('Editar Institución')
+                      setModalTitle('Editar etiqueta')
                       setLabelToEdit(label)
                     }
 

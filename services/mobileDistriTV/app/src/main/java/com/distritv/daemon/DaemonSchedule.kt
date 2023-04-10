@@ -70,9 +70,11 @@ class DaemonSchedule: Service() {
     private fun launcherContent() {
         val currentMillisecond = localDateTimeToMillis(LocalDateTime.now())!!
 
-        contentService.getCurrentContents(currentMillisecond).forEach {
+        val currentContents = contentService.getCurrentContents(currentMillisecond)
 
-            val nextExecutionTime = it.cron?.let { it ->
+        for (content in currentContents) {
+
+            val nextExecutionTime = content.cron?.let { it ->
                 millisToDate(currentMillisecond)?.let { it1 -> calculateNextExecutionTime(it, it1) }
             }
 
@@ -87,21 +89,19 @@ class DaemonSchedule: Service() {
 
                 if (!isContentCurrentlyPlaying && dateToMillis(nextExecutionTime) in currentMillisecond until rightTime) {
 
-                    Log.v(TAG, "--- cumple con la condicion de reprouccion: $currentMillisecond - ${nextExecutionTime.time} - $rightTime")
+                    Log.v(TAG, "--- cumple con la condicion de reprouccion ${content.id}: $currentMillisecond - ${nextExecutionTime.time} - $rightTime")
 
                     // If periodTimeInSecond is greater than one minute, an alarm is programmed, otherwise it is played instantly
                     //if (periodTimeInSecond > 5) { //prueba de alarma
                     if (periodTimeInSecond > TimeUnit.MINUTES.toSeconds(1)) {
-                        setAlarm(it, nextExecutionTime)
-                        Toast.makeText(applicationContext, "DameonSchedule ALARM contentId: ${it.id}", Toast.LENGTH_SHORT).show()
+                        setAlarm(content, nextExecutionTime)
+                        Toast.makeText(applicationContext, "DameonSchedule ALARM contentId: ${content.id}", Toast.LENGTH_SHORT).show()
                     } else {
-                        launchContentNow(it)
-                        Toast.makeText(applicationContext, "DameonSchedule NOW contentId: ${it.id}", Toast.LENGTH_SHORT).show()
+                        launchContentNow(content)
+                        Toast.makeText(applicationContext, "DameonSchedule NOW contentId: ${content.id}", Toast.LENGTH_SHORT).show()
                     }
 
-                    (applicationContext as DistriTVApp).setContentCurrentlyPlaying(true)
-
-                    return@forEach
+                    break
                 }
             }
         }

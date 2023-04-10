@@ -84,6 +84,9 @@ class ScheduleReceiver() : BroadcastReceiver() {
             context.startActivity(scheduledIntent)
         }
 
+        // Notice that some content is being played
+        (context.applicationContext as DistriTVApp).setContentCurrentlyPlaying(true)
+
         if (isAlarm != null && isAlarm) {
             cancelAlarm(context, contentParam, contentType, contentDuration, contentId.toInt())
         }

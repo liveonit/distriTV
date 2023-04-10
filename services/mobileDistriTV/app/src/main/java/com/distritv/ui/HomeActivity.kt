@@ -1,10 +1,12 @@
 package com.distritv.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -34,6 +36,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setPermission()
+        idDisplay()
 
         myApp = this.applicationContext as DistriTVApp
 
@@ -145,6 +148,11 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         return false
+    }
+
+    @SuppressLint("HardwareIds", "SetTextI18n")
+    private fun idDisplay(){
+        binding.idInformationDisplay.text = "id : ${Settings.Secure.getString(applicationContext.contentResolver, Settings.Secure.ANDROID_ID)}"
     }
 
     companion object {

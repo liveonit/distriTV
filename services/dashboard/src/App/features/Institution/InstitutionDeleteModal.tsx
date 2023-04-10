@@ -43,7 +43,7 @@ export default function InstitutionDeleteModal({ isOpen, handleCloseDeleteModal,
     <>
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
-          <Typography variant='h6' color='textPrimary'>
+          <Typography variant='h4' color='textPrimary'>
             Está seguro que desea borrar la institución {nombreInstitution} ?
              
           </Typography>

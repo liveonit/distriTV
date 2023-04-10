@@ -8,11 +8,16 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { uploadContent } from 'src/store/content/content.action'
 import { useDispatch } from 'react-redux'
+import { FileUploader } from "react-drag-drop-files";
 
 type IProps = {
   isOpen: boolean
   handleCloseEditModal: () => void
 }
+
+
+
+
 
 export default function CreateContentModal({ isOpen, handleCloseEditModal }: IProps) {
   const [name, setName] = React.useState('')
@@ -26,6 +31,9 @@ export default function CreateContentModal({ isOpen, handleCloseEditModal }: IPr
       setFileError('At least and only one file should be selected')
     setFiles(event.target.files)
   }
+
+
+  
 
   const handleSave = async () => {
     if (files?.length && files?.length === 1) {
@@ -50,10 +58,11 @@ export default function CreateContentModal({ isOpen, handleCloseEditModal }: IPr
     <>
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
-          <Typography variant='h6' color='textPrimary'>
+          <Typography variant='h4' color='textPrimary'>
             Edit content
           </Typography>
           <br />
+          <FileUploader handleChange={handleFilesChange} name="file" types={files} />
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField

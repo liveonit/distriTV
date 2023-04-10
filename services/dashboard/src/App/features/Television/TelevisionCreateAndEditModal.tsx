@@ -34,7 +34,7 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
     <>
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
-          <Typography variant='h6' color='textPrimary'>
+          <Typography variant='h4' color='textPrimary'>
             {title}
           </Typography>
           <br />

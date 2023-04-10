@@ -7,6 +7,8 @@ export const PATH_NAME = {
   LOGIN: '/login',
   INSTITUTION: '/institutions',
   CONTENT: '/contents',
+  TELEVISION: '/televisions',
+  LABEL: '/labels',
   USERS: '/users',
   KANBAN: '/kanban',
 };

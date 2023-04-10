@@ -1,10 +1,10 @@
-import { ContentT } from '../content/content.type'
+import * as z from 'zod'
 
-export type TelevisionT = {
-  id: number
-  ip: string
-  mac: string
-  notifications?: Notification[]
-  televisions?: TelevisionT[]
-  contents?: ContentT[]
-}
+export const televisionSchema = z.object({
+  institutionId: z.number(),
+  ip: z.string().nonempty('Ip is required').min(7, 'Ip must have at least 2 characters'),
+  mac: z.string().nonempty('Mac is required'),
+ 
+})
+
+export type TelevisionT = z.TypeOf<typeof televisionSchema>

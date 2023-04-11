@@ -12,6 +12,7 @@ import { CITIES } from 'src/utils/constants/Cities'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
 import { removeEmpty } from 'src/utils/removeEmpty'
+import RefreshIcon from '@material-ui/icons/Refresh'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -52,10 +53,21 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
               />
             </Grid>
           </Grid>{' '}
-          <br />
+          <br/>
           <Grid item xs={12}>
             <FormInputText fullWidth label='Localidad' variant='outlined' name='locality' control={control} />
           </Grid>
+          {!television &&
+           <><br/>             
+              <Grid container>
+              <Grid item>
+              <FormInputText fullWidth label='Código TV' variant='outlined' name='locality' value="666666" control={control} /> 
+              </Grid>
+              <Grid item alignItems="stretch" style={{ display: "flex" }}>
+              <Button startIcon={<RefreshIcon />} color="primary" onClick={() => console.log(Math.random().toString(36).slice(2, 8))} />
+              </Grid>
+              </Grid> </>
+          }
         </DialogContent>
         <DialogActions>
           <Button

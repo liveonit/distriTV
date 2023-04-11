@@ -16,10 +16,14 @@ import com.distritv.R
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.daemon.DaemonRequest
 import com.distritv.daemon.DaemonSchedule
+import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
+import org.koin.android.ext.android.inject
 
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteractionListener {
+
+    private val sharedPreferences: SharedPreferencesService by inject()
 
     private val MY_PERMISSIONS_REQUEST = 100
 
@@ -152,7 +156,11 @@ class HomeActivity : AppCompatActivity() {
 
     @SuppressLint("HardwareIds", "SetTextI18n")
     private fun idDisplay(){
-        binding.idInformationDisplay.text = "id : ${Settings.Secure.getString(applicationContext.contentResolver, Settings.Secure.ANDROID_ID)}"
+        binding.idInformationDisplay.text = "id : ${sharedPreferences.getDeviceId()}"
+    }
+
+    override fun onStartButtonPressed() {
+        sharedPreferences.addDeviceId(onStartButtonPressed().)
     }
 
     companion object {

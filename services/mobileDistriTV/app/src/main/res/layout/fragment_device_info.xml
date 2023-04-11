@@ -6,9 +6,43 @@
     tools:context=".ui.DeviceInfoFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:id="@+id/input_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginTop="30dp">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/hello_blank_fragment" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:paddingHorizontal="40dp">
+
+
+        <EditText
+            android:id="@+id/user_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="16sp"
+            android:ems="10"
+            android:paddingTop="10dp"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
+        <Button
+            android:id="@+id/button_id"
+            android:layout_height="10sp"
+            android:layout_width="10sp"
+            android:text="Registrar"/>
+
+
+    </LinearLayout>
 
 </FrameLayout>

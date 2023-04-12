@@ -1,10 +1,7 @@
 <resources>
     <string name="app_name">mobileDistriTV</string>
-    <string name="main_btn_download">Descargar contenido</string>
-    <string name="main_btn_play">Reproducir contenido</string>
-    <string name="btn_back">Volver</string>
-    <string name="btn_download">Descargar</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="app_preference_file_key">DistriTVApp</string>
+    <string name="device_info_title">Ingresar ID del dispositivo</string>
+    <string name="device_info_register_button">Registrar</string>
+
 </resources>

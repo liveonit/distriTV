@@ -7,42 +7,37 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <LinearLayout
-        android:id="@+id/input_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_marginTop="30dp">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/device_info_title"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:paddingHorizontal="40dp">
+        android:layout_width="600dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="150dp"
+        android:paddingHorizontal="40dp"
+        android:layout_gravity="center_horizontal">
 
 
         <EditText
-            android:id="@+id/user_id"
+            android:id="@+id/device_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="16sp"
-            android:ems="10"
-            android:paddingTop="10dp"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>
-        <Button
-            android:id="@+id/button_id"
-            android:layout_height="10sp"
-            android:layout_width="10sp"
-            android:text="Registrar"/>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/device_info_register_button"
+        android:gravity="center"
+        android:layout_gravity="center"/>
 
-    </LinearLayout>
 
 </FrameLayout>

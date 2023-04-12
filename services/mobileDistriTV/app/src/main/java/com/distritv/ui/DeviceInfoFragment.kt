@@ -54,8 +54,8 @@ class DeviceInfoFragment : Fragment() {
     }
 
     private fun setupStartButton() {
-        binding.startButton.setOnClickListener {
-            listener?.onStartButtonPressed()
+        binding.buttonId.setOnClickListener {
+            listener?.onStartButtonPressed(binding.deviceId.text.toString())
         }
     }
 

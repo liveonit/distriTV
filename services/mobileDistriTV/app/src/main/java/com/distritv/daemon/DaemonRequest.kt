@@ -18,6 +18,7 @@ import com.distritv.data.model.Content
 import com.distritv.data.model.InfoDevice
 import com.distritv.data.repositories.ContentRepository
 import com.distritv.data.service.ContentService
+import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +33,7 @@ class DaemonRequest: Service() {
 
     private val contentRepository: ContentRepository by inject()
     private val contentService: ContentService by inject()
+    private val sharedPreferences: SharedPreferencesService by inject()
 
     private val handler = Handler(Looper.myLooper()!!)
     private lateinit var runnable: Runnable
@@ -78,7 +80,10 @@ class DaemonRequest: Service() {
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 var minuto = 16 //prueba
-                val id = Settings.Secure.getString(applicationContext.contentResolver, Settings.Secure.ANDROID_ID)
+                val id = sharedPreferences.getDeviceId()
+                if(id.isNullOrEmpty()){
+                    return@launch
+                }
                 val infoDevice = InfoDevice(id)
 
 

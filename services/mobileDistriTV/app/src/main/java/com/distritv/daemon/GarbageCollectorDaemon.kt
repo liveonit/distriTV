@@ -88,6 +88,6 @@ class GarbageCollectorDaemon: Service() {
 
     companion object {
         const val TAG = "[GarbageCollectorDaemon]"
-        private val periodTime: Long = BuildConfig.CLEANER_TIME_PERIOD
+        private val periodTime: Long = BuildConfig.GARBAGE_COLLECTOR_TIME_PERIOD
     }
 }

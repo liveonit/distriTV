@@ -1,5 +1,6 @@
 package com.distritv.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Intent
@@ -11,9 +12,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.distritv.DistriTVApp
 import com.distritv.R
+import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.databinding.ActivityHomeBinding
-import com.distritv.daemon.DaemonRequest
-import com.distritv.daemon.DaemonSchedule
+import com.distritv.daemon.ContentRequestDaemon
+import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.utils.*
 
 
@@ -28,12 +30,15 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var contentParam: String
 
 
+    @SuppressLint("AppCompatMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setPermission()
+        //setPermission()
+
+        startServices()
 
         myApp = this.applicationContext as DistriTVApp
 
@@ -43,18 +48,6 @@ class HomeActivity : AppCompatActivity() {
         val contentDuration = intent.extras?.getLong(CONTENT_DURATION_PARAM) ?: -1L
 
         addFragment(contentType, contentDuration)
-
-        if (!isServiceRunning(DaemonRequest::class.java)) {
-            ContextCompat.startForegroundService(this, Intent(this, DaemonRequest::class.java))
-        }
-
-        if (!isServiceRunning(DaemonSchedule::class.java)) {
-            ContextCompat.startForegroundService(this, Intent(this, DaemonSchedule::class.java))
-        }
-
-        //if (!isServiceRunning(DaemonInactivateContent::class.java)) {
-        //    ContextCompat.startForegroundService(this, Intent(this, DaemonInactivateContent::class.java))
-        //}
 
         actionBar?.hide()
     }
@@ -134,6 +127,20 @@ class HomeActivity : AppCompatActivity() {
                 this,
                 arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), MY_PERMISSIONS_REQUEST
             )
+        }
+    }
+
+    private fun startServices() {
+        if (!isServiceRunning(ContentRequestDaemon::class.java)) {
+            ContextCompat.startForegroundService(this, Intent(this, ContentRequestDaemon::class.java))
+        }
+
+        if (!isServiceRunning(ContentSchedulingDaemon::class.java)) {
+            ContextCompat.startForegroundService(this, Intent(this, ContentSchedulingDaemon::class.java))
+        }
+
+        if (!isServiceRunning(GarbageCollectorDaemon::class.java)) {
+            ContextCompat.startForegroundService(this, Intent(this, GarbageCollectorDaemon::class.java))
         }
     }
 

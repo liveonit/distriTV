@@ -8,7 +8,6 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import com.distritv.BuildConfig
-import com.distritv.DistriTVApp
 import com.distritv.data.model.CalendarModel
 import com.distritv.data.model.Content
 import com.distritv.data.service.AlarmService
@@ -21,7 +20,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class DaemonSchedule: Service() {
+class ContentSchedulingDaemon: Service() {
 
     private val contentService: ContentService by inject()
     private val alarmService: AlarmService by inject()
@@ -44,6 +43,8 @@ class DaemonSchedule: Service() {
         runnable = object : Runnable {
             override fun run() {
                 launcherContent()
+
+                // Schedule the next execution in periodTime milliseconds:
                 handler.postDelayed(this, TimeUnit.SECONDS.toMillis(periodTimeInSecond))
             }
         }
@@ -51,7 +52,10 @@ class DaemonSchedule: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(TAG, "Service started command...")
-        handler.post(runnable) // Start the daemon by scheduling the first execution
+
+        // Start the daemon by scheduling the first execution:
+        handler.post(runnable)
+
         return START_STICKY
     }
 
@@ -63,42 +67,44 @@ class DaemonSchedule: Service() {
     override fun onDestroy() {
         super.onDestroy()
         Log.i(TAG, "Service destroyed...")
-        handler.removeCallbacks(runnable) // Stop the daemon by removing all future executions
+
+        // Stop the daemon by removing all future executions:
+        handler.removeCallbacks(runnable)
+
         stopForeground(true)
     }
 
     private fun launcherContent() {
-        val currentMillisecond = localDateTimeToMillis(LocalDateTime.now())!!
+        val currentTimeInMillis = localDateTimeToMillis(LocalDateTime.now())!!
+        val intervalEndTimeInMillis = currentTimeInMillis.plus(TimeUnit.SECONDS.toMillis(periodTimeInSecond))
 
-        val currentContents = contentService.getCurrentContents(currentMillisecond)
+        val currentContents = contentService.getCurrentContents(currentTimeInMillis, intervalEndTimeInMillis)
 
         for (content in currentContents) {
 
             val nextExecutionTime = content.cron?.let { it ->
-                millisToDate(currentMillisecond)?.let { it1 -> calculateNextExecutionTime(it, it1) }
+                millisToDate(currentTimeInMillis)?.let { it1 -> calculateNextExecutionTime(it, it1) }
             }
-
-            val rightTime = currentMillisecond.plus(TimeUnit.SECONDS.toMillis(periodTimeInSecond))
 
             if (nextExecutionTime != null) {
 
-                Log.v(TAG, "$currentMillisecond - ${dateToMillis(nextExecutionTime)} - $rightTime")
+                Log.v(TAG, "$currentTimeInMillis - ${dateToMillis(nextExecutionTime)} - $intervalEndTimeInMillis")
 
-                val isContentCurrentlyPlaying: Boolean =
-                    (applicationContext as DistriTVApp).isContentCurrentlyPlaying()
+                val nextExecutionTimeInMillis = dateToMillis(nextExecutionTime)!!
 
-                if (!isContentCurrentlyPlaying && dateToMillis(nextExecutionTime) in currentMillisecond until rightTime) {
+                if (nextExecutionTimeInMillis in currentTimeInMillis until intervalEndTimeInMillis) {
 
-                    Log.v(TAG, "--- cumple con la condicion de reprouccion ${content.id}: $currentMillisecond - ${nextExecutionTime.time} - $rightTime")
+                    Log.v(TAG, "--- cumple con la condicion de reprouccion ${content.id}: $currentTimeInMillis - ${nextExecutionTime.time} - $intervalEndTimeInMillis")
+                    Log.v(TAG, "nextExecutionTimeInMillis - currentTimeInMillis = ${nextExecutionTimeInMillis.minus(currentTimeInMillis)}")
 
-                    // If periodTimeInSecond is greater than one minute, an alarm is programmed, otherwise it is played instantly
-                    //if (periodTimeInSecond > 5) { //prueba de alarma
-                    if (periodTimeInSecond > TimeUnit.MINUTES.toSeconds(1)) {
+                    // If the next execution minus the current time (waiting time) is greater than one minute,
+                    // an alarm is programmed, otherwise it is played instantly
+                    if (nextExecutionTimeInMillis.minus(currentTimeInMillis)  > TimeUnit.MINUTES.toMillis(1)) {
                         setAlarm(content, nextExecutionTime)
-                        Toast.makeText(applicationContext, "DameonSchedule ALARM contentId: ${content.id}", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(applicationContext, "DameonSchedule ALARM contentId: ${content.id}", Toast.LENGTH_SHORT).show()
                     } else {
                         launchContentNow(content)
-                        Toast.makeText(applicationContext, "DameonSchedule NOW contentId: ${content.id}", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(applicationContext, "DameonSchedule NOW contentId: ${content.id}", Toast.LENGTH_SHORT).show()
                     }
 
                     break
@@ -153,7 +159,7 @@ class DaemonSchedule: Service() {
     }
 
     private fun launchContentNow(content: Content) {
-        val intent = Intent(applicationContext, ScheduleReceiver::class.java)
+        val intent = Intent(applicationContext, ContentPlaybackLauncher::class.java)
             .putExtra(CONTENT_TYPE_PARAM, content.type)
             .putExtra(CONTENT_ID_PARAM, content.id.toInt())
             .putExtra(CONTENT_DURATION_PARAM, content.durationInSeconds)
@@ -175,7 +181,7 @@ class DaemonSchedule: Service() {
     }
 
     companion object {
-        const val TAG = "[DaemonSchedule]"
+        const val TAG = "[ContentSchedulingDaemon]"
         private val periodTimeInSecond: Long = BuildConfig.SCHEDULE_TIME_PERIOD
         private const val ERROR_LOCAL_PATH_NULL_OR_BLANK = "It is not possible to schedule the reproduction of the content, it does not have any local path of the downloaded content"
         private const val ERROR_TEXT_NULL_OR_BLANK = "It is not possible to schedule the reproduction of the content, it is of type TEXT but it does not have any text"

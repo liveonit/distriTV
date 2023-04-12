@@ -59,7 +59,7 @@
         </receiver>
 
         <receiver
-            android:name=".daemon.ScheduleReceiver"
+            android:name=".daemon.ContentPlaybackLauncher"
             android:enabled="true"
             android:exported="true" />
 
@@ -73,20 +73,20 @@
         </service>
 
         <service
-            android:name=".daemon.DaemonRequest"
+            android:name=".daemon.ContentRequestDaemon"
             android:label="Daemon Request Service"
             android:enabled="true"
             android:exported="true" />
 
         <service
-            android:name=".daemon.DaemonSchedule"
+            android:name=".daemon.ContentSchedulingDaemon"
             android:label="Daemon Schedule Service"
             android:enabled="true"
             android:exported="true" />
 
         <service
-            android:name=".daemon.DaemonInactivateContent"
-            android:label="Daemon Inactivate Content Service"
+            android:name=".daemon.GarbageCollectorDaemon"
+            android:label="Daemon Garbage Collector Service"
             android:enabled="true"
             android:exported="true" />
 

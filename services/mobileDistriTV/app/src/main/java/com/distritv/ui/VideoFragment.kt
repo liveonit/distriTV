@@ -61,6 +61,7 @@ class VideoFragment : Fragment() {
         mediaC.setAnchorView(binding.videoContainer)
 
         binding.videoContainer.start()
+        Log.i(TAG, "Playback started.")
 
         binding.videoContainer.setOnCompletionListener {
             // Video is complete, after 10 seconds come back home

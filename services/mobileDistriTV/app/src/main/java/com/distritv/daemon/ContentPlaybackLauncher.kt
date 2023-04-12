@@ -10,6 +10,7 @@ import android.app.AlarmManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.distritv.DistriTVApp
 import com.distritv.R
 import com.distritv.ui.HomeActivity
@@ -19,7 +20,7 @@ import com.distritv.ui.VideoFragment
 import com.distritv.utils.*
 
 
-class ScheduleReceiver() : BroadcastReceiver() {
+class ContentPlaybackLauncher() : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
@@ -32,7 +33,18 @@ class ScheduleReceiver() : BroadcastReceiver() {
         val currentActivity: Activity? =
             (context.applicationContext as DistriTVApp).getCurrentActivity()
 
+        val isContentCurrentlyPlaying: Boolean =
+            (context.applicationContext as DistriTVApp).isContentCurrentlyPlaying()
+
         if (contentParam.isNullOrBlank() || contentType.isNullOrBlank() || contentId == null) {
+            return
+        }
+
+        if (isContentCurrentlyPlaying) {
+            Log.w(TAG, "Cannot be played because other content is currently playing")
+            if (isAlarm != null && isAlarm) {
+                cancelAlarm(context, contentParam, contentType, contentDuration, contentId.toInt())
+            }
             return
         }
 
@@ -106,7 +118,7 @@ class ScheduleReceiver() : BroadcastReceiver() {
     }
 
     companion object {
-        const val TAG = "[ScheduleReceiver]"
+        const val TAG = "[ContentPlaybackLauncher]"
     }
 
 }

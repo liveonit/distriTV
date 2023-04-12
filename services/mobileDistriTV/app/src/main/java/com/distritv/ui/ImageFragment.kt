@@ -69,6 +69,7 @@ class ImageFragment : Fragment() {
         viewModel.image.observe(viewLifecycleOwner) {
             if (it != null) {
                 binding.imageContainer.setImageBitmap(it)
+                Log.i(TAG, "Playback started.")
 
                 // Back home after end of the duration
                 Handler(Looper.getMainLooper()).postDelayed({

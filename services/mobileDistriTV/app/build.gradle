@@ -41,6 +41,7 @@ android {
             buildConfigField "String", "BASE_URL", "\"${props.getProperty("base_url_local")}\""
             buildConfigField "Long", "REQUEST_TIME_PERIOD", "${props.getProperty("request_time_period_in_seconds")}L"
             buildConfigField "Long", "SCHEDULE_TIME_PERIOD", "${props.getProperty("schedule_time_period_in_seconds")}L"
+            buildConfigField "Long", "CLEANER_TIME_PERIOD", "${props.getProperty("cleaner_time_period_in_seconds")}L"
         }
         release {
             minifyEnabled false
@@ -49,6 +50,7 @@ android {
             buildConfigField "String", "BASE_URL", "\"${props.getProperty("base_url_prod")}\""
             buildConfigField "Long", "REQUEST_TIME_PERIOD", "${props.getProperty("request_time_period_in_seconds")}L"
             buildConfigField "Long", "SCHEDULE_TIME_PERIOD", "${props.getProperty("schedule_time_period_in_seconds")}L"
+            buildConfigField "Long", "CLEANER_TIME_PERIOD", "${props.getProperty("cleaner_time_period_in_seconds")}L"
         }
     }
 

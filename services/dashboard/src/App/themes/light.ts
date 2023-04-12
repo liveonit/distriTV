@@ -1,4 +1,4 @@
-import { colors, createTheme } from '@material-ui/core';
+import {createTheme } from '@material-ui/core';
 
 const lightTheme = createTheme({
   palette: {
@@ -7,22 +7,22 @@ const lightTheme = createTheme({
       white: '#fff',
     },
     action: {
-      active: colors.blueGrey[600],
+      active: '#00a096',
     },
     background: {
       default: '#fafafa',
       paper: '#fff',
     },
     primary: {
-      light: '#1976d2 ',
-      main: '#3f51b5',
-      dark: '#303f9f',
+      light: '#00a096',
+      main: '#00a096',
+      dark: '#00796B',
       contrastText: '#fff',
     },
     secondary: {
-      light: '#ff4081',
-      main: '#1976d2',
-      dark: '#c51162',
+      light: '#B2DFDB',
+      main: '#00a096',
+      dark: '#00695C',
       contrastText: '#fff',
     },
     text: {
@@ -31,8 +31,15 @@ const lightTheme = createTheme({
       disabled: 'rgba(0, 0, 0, 0.38)',
       hint: 'rgba(0, 0, 0, 0.38)',
     },
+    
+   
   },
+  
   overrides: {},
 });
 
+
+
+
 export default lightTheme;
+

@@ -19,7 +19,7 @@ const listTelevisions: Epic = (action$) =>
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(() => {
       const {session} = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ path: '/institution', requireAuthType: session?.type }).pipe(
+      return apiSvc.request({ path: '/television', requireAuthType: session?.type }).pipe(
         map(({ response }) => {
           return {
             type: TelevisionActionTypes.LIST_ALL_SUCCESS,
@@ -39,7 +39,7 @@ const listTelevisions: Epic = (action$) =>
 const listTelevisionsFailed: Epic = (action$) =>
   action$.pipe(
     ofType(TelevisionActionTypes.LIST_ALL_FAILURE),
-    map(() => enqueueSnackbarAction({ variant: 'error', message: 'Error getting institutions.', key: 'REQUEST_ERROR' })),
+    map(() => enqueueSnackbarAction({ variant: 'error', message: 'Error getting televisions.', key: 'REQUEST_ERROR' })),
   )
 
-export const institutionsEpics = [listTelevisions, listTelevisionsFailed]
+export const televisionsEpics = [listTelevisions, listTelevisionsFailed]

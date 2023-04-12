@@ -12,13 +12,14 @@ import { SessionT } from '../auth/auth.type'
 
 const refreshToken$ = defer(() => checkOrRefreshToken())
 
+// === List institutions
 const listInstitutions: Epic = (action$) =>
   action$.pipe(
     ofType(InstitutionActionTypes.LIST_ALL_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(() => {
-      const {session} = storage.get<SessionT>('session') || {}
+      const { session } = storage.get<SessionT>('session') || {}
       return apiSvc.request({ path: '/institution', requireAuthType: session?.type }).pipe(
         map(({ response }) => {
           return {
@@ -35,11 +36,87 @@ const listInstitutions: Epic = (action$) =>
       )
     }),
   )
-
 const listInstitutionsFailed: Epic = (action$) =>
   action$.pipe(
     ofType(InstitutionActionTypes.LIST_ALL_FAILURE),
     map(() => enqueueSnackbarAction({ variant: 'error', message: 'Error getting institutions.', key: 'REQUEST_ERROR' })),
   )
 
-export const institutionsEpics = [listInstitutions, listInstitutionsFailed]
+// === Create institution
+const createInstitution: Epic = (action$) =>
+  action$.pipe(
+    ofType(InstitutionActionTypes.CREATE_REQUEST),
+    debounceTime(0),
+    concatMap((act) => refreshToken$.pipe(map(() => act))),
+    mergeMap(({ payload }) => {
+      const { session } = storage.get<SessionT>('session') || {}
+      return apiSvc.request({ method: 'POST', path: '/institutions', requireAuthType: session?.type, body: payload }).pipe(
+        mergeMap(({ response }) => {
+          return of({
+            type: InstitutionActionTypes.CREATE_SUCCESS,
+            payload: response,
+          })
+        }),
+        catchError((err) =>
+          of({
+            type: InstitutionActionTypes.CREATE_FAILURE,
+            payload: err,
+          }),
+        ),
+      )
+    }),
+  )
+
+// === Update institution
+const updateInstitution: Epic = (action$) =>
+  action$.pipe(
+    ofType(InstitutionActionTypes.CREATE_REQUEST),
+    debounceTime(0),
+    concatMap((act) => refreshToken$.pipe(map(() => act))),
+    mergeMap(({ payload }) => {
+      const { session } = storage.get<SessionT>('session') || {}
+      return apiSvc.request({ method: 'PUT', path: `/institutions/${payload.id}`, requireAuthType: session?.type, body: payload }).pipe(
+        mergeMap(({ response }) => {
+          return of({
+            type: InstitutionActionTypes.EDIT_SUCCESS,
+            payload: response,
+          })
+        }),
+        catchError((err) =>
+          of({
+            type: InstitutionActionTypes.CREATE_FAILURE,
+            payload: err,
+          }),
+        ),
+      )
+    }),
+  )
+
+
+// === Update institution
+const deleteInstitution: Epic = (action$) =>
+  action$.pipe(
+    ofType(InstitutionActionTypes.CREATE_REQUEST),
+    debounceTime(0),
+    concatMap((act) => refreshToken$.pipe(map(() => act))),
+    mergeMap(({ payload }) => {
+      const { session } = storage.get<SessionT>('session') || {}
+      return apiSvc.request({ method: 'PUT', path: `/institutions/${payload.id}`, requireAuthType: session?.type, body: payload }).pipe(
+        mergeMap(({ response }) => {
+          return of({
+            type: InstitutionActionTypes.EDIT_SUCCESS,
+            payload: response,
+          })
+        }),
+        catchError((err) =>
+          of({
+            type: InstitutionActionTypes.CREATE_FAILURE,
+            payload: err,
+          }),
+        ),
+      )
+    }),
+  )
+
+
+export const institutionsEpics = [listInstitutions, listInstitutionsFailed, createInstitution, updateInstitution, deleteInstitution]

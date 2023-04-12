@@ -24,6 +24,36 @@ const reducer = (state = initialState, { type, payload }: any) => {
         isLoading: false,
         items: payload,
       }
+    case InstitutionActionTypes.CREATE_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+      }
+    case InstitutionActionTypes.CREATE_FAILURE:
+      return {
+        ...state,
+        isLoading: false
+      }
+    case InstitutionActionTypes.CREATE_SUCCESS:
+      return {
+        ...state,
+        isLoading: false
+      }
+    case InstitutionActionTypes.EDIT_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+      }
+    case InstitutionActionTypes.EDIT_FAILURE:
+      return {
+        ...state,
+        isLoading: false
+      }
+    case InstitutionActionTypes.EDIT_SUCCESS:
+      return {
+        ...state,
+        isLoading: false
+      }
     default:
       return state
   }

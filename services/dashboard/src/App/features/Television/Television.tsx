@@ -11,16 +11,17 @@ import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
 import { useDispatch, useSelector } from 'react-redux'
-import { institutionsIsLoadingSelector, institutionsSelector } from 'src/store/institution/institutions.selector'
+import { televisionsIsLoadingSelector, televisionsSelector } from 'src/store/television/television.selector'
+
 import { CircularProgress } from 'node_modules/@mui/material'
 import Button from '@material-ui/core/Button'
-import { listInstitutions } from 'src/store/institution/institution.action'
-import { InstitutionT } from 'src/store/institution/institution.type'
+import { listTelevisions } from 'src/store/television/television.action'
+import { TelevisionT } from 'src/store/television/television.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import InstitutionCreateAndEditModal from './InstitutionCreateAndEditModal'
-import InstitutionDeleteModal from './InstitutionDeleteModal'
+import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
+import TelevisionDeleteModal from './TelevisionDeleteModal'
 
 
 
@@ -30,28 +31,28 @@ const useStyles = makeStyles({
   },
 })
 
-export default function InstitutionList() {
+export default function TelevisionList() {
   const classes = useStyles()
   const dispatch = useDispatch()
 
   React.useEffect(() => {
-    dispatch(listInstitutions())
+    dispatch(listTelevisions())
   }, [dispatch])
 
-  const isLoading = useSelector(institutionsIsLoadingSelector)
-  const institutions = useSelector(institutionsSelector)
+  const isLoading = useSelector(televisionsIsLoadingSelector)
+  const televisions = useSelector(televisionsSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
-  const [institutionToEdit, setInstitutionToEdit] = React.useState<InstitutionT | null>(null)
-  const [institutionToDelete, setInstitutionToDelete] = React.useState<InstitutionT | null>(null)
+  const [televisionToEdit, setTelevisionToEdit] = React.useState<TelevisionT | null>(null)
+  const [televisionToDelete, setTelevisionToDelete] = React.useState<TelevisionT | null>(null)
   const [titleModal, setModalTitle] = React.useState('Titulo')
 
-  function handleCloseEditInstitutionModal() {
-    setInstitutionToEdit(null)
+  function handleCloseEditTelevisionModal() {
+    setTelevisionToEdit(null)
     setIsModalCreate(false)
   }
 
-  function handleCloseDeleteInstitutionModal() {
-    setInstitutionToDelete(null)
+  function handleCloseDeleteTelevisionModal() {
+    setTelevisionToDelete(null)
   }
 
   return isLoading ? (
@@ -60,7 +61,7 @@ export default function InstitutionList() {
     <>
       <Grid container alignItems='center'>
         <Grid sm={8}>
-          <h2>Instituciones</h2>
+          <h2>Televisiones</h2>
         </Grid>
         <Grid sm={4} container justifyContent='flex-end'>
           <Button
@@ -69,7 +70,7 @@ export default function InstitutionList() {
             size='small'
             startIcon={<AddIcon />}
             onClick={() => {
-              setModalTitle('Crear Institución')
+              setModalTitle('Crear Television')
               setIsModalCreate(true)
             }
             }
@@ -82,34 +83,34 @@ export default function InstitutionList() {
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>City</TableCell>
-              <TableCell>Locality</TableCell>
+              <TableCell>Id</TableCell>
+              <TableCell>Ip</TableCell>
+              <TableCell>Mac</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {institutions.map((institution) => (
-              <TableRow key={institution.id}>
+            {televisions.map((television) => (
+              <TableRow key={television.institutionId}>
                 <TableCell component='th' scope='row'>
-                  {institution.name}
+                  {television.institutionId}
                 </TableCell>
-                <TableCell>{institution.city}</TableCell>
-                <TableCell>{institution.locality}</TableCell>
+                <TableCell>{television.ip}</TableCell>
+                <TableCell>{television.mac}</TableCell>
                 <TableCell>
-                  <IconButton color='primary' aria-label='edit institution' component='span'>
+                  <IconButton color='primary' aria-label='edit television' component='span'>
                     <EditIcon onClick={() => {
 
                       setModalTitle('Editar Institución')
-                      setInstitutionToEdit(institution)
+                      setTelevisionToEdit(television)
                     }
 
                     } />
                   </IconButton>
-                  <IconButton color='primary' aria-label='delete institution' component='span'>
+                  <IconButton color='primary' aria-label='delete television' component='span'>
                     <DeleteIcon onClick={() => {
 
-                      setInstitutionToDelete(institution)
+                      setTelevisionToDelete(television)
                     }
 
                     } />
@@ -120,16 +121,16 @@ export default function InstitutionList() {
           </TableBody>
         </Table>
       </TableContainer>
-      {(!!institutionToEdit || isModalCreate) &&
-        <InstitutionCreateAndEditModal
+      {(!!televisionToEdit || isModalCreate) &&
+        <TelevisionCreateAndEditModal
           title={titleModal}
-          institution={institutionToEdit!}
-          handleCloseEditModal={handleCloseEditInstitutionModal}
+          television={televisionToEdit!}
+          handleCloseEditModal={handleCloseEditTelevisionModal}
         />}
-      <InstitutionDeleteModal
-        isOpen={!!institutionToDelete}
-        institution={institutionToDelete!}
-        handleCloseDeleteModal={handleCloseDeleteInstitutionModal}
+      <TelevisionDeleteModal
+        isOpen={!!televisionToDelete}
+        television={televisionToDelete!}
+        handleCloseDeleteModal={handleCloseDeleteTelevisionModal}
       />
     </>
   )

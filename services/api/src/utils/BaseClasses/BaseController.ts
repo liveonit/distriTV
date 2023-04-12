@@ -59,7 +59,7 @@ class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
     if (!id) throw new BadRequest('Id is required');
     if (!isNaN(+id)) id = +id
     const { relations } = this.querySchema?.parse(req.query) || {};
-    const result = await this.service.get({where: {id} as  FindOptionsWhere<T>, relations});
+    const result = await this.service.get({ where: { id } as FindOptionsWhere<T>, relations });
     return res.status(200).json(result);
   });
 
@@ -68,7 +68,7 @@ class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
     if (!id) throw new BadRequest('Id is required');
     if (!isNaN(+id)) id = +id
     await this.service.delete(id);
-    return res.status(200).json();
+    return res.status(200).json({ id });
   });
 }
 

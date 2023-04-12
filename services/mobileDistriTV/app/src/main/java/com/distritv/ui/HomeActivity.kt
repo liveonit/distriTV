@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -16,10 +17,14 @@ import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.daemon.ContentRequestDaemon
 import com.distritv.daemon.ContentSchedulingDaemon
+import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
+import org.koin.android.ext.android.inject
 
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteractionListener {
+
+    private val sharedPreferences: SharedPreferencesService by inject()
 
     private val MY_PERMISSIONS_REQUEST = 100
 
@@ -80,14 +85,29 @@ class HomeActivity : AppCompatActivity() {
     private fun addFragment(contentType: String?, contentDuration: Long) {
         if (contentType.isNullOrBlank()) {
             //Default load
-            supportFragmentManager.addFragment(
-                R.id.home_fragment_container,
-                ImageFragment(),
-                false,
-                ImageFragment.TAG
-            )
+            if(sharedPreferences.isDeviceRegistered()){
+                supportFragmentManager.addFragment(
+                    R.id.home_fragment_container,
+                    ImageFragment(),
+                    false,
+                    ImageFragment.TAG
+
+                )
+                idDisplay()
+
+            } else {
+                binding.idInformationDisplay.visibility = View.INVISIBLE
+                supportFragmentManager.addFragment(
+                    R.id.home_fragment_container,
+                    DeviceInfoFragment(),
+                    false,
+                    DeviceInfoFragment.TAG
+                )
+            }
+
         } else {
             //Content load
+            binding.idInformationDisplay.visibility = View.INVISIBLE
             when (contentType) {
                 IMAGE ->
                     supportFragmentManager.addFragment(
@@ -152,6 +172,23 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         return false
+    }
+
+    @SuppressLint("HardwareIds", "SetTextI18n")
+    private fun idDisplay(){
+        binding.idInformationDisplay.text = "id : ${sharedPreferences.getDeviceId()}"
+        binding.idInformationDisplay.visibility = View.VISIBLE
+    }
+
+    override fun onStartButtonPressed(id: String) {
+        sharedPreferences.addDeviceId(id)
+        supportFragmentManager.addFragment(
+            R.id.home_fragment_container,
+            ImageFragment(),
+            false,
+            ImageFragment.TAG
+        )
+        idDisplay()
     }
 
     companion object {

@@ -3,7 +3,10 @@ package com.distritv.utils
 import android.net.Uri
 import com.distritv.data.model.Content
 
+
 const val CONTENTS_DIRECTORY = ""
+
+const val DEVICE_ID = "deviceId"
 
 const val CONTENT_PARAM = "contentParam"
 const val CONTENT_TYPE_PARAM = "contentType"

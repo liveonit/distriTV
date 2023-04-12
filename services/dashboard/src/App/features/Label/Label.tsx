@@ -11,47 +11,48 @@ import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
 import { useDispatch, useSelector } from 'react-redux'
-import { institutionsIsLoadingSelector, institutionsSelector } from 'src/store/institution/institutions.selector'
+import { labelsIsLoadingSelector, labelsSelector } from 'src/store/label/label.selector'
 import { CircularProgress } from 'node_modules/@mui/material'
 import Button from '@material-ui/core/Button'
-import { listInstitutions } from 'src/store/institution/institution.action'
-import { InstitutionT } from 'src/store/institution/institution.type'
+import { listLabels } from 'src/store/label/label.action'
+import { LabelT } from 'src/store/label/label.type'
 import AddIcon from '@material-ui/icons/Add'
-import DeleteIcon from '@material-ui/icons/Delete';
-
-import InstitutionCreateAndEditModal from './InstitutionCreateAndEditModal'
-import InstitutionDeleteModal from './InstitutionDeleteModal'
+import DeleteIcon from '@material-ui/icons/Delete'
+import LabelCreateAndEditModal from './LabelCreateAndEditModal'
+import LabelDeleteModal from './LabelDeleteModal'
 
 
 
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
+
   },
 })
 
-export default function InstitutionList() {
+
+export default function LabelList() {
   const classes = useStyles()
   const dispatch = useDispatch()
 
   React.useEffect(() => {
-    dispatch(listInstitutions())
+    dispatch(listLabels())
   }, [dispatch])
 
-  const isLoading = useSelector(institutionsIsLoadingSelector)
-  const institutions = useSelector(institutionsSelector)
+  const isLoading = useSelector(labelsIsLoadingSelector)
+  const labels = useSelector(labelsSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
-  const [institutionToEdit, setInstitutionToEdit] = React.useState<InstitutionT | null>(null)
-  const [institutionToDelete, setInstitutionToDelete] = React.useState<InstitutionT | null>(null)
+  const [labelToEdit, setLabelToEdit] = React.useState<LabelT | null>(null)
+  const [labelToDelete, setLabelToDelete] = React.useState<LabelT | null>(null)
   const [titleModal, setModalTitle] = React.useState('Titulo')
 
-  function handleCloseEditInstitutionModal() {
-    setInstitutionToEdit(null)
+  function handleCloseEditLabelModal() {
+    setLabelToEdit(null)
     setIsModalCreate(false)
   }
 
-  function handleCloseDeleteInstitutionModal() {
-    setInstitutionToDelete(null)
+  function handleCloseDeleteLabelModal() {
+    setLabelToDelete(null)
   }
 
   return isLoading ? (
@@ -64,15 +65,12 @@ export default function InstitutionList() {
         </Grid>
         <Grid sm={4} container justifyContent='flex-end'>
           <Button
-            variant='contained'
-            color='primary'
-            size='small'
-            startIcon={<AddIcon />}
+           variant='contained' color='primary' size='small'
+            startIcon={<AddIcon/>}
             onClick={() => {
               setModalTitle('Crear Institución')
               setIsModalCreate(true)
-            }
-            }
+            }}
           >
             Nuevo
           </Button>
@@ -80,7 +78,7 @@ export default function InstitutionList() {
       </Grid>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
-          <TableHead>
+          <TableHead >
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>City</TableCell>
@@ -89,27 +87,27 @@ export default function InstitutionList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {institutions.map((institution) => (
-              <TableRow key={institution.id}>
+            {labels.map((label) => (
+              <TableRow key={label.id}>
                 <TableCell component='th' scope='row'>
-                  {institution.name}
+                  {label.name}
                 </TableCell>
-                <TableCell>{institution.city}</TableCell>
-                <TableCell>{institution.locality}</TableCell>
+                <TableCell>{label.name}</TableCell>
+                <TableCell>{label.description}</TableCell>
                 <TableCell>
-                  <IconButton color='primary' aria-label='edit institution' component='span'>
+                  <IconButton color='primary' aria-label='edit label' component='span'>
                     <EditIcon onClick={() => {
 
-                      setModalTitle('Editar Institución')
-                      setInstitutionToEdit(institution)
+                      setModalTitle('Editar etiqueta')
+                      setLabelToEdit(label)
                     }
 
                     } />
                   </IconButton>
-                  <IconButton color='primary' aria-label='delete institution' component='span'>
+                  <IconButton color='primary' aria-label='delete label' component='span'>
                     <DeleteIcon onClick={() => {
 
-                      setInstitutionToDelete(institution)
+                      setLabelToDelete(label)
                     }
 
                     } />
@@ -120,16 +118,16 @@ export default function InstitutionList() {
           </TableBody>
         </Table>
       </TableContainer>
-      {(!!institutionToEdit || isModalCreate) &&
-        <InstitutionCreateAndEditModal
+      {(!!labelToEdit || isModalCreate) &&
+        <LabelCreateAndEditModal
           title={titleModal}
-          institution={institutionToEdit!}
-          handleCloseEditModal={handleCloseEditInstitutionModal}
+          label={labelToEdit!}
+          handleCloseEditModal={handleCloseEditLabelModal}
         />}
-      <InstitutionDeleteModal
-        isOpen={!!institutionToDelete}
-        institution={institutionToDelete!}
-        handleCloseDeleteModal={handleCloseDeleteInstitutionModal}
+      <LabelDeleteModal
+        isOpen={!!labelToDelete}
+        label={labelToDelete!}
+        handleCloseDeleteModal={handleCloseDeleteLabelModal}
       />
     </>
   )

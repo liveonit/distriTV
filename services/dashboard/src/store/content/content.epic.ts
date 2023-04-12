@@ -54,11 +54,10 @@ const uploadContent: Epic = (action$) => {
       return err
     }),
     mergeMap(({ payload }) => {
-      const { files } = payload
-      console.log({ filesLength: files?.length })
+      const { file } = payload
       const formData = new FormData()
-      formData.append('file', files[0], files[0].name)
-      formData.append('type', files[0].type)
+      formData.append('file', file, file.name)
+      formData.append('type', file.type)
       formData.append('name', payload.name)
 
       return apiSvc
@@ -77,15 +76,14 @@ const uploadContent: Epic = (action$) => {
         })
         .pipe(takeUntil(action$.pipe(ofType(ContentActionTypes.CANCEL_VIDEO_UPLOAD))))
         .pipe(
-          mergeMap(({response}) => {
-            console.log('path ========>>>>>>>>>', `${window.location.protocol}//${window.location.host}${(response as any).filePath}`)
+          mergeMap(({ response }) => {
             return of(
               {
                 type: ContentActionTypes.UPLOAD_FILE_SUCCESS,
               },
               {
                 type: ContentActionTypes.CREATE_REQUEST,
-                payload: { ...payload, url: `${window.location.protocol}//${window.location.host}${(response as any)[0].filePath}`},
+                payload: { ...payload, url: `${window.location.protocol}//${window.location.host}${(response as any)[0].filePath}` },
               },
             )
           }),

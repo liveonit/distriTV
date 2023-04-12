@@ -19,7 +19,7 @@ const listLabels: Epic = (action$) =>
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(() => {
       const {session} = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ path: '/institution', requireAuthType: session?.type }).pipe(
+      return apiSvc.request({ path: '/label', requireAuthType: session?.type }).pipe(
         map(({ response }) => {
           return {
             type: LabelActionTypes.LIST_ALL_SUCCESS,
@@ -42,4 +42,4 @@ const listLabelsFailed: Epic = (action$) =>
     map(() => enqueueSnackbarAction({ variant: 'error', message: 'Error getting institutions.', key: 'REQUEST_ERROR' })),
   )
 
-export const institutionsEpics = [listLabels, listLabelsFailed]
+export const labelsEpics = [listLabels, listLabelsFailed]

@@ -9,7 +9,8 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, CircularProgress } from 'node_modules/@mui/material'
+import { CircularProgress } from 'node_modules/@mui/material'
+import Button from '@material-ui/core/Button'
 import { listContents } from 'src/store/content/content.action'
 import { contentIsLoadingSelector, contentSelector } from 'src/store/content/content.selector'
 import AddIcon from '@material-ui/icons/Add'
@@ -54,7 +55,7 @@ export default function ContentList() {
             startIcon={<AddIcon />}
             onClick={() => setIsModalOpen(true)}
           >
-            Add
+            NUEVO
           </Button>
         </Grid>
       </Grid>

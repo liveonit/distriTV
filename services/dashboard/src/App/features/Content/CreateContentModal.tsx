@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler } from 'react'
+import React, { useCallback } from 'react'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -8,6 +8,11 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { uploadContent } from 'src/store/content/content.action'
 import { useDispatch } from 'react-redux'
+import { useDropzone } from 'react-dropzone'
+import { Box } from '@mui/material'
+// matrial icon
+import CloudUpload from '@material-ui/icons/CloudUpload'
+import CloudDone from '@material-ui/icons/CloudDone'
 
 type IProps = {
   isOpen: boolean
@@ -16,32 +21,30 @@ type IProps = {
 
 export default function CreateContentModal({ isOpen, handleCloseEditModal }: IProps) {
   const [name, setName] = React.useState('')
-  const [files, setFiles] = React.useState<FileList | null>(null)
+  const [file, setFile] = React.useState<File | null>(null)
   const [fileError, setFileError] = React.useState('')
   const [uploadingFile, setUploadingFile] = React.useState(false)
   const dispatch = useDispatch()
 
-  const handleFilesChange: ChangeEventHandler<HTMLInputElement> = async (event) => {
-    if (event.target.files?.length && event.target.files?.length > 1)
-      setFileError('At least and only one file should be selected')
-    setFiles(event.target.files)
-  }
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    if (acceptedFiles.length && acceptedFiles.length > 1) setFileError('At least and only one file should be selected')
+    setFile(acceptedFiles[0])
+  }, [])
+  const { getRootProps, getInputProps } = useDropzone({ onDrop, maxFiles: 1 })
 
   const handleSave = async () => {
-    if (files?.length && files?.length === 1) {
+    if (file) {
       setUploadingFile(true)
-      
-      // const result = await axios.post('/api/v1/content/upload', formData)
       dispatch(
         uploadContent({
           name,
-          type: files[0].type,
-          files,
+          type: file.type,
+          file,
         }),
       )
     }
     setName('')
-    setFiles(null)
+    setFile(null)
     handleCloseEditModal()
   }
   console.log(uploadingFile)
@@ -67,14 +70,33 @@ export default function CreateContentModal({ isOpen, handleCloseEditModal }: IPr
             </Grid>
           </Grid>
 
-          <input type='file' onChange={handleFilesChange} />
+          <div {...getRootProps()} style={{ height: '150px', border: '1px solid', marginTop: '15px' }}>
+            <input {...getInputProps()} />
+            <Box display='flex' flexDirection={'column'} style={{ alignItems: 'center', justifyContent: 'center' }}>
+              {!file ? (
+                <>
+                  <CloudUpload style={{ width: '50px', height: '50px', marginTop: '10px' }} />
+                  <Typography variant='h6' color='textPrimary'>
+                    Drop the files here or click to open the browser...
+                  </Typography>
+                </>
+              ): <>
+              <CloudDone style={{ width: '50px', height: '50px', marginTop: '10px' }} />
+                  <Typography variant='h6' color='textPrimary'>
+                    Loaded filename: "{file.name}"
+                    <br/>
+                    File successfully loaded, click here to change the file or drop a new one
+                  </Typography>
+              </>}
+            </Box>
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseEditModal} color='primary'>
             Close
           </Button>
           <Button
-            onClick={() => files && handleSave()}
+            onClick={() => file && handleSave()}
             disabled={!!fileError.length}
             variant='contained'
             color='primary'

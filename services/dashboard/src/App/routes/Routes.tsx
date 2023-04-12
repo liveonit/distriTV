@@ -21,6 +21,9 @@ const Dashboard = lazy(() => import('../features/Dashboard'));
 const Playbackground = lazy(() => import('../features/Playbackground'));
 const Login = lazy(() => import('../features/Login'));
 const Kanban = lazy(() => import('../features/Kanban'));
+const Television = lazy(() => import('../features/Television'));
+const Label = lazy(() => import('../features/Label'));
+
 
 const routesConfig: RoutesT[] = [
   {
@@ -63,6 +66,16 @@ const routesConfig: RoutesT[] = [
       {
         path: PATH_NAME.CONTENT,
         component: Content,
+        requireRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
+      },
+      {
+        path: PATH_NAME.TELEVISION,
+        component: Television,
+        requireRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
+      },
+      {
+        path: PATH_NAME.LABEL,
+        component: Label,
         requireRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
       },
       {

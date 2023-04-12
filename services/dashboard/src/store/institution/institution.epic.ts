@@ -94,7 +94,7 @@ const updateInstitution: Epic = (action$) =>
 
 
 // === Update institution
-const updateInstitution: Epic = (action$) =>
+const deleteInstitution: Epic = (action$) =>
   action$.pipe(
     ofType(InstitutionActionTypes.CREATE_REQUEST),
     debounceTime(0),
@@ -119,4 +119,4 @@ const updateInstitution: Epic = (action$) =>
   )
 
 
-export const institutionsEpics = [listInstitutions, listInstitutionsFailed, createInstitution, updateInstitution]
+export const institutionsEpics = [listInstitutions, listInstitutionsFailed, createInstitution, updateInstitution, deleteInstitution]

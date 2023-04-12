@@ -16,13 +16,13 @@ const lightTheme = createTheme({
     primary: {
       light: '#00a096',
       main: '#00a096',
-      dark: '#303f9f',
+      dark: '#00796B',
       contrastText: '#fff',
     },
     secondary: {
-      light: '#ff4081',
+      light: '#B2DFDB',
       main: '#00a096',
-      dark: '#c51162',
+      dark: '#00695C',
       contrastText: '#fff',
     },
     text: {

@@ -54,10 +54,10 @@ const uploadContent: Epic = (action$) => {
       return err
     }),
     mergeMap(({ payload }) => {
-      const { files } = payload
+      const { file } = payload
       const formData = new FormData()
-      formData.append('file', files[0], files[0].name)
-      formData.append('type', files[0].type)
+      formData.append('file', file, file.name)
+      formData.append('type', file.type)
       formData.append('name', payload.name)
 
       return apiSvc

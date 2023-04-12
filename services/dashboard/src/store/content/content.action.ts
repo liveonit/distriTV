@@ -9,7 +9,7 @@ export const createContent = (payload: { name: string; url: string, type: string
   payload,
 })
 
-export const uploadContent = (payload: { name: string; type: string, files: FileList }) => ({
+export const uploadContent = (payload: { name: string; type: string, file: File }) => ({
   type: ContentActionTypes.UPLOAD_FILE_REQUEST,
   payload,
 })

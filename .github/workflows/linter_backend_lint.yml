@@ -9,8 +9,11 @@ jobs:
     name: run lint
     timeout-minutes: 30
     runs-on: ubuntu-latest
-
+    
     steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
     - name: Install node
       uses: actions/setup-node@v1
       with:

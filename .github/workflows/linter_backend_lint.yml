@@ -5,6 +5,12 @@ on:
     branches: ['main']
 
 jobs:
+  linter_backend:
+    name: run lint
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Install node
       uses: actions/setup-node@v1
       with:

@@ -91,10 +91,8 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
                     ImageFragment(),
                     false,
                     ImageFragment.TAG
-
                 )
                 idDisplay()
-
             } else {
                 binding.idInformationDisplay.visibility = View.INVISIBLE
                 supportFragmentManager.addFragment(
@@ -104,7 +102,6 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
                     DeviceInfoFragment.TAG
                 )
             }
-
         } else {
             //Content load
             binding.idInformationDisplay.visibility = View.INVISIBLE

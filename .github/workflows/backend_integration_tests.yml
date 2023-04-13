@@ -5,8 +5,8 @@ on:
     branches: ['main']
 
 jobs:
-  docker:
-    name: build and test
+  backend_integration_tests:
+    name: Backend integration tests
     timeout-minutes: 30
     runs-on: ubuntu-latest
 

@@ -6,7 +6,7 @@ on:
 
 jobs:
   linter_frontend:
-    name: run lint
+    name: linter frontend
     timeout-minutes: 30
     runs-on: ubuntu-latest
     

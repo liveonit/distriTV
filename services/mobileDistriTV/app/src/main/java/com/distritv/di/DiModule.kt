@@ -1,17 +1,21 @@
 package com.distritv.di
 
+import android.app.Application
 import com.distritv.BuildConfig
+import com.distritv.R
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
-import com.distritv.ui.image.ImageViewModel
-import com.distritv.ui.home.ContentListViewModel
+import com.distritv.ui.ImageViewModel
+import com.distritv.data.service.AlarmService
 import com.distritv.data.service.ContentDbService
 import com.distritv.data.service.ContentDbHelper
+import com.distritv.data.service.SharedPreferencesService
 import com.distritv.data.repositories.ContentRepository
 import com.distritv.data.repositories.IContentRepository
 import com.distritv.data.service.ContentService
 import com.distritv.data.ApiService
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import retrofit2.Retrofit
@@ -52,11 +56,25 @@ val repositoriesModule = module {
 
 val viewModelsModule = module {
     viewModelOf(::ImageViewModel)
-    viewModelOf(::ContentListViewModel)
 }
 
 val servicesModule = module {
     factoryOf(::ContentDbService)
     factoryOf(::ContentDbHelper)
     factoryOf(::ContentService)
+    factoryOf(::AlarmService)
+    factoryOf(::SharedPreferencesService)
+}
+
+val sharedPreferencesModule = module {
+    single(){
+        getSharedPrefs(androidApplication())
+    }
+}
+
+fun getSharedPrefs(androidApplication: Application): android.content.SharedPreferences? {
+    return androidApplication.getSharedPreferences(
+        R.string.app_preference_file_key.toString(),
+        android.content.Context.MODE_PRIVATE
+    )
 }

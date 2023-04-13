@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { withStyles, Theme } from '@material-ui/core/styles';
-
 // material core
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
-
 // matrial icon
 import HelpIcon from '@material-ui/icons/Help';
 
@@ -64,7 +62,6 @@ const TextFieldShrink = ({
     return () => {
       clearTimeout(timeout);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue]);
 
   return (

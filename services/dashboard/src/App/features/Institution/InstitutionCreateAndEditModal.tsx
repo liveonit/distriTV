@@ -11,6 +11,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { CITIES } from 'src/utils/constants/Cities'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
+import { FormInputDate } from 'src/App/components/molecules/Forms/FormInputDate'
+
 import { removeEmpty } from 'src/utils/removeEmpty'
 
 type IProps = {
@@ -56,6 +58,7 @@ export default function InstitutionCreateAndEditModal({ handleCloseEditModal, in
           <Grid item xs={12}>
             <FormInputText fullWidth label='Localidad' variant='outlined' name='locality' control={control} />
           </Grid>
+          <FormInputDate  name='startDate' control={control} label='Fecha de inicio' />
         </DialogContent>
         <DialogActions>
           <Button

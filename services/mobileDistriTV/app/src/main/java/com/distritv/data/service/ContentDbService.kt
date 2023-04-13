@@ -5,6 +5,7 @@ import android.provider.BaseColumns
 import com.distritv.data.ContentContract
 import com.distritv.data.model.Content
 import com.distritv.utils.*
+import java.time.LocalDateTime
 
 
 class ContentDbService(private val contentDbHelper: ContentDbHelper) {
@@ -288,16 +289,58 @@ class ContentDbService(private val contentDbHelper: ContentDbHelper) {
         return items
     }
 
+    fun findExpiredContents(): List<Content> {
+
+        val projection = getAllBaseDateColumns()
+
+        val selection = "${ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE} = ?" +
+                "AND ${ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE} < ?"
+        val selectionArgs = arrayOf(ACTIVE_YES.toString(),
+            localDateTimeToMillis(LocalDateTime.now()).toString())
+
+        val cursor = contentDbHelper.readableDatabase.query(
+            ContentContract.ContentEntry.TABLE_NAME,   // The table to query
+            projection,             // The array of columns to return (pass null to get all)
+            selection,              // The columns for the WHERE clause
+            selectionArgs,          // The values for the WHERE clause
+            null,                   // don't group the rows
+            null,                   // don't filter by row groups
+            null               // The sort order
+        )
+
+        val items = mutableListOf<Content>()
+        with(cursor) {
+            while (moveToNext()) {
+                items.add(
+                    Content(
+                        getLong(getColumnIndexOrThrow(BaseColumns._ID)),
+                        getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_NAME)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_URL)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TYPE)),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_TEXT)),
+                        millisToLocalDateTime(getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_START_DATE))),
+                        millisToLocalDateTime(getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_END_DATE))),
+                        getString(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_CRON)),
+                        getLong(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_DURATION)),
+                        getInt(getColumnIndexOrThrow(ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE))
+                    )
+                )
+            }
+        }
+        cursor.close()
+
+        return items
+    }
+
     fun findInactiveContents(): List<Content> {
 
-        // Define a projection that specifies which columns from the database
-        // you will actually use after this query.
         val projection = getAllBaseDateColumns()
 
         val selection = "${ContentContract.ContentEntry.COLUMN_CONTENT_ACTIVE} = ?"
         val selectionArgs = arrayOf(ACTIVE_NO.toString())
 
-        //val cursor = dbReadable.query(
         val cursor = contentDbHelper.readableDatabase.query(
             ContentContract.ContentEntry.TABLE_NAME,   // The table to query
             projection,             // The array of columns to return (pass null to get all)

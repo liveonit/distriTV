@@ -1,3 +1,11 @@
+/**
+ * This service starts running in the background when start the app and continues even if the app is closed.
+ * Stops only if the app is force stopped.
+ *
+ * Periodically inactivates content that expired on the endDate and deletes files
+ * from inactive content and files that no longer belong to any content.
+ */
+
 package com.distritv.daemon
 
 import android.app.Service
@@ -36,6 +44,7 @@ class GarbageCollectorDaemon: Service() {
         runnable = object : Runnable {
             override fun run() {
 
+                inactivateExpiredContent()
                 removeContentFile()
 
                 // Schedule the next execution in periodTime milliseconds:
@@ -66,6 +75,10 @@ class GarbageCollectorDaemon: Service() {
         handler.removeCallbacks(runnable)
 
         stopForeground(true)
+    }
+
+    private fun inactivateExpiredContent() {
+        contentService.inactivateExpiredContent()
     }
 
     private fun removeContentFile() {

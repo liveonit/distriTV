@@ -1,6 +1,8 @@
 /**
  * This service starts running in the background when start the app and continues even if the app is closed.
  * Stops only if the app is force stopped.
+ *
+ * Periodically makes requests to the server to bring the contents that correspond to the device.
  */
 
 package com.distritv.daemon
@@ -99,10 +101,10 @@ class ContentRequestDaemon: Service() {
                 val contentList = contentService.getAllContents()
 
                 val responseContentList = contentRepository.getContentList()
-                val contentListPost = contentRepository.postContentList(infoDevice)
+                //val contentListPost = contentRepository.postContentList(infoDevice)
 
                 // Check if any content was removed to inactivate
-                contentList.forEach { content ->
+                contentList.filter { it.active == ACTIVE_YES }.forEach { content ->
                     contentService.checkAndInactivateDeletedContent(content, responseContentList)
                 }
 

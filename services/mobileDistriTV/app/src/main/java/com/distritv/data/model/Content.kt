@@ -13,6 +13,6 @@ data class Content(
     var startDate: LocalDateTime?,
     var endDate: LocalDateTime?,
     var cron: String?,
-    var durationInSeconds: Long,
+    var durationInSeconds: Long = 0L,
     var active: Int?
     )

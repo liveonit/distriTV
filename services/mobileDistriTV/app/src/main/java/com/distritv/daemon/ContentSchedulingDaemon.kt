@@ -1,3 +1,11 @@
+/**
+ * This service starts running in the background when start the app and continues even if the app is closed.
+ * Stops only if the app is force stopped.
+ *
+ * Periodically checks among the active contents if the time of the next playback is within the current interval
+ * to play immediately or create an alarm for its next playback (if the waiting time is more than one minute).
+ */
+
 package com.distritv.daemon
 
 import android.app.Service
@@ -107,7 +115,6 @@ class ContentSchedulingDaemon: Service() {
                         //Toast.makeText(applicationContext, "DameonSchedule NOW contentId: ${content.id}", Toast.LENGTH_SHORT).show()
                     }
 
-                    break
                 }
             }
         }

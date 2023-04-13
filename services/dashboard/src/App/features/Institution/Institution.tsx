@@ -23,7 +23,6 @@ import InstitutionCreateAndEditModal from './InstitutionCreateAndEditModal'
 import InstitutionDeleteModal from './InstitutionDeleteModal'
 
 
-
 const useStyles = makeStyles({
   table: {
     minWidth: 650,

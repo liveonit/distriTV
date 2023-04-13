@@ -189,15 +189,15 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Ignacio Barreto - [@your_twitter](https://twitter.com/your_username) - ibarretorey@gmail.com
+Ignacio Barreto - ibarretorey@gmail.com
 
-Malva Goitiño - [@your_twitter](https://twitter.com/your_username) - alvarogoitino@gmail.com
+Malva Goitiño - alvarogoitino@gmail.com
 
-Matías Gonnet - [@your_twitter](https://twitter.com/your_username) - gonnet.matias@gmail.com
+Matías Gonnet - gonnet.matias@gmail.com
 
-Facundo Ramírez - [@your_twitter](https://twitter.com/your_username) - facundoramirezb@gmail.com
+Facundo Ramírez - facundoramirezb@gmail.com
 
-Martín Riani - [@your_twitter](https://twitter.com/your_username) - martiniano13@gmail.com
+Martín Riani - martiniano13@gmail.com
 
 Project Link: [https://github.com/liveonit/distriTV](https://github.com/liveonit/distriTV)
 

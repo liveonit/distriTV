@@ -18,6 +18,7 @@ import { listLabels } from 'src/store/label/label.action'
 import { LabelT } from 'src/store/label/label.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
+
 import LabelCreateAndEditModal from './LabelCreateAndEditModal'
 import LabelDeleteModal from './LabelDeleteModal'
 

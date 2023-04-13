@@ -10,6 +10,7 @@ import permission from './permission/permission.reducer'
 import content from './content/content.reducer'
 import label from './label/label.reducer'
 import television from './television/television.reducer'
+import agenda from './agenda/agendas.reducer'
 export const rootReducer = combineReducers({
   auth,
   app,
@@ -20,6 +21,7 @@ export const rootReducer = combineReducers({
   permission,
   content,
   label,
+  agenda,
   television
 });
 

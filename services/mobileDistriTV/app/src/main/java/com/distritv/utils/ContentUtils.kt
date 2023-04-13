@@ -3,6 +3,9 @@ package com.distritv.utils
 import android.net.Uri
 import com.distritv.data.model.Content
 
+
+const val CONTENTS_DIRECTORY = ""
+
 const val DEVICE_ID = "deviceId"
 
 const val CONTENT_PARAM = "contentParam"
@@ -37,4 +40,10 @@ fun isImage(type: String): Boolean {
 
 fun isText(type: String): Boolean {
     return (TEXT_TYPES.contains(type) && !IMAGE_TYPES.contains(type) && !VIDEO_TYPES.contains(type))
+}
+
+fun areEquals(c1: Content, c2: Content): Boolean {
+    return c1.id == c2.id && c1.name == c2.name && c1.type == c2.type && c1.url == c2.url
+            && c1.text == c2.text && c1.startDate == c2.startDate && c1.endDate == c2.endDate
+            && c1.cron == c2.cron && c1.durationInSeconds == c2.durationInSeconds
 }

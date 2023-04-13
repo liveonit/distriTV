@@ -55,6 +55,7 @@ class TextFragment : Fragment() {
 
     private fun showText() {
         binding.textContainer.text = textParam
+        Log.i(ImageFragment.TAG, "Playback started.")
 
         // Back home after end of the duration
         Handler(Looper.getMainLooper()).postDelayed({

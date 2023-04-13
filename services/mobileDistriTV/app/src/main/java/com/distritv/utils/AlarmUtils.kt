@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import com.distritv.daemon.ScheduleReceiver
+import com.distritv.daemon.ContentPlaybackLauncher
 import com.distritv.data.model.CalendarModel
 import java.util.*
 
@@ -22,7 +22,7 @@ fun createCalendar(calendarModel: CalendarModel): Calendar {
 
 @SuppressLint("UnspecifiedImmutableFlag")
 fun createPendingIntent(context: Context, contentParam: String, contentType: String, contentDuration: Long, requestCode: Int): PendingIntent {
-    return Intent(contentParam, null, context, ScheduleReceiver::class.java)
+    return Intent(contentParam, null, context, ContentPlaybackLauncher::class.java)
         .putExtra(CONTENT_PARAM, contentParam)
         .putExtra(CONTENT_TYPE_PARAM, contentType)
         .putExtra(CONTENT_DURATION_PARAM, contentDuration)

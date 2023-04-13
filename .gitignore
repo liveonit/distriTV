@@ -1,3 +1,12 @@
 .env
 .DS_Store
-services/mobileDistriTV/config-debug.properties
+services/mobileDistriTV/*.iml
+services/mobileDistriTV/.gradle
+services/mobileDistriTV/.idea/
+services/mobileDistriTV/.idea/caches
+services/mobileDistriTV/.idea/libraries
+services/mobileDistriTV/.idea/modules.xml
+services/mobileDistriTV/.idea/workspace.xml
+services/mobileDistriTV/.idea/navEditor.xml
+services/mobileDistriTV/.idea/assetWizardSettings.xml
+services/mobileDistriTV/.idea/deploymentTargetDropDown.xml

@@ -1,0 +1,19 @@
+name: linter_backend
+
+on:
+  pull_request:
+    branches: ['main']
+
+jobs:
+    - name: Install node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 18.x
+
+    - name: Install api dependencies
+      run: yarn
+      working-directory: services/api
+
+    - name: Run backend linter
+      run: yarn lint
+      working-directory: services/api

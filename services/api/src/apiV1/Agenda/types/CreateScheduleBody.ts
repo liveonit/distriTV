@@ -5,7 +5,7 @@ export const createScheduleBody = z.object({
   televisionId: z.number(),
   startDate: z.date(),
   endDate: z.date(),
-  cron: z.string(),
+  cron: z.string()
 });
 
 export type CreateTelevisionBodyType = z.infer<typeof createScheduleBody>;

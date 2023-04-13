@@ -1,0 +1,19 @@
+name: linter_frontend
+
+on:
+  pull_request:
+    branches: ['main']
+
+jobs:
+    - name: Install node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 18.x
+
+    - name: Install frontend dependencies
+      run: yarn
+      working-directory: services/dashboard
+
+    - name: Run frontend linter
+      run: yarn lint
+      working-directory: services/dashboard

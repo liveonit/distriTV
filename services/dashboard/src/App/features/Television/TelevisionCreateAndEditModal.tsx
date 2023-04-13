@@ -63,7 +63,7 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
               <Grid item>
               <FormInputText fullWidth label='Código TV' variant='outlined' name='locality' value="666666" control={control} /> 
               </Grid>
-              <Grid item alignItems="stretch" style={{ display: "flex" }}>
+              <Grid item alignItems="stretch" style={{ display: 'flex' }}>
               <Button startIcon={<RefreshIcon />} color="primary" onClick={() => console.log(Math.random().toString(36).slice(2, 8))} />
               </Grid>
               </Grid> </>

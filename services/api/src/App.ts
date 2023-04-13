@@ -13,9 +13,7 @@ import fileUpload from 'express-fileupload';
 
 export class App {
   public readonly app = express();
-  private apiPrefix: string;
   constructor() {
-    this.apiPrefix = config.API_PREFIX;
     this.setMiddlewares();
     this.setRoutes();
     this.app.use(this.notFoundError);
@@ -34,8 +32,8 @@ export class App {
     this.app.use(loggerMiddleware);
   };
   private setRoutes = (): void => {
-    this.app.get(`${this.apiPrefix}/health`, this.healthCheck);
-    this.app.use(`${this.apiPrefix}/v1`, router);
+    this.app.get(`${config.API_PREFIX}/${config.API_VERSION}/health`, this.healthCheck);
+    this.app.use(`${config.API_PREFIX}/${config.API_VERSION}`, router);
   };
 
   private notFoundError = (req: Request, res: Response, next: NextFunction) => {

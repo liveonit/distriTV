@@ -8,7 +8,7 @@ Properties props = new Properties()
 try {
     props.load(file('../config.properties').newDataInputStream())
 } catch (Exception ex) {
-    throw new GradleException("Missing keys.properties file.");
+    throw new GradleException("Missing config.properties file.");
 }
 
 android {

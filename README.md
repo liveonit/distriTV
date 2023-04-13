@@ -30,7 +30,7 @@
     <a href="https://github.com/liveonit/distriTV"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/liveonit/distriTV">View Demo</a>
+    <a href="http://triactivesoft.ddns.net/">View Demo</a>
     ·
     <a href="https://github.com/liveonit/distriTV/issues">Report Bug</a>
     ·
@@ -71,18 +71,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Product Name Screen Shot][product-screenshot]](demo-url)
 
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
-
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
-
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
-
-Use the `BLANK_README.md` to get started.
+DistriTV is a system created to distribute and schedule image, video, and text content across Android TV devices across multiple locations. The system consists of a Web Backoffice implemented in React and an Android APP. Users are able to upload contents directly to the backoffice and then schedule its reproduction on the Android TV devices based on customizable criteria, such as location, institution, or custom labels. All the communication to the devices is made by the backoffice via the network, no user interaction or physical handling is required.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -110,34 +101,48 @@ Use the `BLANK_README.md` to get started.
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+Here are the instructions to execute the project locally and install the application on the demo TV.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+* Docker is required to be installed locally to serve the backoffice. Refer to their [official documentation](https://docs.docker.com/desktop/) on how to install it. After installing it, make sure that the service is running.
+
+* Android studio is required to build the APK for the Android TV. It can be obtained [here](https://developer.android.com/studio)
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+1. Clone the repo
+   ```sh
+   git clone https://github.com/liveonit/distriTV.git
+   ```
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+#### Backoffice
+2. Create a copy of the `.env.example` file and name it `.env`. Remember to set secure values when deploying to a production environment.
+3. Execute the docker compose
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   docker compose up -d --build
    ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+4. Visit http://localhost/
+
+#### Android TV
+
+5. On Android Studio, after importing the project, go to `Build -> Select Build Variant`. There you can choose between `debug` and `release`
+6. To generate the APK, go to `Build -> Build Bundle(s) / APK(s) -> Build APK(s)`. The file exported to 
+    ```
+    services/mobileDistriTV/app/build/outputs/apk
+    ```
+7. To install on the Demo PC, do a factory reset and don´t connect to the internet. Go to storage, select the APK and install it. Now connect to the internet.
+
+### Troubleshooting
+
+Here is a list of common issues and how to solve it:
+
+* `Failed to find Build Tools revision x.x.x x` - When trying to Make Project or build the APK
+  
+  Make sure that the `buildToolsVersion` value in the `build.gradle` file matches with one of the installed versions of Android SDK Build-Tools. To check, go to:
+    ```
+    File -> Settings -> Appeareance & Beahavior -> System Settings -> Android SDK -> SDK Tools -> Show Package Details
+    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -146,24 +151,12 @@ _Below is an example of how you can instruct your audience on installing and set
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
 <!-- ROADMAP -->
 ## Roadmap
-
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
 
 See the [open issues](https://github.com/liveonit/distriTV/issues) for a full list of proposed features (and known issues).
 
@@ -174,16 +167,11 @@ See the [open issues](https://github.com/liveonit/distriTV/issues) for a full li
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+1. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+6. Get approvers
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -201,27 +189,26 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+Ignacio Barreto - [@your_twitter](https://twitter.com/your_username) - ibarretorey@gmail.com
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Malva Goitiño - [@your_twitter](https://twitter.com/your_username) - alvarogoitino@gmail.com
+
+Matías Gonnet - [@your_twitter](https://twitter.com/your_username) - gonnet.matias@gmail.com
+
+Facundo Ramírez - [@your_twitter](https://twitter.com/your_username) - facundoramirezb@gmail.com
+
+Martín Riani - [@your_twitter](https://twitter.com/your_username) - martiniano13@gmail.com
+
+Project Link: [https://github.com/liveonit/distriTV](https://github.com/liveonit/distriTV)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
-
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-* [Malven's Grid Cheatsheet](https://grid.malven.co/)
-* [Img Shields](https://shields.io)
-* [GitHub Pages](https://pages.github.com)
-* [Font Awesome](https://fontawesome.com)
-* [React Icons](https://react-icons.github.io/react-icons/search)
+* Leonardo Martínez
+* Germán Capdehourat
+* Rodolfo Roballo
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -256,3 +243,6 @@ Use this space to list resources you find helpful and would like to give credit 
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com 
+
+<!-- -->
+[demo-url]: http://triactivesoft.ddns.net/

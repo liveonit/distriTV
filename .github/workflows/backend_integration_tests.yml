@@ -29,8 +29,12 @@ jobs:
       run: yarn
       working-directory: services/api
 
-    - name: Check API status and run tests
+    - name: Check API status
       run: docker-compose logs api && yarn test
+      working-directory: services/api
+
+    - name: Run tests
+      run: yarn test
       working-directory: services/api
 
     - name: Stop containers

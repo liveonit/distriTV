@@ -1,5 +1,4 @@
 import { handleErrorAsync } from '@src/middlewares/errorCatcher';
-import { authorSvc } from '@src/apiV1/Author/AuthorService';
 import { BadRequest } from '@src/utils/errors';
 import { Request, Response } from 'express';
 import { BaseService } from './BaseService';

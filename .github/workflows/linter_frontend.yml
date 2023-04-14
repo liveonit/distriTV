@@ -1,0 +1,28 @@
+name: linter_frontend
+
+on:
+  pull_request:
+    branches: ['main']
+
+jobs:
+  linter_frontend:
+    name: linter frontend
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Install node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 18.x
+
+    - name: Install api dependencies
+      run: yarn
+      working-directory: services/dashboard
+
+    - name: Run frontend linter
+      run: yarn lint
+      working-directory: services/dashboard

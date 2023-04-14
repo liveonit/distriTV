@@ -2,6 +2,7 @@ package com.distritv.data.repositories
 
 import com.distritv.data.ApiService
 import com.distritv.data.model.Content
+import com.distritv.data.model.InfoDevice
 import okhttp3.ResponseBody
 
 class ContentRepository(private val apiService: ApiService): IContentRepository {
@@ -9,7 +10,13 @@ class ContentRepository(private val apiService: ApiService): IContentRepository 
        return apiService.fetchContentList()
     }
 
-    override suspend fun downloadContent(content: String): ResponseBody {
+    override suspend fun fetchContent(content: String): ResponseBody {
         return apiService.fetchContent(content)
     }
+
+    override suspend fun postContentList(infoDevice: InfoDevice): List<Content> {
+        return apiService.postContentList(infoDevice)
+    }
+
+
 }

@@ -24,6 +24,7 @@ export const configSchema = z.object({
   REDIS_PORT: z.string().transform((v) => +v),
   REDIS_PASSWORD: z.string(),
   API_PREFIX: z.string(),
+  API_VERSION: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   PATH_TO_UPLOAD_FILES: z.string(),
 });

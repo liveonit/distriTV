@@ -25,7 +25,6 @@ const Television = lazy(() => import('../features/Television'));
 const Label = lazy(() => import('../features/Label'));
 const Agenda = lazy(() => import('../features/Agenda'));
 
-
 const routesConfig: RoutesT[] = [
   {
     path: '/',

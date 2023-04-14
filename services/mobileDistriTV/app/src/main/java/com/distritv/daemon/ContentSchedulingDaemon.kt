@@ -14,7 +14,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
-import android.widget.Toast
 import com.distritv.BuildConfig
 import com.distritv.data.model.CalendarModel
 import com.distritv.data.model.Content
@@ -95,26 +94,16 @@ class ContentSchedulingDaemon: Service() {
             }
 
             if (nextExecutionTime != null) {
-
-                Log.v(TAG, "$currentTimeInMillis - ${dateToMillis(nextExecutionTime)} - $intervalEndTimeInMillis")
-
                 val nextExecutionTimeInMillis = dateToMillis(nextExecutionTime)!!
 
                 if (nextExecutionTimeInMillis in currentTimeInMillis until intervalEndTimeInMillis) {
-
-                    Log.v(TAG, "--- cumple con la condicion de reprouccion ${content.id}: $currentTimeInMillis - ${nextExecutionTime.time} - $intervalEndTimeInMillis")
-                    Log.v(TAG, "nextExecutionTimeInMillis - currentTimeInMillis = ${nextExecutionTimeInMillis.minus(currentTimeInMillis)}")
-
                     // If the next execution minus the current time (waiting time) is greater than one minute,
                     // an alarm is programmed, otherwise it is played instantly
                     if (nextExecutionTimeInMillis.minus(currentTimeInMillis)  > TimeUnit.MINUTES.toMillis(1)) {
                         setAlarm(content, nextExecutionTime)
-                        //Toast.makeText(applicationContext, "DameonSchedule ALARM contentId: ${content.id}", Toast.LENGTH_SHORT).show()
                     } else {
                         launchContentNow(content)
-                        //Toast.makeText(applicationContext, "DameonSchedule NOW contentId: ${content.id}", Toast.LENGTH_SHORT).show()
                     }
-
                 }
             }
         }

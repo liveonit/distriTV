@@ -117,10 +117,18 @@ class ContentRequestDaemon: Service() {
 
                     // If no content exists: insert new content
                     if (originalContent == null) {
-                        if (content.name.isBlank()) {
-                            content.name = UUID.randomUUID().toString()
+                        if (!isText(content.type)) {
+                            if (existsContentName(content, contentList)) {
+                                Log.e(TAG,
+                                    "The content name already exists -> id: ${content.id}, name: ${content.name}")
+                                continue
+                            }
+                            if (content.name.isBlank()) {
+                                content.name = UUID.randomUUID().toString()
+                            }
+                        } else if (content.name == null) {
+                            content.name = ""
                         }
-
                         saveContent(
                             content,
                             contentService::downloadAndInsertContent,
@@ -132,13 +140,18 @@ class ContentRequestDaemon: Service() {
 
                     // If content already exists and if it has changes: update content
 
-                    if (content.name.isBlank()) {
+                    if (!isText(content.type) && content.name.isBlank()) {
                         content.name = originalContent.name
+                    } else if (content.name == null) {
+                        content.name = ""
                     }
-
                     if (!areEquals(originalContent, content)) {
+                        if (!isText(content.type) && existsContentName(content, contentList)) {
+                            Log.e(TAG,
+                                "The content name already exists -> id: ${content.id}, name: ${content.name}")
+                            continue
+                        }
                         content.idDB = originalContent.idDB
-
                         saveContent(
                             content,
                             contentService::downloadAndUpdateContent,
@@ -158,6 +171,13 @@ class ContentRequestDaemon: Service() {
         }
     }
 
+    /**
+     * If content type is not Text, check if the content name already exists.
+     */
+    private fun existsContentName(content: Content, contentList: List<Content>): Boolean {
+        return contentList.firstOrNull { !isText(it.type) && it.name == content.name } != null
+    }
+
     private suspend fun saveContent(
         content: Content,
         action: (content: Content, response: ResponseBody) -> Long?,
@@ -169,6 +189,9 @@ class ContentRequestDaemon: Service() {
         tempSetFields(content)
 
         content.active = ACTIVE_YES
+        if (content.localPath == null) {
+            content.localPath = ""
+        }
 
         var resultId: Long? = -1L
 

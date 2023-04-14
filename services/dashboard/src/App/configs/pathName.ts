@@ -9,6 +9,7 @@ export const PATH_NAME = {
   CONTENT: '/contents',
   TELEVISION: '/televisions',
   LABEL: '/labels',
+  AGENDA: '/agendas',
   USERS: '/users',
   KANBAN: '/kanban',
 };

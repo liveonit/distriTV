@@ -23,7 +23,7 @@ const Login = lazy(() => import('../features/Login'));
 const Kanban = lazy(() => import('../features/Kanban'));
 const Television = lazy(() => import('../features/Television'));
 const Label = lazy(() => import('../features/Label'));
-
+const Agenda = lazy(() => import('../features/Agenda'));
 
 const routesConfig: RoutesT[] = [
   {
@@ -76,6 +76,11 @@ const routesConfig: RoutesT[] = [
       {
         path: PATH_NAME.LABEL,
         component: Label,
+        requireRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
+      },
+      {
+        path: PATH_NAME.AGENDA,
+        component: Agenda,
         requireRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
       },
       {

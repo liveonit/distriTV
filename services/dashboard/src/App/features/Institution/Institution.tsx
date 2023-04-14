@@ -18,6 +18,7 @@ import { listInstitutions } from 'src/store/institution/institution.action'
 import { InstitutionT } from 'src/store/institution/institution.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete';
+
 import InstitutionCreateAndEditModal from './InstitutionCreateAndEditModal'
 import InstitutionDeleteModal from './InstitutionDeleteModal'
 

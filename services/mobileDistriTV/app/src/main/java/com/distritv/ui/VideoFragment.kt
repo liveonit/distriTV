@@ -23,7 +23,7 @@ class VideoFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var localPathParam = ""
-    private var durationAfterCompletion = 10L
+    private var durationAfterCompletion = 0L
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -42,7 +42,7 @@ class VideoFragment : Fragment() {
 
         arguments?.let {
             localPathParam = it.getString(CONTENT_PARAM, "")
-            durationAfterCompletion = it.getLong(CONTENT_DURATION_PARAM, 10L)
+            durationAfterCompletion = it.getLong(CONTENT_DURATION_PARAM, 0L)
         }
         return binding.root
     }

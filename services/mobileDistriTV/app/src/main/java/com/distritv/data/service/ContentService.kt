@@ -16,7 +16,7 @@ class ContentService(private val contentDbService: ContentDbService,
         if (result == null) {
             content.active = ACTIVE_NO
             if (contentDbService.update(content.idDB!!, content) > 0) {
-                Log.i(TAG, "Content was inactivate: $content")
+                Log.i(TAG, "Content was inactivated: $content")
             }
         }
     }
@@ -147,6 +147,16 @@ class ContentService(private val contentDbService: ContentDbService,
         return contentDbService.findAllContents()
     }
 
+    fun inactivateExpiredContent() {
+        val expiredContents = contentDbService.findExpiredContents()
+        expiredContents.forEach {content ->
+            content.active = ACTIVE_NO
+            if (contentDbService.update(content.idDB!!, content) > 0) {
+                Log.i(TAG, "Content was inactivated: ${content.id}")
+            }
+        }
+    }
+
     fun existsContent(id: Long): Boolean {
         return try {
             val content = contentDbService.findByContentId(id)
@@ -157,9 +167,6 @@ class ContentService(private val contentDbService: ContentDbService,
         }
     }
 
-    fun updateContent(content: Content): Boolean {
-        return (contentDbService.update(content.idDB!!, content) > 0)
-    }
 
     companion object {
         const val TAG = "[ContentService]"

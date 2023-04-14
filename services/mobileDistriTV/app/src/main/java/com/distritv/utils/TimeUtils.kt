@@ -1,9 +1,12 @@
 package com.distritv.utils
 
+import com.google.gson.*
+import java.lang.reflect.Type
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
@@ -58,4 +61,16 @@ fun millisToDate(milliseconds: Long): Date? {
 fun dateToMillis(date: Date): Long? {
     val localDateTime = dateToLocalDateTime(date)
     return localDateTimeToMillis(localDateTime)
+}
+
+class LocalDateTimeDeserializer : JsonDeserializer<LocalDateTime> {
+    override fun deserialize(
+        json: JsonElement?,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
+    ): LocalDateTime {
+        val formatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
+        val dateString = json?.asString
+        return LocalDateTime.parse(dateString, formatter)
+    }
 }

@@ -14,6 +14,9 @@ import com.distritv.data.repositories.ContentRepository
 import com.distritv.data.repositories.IContentRepository
 import com.distritv.data.service.ContentService
 import com.distritv.data.ApiService
+import com.distritv.utils.LocalDateTimeDeserializer
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.factoryOf
@@ -21,6 +24,7 @@ import org.koin.core.module.dsl.singleOf
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import org.koin.core.module.dsl.bind
+import java.time.LocalDateTime
 
 val networkModule = module {
     singleOf(::OkHttpClient) {
@@ -40,10 +44,14 @@ fun provideOkHttpClient(): OkHttpClient {
     return OkHttpClient().newBuilder().build()
 }
 
+val gson: Gson = GsonBuilder()
+    .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeDeserializer())
+    .create()
+
 fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder().baseUrl("${BuildConfig.BASE_URL}")
         .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 }
 

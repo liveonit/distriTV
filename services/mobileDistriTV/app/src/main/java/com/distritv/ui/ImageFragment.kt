@@ -27,7 +27,7 @@ class ImageFragment : Fragment() {
     private val viewModel by viewModel<ImageViewModel>()
 
     private var localPathParam = ""
-    private var contentDuration = -1L
+    private var contentDuration = 0L
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -46,7 +46,7 @@ class ImageFragment : Fragment() {
 
         arguments?.let {
             localPathParam = it.getString(CONTENT_PARAM, "")
-            contentDuration = it.getLong(CONTENT_DURATION_PARAM, -1L)
+            contentDuration = it.getLong(CONTENT_DURATION_PARAM, 0L)
         }
 
         loadImageObserver()

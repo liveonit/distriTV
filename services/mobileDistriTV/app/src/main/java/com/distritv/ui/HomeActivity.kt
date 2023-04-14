@@ -17,6 +17,7 @@ import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.daemon.ContentRequestDaemon
 import com.distritv.daemon.ContentSchedulingDaemon
+import com.distritv.data.model.CalendarModel
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
 import org.koin.android.ext.android.inject
@@ -51,6 +52,9 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
 
         val contentType = intent.extras?.getString(CONTENT_TYPE_PARAM)
         val contentDuration = intent.extras?.getLong(CONTENT_DURATION_PARAM) ?: -1L
+
+        binding.idInformationDisplay.visibility = View.INVISIBLE
+        binding.idInformationCard.visibility = View.INVISIBLE
 
         addFragment(contentType, contentDuration)
 
@@ -95,6 +99,7 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
                 idDisplay()
             } else {
                 binding.idInformationDisplay.visibility = View.INVISIBLE
+                binding.idInformationCard.visibility = View.INVISIBLE
                 supportFragmentManager.addFragment(
                     R.id.home_fragment_container,
                     DeviceInfoFragment(),
@@ -104,7 +109,7 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
             }
         } else {
             //Content load
-            binding.idInformationDisplay.visibility = View.INVISIBLE
+
             when (contentType) {
                 IMAGE ->
                     supportFragmentManager.addFragment(
@@ -131,6 +136,8 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
                     Log.e(TAG, "Unsupported content type: $contentType")
                 }
             }
+            //binding.idInformationDisplay.visibility = View.INVISIBLE
+            //binding.idInformationCard.visibility = View.INVISIBLE
         }
     }
 
@@ -175,6 +182,7 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
     private fun idDisplay(){
         binding.idInformationDisplay.text = "id : ${sharedPreferences.getDeviceId()}"
         binding.idInformationDisplay.visibility = View.VISIBLE
+        binding.idInformationCard.visibility = View.VISIBLE
     }
 
     override fun onStartButtonPressed(id: String) {

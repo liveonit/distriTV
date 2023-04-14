@@ -124,11 +124,11 @@ export default function InstitutionList() {
           institution={institutionToEdit!}
           handleCloseEditModal={handleCloseEditInstitutionModal}
         />}
-      <InstitutionDeleteModal
+      {!!institutionToDelete && <InstitutionDeleteModal
         isOpen={!!institutionToDelete}
         institution={institutionToDelete!}
         handleCloseDeleteModal={handleCloseDeleteInstitutionModal}
-      />
+      />}
     </>
   )
 }

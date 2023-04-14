@@ -1,3 +1,4 @@
+import { insertNewAddedEntity, refreshUpdatedEntity, removeDeletedEntity } from '../helpers'
 import { InstitutionActionTypes, InstitutionsState } from './institution.state'
 
 const initialState: InstitutionsState = {
@@ -37,6 +38,7 @@ const reducer = (state = initialState, { type, payload }: any) => {
     case InstitutionActionTypes.CREATE_SUCCESS:
       return {
         ...state,
+        items: insertNewAddedEntity(state.items, payload),
         isLoading: false
       }
     case InstitutionActionTypes.EDIT_REQUEST:
@@ -52,6 +54,23 @@ const reducer = (state = initialState, { type, payload }: any) => {
     case InstitutionActionTypes.EDIT_SUCCESS:
       return {
         ...state,
+        items: refreshUpdatedEntity(state.items, payload),
+        isLoading: false
+      }
+    case InstitutionActionTypes.DELETE_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+      }
+    case InstitutionActionTypes.DELETE_FAILURE:
+      return {
+        ...state,
+        isLoading: false
+      }
+    case InstitutionActionTypes.DELETE_SUCCESS:
+      return {
+        ...state,
+        items: removeDeletedEntity(state.items, payload.id),
         isLoading: false
       }
     default:

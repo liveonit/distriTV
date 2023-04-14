@@ -11,8 +11,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { CITIES } from 'src/utils/constants/Cities'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
-import { FormInputDate } from 'src/App/components/molecules/Forms/FormInputDate'
 import { removeEmpty } from 'src/utils/removeEmpty'
+import { useDispatch } from 'react-redux'
+import { createInstitution, updateInstitution } from 'src/store/institution/institution.action'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -23,6 +24,8 @@ type IProps = {
 export default function InstitutionCreateAndEditModal({ handleCloseEditModal, institution, title }: IProps) {
   const institutionInitialState: InstitutionT = { name: '', city: '', locality: '', ...removeEmpty(institution) }
 
+  const dispatch = useDispatch()
+
   const methods = useForm<InstitutionT>({
     resolver: zodResolver(institutionSchema),
     defaultValues: institutionInitialState,
@@ -30,7 +33,11 @@ export default function InstitutionCreateAndEditModal({ handleCloseEditModal, in
 
   const { reset, handleSubmit, control } = methods
 
-  const onSubmit: SubmitHandler<InstitutionT> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<InstitutionT> = (data) => {
+    if (!institution) dispatch(createInstitution(data))
+    else dispatch(updateInstitution(data))
+    handleCloseEditModal()
+  }
   return (
     <>
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
@@ -57,7 +64,6 @@ export default function InstitutionCreateAndEditModal({ handleCloseEditModal, in
           <Grid item xs={12}>
             <FormInputText fullWidth label='Localidad' variant='outlined' name='locality' control={control} />
           </Grid>
-          <FormInputDate  name='startDate' control={control} label='Fecha de inicio' />
         </DialogContent>
         <DialogActions>
           <Button

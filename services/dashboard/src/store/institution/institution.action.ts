@@ -16,6 +16,6 @@ export const updateInstitution = (payload: InstitutionT) => ({
 })
 
 export const deleteInstitution = (payload: { id: number | string }) => ({
-  type: InstitutionActionTypes.EDIT_REQUEST,
+  type: InstitutionActionTypes.DELETE_REQUEST,
   payload
 })

@@ -50,7 +50,7 @@ const createInstitution: Epic = (action$) =>
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ method: 'POST', path: '/institutions', requireAuthType: session?.type, body: payload }).pipe(
+      return apiSvc.request({ method: 'POST', path: '/institution', requireAuthType: session?.type, body: payload }).pipe(
         mergeMap(({ response }) => {
           return of({
             type: InstitutionActionTypes.CREATE_SUCCESS,
@@ -70,12 +70,12 @@ const createInstitution: Epic = (action$) =>
 // === Update institution
 const updateInstitution: Epic = (action$) =>
   action$.pipe(
-    ofType(InstitutionActionTypes.CREATE_REQUEST),
+    ofType(InstitutionActionTypes.EDIT_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ method: 'PUT', path: `/institutions/${payload.id}`, requireAuthType: session?.type, body: payload }).pipe(
+      return apiSvc.request({ method: 'PUT', path: `/institution/${payload.id}`, requireAuthType: session?.type, body: payload }).pipe(
         mergeMap(({ response }) => {
           return of({
             type: InstitutionActionTypes.EDIT_SUCCESS,
@@ -84,7 +84,7 @@ const updateInstitution: Epic = (action$) =>
         }),
         catchError((err) =>
           of({
-            type: InstitutionActionTypes.CREATE_FAILURE,
+            type: InstitutionActionTypes.EDIT_FAILURE,
             payload: err,
           }),
         ),
@@ -96,21 +96,21 @@ const updateInstitution: Epic = (action$) =>
 // === Update institution
 const deleteInstitution: Epic = (action$) =>
   action$.pipe(
-    ofType(InstitutionActionTypes.CREATE_REQUEST),
+    ofType(InstitutionActionTypes.DELETE_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ method: 'PUT', path: `/institutions/${payload.id}`, requireAuthType: session?.type, body: payload }).pipe(
+      return apiSvc.request({ method: 'DELETE', path: `/institution/${payload.id}`, requireAuthType: session?.type }).pipe(
         mergeMap(({ response }) => {
           return of({
-            type: InstitutionActionTypes.EDIT_SUCCESS,
+            type: InstitutionActionTypes.DELETE_SUCCESS,
             payload: response,
           })
         }),
         catchError((err) =>
           of({
-            type: InstitutionActionTypes.CREATE_FAILURE,
+            type: InstitutionActionTypes.DELETE_FAILURE,
             payload: err,
           }),
         ),

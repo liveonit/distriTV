@@ -4,16 +4,14 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryColumn,
-  PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable
+  PrimaryGeneratedColumn
 } from 'typeorm';
 import { Television } from './Television';
 import { Content } from './Content';
 import { Label } from './Label';
 
+@Entity()
 export class Schedule extends BaseEntity {
-
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -34,7 +32,7 @@ export class Schedule extends BaseEntity {
 
   @ManyToOne(() => Television, (tv) => tv.id)
   @JoinColumn({ name: 'televisionId' })
-  televisions!: Television;
+  television!: Television;
 
   @ManyToOne(() => Label, (label) => label.id)
   @JoinColumn({ name: 'labelId' })

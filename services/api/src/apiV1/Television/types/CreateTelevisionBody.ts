@@ -4,10 +4,9 @@ export const createTelevisionBody = z.object({
   institutionId: z.number().optional(),
   ip: z.string(),
   mac: z.string(),
+  tvCode: z.string().length(6),
   m2mRelations: z.object({
-    label: z.array(z.number()).optional(),
-    notification: z.array(z.number()).optional(),
-    content: z.array(z.number()).optional(),
+    label: z.array(z.number()).optional()
   }).optional(),
 });
 

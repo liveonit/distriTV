@@ -6,12 +6,14 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
-  JoinColumn
+  JoinColumn,
+  OneToMany
 } from 'typeorm';
 import { Institution } from './Institution';
 import { Notification } from './Notification';
 import { Label } from './Label';
 import { Content } from './Content';
+import { Schedule } from './Schedule';
 
 @Entity()
 export class Television extends BaseEntity {
@@ -27,18 +29,21 @@ export class Television extends BaseEntity {
   @Column()
   mac!: String;
 
-  @ManyToOne(() => Institution, (inst) => inst.televisions)
+  @Column()
+  tvCode!: String;
+
+  @ManyToOne(() => Institution, (institution) => institution.televisions)
   @JoinColumn({ name: 'institutionId' })
   public institution?: Institution;
 
-  @ManyToMany(() => Notification, (noti) => noti.id)
+  @ManyToMany(() => Notification, (notification) => notification.id)
   @JoinTable({ name: 'television_has_notification' })
   notifications?: Notification[];
 
-  @ManyToMany(() => Label, (lbl) => lbl.id)
+  @ManyToMany(() => Label, (label) => label.id)
   @JoinTable({ name: 'television_has_label' })
   labels?: Label[];
 
-  @ManyToMany(() => Content, (cnt) => cnt.id) // Entidad fuerte TV por eso va acá.
-  contents?: Content[];
+  @OneToMany(() => Schedule, (schedule) => schedule.id)
+  schedules?: Schedule[];
 }

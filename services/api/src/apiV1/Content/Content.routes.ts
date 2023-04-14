@@ -3,36 +3,36 @@ import { Router } from 'express';
 import { contentController } from './Content.controller';
 import fileUpload from 'express-fileupload';
 /**
- * Api permite leer y manipular datos de usuarios
+ * Api permite leer y manipular datos de contenidos
  */
 const router = Router();
 
 /**
- * Devuelve una lista de usuarios
+ * Devuelve una lista de contenidos
  */
 router.get('/', contentController.getMany, );
 
 /**
- * Devuelve un usuario según su ID
+ * Devuelve un contenido según su ID
  */
 router.get('/:id', authSvc.authRequiredMiddleware([]), contentController.getById);
 /**
- * Crea un nuevo usuario
+ * Crea un nuevo contenido
  */
 router.post('/', authSvc.authRequiredMiddleware(['admin']), contentController.create);
 /*
- * Actualiza los datos de un usuario. Este endpoint también se encarga de la gestión
+ * Actualiza los datos de un contenido. Este endpoint también se encarga de la gestión
  * de su contraseña.
  */
 router.put('/:id', authSvc.authRequiredMiddleware(['admin']), contentController.update);
 
 /*
- * Elimina un usuario
+ * Elimina un contenido
  */
 router.delete('/:id', authSvc.authRequiredMiddleware(['admin']), contentController.delete);
 
 /*
- * Elimina un usuario
+ * Elimina un contenido
  */
 router.post(
   '/upload',

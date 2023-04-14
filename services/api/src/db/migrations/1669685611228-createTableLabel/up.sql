@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `label` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `description` VARCHAR(255),
   PRIMARY KEY (`id`));

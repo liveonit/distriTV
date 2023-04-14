@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `television` (
   `institutionId` INT NOT NULL,
   `ip` VARCHAR(45) NULL,
   `mac` VARCHAR(45) NULL,
+  `tvCode` VARCHAR(60) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_Television_institution_idx` (`institutionId` ASC) VISIBLE,
   CONSTRAINT `fk_television_institution`

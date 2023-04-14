@@ -7,6 +7,7 @@ import {
   ManyToMany,
 } from 'typeorm';
 import { Television } from './Television';
+import { Label } from './Label';
 
 @Entity()
 export class Content extends BaseEntity {
@@ -22,7 +23,10 @@ export class Content extends BaseEntity {
   @Column()
   type!: string;
 
+  @Column()
+  text!: string;
+
   @ManyToMany(() => Television, (tv) => tv.id)
-  @JoinTable({ name: 'content_has_television'})
+  @JoinTable({ name: 'schedule'})
   televisions?: Television[];
 }

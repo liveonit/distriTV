@@ -10,6 +10,8 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { removeEmpty } from 'src/utils/removeEmpty'
+import { createLabel, updateLabel } from 'src/store/label/label.action'
+import { useDispatch } from 'react-redux'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -18,7 +20,7 @@ type IProps = {
 }
 
 export default function LabelCreateAndEditModal({ handleCloseEditModal, label, title }: IProps) {
-  const labelInitialState: LabelT = { name: '', city: '', locality: '', ...removeEmpty(label) }
+  const labelInitialState: LabelT = { id:0,  name: '', description: '', ...removeEmpty(label) }
 
   const methods = useForm<LabelT>({
     resolver: zodResolver(labelSchema),
@@ -26,8 +28,12 @@ export default function LabelCreateAndEditModal({ handleCloseEditModal, label, t
   })
 
   const { reset, handleSubmit, control } = methods
-
-  const onSubmit: SubmitHandler<LabelT> = (data) => console.log(data)
+  const dispatch = useDispatch() 
+  const onSubmit: SubmitHandler<LabelT> = (data) => {
+    if (!label) dispatch(createLabel(data))
+    else dispatch(updateLabel(data))
+    handleCloseEditModal()
+  }
   return (
     <>
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>

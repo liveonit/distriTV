@@ -125,11 +125,14 @@ export default function LabelList() {
           label={labelToEdit!}
           handleCloseEditModal={handleCloseEditLabelModal}
         />}
-      <LabelDeleteModal
+        {!!labelToDelete &&
+          <LabelDeleteModal
         isOpen={!!labelToDelete}
         label={labelToDelete!}
         handleCloseDeleteModal={handleCloseDeleteLabelModal}
-      />
+        />
+        }
+      
     </>
   )
 }

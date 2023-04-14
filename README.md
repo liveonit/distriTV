@@ -151,6 +151,8 @@ Here is a list of common issues and how to solve it:
 <!-- USAGE EXAMPLES -->
 ## Usage
 
+After first installing the app on the device the app it will ask the user an identifier used to sync it with the backoffice. After that the app will automatically download and reproduce content if scheduled in backoffice. It will continue to work even when minimize. If the device is restarted, the app will start automatically.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 

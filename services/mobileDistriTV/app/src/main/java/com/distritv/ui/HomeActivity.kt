@@ -16,7 +16,6 @@ import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.daemon.ContentRequestDaemon
 import com.distritv.daemon.ContentSchedulingDaemon
-import com.distritv.data.model.CalendarModel
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
 import org.koin.android.ext.android.inject
@@ -51,9 +50,6 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
 
         val contentType = intent.extras?.getString(CONTENT_TYPE_PARAM)
         val contentDuration = intent.extras?.getLong(CONTENT_DURATION_PARAM) ?: -1L
-
-        binding.idInformationDisplay.visibility = View.INVISIBLE
-        binding.idInformationCard.visibility = View.INVISIBLE
 
         addFragment(contentType, contentDuration)
 
@@ -105,10 +101,6 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
             }
         } else {
             //Content load
-<<<<<<< HEAD
-
-=======
->>>>>>> f2b16bf (androidApp: fix display device id and fix hide the keyboard)
             when (contentType) {
                 IMAGE ->
                     supportFragmentManager.addFragment(

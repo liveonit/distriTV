@@ -126,11 +126,12 @@ export default function TelevisionList() {
           television={televisionToEdit!}
           handleCloseEditModal={handleCloseEditTelevisionModal}
         />}
+        {!!televisionToDelete&&
       <TelevisionDeleteModal
         isOpen={!!televisionToDelete}
         television={televisionToDelete!}
         handleCloseDeleteModal={handleCloseDeleteTelevisionModal}
-      />
+      />}
     </>
   )
 }

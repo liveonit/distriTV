@@ -58,11 +58,7 @@ class ImageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         fullscreenManager?.enterFullscreen()
 
-        if (localPathParam.isNotBlank()) {
-            viewModel.fetchImage(localPathParam)
-        } else {
-            binding.imageContainer.setImageResource(R.drawable.home_wallpaper)
-        }
+        viewModel.fetchImage(localPathParam)
     }
 
     private fun loadImageObserver() {
@@ -76,9 +72,9 @@ class ImageFragment : Fragment() {
                     (context?.applicationContext as DistriTVApp).setContentCurrentlyPlaying(false)
                     activity?.supportFragmentManager?.replaceFragment(
                         R.id.home_fragment_container,
-                        ImageFragment(),
+                        HomeFragment(),
                         false,
-                        ImageFragment.TAG
+                        HomeFragment.TAG
                     )
                     Log.i(TAG, "Playback finished, coming home...")
                 }, TimeUnit.SECONDS.toMillis(contentDuration))

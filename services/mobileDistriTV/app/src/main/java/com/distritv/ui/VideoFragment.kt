@@ -69,9 +69,9 @@ class VideoFragment : Fragment() {
                 (context?.applicationContext as DistriTVApp).setContentCurrentlyPlaying(false)
                 activity?.supportFragmentManager?.replaceFragment(
                     R.id.home_fragment_container,
-                    ImageFragment(),
+                    HomeFragment(),
                     false,
-                    ImageFragment.TAG
+                    HomeFragment.TAG
                 )
                 Log.i(TAG, "Playback finished, coming home...")
             }, TimeUnit.SECONDS.toMillis(durationAfterCompletion))

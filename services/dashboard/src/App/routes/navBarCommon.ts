@@ -54,6 +54,13 @@ export const navBarCommon = [
         href: PATH_NAME.LABEL,
         label: DRAWER_MENU_LABEL.TELEVISIONS,
       },
+      {
+        title: 'Agenda',
+        IconColor: 'primary',
+        icon: LabelIcon,
+        href: PATH_NAME.AGENDA,
+        label: DRAWER_MENU_LABEL.AGENDAS,
+      },
     ],
   },
   {

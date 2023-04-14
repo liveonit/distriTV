@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -92,14 +91,11 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
             if(sharedPreferences.isDeviceRegistered()){
                 supportFragmentManager.addFragment(
                     R.id.home_fragment_container,
-                    ImageFragment(),
+                    HomeFragment(),
                     false,
-                    ImageFragment.TAG
+                    HomeFragment.TAG
                 )
-                idDisplay()
             } else {
-                binding.idInformationDisplay.visibility = View.INVISIBLE
-                binding.idInformationCard.visibility = View.INVISIBLE
                 supportFragmentManager.addFragment(
                     R.id.home_fragment_container,
                     DeviceInfoFragment(),
@@ -109,7 +105,10 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
             }
         } else {
             //Content load
+<<<<<<< HEAD
 
+=======
+>>>>>>> f2b16bf (androidApp: fix display device id and fix hide the keyboard)
             when (contentType) {
                 IMAGE ->
                     supportFragmentManager.addFragment(
@@ -177,23 +176,14 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
         }
         return false
     }
-
-    @SuppressLint("HardwareIds", "SetTextI18n")
-    private fun idDisplay(){
-        binding.idInformationDisplay.text = "id : ${sharedPreferences.getDeviceId()}"
-        binding.idInformationDisplay.visibility = View.VISIBLE
-        binding.idInformationCard.visibility = View.VISIBLE
-    }
-
-    override fun onStartButtonPressed(id: String) {
+    override fun onRegisterButtonPressed(id: String) {
         sharedPreferences.addDeviceId(id)
         supportFragmentManager.addFragment(
             R.id.home_fragment_container,
-            ImageFragment(),
+            HomeFragment(),
             false,
-            ImageFragment.TAG
+            HomeFragment.TAG
         )
-        idDisplay()
     }
 
     companion object {

@@ -13,26 +13,50 @@ import { Box } from '@mui/material'
 // matrial icon
 import CloudUpload from '@material-ui/icons/CloudUpload'
 import CloudDone from '@material-ui/icons/CloudDone'
+import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { contentSchema, ContentT } from 'src/store/content/content.type'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { removeEmpty } from 'src/utils/removeEmpty'
+//import { createContent } from 'src/store/content/content.action'
+import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 
 type IProps = {
   isOpen: boolean
-  handleCloseEditModal: () => void
+  handleCloseContentModal: () => void
+  content: Partial<ContentT>
 }
+const contentType = ['Video', 'Imagen', 'Texto']
 
-export default function CreateContentModal({ isOpen, handleCloseEditModal }: IProps) {
+export default function CreateContentModal({ isOpen, handleCloseContentModal, content }: IProps) {
   const [name, setName] = React.useState('')
   const [file, setFile] = React.useState<File | null>(null)
   const [fileError, setFileError] = React.useState('')
   const [uploadingFile, setUploadingFile] = React.useState(false)
-  const dispatch = useDispatch()
-
+  
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length && acceptedFiles.length > 1) setFileError('At least and only one file should be selected')
     setFile(acceptedFiles[0])
   }, [])
   const { getRootProps, getInputProps } = useDropzone({ onDrop, maxFiles: 1 })
+  const contentInitialState: ContentT = { name: '', type: '', url: '', text: '', ...removeEmpty(content)}
+  const dispatch = useDispatch()
+
+  const methods = useForm<ContentT>({
+    resolver: zodResolver(contentSchema),
+    defaultValues: contentInitialState,
+  })
+  const { reset, handleSubmit, control, getValues } = methods
+  
+  const onSubmit: SubmitHandler<ContentT> = (data) => {
+   
+    handleCloseContentModal()
+  }
+  
+  
 
   const handleSave = async () => {
+    console.log(getValues().type)
     if (file) {
       setUploadingFile(true)
       dispatch(
@@ -45,7 +69,7 @@ export default function CreateContentModal({ isOpen, handleCloseEditModal }: IPr
     }
     setName('')
     setFile(null)
-    handleCloseEditModal()
+    handleCloseContentModal()
   }
   console.log(uploadingFile)
 
@@ -53,11 +77,33 @@ export default function CreateContentModal({ isOpen, handleCloseEditModal }: IPr
     <>
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
-          <Typography variant='h6' color='textPrimary'>
-            Edit content
+          <Typography variant='h4' color='textPrimary'>
+            Create content
           </Typography>
           <br />
           <Grid container spacing={2}>
+          <Grid item xs={12}>
+              <FormInputDropdown
+                fullWidth
+                label='Tipo de Contenido'
+                name='type'
+                control={control}
+                selectOptions={contentType.map((tp) => ({ label: tp, value: tp }))}
+              />
+            </Grid>
+          {getValues().type == 'Imagen' &&
+           <Grid item xs={12}>
+           <FormInputText name='duration' control={control} fullWidth label='Duración' variant='outlined' />
+         </Grid>
+          }
+           {getValues().type == 'Texto' &&
+           <Grid item xs={12}>
+           <Box display='flex' flexDirection={'column'} style={{ alignItems: 'center', justifyContent: 'center' }}>
+           <FormInputText name='text' control={control} fullWidth label='Mensaje a mostrar' variant='outlined' style={{ width: '150px', height: '150px', marginTop: '10px' }}/>
+           </Box>
+         </Grid>
+          }
+          
             <Grid item xs={12}>
               <TextField
                 value={name}
@@ -69,7 +115,7 @@ export default function CreateContentModal({ isOpen, handleCloseEditModal }: IPr
               />
             </Grid>
           </Grid>
-
+          {getValues().type != 'Texto' &&
           <div {...getRootProps()} style={{ height: '150px', border: '1px solid', marginTop: '15px' }}>
             <input {...getInputProps()} />
             <Box display='flex' flexDirection={'column'} style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -90,13 +136,20 @@ export default function CreateContentModal({ isOpen, handleCloseEditModal }: IPr
               </>}
             </Box>
           </div>
+        }
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseEditModal} color='primary'>
+          <Button  onClick={() => {
+              reset()
+              handleCloseContentModal()
+            }} color='primary'>
             Close
           </Button>
           <Button
-            onClick={() => file && handleSave()}
+            onClick={
+              () => file && handleSave()
+              
+            }
             disabled={!!fileError.length}
             variant='contained'
             color='primary'

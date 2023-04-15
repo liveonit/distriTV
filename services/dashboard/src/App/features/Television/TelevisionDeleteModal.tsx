@@ -24,17 +24,13 @@ export default function InstitutionDeleteModal({ isOpen, handleCloseDeleteModal,
   
 
   return (
-    
     <>
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
             Está seguro que desea borrar la Televisión con ip:  {television.ip} ?
-             
           </Typography>
           <br />
-          
-       
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDeleteModal} color='primary'>

@@ -16,6 +16,6 @@ export const updateAgenda = (payload: AgendaT) => ({
 })
 
 export const deleteAgenda = (payload: { id: number | string }) => ({
-  type: AgendaActionTypes.EDIT_REQUEST,
+  type: AgendaActionTypes.DELETE_REQUEST,
   payload
 })

@@ -8,11 +8,11 @@ import Typography from '@material-ui/core/Typography'
 import { televisionSchema, TelevisionT } from 'src/store/television/television.type'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CITIES } from 'src/utils/constants/Cities'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
-import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
 import { removeEmpty } from 'src/utils/removeEmpty'
 import RefreshIcon from '@material-ui/icons/Refresh'
+import { createTelevision, updateTelevision } from 'src/store/television/television.action'
+import { useDispatch } from 'react-redux'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -28,9 +28,15 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
     defaultValues: televisionInitialState,
   })
 
+  const dispatch = useDispatch() 
   const { reset, handleSubmit, control } = methods
 
-  const onSubmit: SubmitHandler<TelevisionT> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<TelevisionT> = (data) => {
+    if (!television) dispatch(createTelevision(data))
+    else dispatch(updateTelevision(data))
+    handleCloseEditModal()
+  }
+
   return (
     <>
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
@@ -41,30 +47,20 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
           <br />
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <FormInputText name='name' control={control} fullWidth label='Nombre' variant='outlined' />
-            </Grid>
-            <Grid item xs={12}>
-              <FormInputDropdown
-                fullWidth
-                label='Departamento'
-                name='city'
-                control={control}
-                selectOptions={CITIES.map((dep) => ({ label: dep, value: dep }))}
-              />
+              <FormInputText name='ip' control={control} fullWidth label='ip' variant='outlined' />
             </Grid>
           </Grid>{' '}
           <br/>
           <Grid item xs={12}>
-            <FormInputText fullWidth label='Localidad' variant='outlined' name='locality' control={control} />
+            <FormInputText fullWidth label='mac' variant='outlined' name='mac' control={control} />
           </Grid>
           {!television &&
            <><br/>             
               <Grid container>
               <Grid item>
-              <FormInputText fullWidth label='Código TV' variant='outlined' name='locality' value="666666" control={control} /> 
+              
               </Grid>
               <Grid item alignItems="stretch" style={{ display: 'flex' }}>
-
               <Button startIcon={<RefreshIcon />} color="primary" onClick={() => console.log(Math.random().toString(36).slice(2, 8))} />
               </Grid>
               </Grid> </>

@@ -94,7 +94,6 @@ export default function ContentList() {
                     <DeleteIcon onClick={() => {setContentToDelete(content)}
                     } />
                   </IconButton>
-
                 </TableCell>
               </TableRow>
             ))}

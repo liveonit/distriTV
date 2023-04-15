@@ -22,7 +22,7 @@ const val TEXT = "text"
 const val ACTIVE_NO = 0
 const val ACTIVE_YES = 1
 
-val VIDEO_TYPES = listOf("video/mp4")
+val VIDEO_TYPES = listOf("video/mp4", "video/webm")
 val IMAGE_TYPES = listOf("image/jpeg", "image/jpg", "image/png")
 val TEXT_TYPES = listOf("text")
 

@@ -9,13 +9,16 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import { useDispatch, useSelector } from 'react-redux'
-import { CircularProgress } from 'node_modules/@mui/material'
+import { CircularProgress, IconButton } from 'node_modules/@mui/material'
 import Button from '@material-ui/core/Button'
+import EditIcon from '@material-ui/icons/Edit'
+import DeleteIcon from '@material-ui/icons/Delete';
 import { listContents } from 'src/store/content/content.action'
 import { contentIsLoadingSelector, contentSelector } from 'src/store/content/content.selector'
 import AddIcon from '@material-ui/icons/Add'
-
 import CreateContentModal from './CreateContentModal'
+import ContentDeleteModal from './ContentDeleteModal'
+import { ContentT } from 'src/store/content/content.type'
 
 const useStyles = makeStyles({
   table: {
@@ -34,9 +37,14 @@ export default function ContentList() {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const isLoading = useSelector(contentIsLoadingSelector)
   const contents = useSelector(contentSelector)
+  const [contentToEdit, setContentToEdit] = React.useState<ContentT | null>(null)
+  const [contentToDelete, setContentToDelete] = React.useState<ContentT | null>(null)
 
   function handleCloseEditContentModal() {
     setIsModalOpen(false)
+  }
+  function handleCloseDeleteContentModal() {
+    setContentToDelete(null)
   }
 
   return isLoading ? (
@@ -66,6 +74,7 @@ export default function ContentList() {
               <TableCell>Name</TableCell>
               <TableCell>Type</TableCell>
               <TableCell>URL</TableCell>
+              <TableCell> Action </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -76,15 +85,34 @@ export default function ContentList() {
                 </TableCell>
                 <TableCell>{content.type}</TableCell>
                 <TableCell>{content.url}</TableCell>
+                <TableCell>
+                <IconButton color='primary' aria-label='edit content' component='span'>
+                    <EditIcon onClick={() => {setContentToEdit(content)}
+                    } />
+                  </IconButton>
+                  <IconButton color='primary' aria-label='delete content' component='span'>
+                    <DeleteIcon onClick={() => {setContentToDelete(content)}
+                    } />
+                  </IconButton>
+
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+     {!!contentToEdit || isModalOpen &&
       <CreateContentModal
         isOpen={isModalOpen}
-        handleCloseEditModal={handleCloseEditContentModal}
+        handleCloseContentModal={handleCloseEditContentModal}
+        content={contentToEdit!}
       />
-    </>
+     }
+    {!!contentToDelete && <ContentDeleteModal
+        isOpen={!!contentToDelete}
+        content={contentToDelete!}
+        handleCloseDeleteModal={handleCloseDeleteContentModal}
+      />}
+</>
   )
 }

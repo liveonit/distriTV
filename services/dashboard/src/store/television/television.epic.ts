@@ -12,13 +12,14 @@ import { SessionT } from '../auth/auth.type'
 
 const refreshToken$ = defer(() => checkOrRefreshToken())
 
+// === List televisions
 const listTelevisions: Epic = (action$) =>
   action$.pipe(
     ofType(TelevisionActionTypes.LIST_ALL_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(() => {
-      const {session} = storage.get<SessionT>('session') || {}
+      const { session } = storage.get<SessionT>('session') || {}
       return apiSvc.request({ path: '/television', requireAuthType: session?.type }).pipe(
         map(({ response }) => {
           return {
@@ -35,11 +36,87 @@ const listTelevisions: Epic = (action$) =>
       )
     }),
   )
-
 const listTelevisionsFailed: Epic = (action$) =>
   action$.pipe(
     ofType(TelevisionActionTypes.LIST_ALL_FAILURE),
     map(() => enqueueSnackbarAction({ variant: 'error', message: 'Error getting televisions.', key: 'REQUEST_ERROR' })),
   )
 
-export const televisionsEpics = [listTelevisions, listTelevisionsFailed]
+// === Create television
+const createTelevision: Epic = (action$) =>
+  action$.pipe(
+    ofType(TelevisionActionTypes.CREATE_REQUEST),
+    debounceTime(0),
+    concatMap((act) => refreshToken$.pipe(map(() => act))),
+    mergeMap(({ payload }) => {
+      const { session } = storage.get<SessionT>('session') || {}
+      return apiSvc.request({ method: 'POST', path: '/television', requireAuthType: session?.type, body: payload }).pipe(
+        mergeMap(({ response }) => {
+          return of({
+            type: TelevisionActionTypes.CREATE_SUCCESS,
+            payload: response,
+          })
+        }),
+        catchError((err) =>
+          of({
+            type: TelevisionActionTypes.CREATE_FAILURE,
+            payload: err,
+          }),
+        ),
+      )
+    }),
+  )
+
+// === Update television
+const updateTelevision: Epic = (action$) =>
+  action$.pipe(
+    ofType(TelevisionActionTypes.EDIT_REQUEST),
+    debounceTime(0),
+    concatMap((act) => refreshToken$.pipe(map(() => act))),
+    mergeMap(({ payload }) => {
+      const { session } = storage.get<SessionT>('session') || {}
+      return apiSvc.request({ method: 'PUT', path: `/television/${payload.id}`, requireAuthType: session?.type, body: payload }).pipe(
+        mergeMap(({ response }) => {
+          return of({
+            type: TelevisionActionTypes.EDIT_SUCCESS,
+            payload: response,
+          })
+        }),
+        catchError((err) =>
+          of({
+            type: TelevisionActionTypes.EDIT_FAILURE,
+            payload: err,
+          }),
+        ),
+      )
+    }),
+  )
+
+
+// === Update television
+const deleteTelevision: Epic = (action$) =>
+  action$.pipe(
+    ofType(TelevisionActionTypes.DELETE_REQUEST),
+    debounceTime(0),
+    concatMap((act) => refreshToken$.pipe(map(() => act))),
+    mergeMap(({ payload }) => {
+      const { session } = storage.get<SessionT>('session') || {}
+      return apiSvc.request({ method: 'DELETE', path: `/television/${payload.id}`, requireAuthType: session?.type }).pipe(
+        mergeMap(({ response }) => {
+          return of({
+            type: TelevisionActionTypes.DELETE_SUCCESS,
+            payload: response,
+          })
+        }),
+        catchError((err) =>
+          of({
+            type: TelevisionActionTypes.DELETE_FAILURE,
+            payload: err,
+          }),
+        ),
+      )
+    }),
+  )
+
+
+export const televisionsEpics = [listTelevisions, listTelevisionsFailed, createTelevision, updateTelevision, deleteTelevision]

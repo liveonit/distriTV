@@ -5,6 +5,8 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import Typography from '@material-ui/core/Typography'
 import { LabelT } from 'src/store/label/label.type'
+import { useDispatch } from 'react-redux'
+import { deleteLabel } from 'src/store/label/label.action'
 
 type IProps = {
   isOpen: boolean
@@ -12,30 +14,12 @@ type IProps = {
   label: LabelT
 }
 
-
-
-
-let nombreLabel = ''
-
-
 export default function LabelDeleteModal({ isOpen, handleCloseDeleteModal, label}: IProps) {
-  
+  const dispatch = useDispatch() 
   function handleDeleteLabel() {
-    //TODO: Save label
-    console.log(label)
-      
-    
+    dispatch(deleteLabel({ id: label.id! }))
+    handleCloseDeleteModal()
   }
-
-  function labelFieldsValues(){
-    if (label) {
-       nombreLabel = label.name
-  } 
-  
-  }
-  
-  labelFieldsValues()
-  
 
   return (
     
@@ -43,7 +27,7 @@ export default function LabelDeleteModal({ isOpen, handleCloseDeleteModal, label
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            Está seguro que desea borrar la etiqueta {nombreLabel} ?
+            Está seguro que desea borrar la etiqueta {label.name} ?
              
           </Typography>
           <br />

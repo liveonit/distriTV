@@ -125,4 +125,28 @@ const createContent: Epic = (action$) =>
     }),
   )
 
-export const contentsEpics = [listContents, listContentsFailed, uploadContent, createContent]
+  const deleteContent: Epic = (action$) =>
+  action$.pipe(
+    ofType(ContentActionTypes.DELETE_REQUEST),
+    debounceTime(0),
+    concatMap((act) => refreshToken$.pipe(map(() => act))),
+    mergeMap(({ payload }) => {
+      const { session } = storage.get<SessionT>('session') || {}
+      return apiSvc.request({ method: 'DELETE', path: `/content/${payload.id}`, requireAuthType: session?.type }).pipe(
+        mergeMap(({ response }) => {
+          return of({
+            type: ContentActionTypes.DELETE_SUCCESS,
+            payload: response,
+          })
+        }),
+        catchError((err) =>
+          of({
+            type: ContentActionTypes.DELETE_FAILURE,
+            payload: err,
+          }),
+        ),
+      )
+    }),
+  )
+
+export const contentsEpics = [listContents, listContentsFailed, uploadContent, createContent, deleteContent]

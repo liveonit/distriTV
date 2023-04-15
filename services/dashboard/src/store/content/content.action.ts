@@ -13,3 +13,9 @@ export const uploadContent = (payload: { name: string; type: string, file: File 
   type: ContentActionTypes.UPLOAD_FILE_REQUEST,
   payload,
 })
+
+export const deleteContent = (payload: { id: number | string }) => ({
+  type: ContentActionTypes.DELETE_REQUEST,
+  payload
+})
+

@@ -175,7 +175,8 @@ class ContentRequestDaemon: Service() {
      * If content type is not Text, check if the content name already exists.
      */
     private fun existsContentName(content: Content, contentList: List<Content>): Boolean {
-        return contentList.firstOrNull { !isText(it.type) && it.name == content.name } != null
+        return contentList.firstOrNull { !isText(it.type) && it.active == ACTIVE_YES
+                && it.id != content.id && it.name == content.name } != null
     }
 
     private suspend fun saveContent(
@@ -222,9 +223,15 @@ class ContentRequestDaemon: Service() {
         content.endDate = LocalDateTime.parse(endDate, pattern)
 
         //content.cron = "0 0/2 * * * ?" //cada 2 minutos
-        content.cron = "0 0/1 * * * ?" //cada 1 minuto
+        //content.cron = "0 0/1 * * * ?" //cada 1 minuto
         //content.cron = "0 0/5 * * * ?" //cada 5 minutos
-        content.durationInSeconds = 30
+        content.cron = "0/40 * * * * ?" //cada 30 segundos
+
+        if(isVideo(content.type)){
+            content.durationInSeconds = 0
+        }else{
+            content.durationInSeconds = 20
+        }
     }
 
     companion object {

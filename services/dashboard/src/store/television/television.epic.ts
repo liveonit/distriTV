@@ -41,6 +41,37 @@ const listTelevisionsFailed: Epic = (action$) =>
     ofType(TelevisionActionTypes.LIST_ALL_FAILURE),
     map(() => enqueueSnackbarAction({ variant: 'error', message: 'Error getting televisions.', key: 'REQUEST_ERROR' })),
   )
+  const listTelevisionsJoin: Epic = (action$) =>
+  action$.pipe(
+    ofType(TelevisionActionTypes.LIST_ALL_JOIN_REQUEST),
+    debounceTime(0),
+    concatMap((act) => refreshToken$.pipe(map(() => act))),
+    mergeMap(() => {
+      const { session } = storage.get<SessionT>('session') || {}
+      return apiSvc.request({ path: '/television?relations=institution', requireAuthType: session?.type }).pipe(
+        map(({ response }) => {
+          return {
+            type: TelevisionActionTypes.LIST_ALL_JOIN_SUCCESS,
+            payload: response
+          }
+        }),
+        catchError((err) =>
+          of({
+            type: TelevisionActionTypes.LIST_ALL_JOIN_FAILURE,
+            payload: err,
+          }),
+        ),
+      )
+    }),
+  )
+const listTelevisionsJoinFailed: Epic = (action$) =>
+  action$.pipe(
+    ofType(TelevisionActionTypes.LIST_ALL_FAILURE),
+    map(() => enqueueSnackbarAction({ variant: 'error', message: 'Error getting televisions.', key: 'REQUEST_ERROR' })),
+  )
+
+
+
 
 // === Create television
 const createTelevision: Epic = (action$) =>
@@ -119,4 +150,4 @@ const deleteTelevision: Epic = (action$) =>
   )
 
 
-export const televisionsEpics = [listTelevisions, listTelevisionsFailed, createTelevision, updateTelevision, deleteTelevision]
+export const televisionsEpics = [listTelevisions, listTelevisionsFailed, listTelevisionsJoin, listTelevisionsJoinFailed,createTelevision, updateTelevision, deleteTelevision]

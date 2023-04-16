@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { televisionsIsLoadingSelector, televisionsSelector } from 'src/store/television/television.selector'
 import { CircularProgress } from 'node_modules/@mui/material'
 import Button from '@material-ui/core/Button'
-import { listTelevisions } from 'src/store/television/television.action'
+import { listTelevisionsJoin } from 'src/store/television/television.action'
 import { TelevisionT } from 'src/store/television/television.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -35,8 +35,9 @@ export default function TelevisionList() {
   const dispatch = useDispatch()
 
   React.useEffect(() => {
-    dispatch(listTelevisions())
+    dispatch(listTelevisionsJoin())
   }, [dispatch])
+  
 
   const isLoading = useSelector(televisionsIsLoadingSelector)
   const televisions = useSelector(televisionsSelector)
@@ -85,22 +86,23 @@ export default function TelevisionList() {
               <TableCell>Id</TableCell>
               <TableCell>Ip</TableCell>
               <TableCell>Mac</TableCell>
+              <TableCell>Institución</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {televisions.map((television) => (
-              <TableRow key={television.institutionId}>
+              <TableRow key={television.id}>
                 <TableCell component='th' scope='row'>
-                  {television.institutionId}
+                  {television.id}
                 </TableCell>
                 <TableCell>{television.ip}</TableCell>
                 <TableCell>{television.mac}</TableCell>
+                <TableCell>{television?.institution?.name}</TableCell>
                 <TableCell>
                   <IconButton color='primary' aria-label='edit television' component='span'>
                     <EditIcon onClick={() => {
-
-                      setModalTitle('Editar Institución')
+                      setModalTitle('Editar Televisión')
                       setTelevisionToEdit(television)
                     }
 

@@ -25,6 +25,23 @@ const reducer = (state = initialState, { type, payload }: any) => {
         isLoading: false,
         items: payload,
       }
+      case TelevisionActionTypes.LIST_ALL_JOIN_REQUEST:
+        return {
+          ...state,
+          isLoading: true,
+        }
+      case TelevisionActionTypes.LIST_ALL_JOIN_FAILURE:
+        return {
+          ...state,
+          isLoading: false,
+          items: [],
+        }
+      case TelevisionActionTypes.LIST_ALL_JOIN_SUCCESS:
+        return {
+          ...state,
+          isLoading: false,
+          items: payload,
+        }
     case TelevisionActionTypes.CREATE_REQUEST:
       return {
         ...state,

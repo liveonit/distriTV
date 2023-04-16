@@ -13,6 +13,10 @@ import { removeEmpty } from 'src/utils/removeEmpty'
 import RefreshIcon from '@material-ui/icons/Refresh'
 import { createTelevision, updateTelevision } from 'src/store/television/television.action'
 import { useDispatch } from 'react-redux'
+import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
+import { useSelector } from 'react-redux'
+import { institutionsSelector } from 'src/store/institution/institutions.selector'
+import { listInstitutions } from 'src/store/institution/institution.action'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -27,9 +31,13 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
     resolver: zodResolver(televisionSchema),
     defaultValues: televisionInitialState,
   })
-
+  const institutions = useSelector(institutionsSelector)
   const dispatch = useDispatch() 
-  const { reset, handleSubmit, control } = methods
+  const { reset, handleSubmit, setValue, control } = methods
+
+  React.useEffect(() => {
+    dispatch(listInstitutions())
+  }, [dispatch])
 
   const onSubmit: SubmitHandler<TelevisionT> = (data) => {
     if (!television) dispatch(createTelevision(data))
@@ -46,6 +54,15 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
           </Typography>
           <br />
           <Grid container spacing={2}>
+          <Grid item xs={12}>
+              <FormInputDropdown
+                fullWidth
+                label='Institución'
+                name='institutionId'
+                control={control}
+                selectOptions={institutions.map((ins) => ({ label: ins.name, value: ins.id!! }))}
+              />
+            </Grid>
             <Grid item xs={12}>
               <FormInputText name='ip' control={control} fullWidth label='ip' variant='outlined' />
             </Grid>
@@ -58,10 +75,10 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
            <><br/>             
               <Grid container>
               <Grid item>
-              
               </Grid>
               <Grid item alignItems="stretch" style={{ display: 'flex' }}>
-              <Button startIcon={<RefreshIcon />} color="primary" onClick={() => console.log(Math.random().toString(36).slice(2, 8))} />
+              <FormInputText name='tvCode' control={control} fullWidth label='Código Tv' variant='outlined' />
+              <Button startIcon={<RefreshIcon />} color="primary" onClick={() => setValue('tvCode', Math.random().toString(36).slice(2, 8))} />
               </Grid>
               </Grid> </>
           }

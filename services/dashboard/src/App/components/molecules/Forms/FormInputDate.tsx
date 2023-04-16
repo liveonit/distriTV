@@ -5,14 +5,14 @@ import { Controller } from 'react-hook-form'
 
 const DATE_FORMAT = 'dd-MM-yy-HH-ss'
 
-type FormInputDropdownPropsT = {
+type FormInputDatePropsT = {
   name: string;
   control: any;
   label: string;
   setValue?: any;
 }
 
-export const FormInputDate: React.FC<FormInputDropdownPropsT> = ({ name, control, label }) => {
+export const FormInputDate: React.FC<FormInputDatePropsT> = ({ name, control, label }) => {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Controller
@@ -25,7 +25,7 @@ export const FormInputDate: React.FC<FormInputDropdownPropsT> = ({ name, control
             defaultValue={new Date()}
             id={`date-${Math.random()}`}
             label={label}
-            rifmFormatter={(val) => val.replace(/[^[a-zA-Z0-9-]*$]+/gi, '')}
+            rifmFormatter={(val: string) => val.replace(/[^[a-zA-Z0-9-]*$]+/gi, '')}
             refuse={/[^[a-zA-Z0-9-]*$]+/gi}
             autoOk
             KeyboardButtonProps={{

@@ -8,11 +8,14 @@ import Typography from '@material-ui/core/Typography'
 import { agendaSchema, AgendaT } from 'src/store/agenda/agenda.type'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CITIES } from 'src/utils/constants/Cities'
-import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
 import { FormInputDate } from 'src/App/components/molecules/Forms/FormInputDate'
 import { removeEmpty } from 'src/utils/removeEmpty'
+import { contentSelector } from 'src/store/content/content.selector'
+import { useDispatch, useSelector } from 'react-redux'
+import { listContents } from 'src/store/content/content.action'
+import { listTelevisions } from 'src/store/television/television.action'
+import { televisionsSelector } from 'src/store/television/television.selector'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -23,12 +26,22 @@ type IProps = {
 export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda, title }: IProps) {
   const agendaInitialState: AgendaT = {contentId: 0, televisionId: 0, startDate: '', endDate: '',  cron: '', ...removeEmpty(agenda)
   }
+  const contents = useSelector(contentSelector)
+  const televisions = useSelector(televisionsSelector)
 
   const methods = useForm<AgendaT>({
     resolver: zodResolver(agendaSchema),
     defaultValues: agendaInitialState,
   })
 
+  const dispatch = useDispatch()
+  React.useEffect(() => {
+    dispatch(listContents())
+  }, [dispatch])
+  React.useEffect(() => {
+    dispatch(listTelevisions())
+  }, [dispatch])
+  
   const { reset, handleSubmit, control } = methods
 
   const onSubmit: SubmitHandler<AgendaT> = (data) => console.log(data)
@@ -41,24 +54,28 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
           </Typography>
           <br />
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <FormInputText name='name' control={control} fullWidth label='Nombre' variant='outlined' />
+          <Grid item xs={12}>
+              <FormInputDropdown
+                fullWidth
+                label='Contenido'
+                name='contenidoId'
+                control={control}
+                selectOptions={contents.map((con) => ({ label: con.name, value: con.id!! }))}
+              />
             </Grid>
             <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label='Departamento'
-                name='city'
+                label='Televisión'
+                name='televisionId'
                 control={control}
-                selectOptions={CITIES.map((dep) => ({ label: dep, value: dep }))}
+                selectOptions={televisions.map((tel) => ({ label: tel.ip, value: tel.id!! }))}
               />
             </Grid>
           </Grid>{' '}
           <br />
-          <Grid item xs={12}>
-            <FormInputText fullWidth label='Localidad' variant='outlined' name='locality' control={control} />
-          </Grid>
-          <FormInputDate  name='startDate' control={control} label='Fecha de inicio' />
+          <FormInputDate  name='startDate' control={control} label='Fecha inicio' />
+          <FormInputDate  name='endDate' control={control} label='Fecha fin' />
         </DialogContent>
         <DialogActions>
           <Button

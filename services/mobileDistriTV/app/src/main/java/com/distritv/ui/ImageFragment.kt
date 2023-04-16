@@ -9,12 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.distritv.DistriTVApp
-import com.distritv.R
 import com.distritv.databinding.FragmentImageBinding
-import com.distritv.utils.CONTENT_DURATION_PARAM
-import com.distritv.utils.CONTENT_PARAM
-import com.distritv.utils.replaceFragment
+import com.distritv.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -61,22 +57,19 @@ class ImageFragment : Fragment() {
         viewModel.fetchImage(localPathParam)
     }
 
+    override fun onResume() {
+        super.onResume()
+        backHomeOnResume()
+    }
+
     private fun loadImageObserver() {
         viewModel.image.observe(viewLifecycleOwner) {
             if (it != null) {
                 binding.imageContainer.setImageBitmap(it)
                 Log.i(TAG, "Playback started.")
 
-                // Back home after end of the duration
                 Handler(Looper.getMainLooper()).postDelayed({
-                    (context?.applicationContext as DistriTVApp).setContentCurrentlyPlaying(false)
-                    activity?.supportFragmentManager?.replaceFragment(
-                        R.id.home_fragment_container,
-                        HomeFragment(),
-                        false,
-                        HomeFragment.TAG
-                    )
-                    Log.i(TAG, "Playback finished, coming home...")
+                    onAfterCompletion(TAG)
                 }, TimeUnit.SECONDS.toMillis(contentDuration))
             } else {
                 Log.e(TAG, "No image available.")

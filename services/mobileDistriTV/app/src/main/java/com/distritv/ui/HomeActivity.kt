@@ -74,6 +74,7 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
     override fun onDestroy() {
         super.onDestroy()
         clearReferences()
+        (this.applicationContext as DistriTVApp).setContentCurrentlyPlaying(false)
     }
 
     private fun clearReferences() {
@@ -127,8 +128,6 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
                     Log.e(TAG, "Unsupported content type: $contentType")
                 }
             }
-            //binding.idInformationDisplay.visibility = View.INVISIBLE
-            //binding.idInformationCard.visibility = View.INVISIBLE
         }
     }
 

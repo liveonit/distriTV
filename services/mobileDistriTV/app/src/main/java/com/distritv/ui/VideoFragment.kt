@@ -9,12 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.MediaController
 import androidx.fragment.app.Fragment
-import com.distritv.DistriTVApp
-import com.distritv.R
 import com.distritv.databinding.FragmentVideoBinding
-import com.distritv.utils.CONTENT_DURATION_PARAM
-import com.distritv.utils.CONTENT_PARAM
-import com.distritv.utils.replaceFragment
+import com.distritv.utils.*
 import java.util.concurrent.TimeUnit
 
 class VideoFragment : Fragment() {
@@ -54,6 +50,11 @@ class VideoFragment : Fragment() {
         startVideo()
     }
 
+    override fun onResume() {
+        super.onResume()
+        backHomeOnResume()
+    }
+
     private fun startVideo() {
         binding.videoContainer.setVideoPath(localPathParam)
         val mediaC = MediaController(context)
@@ -64,16 +65,8 @@ class VideoFragment : Fragment() {
         Log.i(TAG, "Playback started.")
 
         binding.videoContainer.setOnCompletionListener {
-            // Video is complete, after 10 seconds come back home
             Handler(Looper.getMainLooper()).postDelayed({
-                (context?.applicationContext as DistriTVApp).setContentCurrentlyPlaying(false)
-                activity?.supportFragmentManager?.replaceFragment(
-                    R.id.home_fragment_container,
-                    HomeFragment(),
-                    false,
-                    HomeFragment.TAG
-                )
-                Log.i(TAG, "Playback finished, coming home...")
+                onAfterCompletion(TAG)
             }, TimeUnit.SECONDS.toMillis(durationAfterCompletion))
         }
     }

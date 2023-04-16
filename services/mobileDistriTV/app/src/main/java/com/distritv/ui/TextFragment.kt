@@ -8,12 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.distritv.DistriTVApp
-import com.distritv.R
 import com.distritv.databinding.FragmentTextBinding
-import com.distritv.utils.CONTENT_DURATION_PARAM
-import com.distritv.utils.CONTENT_PARAM
-import com.distritv.utils.replaceFragment
+import com.distritv.utils.*
 import java.util.concurrent.TimeUnit
 
 class TextFragment : Fragment() {
@@ -53,22 +49,18 @@ class TextFragment : Fragment() {
         showText()
     }
 
+    override fun onResume() {
+        super.onResume()
+        backHomeOnResume()
+    }
+
     private fun showText() {
         binding.textContainer.text = textParam
-        Log.i(ImageFragment.TAG, "Playback started.")
+        Log.i(TAG, "Playback started.")
 
-        // Back home after end of the duration
         Handler(Looper.getMainLooper()).postDelayed({
-            (context?.applicationContext as DistriTVApp).setContentCurrentlyPlaying(false)
-            activity?.supportFragmentManager?.replaceFragment(
-                R.id.home_fragment_container,
-                HomeFragment(),
-                false,
-                HomeFragment.TAG
-            )
-            Log.i(TAG, "Playback finished, coming home...")
+            onAfterCompletion(TAG)
         }, TimeUnit.SECONDS.toMillis(contentDuration))
-
     }
 
     companion object {

@@ -60,7 +60,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
                 label='Contenido'
                 name='contenidoId'
                 control={control}
-                selectOptions={contents.map((con) => ({ label: con.name, value: con.id!! }))}
+                selectOptions={contents.map((con) => ({ label: con.name, value: con.id! }))}
               />
             </Grid>
             <Grid item xs={12}>
@@ -69,7 +69,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
                 label='Televisión'
                 name='televisionId'
                 control={control}
-                selectOptions={televisions.map((tel) => ({ label: tel.ip, value: tel.id!! }))}
+                selectOptions={televisions.map((tel) => ({ label: tel.ip, value: tel.id! }))}
               />
             </Grid>
           </Grid>{' '}

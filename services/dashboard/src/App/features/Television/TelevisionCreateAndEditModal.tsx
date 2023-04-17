@@ -60,7 +60,7 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
                 label='Institución'
                 name='institutionId'
                 control={control}
-                selectOptions={institutions.map((ins) => ({ label: ins.name, value: ins.id!! }))}
+                selectOptions={institutions.map((ins) => ({ label: ins.name, value: ins.id! }))}
               />
             </Grid>
             <Grid item xs={12}>

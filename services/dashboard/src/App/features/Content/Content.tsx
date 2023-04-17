@@ -12,13 +12,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { CircularProgress, IconButton } from 'node_modules/@mui/material'
 import Button from '@material-ui/core/Button'
 import EditIcon from '@material-ui/icons/Edit'
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/Delete'
 import { listContents } from 'src/store/content/content.action'
 import { contentIsLoadingSelector, contentSelector } from 'src/store/content/content.selector'
 import AddIcon from '@material-ui/icons/Add'
-import CreateContentModal from './CreateContentModal'
-import ContentDeleteModal from './ContentDeleteModal'
 import { ContentT } from 'src/store/content/content.type'
+
+import CreateAndEditContentModal from './CreateAndEditContentModal'
+import ContentDeleteModal from './ContentDeleteModal'
 
 const useStyles = makeStyles({
   table: {
@@ -52,10 +53,10 @@ export default function ContentList() {
   ) : (
     <>
       <Grid container alignItems='center'>
-        <Grid sm={8}>
+        <Grid item sm={8}>
           <h2>Content</h2>
         </Grid>
-        <Grid sm={4} container justifyContent='flex-end'>
+        <Grid item sm={4} container justifyContent='flex-end'>
           <Button
             variant='contained'
             color='primary'
@@ -86,13 +87,25 @@ export default function ContentList() {
                 <TableCell>{content.type}</TableCell>
                 <TableCell>{content.url}</TableCell>
                 <TableCell>
-                <IconButton color='primary' aria-label='edit content' component='span'>
-                    <EditIcon onClick={() => {setContentToEdit(content)}
-                    } />
+                  <IconButton
+                    onClick={() => {
+                      setContentToEdit(content)
+                    }}
+                    color='primary'
+                    aria-label='edit content'
+                    component='span'
+                  >
+                    <EditIcon />
                   </IconButton>
-                  <IconButton color='primary' aria-label='delete content' component='span'>
-                    <DeleteIcon onClick={() => {setContentToDelete(content)}
-                    } />
+                  <IconButton
+                    onClick={() => {
+                      setContentToDelete(content)
+                    }}
+                    color='primary'
+                    aria-label='delete content'
+                    component='span'
+                  >
+                    <DeleteIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -100,18 +113,21 @@ export default function ContentList() {
           </TableBody>
         </Table>
       </TableContainer>
-     {!!contentToEdit || isModalOpen &&
-      <CreateContentModal
-        isOpen={isModalOpen}
-        handleCloseContentModal={handleCloseEditContentModal}
-        content={contentToEdit!}
-      />
-     }
-    {!!contentToDelete && <ContentDeleteModal
-        isOpen={!!contentToDelete}
-        content={contentToDelete!}
-        handleCloseDeleteModal={handleCloseDeleteContentModal}
-      />}
-</>
+      {!!contentToEdit ||
+        (isModalOpen && (
+          <CreateAndEditContentModal
+            isOpen={isModalOpen}
+            handleCloseContentModal={handleCloseEditContentModal}
+            content={contentToEdit!}
+          />
+        ))}
+      {!!contentToDelete && (
+        <ContentDeleteModal
+          isOpen={!!contentToDelete}
+          content={contentToDelete!}
+          handleCloseDeleteModal={handleCloseDeleteContentModal}
+        />
+      )}
+    </>
   )
 }

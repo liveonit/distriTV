@@ -17,12 +17,10 @@ import Button from '@material-ui/core/Button'
 import { listTelevisionsJoin } from 'src/store/television/television.action'
 import { TelevisionT } from 'src/store/television/television.type'
 import AddIcon from '@material-ui/icons/Add'
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/Delete'
 
 import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
 import TelevisionDeleteModal from './TelevisionDeleteModal'
-
-
 
 const useStyles = makeStyles({
   table: {
@@ -60,10 +58,10 @@ export default function TelevisionList() {
   ) : (
     <>
       <Grid container alignItems='center'>
-        <Grid sm={8}>
+        <Grid item sm={8}>
           <h2>Televisiones</h2>
         </Grid>
-        <Grid sm={4} container justifyContent='flex-end'>
+        <Grid item sm={4} container justifyContent='flex-end'>
           <Button
             variant='contained'
             color='primary'
@@ -72,8 +70,7 @@ export default function TelevisionList() {
             onClick={() => {
               setModalTitle('Crear Television')
               setIsModalCreate(true)
-            }
-            }
+            }}
           >
             Nuevo
           </Button>
@@ -100,21 +97,26 @@ export default function TelevisionList() {
                 <TableCell>{television.mac}</TableCell>
                 <TableCell>{television?.institution?.name}</TableCell>
                 <TableCell>
-                  <IconButton color='primary' aria-label='edit television' component='span'>
-                    <EditIcon onClick={() => {
-                      setModalTitle('Editar Televisión')
+                  <IconButton
+                    onClick={() => {
+                      setModalTitle('Editar Institución')
                       setTelevisionToEdit(television)
-                    }
-
-                    } />
+                    }}
+                    color='primary'
+                    aria-label='edit television'
+                    component='span'
+                  >
+                    <EditIcon />
                   </IconButton>
-                  <IconButton color='primary' aria-label='delete television' component='span'>
-                    <DeleteIcon onClick={() => {
-
+                  <IconButton
+                    onClick={() => {
                       setTelevisionToDelete(television)
-                    }
-
-                    } />
+                    }}
+                    color='primary'
+                    aria-label='delete television'
+                    component='span'
+                  >
+                    <DeleteIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -122,18 +124,20 @@ export default function TelevisionList() {
           </TableBody>
         </Table>
       </TableContainer>
-      {(!!televisionToEdit || isModalCreate) &&
+      {(!!televisionToEdit || isModalCreate) && (
         <TelevisionCreateAndEditModal
           title={titleModal}
           television={televisionToEdit!}
           handleCloseEditModal={handleCloseEditTelevisionModal}
-        />}
-        {!!televisionToDelete&&
-      <TelevisionDeleteModal
-        isOpen={!!televisionToDelete}
-        television={televisionToDelete!}
-        handleCloseDeleteModal={handleCloseDeleteTelevisionModal}
-      />}
+        />
+      )}
+      {!!televisionToDelete && (
+        <TelevisionDeleteModal
+          isOpen={!!televisionToDelete}
+          television={televisionToDelete!}
+          handleCloseDeleteModal={handleCloseDeleteTelevisionModal}
+        />
+      )}
     </>
   )
 }

@@ -17,12 +17,10 @@ import Button from '@material-ui/core/Button'
 import { listAgendas } from 'src/store/agenda/agenda.action'
 import { AgendaT } from 'src/store/agenda/agenda.type'
 import AddIcon from '@material-ui/icons/Add'
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/Delete'
 
 import AgendaCreateAndEditModal from './AgendaCreateAndEditModal'
 import AgendaDeleteModal from './AgendaDeleteModal'
-
-
 
 const useStyles = makeStyles({
   table: {
@@ -59,10 +57,10 @@ export default function AgendaList() {
   ) : (
     <>
       <Grid container alignItems='center'>
-        <Grid sm={8}>
+        <Grid item sm={8}>
           <h2>Agenda</h2>
         </Grid>
-        <Grid sm={4} container justifyContent='flex-end'>
+        <Grid item sm={4} container justifyContent='flex-end'>
           <Button
             variant='contained'
             color='primary'
@@ -71,8 +69,7 @@ export default function AgendaList() {
             onClick={() => {
               setModalTitle('Crear Agenda')
               setIsModalCreate(true)
-            }
-            }
+            }}
           >
             Nuevo
           </Button>
@@ -97,22 +94,26 @@ export default function AgendaList() {
                 <TableCell>{agenda.startDate.toString()}</TableCell>
                 <TableCell>{agenda.endDate.toString()}</TableCell>
                 <TableCell>
-                  <IconButton color='primary' aria-label='edit agenda' component='span'>
-                    <EditIcon onClick={() => {
-
+                  <IconButton
+                    onClick={() => {
                       setModalTitle('Editar Agenda')
                       setAgendaToEdit(agenda)
-                    }
-
-                    } />
+                    }}
+                    color='primary'
+                    aria-label='edit agenda'
+                    component='span'
+                  >
+                    <EditIcon />
                   </IconButton>
-                  <IconButton color='primary' aria-label='delete agenda' component='span'>
-                    <DeleteIcon onClick={() => {
-
+                  <IconButton
+                    onClick={() => {
                       setAgendaToDelete(agenda)
-                    }
-
-                    } />
+                    }}
+                    color='primary'
+                    aria-label='delete agenda'
+                    component='span'
+                  >
+                    <DeleteIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -120,12 +121,13 @@ export default function AgendaList() {
           </TableBody>
         </Table>
       </TableContainer>
-      {(!!agendaToEdit || isModalCreate) &&
+      {(!!agendaToEdit || isModalCreate) && (
         <AgendaCreateAndEditModal
           title={titleModal}
           agenda={agendaToEdit!}
           handleCloseEditModal={handleCloseEditAgendaModal}
-        />}
+        />
+      )}
       <AgendaDeleteModal
         isOpen={!!agendaToDelete}
         agenda={agendaToDelete!}

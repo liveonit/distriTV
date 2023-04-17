@@ -28,6 +28,14 @@ class ContentController extends BaseController<Content, ContentSvc> {
     if (!req.params.path) throw new BadRequest('File path should be specified as path parameter');
     res.download(path.resolve(config.PATH_TO_UPLOAD_FILES, req.params.path));
   });
+
+  public override  delete = handleErrorAsync(async (req: Request, res: Response) => {
+    let id: string | number = req.params.id?.toString();
+    if (!id) throw new BadRequest('Id is required');
+    if (!isNaN(+id)) id = +id
+    await this.service.delete(id);
+    return res.status(200).json({ id });
+  });
 }
 
 export const contentController = new ContentController(

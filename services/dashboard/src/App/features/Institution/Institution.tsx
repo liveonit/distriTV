@@ -10,7 +10,7 @@ import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/Delete'
 import { useDispatch, useSelector } from 'react-redux'
 import { institutionsIsLoadingSelector, institutionsSelector } from 'src/store/institution/institutions.selector'
 import { CircularProgress } from 'node_modules/@mui/material'
@@ -18,6 +18,7 @@ import Button from '@material-ui/core/Button'
 import { listInstitutions } from 'src/store/institution/institution.action'
 import { InstitutionT } from 'src/store/institution/institution.type'
 import AddIcon from '@material-ui/icons/Add'
+
 import InstitutionCreateAndEditModal from './InstitutionCreateAndEditModal'
 import InstitutionDeleteModal from './InstitutionDeleteModal'
 
@@ -56,10 +57,10 @@ export default function InstitutionList() {
   ) : (
     <>
       <Grid container alignItems='center'>
-        <Grid sm={8}>
+        <Grid item sm={8}>
           <h2>Instituciones</h2>
         </Grid>
-        <Grid sm={4} container justifyContent='flex-end'>
+        <Grid item sm={4} container justifyContent='flex-end'>
           <Button
             variant='contained'
             color='primary'
@@ -68,8 +69,7 @@ export default function InstitutionList() {
             onClick={() => {
               setModalTitle('Crear Institución')
               setIsModalCreate(true)
-            }
-            }
+            }}
           >
             Nuevo
           </Button>
@@ -94,22 +94,26 @@ export default function InstitutionList() {
                 <TableCell>{institution.city}</TableCell>
                 <TableCell>{institution.locality}</TableCell>
                 <TableCell>
-                  <IconButton color='primary' aria-label='edit institution' component='span'>
-                    <EditIcon onClick={() => {
-
+                  <IconButton
+                    onClick={() => {
                       setModalTitle('Editar Institución')
                       setInstitutionToEdit(institution)
-                    }
-
-                    } />
+                    }}
+                    color='primary'
+                    aria-label='edit institution'
+                    component='span'
+                  >
+                    <EditIcon />
                   </IconButton>
-                  <IconButton color='primary' aria-label='delete institution' component='span'>
-                    <DeleteIcon onClick={() => {
-
+                  <IconButton
+                    onClick={() => {
                       setInstitutionToDelete(institution)
-                    }
-
-                    } />
+                    }}
+                    color='primary'
+                    aria-label='delete institution'
+                    component='span'
+                  >
+                    <DeleteIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -117,17 +121,20 @@ export default function InstitutionList() {
           </TableBody>
         </Table>
       </TableContainer>
-      {(!!institutionToEdit || isModalCreate) &&
+      {(!!institutionToEdit || isModalCreate) && (
         <InstitutionCreateAndEditModal
           title={titleModal}
           institution={institutionToEdit!}
           handleCloseEditModal={handleCloseEditInstitutionModal}
-        />}
-      {!!institutionToDelete && <InstitutionDeleteModal
-        isOpen={!!institutionToDelete}
-        institution={institutionToDelete!}
-        handleCloseDeleteModal={handleCloseDeleteInstitutionModal}
-      />}
+        />
+      )}
+      {!!institutionToDelete && (
+        <InstitutionDeleteModal
+          isOpen={!!institutionToDelete}
+          institution={institutionToDelete!}
+          handleCloseDeleteModal={handleCloseDeleteInstitutionModal}
+        />
+      )}
     </>
   )
 }

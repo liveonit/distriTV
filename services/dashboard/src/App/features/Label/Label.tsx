@@ -22,15 +22,11 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import LabelCreateAndEditModal from './LabelCreateAndEditModal'
 import LabelDeleteModal from './LabelDeleteModal'
 
-
-
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
-
   },
 })
-
 
 export default function LabelList() {
   const classes = useStyles()
@@ -61,13 +57,15 @@ export default function LabelList() {
   ) : (
     <>
       <Grid container alignItems='center'>
-        <Grid sm={8}>
+        <Grid item sm={8}>
           <h2>Instituciones</h2>
         </Grid>
-        <Grid sm={4} container justifyContent='flex-end'>
+        <Grid item sm={4} container justifyContent='flex-end'>
           <Button
-           variant='contained' color='primary' size='small'
-            startIcon={<AddIcon/>}
+            variant='contained'
+            color='primary'
+            size='small'
+            startIcon={<AddIcon />}
             onClick={() => {
               setModalTitle('Crear Institución')
               setIsModalCreate(true)
@@ -79,7 +77,7 @@ export default function LabelList() {
       </Grid>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
-          <TableHead >
+          <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>City</TableCell>
@@ -96,22 +94,26 @@ export default function LabelList() {
                 <TableCell>{label.name}</TableCell>
                 <TableCell>{label.description}</TableCell>
                 <TableCell>
-                  <IconButton color='primary' aria-label='edit label' component='span'>
-                    <EditIcon onClick={() => {
-
+                  <IconButton
+                    onClick={() => {
                       setModalTitle('Editar etiqueta')
                       setLabelToEdit(label)
-                    }
-
-                    } />
+                    }}
+                    color='primary'
+                    aria-label='edit label'
+                    component='span'
+                  >
+                    <EditIcon />
                   </IconButton>
-                  <IconButton color='primary' aria-label='delete label' component='span'>
-                    <DeleteIcon onClick={() => {
-
+                  <IconButton
+                    onClick={() => {
                       setLabelToDelete(label)
-                    }
-
-                    } />
+                    }}
+                    color='primary'
+                    aria-label='delete label'
+                    component='span'
+                  >
+                    <DeleteIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -119,20 +121,20 @@ export default function LabelList() {
           </TableBody>
         </Table>
       </TableContainer>
-      {(!!labelToEdit || isModalCreate) &&
+      {(!!labelToEdit || isModalCreate) && (
         <LabelCreateAndEditModal
           title={titleModal}
           label={labelToEdit!}
           handleCloseEditModal={handleCloseEditLabelModal}
-        />}
-        {!!labelToDelete &&
-          <LabelDeleteModal
-        isOpen={!!labelToDelete}
-        label={labelToDelete!}
-        handleCloseDeleteModal={handleCloseDeleteLabelModal}
         />
-        }
-      
+      )}
+      {!!labelToDelete && (
+        <LabelDeleteModal
+          isOpen={!!labelToDelete}
+          label={labelToDelete!}
+          handleCloseDeleteModal={handleCloseDeleteLabelModal}
+        />
+      )}
     </>
   )
 }

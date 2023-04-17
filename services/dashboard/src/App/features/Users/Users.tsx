@@ -51,7 +51,7 @@ export default function UserList() {
   ) : (
     <>
       <Grid container alignItems='center'>
-        <Grid sm={8}>
+        <Grid item sm={8}>
           <h2>User</h2>
         </Grid>
       </Grid>
@@ -82,8 +82,13 @@ export default function UserList() {
                 </TableCell>
                 <TableCell>{user.loginType}</TableCell>
                 <TableCell>
-                  <IconButton color='primary' aria-label='edit user' component='span'>
-                    <EditIcon onClick={() => setUserToEdit(user)} />
+                  <IconButton
+                    onClick={() => setUserToEdit(user)}
+                    color='primary'
+                    aria-label='edit user'
+                    component='span'
+                  >
+                    <EditIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>

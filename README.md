@@ -10,10 +10,10 @@
 
 | SERVICE                         | STATUS                                                                                                        |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Back-office Dashboard Linter    | ![Status](https://github.com/liveonit/backendDemos/actions/workflows/linter_frontend.yml/badge.svg)           |
+| Back-office Dashboard Linter    | ![Status](https://github.com/liveonit/distriTV/actions/workflows/linter_frontend.yml/badge.svg)           |
 | Back-office Dashboard Tests     | No tested yet                                                                                                 |
-| Backend Linter                  | ![Status](https://github.com/liveonit/backendDemos/actions/workflows/linter_backend.yml/badge.svg)            |
-| Backend Integration Tests       | ![Status](https://github.com/liveonit/backendDemos/actions/workflows/backend_integration_tests.yml/badge.svg) |
+| Backend Linter                  | ![Status](https://github.com/liveonit/distriTV/actions/workflows/linter_backend.yml/badge.svg)            |
+| Backend Integration Tests       | ![Status](https://github.com/liveonit/distriTV/actions/workflows/backend_integration_tests.yml/badge.svg) |
 
 <!-- PROJECT LOGO -->
 <br />

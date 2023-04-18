@@ -16,6 +16,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { listContents } from 'src/store/content/content.action'
 import { listTelevisions } from 'src/store/television/television.action'
 import { televisionsSelector } from 'src/store/television/television.selector'
+import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
+import { listLabels } from 'src/store/label/label.action'
+import { labelsSelector } from 'src/store/label/label.selector'
+import { createAgenda, updateAgenda } from 'src/store/agenda/agenda.action'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -28,7 +32,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
   }
   const contents = useSelector(contentSelector)
   const televisions = useSelector(televisionsSelector)
-
+  const labels = useSelector(labelsSelector)
   const methods = useForm<AgendaT>({
     resolver: zodResolver(agendaSchema),
     defaultValues: agendaInitialState,
@@ -41,10 +45,17 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
   React.useEffect(() => {
     dispatch(listTelevisions())
   }, [dispatch])
-  
+  React.useEffect(() => {
+    dispatch(listLabels())
+  }, [dispatch])
   const { reset, handleSubmit, control } = methods
 
-  const onSubmit: SubmitHandler<AgendaT> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<AgendaT> = (data) => {
+    if (!agenda) dispatch(createAgenda(data))
+    else dispatch(updateAgenda(data))
+    handleCloseEditModal()
+  }
+
   return (
     <>
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
@@ -58,11 +69,21 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
               <FormInputDropdown
                 fullWidth
                 label='Content'
-                name='contenidoId'
+                name='contentId'
                 control={control}
                 selectOptions={contents.map((con) => ({ label: con.name, value: con.id! }))}
               />
             </Grid>
+            <Grid item xs={12}>
+              <FormInputDropdown
+                fullWidth
+                label='Label'
+                name='label'
+                control={control}
+                selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id!! }))}
+              />
+            </Grid>
+
             <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
@@ -76,6 +97,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
           <br />
           <FormInputDate  name='startDate' control={control} label='Start date' />
           <FormInputDate  name='endDate' control={control} label='End date' />
+          <FormInputText name='cron' control={control} fullWidth label='Crontab' variant='outlined' />
         </DialogContent>
         <DialogActions>
           <Button

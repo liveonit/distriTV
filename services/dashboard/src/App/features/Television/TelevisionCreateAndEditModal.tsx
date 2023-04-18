@@ -57,19 +57,19 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
           <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label='Institución'
+                label='Institution'
                 name='institutionId'
                 control={control}
                 selectOptions={institutions.map((ins) => ({ label: ins.name, value: ins.id! }))}
               />
             </Grid>
             <Grid item xs={12}>
-              <FormInputText name='ip' control={control} fullWidth label='ip' variant='outlined' />
+              <FormInputText name='IP' control={control} fullWidth label='ip' variant='outlined' />
             </Grid>
           </Grid>{' '}
           <br/>
           <Grid item xs={12}>
-            <FormInputText fullWidth label='mac' variant='outlined' name='mac' control={control} />
+            <FormInputText fullWidth label='MAC' variant='outlined' name='mac' control={control} />
           </Grid>
           {!television &&
            <><br/>             
@@ -77,7 +77,7 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
               <Grid item>
               </Grid>
               <Grid item alignItems="stretch" style={{ display: 'flex' }}>
-              <FormInputText name='tvCode' control={control} fullWidth label='Código Tv' variant='outlined' />
+              <FormInputText name='tvCode' control={control} fullWidth label='TV Code' variant='outlined' />
               <Button startIcon={<RefreshIcon />} color="primary" onClick={() => setValue('tvCode', Math.random().toString(36).slice(2, 8))} />
               </Grid>
               </Grid> </>
@@ -91,10 +91,10 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
             }}
             color='primary'
           >
-            Cerrar
+            Close
           </Button>
           <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
-            Guardar
+            Save
           </Button>
         </DialogActions>
       </Dialog>

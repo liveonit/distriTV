@@ -48,12 +48,12 @@ export default function InstitutionCreateAndEditModal({ handleCloseEditModal, in
           <br />
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <FormInputText name='name' control={control} fullWidth label='Nombre' variant='outlined' />
+              <FormInputText name='name' control={control} fullWidth label='Name' variant='outlined' />
             </Grid>
             <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label='Departamento'
+                label='City'
                 name='city'
                 control={control}
                 selectOptions={CITIES.map((dep) => ({ label: dep, value: dep }))}
@@ -62,7 +62,7 @@ export default function InstitutionCreateAndEditModal({ handleCloseEditModal, in
           </Grid>{' '}
           <br />
           <Grid item xs={12}>
-            <FormInputText fullWidth label='Localidad' variant='outlined' name='locality' control={control} />
+            <FormInputText fullWidth label='Locality' variant='outlined' name='locality' control={control} />
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -73,10 +73,10 @@ export default function InstitutionCreateAndEditModal({ handleCloseEditModal, in
             }}
             color='primary'
           >
-            Cerrar
+            Close
           </Button>
           <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
-            Guardar
+            Save
           </Button>
         </DialogActions>
       </Dialog>

@@ -57,7 +57,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
           <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label='Contenido'
+                label='Content'
                 name='contenidoId'
                 control={control}
                 selectOptions={contents.map((con) => ({ label: con.name, value: con.id! }))}
@@ -66,7 +66,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label='Televisión'
+                label='Television'
                 name='televisionId'
                 control={control}
                 selectOptions={televisions.map((tel) => ({ label: tel.ip, value: tel.id! }))}
@@ -74,8 +74,8 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             </Grid>
           </Grid>{' '}
           <br />
-          <FormInputDate  name='startDate' control={control} label='Fecha inicio' />
-          <FormInputDate  name='endDate' control={control} label='Fecha fin' />
+          <FormInputDate  name='startDate' control={control} label='Start date' />
+          <FormInputDate  name='endDate' control={control} label='End date' />
         </DialogContent>
         <DialogActions>
           <Button
@@ -85,10 +85,10 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             }}
             color='primary'
           >
-            Cerrar
+            Close
           </Button>
           <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
-            Guardar
+            Save
           </Button>
         </DialogActions>
       </Dialog>

@@ -58,7 +58,7 @@ export default function AgendaList() {
     <>
       <Grid container alignItems='center'>
         <Grid item sm={8}>
-          <h2>Agenda</h2>
+          <h2>Schedule</h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
           <Button
@@ -67,11 +67,11 @@ export default function AgendaList() {
             size='small'
             startIcon={<AddIcon />}
             onClick={() => {
-              setModalTitle('Crear Agenda')
+              setModalTitle('Create Schedule')
               setIsModalCreate(true)
             }}
           >
-            Nuevo
+            New
           </Button>
         </Grid>
       </Grid>
@@ -79,10 +79,10 @@ export default function AgendaList() {
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell>Televisión</TableCell>
-              <TableCell>Hora inicio</TableCell>
-              <TableCell>Hora fin</TableCell>
-              <TableCell>A reproducir</TableCell>
+              <TableCell>Television</TableCell>
+              <TableCell>Start date</TableCell>
+              <TableCell>End date</TableCell>
+              <TableCell>Content</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

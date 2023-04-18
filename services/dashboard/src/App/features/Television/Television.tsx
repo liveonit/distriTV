@@ -59,7 +59,7 @@ export default function TelevisionList() {
     <>
       <Grid container alignItems='center'>
         <Grid item sm={8}>
-          <h2>Televisiones</h2>
+          <h2>Televisions</h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
           <Button
@@ -72,7 +72,7 @@ export default function TelevisionList() {
               setIsModalCreate(true)
             }}
           >
-            Nuevo
+            New
           </Button>
         </Grid>
       </Grid>
@@ -83,7 +83,7 @@ export default function TelevisionList() {
               <TableCell>Id</TableCell>
               <TableCell>Ip</TableCell>
               <TableCell>Mac</TableCell>
-              <TableCell>Institución</TableCell>
+              <TableCell>Institution</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>

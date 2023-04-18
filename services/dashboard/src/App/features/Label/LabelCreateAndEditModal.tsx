@@ -44,13 +44,13 @@ export default function LabelCreateAndEditModal({ handleCloseEditModal, label, t
           <br />
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <FormInputText name='name' control={control} fullWidth label='Nombre' variant='outlined' />
+              <FormInputText name='name' control={control} fullWidth label='Name' variant='outlined' />
             </Grid>
             
           </Grid>{' '}
           <br />
           <Grid item xs={12}>
-            <FormInputText fullWidth label='Descripcion' variant='outlined' name='description' control={control} />
+            <FormInputText fullWidth label='Description' variant='outlined' name='description' control={control} />
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -61,10 +61,10 @@ export default function LabelCreateAndEditModal({ handleCloseEditModal, label, t
             }}
             variant='contained' color='primary' size='small'
           >
-            Cerrar
+            Close
           </Button>
           <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
-            Guardar
+            Save
           </Button>
         </DialogActions>
       </Dialog>

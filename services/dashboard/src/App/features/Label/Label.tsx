@@ -58,7 +58,7 @@ export default function LabelList() {
     <>
       <Grid container alignItems='center'>
         <Grid item sm={8}>
-          <h2>Instituciones</h2>
+          <h2>Labels</h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
           <Button
@@ -67,11 +67,11 @@ export default function LabelList() {
             size='small'
             startIcon={<AddIcon />}
             onClick={() => {
-              setModalTitle('Crear Institución')
+              setModalTitle('Create Label')
               setIsModalCreate(true)
             }}
           >
-            Nuevo
+            New
           </Button>
         </Grid>
       </Grid>

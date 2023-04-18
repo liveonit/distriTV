@@ -55,7 +55,7 @@ export const navBarCommon = [
         label: DRAWER_MENU_LABEL.TELEVISIONS,
       },
       {
-        title: 'Agenda',
+        title: 'Schedule',
         IconColor: 'primary',
         icon: LabelIcon,
         href: PATH_NAME.AGENDA,

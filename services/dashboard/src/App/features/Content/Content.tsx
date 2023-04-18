@@ -64,7 +64,7 @@ export default function ContentList() {
             startIcon={<AddIcon />}
             onClick={() => setIsModalOpen(true)}
           >
-            NUEVO
+            New
           </Button>
         </Grid>
       </Grid>

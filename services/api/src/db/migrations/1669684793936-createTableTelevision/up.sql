@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS `television` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL,
   `institutionId` INT NOT NULL,
   `ip` VARCHAR(45) NULL,
   `mac` VARCHAR(45) NULL,

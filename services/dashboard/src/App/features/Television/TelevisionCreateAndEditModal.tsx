@@ -28,7 +28,7 @@ type IProps = {
 }
 
 export default function TelevisionCreateAndEditModal({ handleCloseEditModal, television, title }: IProps) {
-  const televisionInitialState: TelevisionT = { id: 0, ip: '', mac: '', label: [], ...removeEmpty(television) }
+  const televisionInitialState: TelevisionT = { id: 0, name:'', ip: '', mac: '', label: [], ...removeEmpty(television) }
 
   const methods = useForm<TelevisionT>({
     resolver: zodResolver(televisionSchema),
@@ -65,6 +65,9 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
           <br />
           <Grid container spacing={2}>
           <Grid item xs={12}>
+            <FormInputText fullWidth label='TV Name' variant='outlined' name='name' control={control} />
+          </Grid>
+          <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
                 label='Institution'
@@ -75,7 +78,7 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
             </Grid>
            
             <Grid item xs={12}>
-              <FormInputText name='IP' control={control} fullWidth label='ip' variant='outlined' />
+              <FormInputText name='ip' control={control} fullWidth label='IP' variant='outlined' />
             </Grid>
           </Grid>{' '}
           <br/>

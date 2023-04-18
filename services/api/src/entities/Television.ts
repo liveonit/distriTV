@@ -21,6 +21,9 @@ export class Television extends BaseEntity {
   id!: number;
 
   @Column()
+  name!: String;
+
+  @Column()
   institutionId!: number;
 
   @Column()

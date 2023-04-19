@@ -12,6 +12,7 @@ import { NavBarItem } from 'src/store/app/app.type';
 import NavBarExpandItem from './NavBarExpandItem';
 // styles
 import useStyles from './styles';
+import { Trans } from 'react-i18next';
 
 const NavBarItem: FC<NavBarItem> = ({
   depth,
@@ -58,7 +59,7 @@ const NavBarItem: FC<NavBarItem> = ({
               style={style}
             >
               {Icon && <Icon className={classes.icon} size="20" />}
-              <span className={classes.title}>{title}</span>
+              <span className={classes.title}><Trans>{title}</Trans></span>
             </Button>
           )}
         </>

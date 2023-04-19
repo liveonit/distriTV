@@ -52,7 +52,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            {title}
+            {t(title)} {t('SCHEDULE')}
           </Typography>
           <br />
           <Grid container spacing={2}>

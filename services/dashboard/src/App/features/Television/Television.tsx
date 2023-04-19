@@ -69,7 +69,7 @@ export default function TelevisionList() {
             size='small'
             startIcon={<AddIcon />}
             onClick={() => {
-              setModalTitle('Crear Television')
+              setModalTitle('CREATE')
               setIsModalCreate(true)
             }}
           >
@@ -100,7 +100,7 @@ export default function TelevisionList() {
                 <TableCell>
                   <IconButton
                     onClick={() => {
-                      setModalTitle('Editar Institución')
+                      setModalTitle('EDIT')
                       setTelevisionToEdit(television)
                     }}
                     color='primary'

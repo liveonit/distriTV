@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { listContents } from 'src/store/content/content.action'
 import { listTelevisions } from 'src/store/television/television.action'
 import { televisionsSelector } from 'src/store/television/television.selector'
-import { Trans } from 'react-i18next/TransWithoutContext'
+import { Trans, useTranslation } from 'react-i18next'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -25,6 +25,7 @@ type IProps = {
 }
 
 export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda, title }: IProps) {
+  const { t } = useTranslation()
   const agendaInitialState: AgendaT = {contentId: 0, televisionId: 0, startDate: '', endDate: '',  cron: '', ...removeEmpty(agenda)
   }
   const contents = useSelector(contentSelector)
@@ -58,7 +59,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
           <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label='Content'
+                label={t(`CONTENT`)}
                 name='contenidoId'
                 control={control}
                 selectOptions={contents.map((con) => ({ label: con.name, value: con.id! }))}
@@ -67,7 +68,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label='Television'
+                label={t(`TELEVISION`)}
                 name='televisionId'
                 control={control}
                 selectOptions={televisions.map((tel) => ({ label: tel.ip, value: tel.id! }))}
@@ -75,8 +76,8 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             </Grid>
           </Grid>{' '}
           <br />
-          <FormInputDate  name='startDate' control={control} label='Start date' />
-          <FormInputDate  name='endDate' control={control} label='End date' />
+          <FormInputDate  name='startDate' control={control} label={t(`START_DATE`)} />
+          <FormInputDate  name='endDate' control={control} label={t(`END_DATE`)} />
         </DialogContent>
         <DialogActions>
           <Button

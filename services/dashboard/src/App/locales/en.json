@@ -9,13 +9,19 @@
   "TELEVISIONS":  "Televisions",
   "TELEVISION":   "Television",
   "LABELS":       "Labels",
+  "LABEL":        "Label",
   "USERS":        "Users",
   "SCHEDULE":     "Schedule",
+
+  "CREATE_INSTITUTION": "Create Institution",
+
+  "DELETE_WARNING": "Are you sure you want to delete the ",
 
   "ACTION":     "Action",
   "NEW":        "New",
   "CLOSE":      "Close",
   "SAVE":       "Save",
+  "DELETE":     "Delete",
 
   "LOCALITY":   "Locality",
   "CITY":       "City",
@@ -29,5 +35,6 @@
   "LAST_NAME":  "Last name",
   "EMAIL":      "Email",
   "DESCRIPTION":"Description",
-  "NAME":       "Name"
+  "TV_CODE":    "TV Code",
+  "NAME":       "Name"  
 }

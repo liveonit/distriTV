@@ -27,35 +27,35 @@ export const navBarCommon = [
     subheader: 'Dashboard',
     items: [
       {
-        title: 'Institutions',
+        title: 'INSTITUTIONS',
         icon: ShopIcon,
         IconColor: 'primary',
         href: PATH_NAME.INSTITUTION,
         label: DRAWER_MENU_LABEL.INSTITUTIONS,
       },
       {
-        title: 'Contents',
+        title: 'CONTENTS',
         IconColor: 'primary',
         icon: ShopIcon,
         href: PATH_NAME.CONTENT,
         label: DRAWER_MENU_LABEL.CONTENTS,
       },
       {
-        title: 'Televisions',
+        title: 'TELEVISIONS',
         IconColor: 'primary',
         icon: TvIcon,
         href: PATH_NAME.TELEVISION,
         label: DRAWER_MENU_LABEL.TELEVISIONS,
       },
       {
-        title: 'Labels',
+        title: 'LABELS',
         IconColor: 'primary',
         icon: LabelIcon,
         href: PATH_NAME.LABEL,
         label: DRAWER_MENU_LABEL.TELEVISIONS,
       },
       {
-        title: 'Schedule',
+        title: 'SCHEDULE',
         IconColor: 'primary',
         icon: LabelIcon,
         href: PATH_NAME.AGENDA,
@@ -67,7 +67,7 @@ export const navBarCommon = [
     subheader: 'Users',
     items: [
       {
-        title: 'Users',
+        title: 'USERS',
         icon: PeopleIcon,
         IconColor: 'primary',
         href: PATH_NAME.USERS,

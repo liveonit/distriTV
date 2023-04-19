@@ -68,7 +68,7 @@ export default function InstitutionList() {
             size='small'
             startIcon={<AddIcon />}
             onClick={() => {
-              setModalTitle('Create Institution')
+              setModalTitle('CREATE')
               setIsModalCreate(true)
             }}
           >
@@ -97,7 +97,7 @@ export default function InstitutionList() {
                 <TableCell>
                   <IconButton
                     onClick={() => {
-                      setModalTitle('Editar Institución')
+                      setModalTitle('EDIT')
                       setInstitutionToEdit(institution)
                     }}
                     color='primary'

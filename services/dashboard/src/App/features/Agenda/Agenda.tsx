@@ -68,7 +68,7 @@ export default function AgendaList() {
             size='small'
             startIcon={<AddIcon />}
             onClick={() => {
-              setModalTitle('Create Schedule')
+              setModalTitle('CREATE')
               setIsModalCreate(true)
             }}
           >
@@ -97,7 +97,7 @@ export default function AgendaList() {
                 <TableCell>
                   <IconButton
                     onClick={() => {
-                      setModalTitle('Editar Agenda')
+                      setModalTitle('EDIT')
                       setAgendaToEdit(agenda)
                     }}
                     color='primary'

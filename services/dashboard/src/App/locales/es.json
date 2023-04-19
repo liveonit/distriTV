@@ -9,13 +9,19 @@
   "TELEVISIONS":  "Televisiones",
   "TELEVISION":   "Televisión",
   "LABELS":       "Etiquetas",
+  "LABEL":       "Etiqueta",
   "USERS":        "Usuarios",
   "SCHEDULE":     "Agenda",
+
+  "CREATE_INSTITUTION": "Crear Institución",
+
+  "DELETE_WARNING": "¿Está seguro que desea eliminar ",
 
   "ACTION":     "Acción",
   "NEW":        "Nuevo",
   "CLOSE":      "Cerrar",
   "SAVE":       "Guardar",
+  "DELETE":     "Eliminar",
 
   "LOCALITY":   "Localidad",
   "CITY":       "Ciudad",
@@ -29,5 +35,6 @@
   "LAST_NAME":  "Apellido",
   "EMAIL":      "Email",
   "DESCRIPTION":"Descripción",
+  "TV_CODE":    "Código TV",
   "NAME":       "Nombre"
 }

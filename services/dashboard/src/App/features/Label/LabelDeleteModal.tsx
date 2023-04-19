@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import { LabelT } from 'src/store/label/label.type'
 import { useDispatch } from 'react-redux'
 import { deleteLabel } from 'src/store/label/label.action'
+import { Trans, /*useTranslation*/ } from 'react-i18next'
 
 type IProps = {
   isOpen: boolean
@@ -15,7 +16,8 @@ type IProps = {
 }
 
 export default function LabelDeleteModal({ isOpen, handleCloseDeleteModal, label}: IProps) {
-  const dispatch = useDispatch() 
+  // const { t } = useTranslation()
+  const dispatch = useDispatch()
   function handleDeleteLabel() {
     dispatch(deleteLabel({ id: label.id! }))
     handleCloseDeleteModal()
@@ -26,9 +28,8 @@ export default function LabelDeleteModal({ isOpen, handleCloseDeleteModal, label
     <>
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
-          <Typography variant='h4' color='textPrimary'>
-            Está seguro que desea borrar la etiqueta {label.name} ?
-             
+          <Typography variant='h4' color='textPrimary'>              
+            <Trans>DELETE_WARNING</Trans><Trans>LABEL</Trans> {label.name} ?
           </Typography>
           <br />
           
@@ -36,7 +37,7 @@ export default function LabelDeleteModal({ isOpen, handleCloseDeleteModal, label
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDeleteModal} color='primary'>
-            Cerrar
+            <Trans>CLOSE</Trans>
           </Button>
           <Button onClick={
 
@@ -44,7 +45,7 @@ export default function LabelDeleteModal({ isOpen, handleCloseDeleteModal, label
             
           }
             variant='contained' color='primary' size='small'>
-            Borrar
+            <Trans>DELETE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

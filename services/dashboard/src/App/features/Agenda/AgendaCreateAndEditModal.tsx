@@ -59,7 +59,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
           <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label={t(`CONTENT`)}
+                label={t('CONTENT')}
                 name='contenidoId'
                 control={control}
                 selectOptions={contents.map((con) => ({ label: con.name, value: con.id! }))}
@@ -68,7 +68,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label={t(`TELEVISION`)}
+                label={t('TELEVISION')}
                 name='televisionId'
                 control={control}
                 selectOptions={televisions.map((tel) => ({ label: tel.ip, value: tel.id! }))}
@@ -76,8 +76,8 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             </Grid>
           </Grid>{' '}
           <br />
-          <FormInputDate  name='startDate' control={control} label={t(`START_DATE`)} />
-          <FormInputDate  name='endDate' control={control} label={t(`END_DATE`)} />
+          <FormInputDate  name='startDate' control={control} label={t('START_DATE')} />
+          <FormInputDate  name='endDate' control={control} label={t('END_DATE')} />
         </DialogContent>
         <DialogActions>
           <Button

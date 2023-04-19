@@ -46,13 +46,13 @@ export default function LabelCreateAndEditModal({ handleCloseEditModal, label, t
           <br />
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <FormInputText name='name' control={control} fullWidth label={t(`NAME`)} variant='outlined' />
+              <FormInputText name='name' control={control} fullWidth label={t('NAME')} variant='outlined' />
             </Grid>
             
           </Grid>{' '}
           <br />
           <Grid item xs={12}>
-            <FormInputText fullWidth label={t(`DESCRIPTION`)} variant='outlined' name='description' control={control} />
+            <FormInputText fullWidth label={t('DESCRIPTION')} variant='outlined' name='description' control={control} />
           </Grid>
         </DialogContent>
         <DialogActions>

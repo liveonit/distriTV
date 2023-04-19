@@ -15,9 +15,9 @@ import { listUsers } from 'src/store/user/user.action'
 import { usersIsLoadingSelector, usersSelector } from 'src/store/user/user.selector'
 import { Chip, CircularProgress } from 'node_modules/@mui/material'
 import { UserT } from 'src/store/user/user.type'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 import UserEditModal from './UserEditModal'
-import { Trans } from 'react-i18next/TransWithoutContext'
 
 const useStyles = makeStyles({
   table: {

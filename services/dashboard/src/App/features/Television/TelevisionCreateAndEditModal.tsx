@@ -59,19 +59,19 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
           <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label={t(`INSTITUTION`)}
+                label={t('INSTITUTION')}
                 name='institutionId'
                 control={control}
                 selectOptions={institutions.map((ins) => ({ label: ins.name, value: ins.id! }))}
               />
             </Grid>
             <Grid item xs={12}>
-              <FormInputText name='IP' control={control} fullWidth label={t(`IP`)} variant='outlined' />
+              <FormInputText name='IP' control={control} fullWidth label={t('IP')} variant='outlined' />
             </Grid>
           </Grid>{' '}
           <br/>
           <Grid item xs={12}>
-            <FormInputText fullWidth label={t(`MAC`)} variant='outlined' name='mac' control={control} />
+            <FormInputText fullWidth label={t('MAC')} variant='outlined' name='mac' control={control} />
           </Grid>
           {!television &&
            <><br/>             
@@ -79,7 +79,7 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
               <Grid item>
               </Grid>
               <Grid item alignItems="stretch" style={{ display: 'flex' }}>
-              <FormInputText name='tvCode' control={control} fullWidth label={t(`TV_CODE`)} variant='outlined' />
+              <FormInputText name='tvCode' control={control} fullWidth label={t('TV_CODE')} variant='outlined' />
               <Button startIcon={<RefreshIcon />} color="primary" onClick={() => setValue('tvCode', Math.random().toString(36).slice(2, 8))} />
               </Grid>
               </Grid> </>

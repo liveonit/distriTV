@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { listContents } from 'src/store/content/content.action'
 import { listTelevisions } from 'src/store/television/television.action'
 import { televisionsSelector } from 'src/store/television/television.selector'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -85,10 +86,10 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             }}
             color='primary'
           >
-            Close
+            <Trans>CLOSE</Trans>
           </Button>
           <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
-            Save
+            <Trans>SAVE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

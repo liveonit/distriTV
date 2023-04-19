@@ -17,6 +17,7 @@ import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputD
 import { useSelector } from 'react-redux'
 import { institutionsSelector } from 'src/store/institution/institutions.selector'
 import { listInstitutions } from 'src/store/institution/institution.action'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -91,10 +92,10 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
             }}
             color='primary'
           >
-            Close
+            <Trans>CLOSE</Trans>
           </Button>
           <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
-            Save
+            <Trans>SAVE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

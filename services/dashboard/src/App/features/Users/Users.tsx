@@ -17,6 +17,7 @@ import { Chip, CircularProgress } from 'node_modules/@mui/material'
 import { UserT } from 'src/store/user/user.type'
 
 import UserEditModal from './UserEditModal'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 const useStyles = makeStyles({
   table: {
@@ -52,19 +53,19 @@ export default function UserList() {
     <>
       <Grid container alignItems='center'>
         <Grid item sm={8}>
-          <h2>User</h2>
+          <h2><Trans>USERS</Trans></h2>
         </Grid>
       </Grid>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
-              <TableCell>Email</TableCell>
+              <TableCell><Trans>FIRST_NAME</Trans></TableCell>
+              <TableCell><Trans>LAST_NAME</Trans></TableCell>
+              <TableCell><Trans>EMAIL</Trans></TableCell>
               <TableCell>Roles (Institution : role) </TableCell>
               <TableCell>Login Type</TableCell>
-              <TableCell>Action</TableCell>
+              <TableCell><Trans>ACTION</Trans></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

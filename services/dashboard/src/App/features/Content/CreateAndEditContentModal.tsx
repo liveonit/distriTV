@@ -20,6 +20,7 @@ import { removeEmpty } from 'src/utils/removeEmpty'
 //import { createContent } from 'src/store/content/content.action'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { FormHelperText } from '@material-ui/core'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 type IProps = {
   isOpen: boolean
@@ -143,7 +144,7 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
             }}
             color='primary'
           >
-            Close
+            <Trans>CLOSE</Trans>
           </Button>
           <Button
             onClick={() => {
@@ -157,7 +158,7 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
             color='primary'
             size='small'
           >
-            Save
+            <Trans>SAVE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

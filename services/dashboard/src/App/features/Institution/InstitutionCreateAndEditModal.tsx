@@ -14,6 +14,7 @@ import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputD
 import { removeEmpty } from 'src/utils/removeEmpty'
 import { useDispatch } from 'react-redux'
 import { createInstitution, updateInstitution } from 'src/store/institution/institution.action'
+import { Trans } from 'react-i18next'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -73,10 +74,10 @@ export default function InstitutionCreateAndEditModal({ handleCloseEditModal, in
             }}
             color='primary'
           >
-            Close
+            <Trans>CLOSE</Trans>
           </Button>
           <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
-            Save
+            <Trans>SAVE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

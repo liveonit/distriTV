@@ -18,10 +18,10 @@ import { listAgendas } from 'src/store/agenda/agenda.action'
 import { AgendaT } from 'src/store/agenda/agenda.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 import AgendaCreateAndEditModal from './AgendaCreateAndEditModal'
 import AgendaDeleteModal from './AgendaDeleteModal'
-import { Trans } from 'react-i18next/TransWithoutContext'
 
 const useStyles = makeStyles({
   table: {

@@ -8,11 +8,11 @@ import Link from '@material-ui/core/Link';
 // types
 import { canAction } from '@app/helpers';
 import { NavBarItem } from 'src/store/app/app.type';
+import { Trans } from 'react-i18next';
 
 import NavBarExpandItem from './NavBarExpandItem';
 // styles
 import useStyles from './styles';
-import { Trans } from 'react-i18next';
 
 const NavBarItem: FC<NavBarItem> = ({
   depth,

@@ -18,10 +18,10 @@ import { listTelevisionsJoin } from 'src/store/television/television.action'
 import { TelevisionT } from 'src/store/television/television.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
 import TelevisionDeleteModal from './TelevisionDeleteModal'
-import { Trans } from 'react-i18next/TransWithoutContext'
 
 const useStyles = makeStyles({
   table: {

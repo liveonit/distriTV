@@ -17,10 +17,10 @@ import { listContents } from 'src/store/content/content.action'
 import { contentIsLoadingSelector, contentSelector } from 'src/store/content/content.selector'
 import AddIcon from '@material-ui/icons/Add'
 import { ContentT } from 'src/store/content/content.type'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 import CreateAndEditContentModal from './CreateAndEditContentModal'
 import ContentDeleteModal from './ContentDeleteModal'
-import { Trans } from 'react-i18next/TransWithoutContext'
 
 const useStyles = makeStyles({
   table: {

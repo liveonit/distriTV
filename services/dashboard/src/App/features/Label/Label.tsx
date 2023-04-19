@@ -68,7 +68,7 @@ export default function LabelList() {
             size='small'
             startIcon={<AddIcon />}
             onClick={() => {
-              setModalTitle('Create Label')
+              setModalTitle('CREATE')
               setIsModalCreate(true)
             }}
           >
@@ -97,7 +97,7 @@ export default function LabelList() {
                 <TableCell>
                   <IconButton
                     onClick={() => {
-                      setModalTitle('Editar etiqueta')
+                      setModalTitle('EDIT')
                       setLabelToEdit(label)
                     }}
                     color='primary'

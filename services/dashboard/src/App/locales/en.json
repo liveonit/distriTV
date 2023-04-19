@@ -13,8 +13,8 @@
   "USERS":        "Users",
   "SCHEDULE":     "Schedule",
 
-  "CREATE_INSTITUTION": "Create Institution",
-
+  "CREATE":         "Create",
+  "EDIT":           "Edit",
   "DELETE_WARNING": "Are you sure you want to delete the ",
 
   "ACTION":     "Action",

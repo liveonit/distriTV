@@ -13,8 +13,8 @@
   "USERS":        "Usuarios",
   "SCHEDULE":     "Agenda",
 
-  "CREATE_INSTITUTION": "Crear Institución",
-
+  "CREATE":         "Crear",
+  "EDIT":           "Editar",
   "DELETE_WARNING": "¿Está seguro que desea eliminar ",
 
   "ACTION":     "Acción",

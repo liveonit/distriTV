@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import { LabelT } from 'src/store/label/label.type'
 import { useDispatch } from 'react-redux'
 import { deleteLabel } from 'src/store/label/label.action'
-import { Trans, /*useTranslation*/ } from 'react-i18next'
+import { Trans } from 'react-i18next'
 
 type IProps = {
   isOpen: boolean
@@ -16,7 +16,6 @@ type IProps = {
 }
 
 export default function LabelDeleteModal({ isOpen, handleCloseDeleteModal, label}: IProps) {
-  // const { t } = useTranslation()
   const dispatch = useDispatch()
   function handleDeleteLabel() {
     dispatch(deleteLabel({ id: label.id! }))

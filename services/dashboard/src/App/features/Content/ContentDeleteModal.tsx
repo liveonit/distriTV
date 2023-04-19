@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import { ContentT } from 'src/store/content/content.type'
 import { useDispatch } from 'react-redux'
 import { deleteContent } from 'src/store/content/content.action'
+import { Trans } from 'react-i18next'
 
 type IProps = {
   isOpen: boolean
@@ -27,16 +28,16 @@ export default function ContentDeleteModal({ isOpen, handleCloseDeleteModal, con
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            Está seguro que desea borrar el  contenido {content.name} ?
+            <Trans>DELETE_WARNING</Trans><Trans>CONTENT</Trans> {content.name} ?
           </Typography>
           <br />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDeleteModal} color='primary'>
-            Cerrar
+            <Trans>CLOSE</Trans>
           </Button>
           <Button onClick={() => handleDeleteContent()} variant='contained' color='primary' size='small'>
-            Borrar
+            <Trans>DELETE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

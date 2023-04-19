@@ -21,6 +21,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 
 import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
 import TelevisionDeleteModal from './TelevisionDeleteModal'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 const useStyles = makeStyles({
   table: {
@@ -59,7 +60,7 @@ export default function TelevisionList() {
     <>
       <Grid container alignItems='center'>
         <Grid item sm={8}>
-          <h2>Televisions</h2>
+          <h2><Trans>TELEVISIONS</Trans></h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
           <Button
@@ -72,7 +73,7 @@ export default function TelevisionList() {
               setIsModalCreate(true)
             }}
           >
-            New
+            <Trans>NEW</Trans>
           </Button>
         </Grid>
       </Grid>
@@ -81,10 +82,10 @@ export default function TelevisionList() {
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
-              <TableCell>Ip</TableCell>
-              <TableCell>Mac</TableCell>
-              <TableCell>Institution</TableCell>
-              <TableCell>Action</TableCell>
+              <TableCell><Trans>IP</Trans></TableCell>
+              <TableCell><Trans>MAC</Trans></TableCell>
+              <TableCell><Trans>INSTITUTION</Trans></TableCell>
+              <TableCell><Trans>ACTION</Trans></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

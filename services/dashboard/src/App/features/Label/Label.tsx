@@ -21,6 +21,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 
 import LabelCreateAndEditModal from './LabelCreateAndEditModal'
 import LabelDeleteModal from './LabelDeleteModal'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 const useStyles = makeStyles({
   table: {
@@ -58,7 +59,7 @@ export default function LabelList() {
     <>
       <Grid container alignItems='center'>
         <Grid item sm={8}>
-          <h2>Labels</h2>
+          <h2><Trans>LABELS</Trans></h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
           <Button
@@ -71,7 +72,7 @@ export default function LabelList() {
               setIsModalCreate(true)
             }}
           >
-            New
+            <Trans>NEW</Trans>
           </Button>
         </Grid>
       </Grid>

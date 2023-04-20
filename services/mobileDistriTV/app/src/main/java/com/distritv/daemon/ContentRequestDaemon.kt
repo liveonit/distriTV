@@ -27,9 +27,6 @@ import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import org.koin.android.ext.android.inject
 import java.net.SocketTimeoutException
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -96,12 +93,10 @@ class ContentRequestDaemon: Service() {
                 if(id.isNullOrEmpty()){
                     return@launch
                 }
-                val infoDevice = InfoDevice(id)
 
                 val contentList = contentService.getAllContents()
 
-                val responseContentList = contentRepository.getContentList()
-                //val contentListPost = contentRepository.postContentList(infoDevice)
+                val responseContentList = contentRepository.fetchContentList(InfoDevice(id))
 
                 // Check if any content was removed to inactivate
                 contentList.filter { it.active == ACTIVE_YES }.forEach { content ->
@@ -109,25 +104,18 @@ class ContentRequestDaemon: Service() {
                 }
 
                 for (content in responseContentList) {
+                    Log.v(TAG, "content: $content")
 
-                    // TODO: prueba -> eliminar
-                    tempSetFields(content)
+                    if (!content.isValid(TAG)) {
+                        continue
+                    }
 
                     val originalContent = contentList.firstOrNull { it.id == content.id }
 
                     // If no content exists: insert new content
                     if (originalContent == null) {
-                        if (!isText(content.type)) {
-                            if (existsContentName(content, contentList)) {
-                                Log.e(TAG,
-                                    "The content name already exists -> id: ${content.id}, name: ${content.name}")
-                                continue
-                            }
-                            if (content.name.isBlank()) {
-                                content.name = UUID.randomUUID().toString()
-                            }
-                        } else if (content.name == null) {
-                            content.name = ""
+                        if (content.existsContentName(TAG, contentList)) {
+                            continue
                         }
                         saveContent(
                             content,
@@ -139,16 +127,8 @@ class ContentRequestDaemon: Service() {
                     }
 
                     // If content already exists and if it has changes: update content
-
-                    if (!isText(content.type) && content.name.isBlank()) {
-                        content.name = originalContent.name
-                    } else if (content.name == null) {
-                        content.name = ""
-                    }
                     if (!areEquals(originalContent, content)) {
-                        if (!isText(content.type) && existsContentName(content, contentList)) {
-                            Log.e(TAG,
-                                "The content name already exists -> id: ${content.id}, name: ${content.name}")
+                        if (content.existsContentName(TAG, contentList)) {
                             continue
                         }
                         content.idDB = originalContent.idDB
@@ -171,29 +151,12 @@ class ContentRequestDaemon: Service() {
         }
     }
 
-    /**
-     * If content type is not Text, check if the content name already exists.
-     */
-    private fun existsContentName(content: Content, contentList: List<Content>): Boolean {
-        return contentList.firstOrNull { !isText(it.type) && it.active == ACTIVE_YES
-                && it.id != content.id && it.name == content.name } != null
-    }
-
     private suspend fun saveContent(
         content: Content,
         action: (content: Content, response: ResponseBody) -> Long?,
         actionTypeText: (content: Content) -> Long?,
         msgResult: String
     ) {
-
-        // TODO: prueba -> eliminar
-        tempSetFields(content)
-
-        content.active = ACTIVE_YES
-        if (content.localPath == null) {
-            content.localPath = ""
-        }
-
         var resultId: Long? = -1L
 
         //type.substringBefore("/")
@@ -210,35 +173,8 @@ class ContentRequestDaemon: Service() {
         }
     }
 
-    /**
-     * solo a modo de prueba mientras no este implementado en el server
-     * TODO eliminar
-     */
-    private fun tempSetFields(content: Content) {
-
-        val pattern = DateTimeFormatter.ofPattern(DATE_FORMAT)
-
-        val startDate = "2023-04-07 20:00:00"
-        content.startDate = LocalDateTime.parse(startDate, pattern)
-
-        val endDate = "2023-04-30 20:00:00"
-        content.endDate = LocalDateTime.parse(endDate, pattern)
-
-        //content.cron = "0 0/2 * * * ?" //cada 2 minutos
-        //content.cron = "0 0/1 * * * ?" //cada 1 minuto
-        //content.cron = "0 0/5 * * * ?" //cada 5 minutos
-        content.cron = "0/40 * * * * ?" //cada 30 segundos
-
-        if(isVideo(content.type)){
-            content.durationInSeconds = 0
-        }else{
-            content.durationInSeconds = 20
-        }
-    }
-
     companion object {
         const val TAG = "[ContentRequestDaemon]"
-
         private val periodTime: Long = BuildConfig.REQUEST_TIME_PERIOD
     }
 }

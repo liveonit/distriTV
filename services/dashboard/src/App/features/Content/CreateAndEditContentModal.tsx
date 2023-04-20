@@ -54,7 +54,7 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
       dispatch(
         uploadContent({
           name: data.name,
-          type: renamedFile.type,
+          type: file.type,
           file: renamedFile,
         }),
       )

@@ -1,6 +1,8 @@
 package com.distritv.utils
 
 import android.net.Uri
+import android.util.Log
+import com.distritv.daemon.ContentRequestDaemon
 import com.distritv.data.model.Content
 
 
@@ -46,4 +48,54 @@ fun areEquals(c1: Content, c2: Content): Boolean {
     return c1.id == c2.id && c1.name == c2.name && c1.type == c2.type && c1.url == c2.url
             && c1.text == c2.text && c1.startDate == c2.startDate && c1.endDate == c2.endDate
             && c1.cron == c2.cron && c1.durationInSeconds == c2.durationInSeconds
+}
+
+private const val MSG_IS_INVALID_ERROR = "The content %s is not valid => %s"
+
+fun Content.isValid(tag: String): Boolean {
+    if (this.id == -1L) {
+        Log.e(tag, String.format(MSG_IS_INVALID_ERROR, "id", this))
+        return false
+    }
+    if (this.type.isBlank()) {
+        Log.e(tag, String.format(MSG_IS_INVALID_ERROR, "type", this))
+        return false
+    }
+    if (isText(this.type)) {
+        if (this.text.isBlank()) {
+            Log.e(tag, String.format(MSG_IS_INVALID_ERROR, "text", this))
+            return false
+        }
+    } else {
+        if (this.name.isBlank()) {
+            Log.e(tag, String.format(MSG_IS_INVALID_ERROR, "name", this))
+            return false
+        }
+        if (this.url.isBlank()) {
+            Log.e(tag, String.format(MSG_IS_INVALID_ERROR, "url", this))
+            return false
+        }
+    }
+    return true
+}
+
+
+/**
+ * If content type is not Text, check if the content name already exists.
+ * @param tag: TAG
+ * @param contentList: active content list
+ */
+fun Content.existsContentName(tag: String, contentList: List<Content>): Boolean {
+    if (isText(this.type)) {
+        return false
+    }
+    val result = contentList.firstOrNull {
+        !isText(it.type) && it.active == ACTIVE_YES
+                && it.id != this.id && it.name == this.name
+    }
+    if (result != null) {
+        Log.e(tag, "The content name already exists => id: ${this.id}, name: ${this.name}")
+        return true
+    }
+    return false
 }

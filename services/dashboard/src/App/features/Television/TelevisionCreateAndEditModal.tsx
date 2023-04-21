@@ -14,12 +14,9 @@ import RefreshIcon from '@material-ui/icons/Refresh'
 import { createTelevision, updateTelevision } from 'src/store/television/television.action'
 import { useDispatch } from 'react-redux'
 import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
-import { FormInputDropdownCheck } from 'src/App/components/molecules/Forms/FormInputDropdownCheck'
 import { useSelector } from 'react-redux'
 import { institutionsSelector } from 'src/store/institution/institutions.selector'
 import { listInstitutions } from 'src/store/institution/institution.action'
-import { labelsSelector } from 'src/store/label/label.selector'
-import { listLabels } from 'src/store/label/label.action'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -35,7 +32,6 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
     defaultValues: televisionInitialState,
   })
   const institutions = useSelector(institutionsSelector)
-  const labels = useSelector(labelsSelector)
 
   const dispatch = useDispatch() 
   const { reset, handleSubmit, setValue, control } = methods
@@ -43,11 +39,7 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
   React.useEffect(() => {
     dispatch(listInstitutions())
   }, [dispatch])
-
-  React.useEffect(() => {
-    dispatch(listLabels())
-  }, [dispatch])
-
+  
   const onSubmit: SubmitHandler<TelevisionT> = (data) => {
     if (!television) dispatch(createTelevision(data))
     else dispatch(updateTelevision(data))
@@ -85,15 +77,6 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
           <Grid item xs={12}>
             <FormInputText fullWidth label='MAC' variant='outlined' name='mac' control={control} />
           </Grid>
-          <Grid item xs={12}>
-              <FormInputDropdownCheck
-                fullWidth
-                label='Labels'
-                name='label'
-                control={control}
-                multiple selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id?.toString()!!}))}
-              />
-            </Grid>
            <><br/>             
               <Grid container>
               <Grid item>

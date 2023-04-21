@@ -1,9 +1,10 @@
 import React from 'react'
 import DateFnsUtils from '@date-io/date-fns'
+import { format } from 'date-fns'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { Controller } from 'react-hook-form'
 
-const DATE_FORMAT = 'dd-MM-yy-HH-ss'
+const DATE_FORMAT = 'yyyy-MM-dd HH:mm:ss'
 
 type FormInputDatePropsT = {
   name: string;
@@ -22,16 +23,19 @@ export const FormInputDate: React.FC<FormInputDatePropsT> = ({ name, control, la
           <KeyboardDatePicker
             fullWidth
             variant='inline'
-            defaultValue={new Date()}
+            placeholder={DATE_FORMAT}
+            defaultValue={format((new Date()),DATE_FORMAT)}
             id={`date-${Math.random()}`}
             label={label}
             rifmFormatter={(val: string) => val.replace(/[^[a-zA-Z0-9-]*$]+/gi, '')}
             refuse={/[^[a-zA-Z0-9-]*$]+/gi}
             autoOk
+            disablePast={true}
             KeyboardButtonProps={{
               'aria-label': 'change date',
             }}
             format={DATE_FORMAT}
+            
             {...field}
           />
         )}
@@ -39,3 +43,6 @@ export const FormInputDate: React.FC<FormInputDatePropsT> = ({ name, control, la
     </MuiPickersUtilsProvider>
   )
 }
+
+
+

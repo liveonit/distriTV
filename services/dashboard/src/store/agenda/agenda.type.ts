@@ -6,6 +6,7 @@ export const agendaSchema = z.object({
   startDate: z.date(),
   endDate: z.date(),
   cron: z.string(),
+  type: z.string().optional(),
 });
 
 export type AgendaT = z.TypeOf<typeof agendaSchema>

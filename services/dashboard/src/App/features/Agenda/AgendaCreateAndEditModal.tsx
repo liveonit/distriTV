@@ -18,8 +18,8 @@ import { listTelevisions } from 'src/store/television/television.action'
 import { televisionsSelector } from 'src/store/television/television.selector'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { listLabels } from 'src/store/label/label.action'
-import { labelsSelector } from 'src/store/label/label.selector'
 import { createAgenda, updateAgenda } from 'src/store/agenda/agenda.action'
+
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -32,11 +32,12 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
   }
   const contents = useSelector(contentSelector)
   const televisions = useSelector(televisionsSelector)
-  const labels = useSelector(labelsSelector)
+  //const labels = useSelector(labelsSelector)
   const methods = useForm<AgendaT>({
     resolver: zodResolver(agendaSchema),
     defaultValues: agendaInitialState,
   })
+  const tipos = ['Etiqueta','Televisión']
 
   const dispatch = useDispatch()
   React.useEffect(() => {
@@ -48,12 +49,16 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
   React.useEffect(() => {
     dispatch(listLabels())
   }, [dispatch])
-  const { reset, handleSubmit, control } = methods
+  const { reset, handleSubmit, watch, control } = methods
 
   const onSubmit: SubmitHandler<AgendaT> = (data) => {
-    if (!agenda) dispatch(createAgenda(data))
-    else dispatch(updateAgenda(data))
-    handleCloseEditModal()
+    if (!agenda) {
+    console.log("aver"+data.startDate)
+    dispatch(createAgenda(data))}
+    else {
+      dispatch(updateAgenda(data))
+      handleCloseEditModal()
+    }
   }
 
   return (
@@ -77,13 +82,13 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label='Label'
-                name='label'
+                label='Type of Agenda'
+                name='type'
                 control={control}
-                selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id!! }))}
+                selectOptions={tipos.map((tip) => ({ label: tip, value: tip }))}
               />
             </Grid>
-
+          {watch('type') === 'Televisión' &&
             <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
@@ -92,7 +97,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
                 control={control}
                 selectOptions={televisions.map((tel) => ({ label: tel.ip, value: tel.id! }))}
               />
-            </Grid>
+            </Grid>}
           </Grid>{' '}
           <br />
           <FormInputDate  name='startDate' control={control} label='Start date' />
@@ -104,12 +109,17 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             onClick={() => {
               reset()
               handleCloseEditModal()
+              
             }}
             color='primary'
           >
             Close
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
+          <Button onClick={() => {
+            console.log("test"+typeof(watch("startDate"))) 
+            handleSubmit(onSubmit) }
+            } 
+            variant='contained' color='primary' size='small'>
             Save
           </Button>
         </DialogActions>

@@ -2,10 +2,10 @@ import { z } from 'zod';
 
 export const createScheduleBody = z.object({
   contentId: z.number(),
-  televisionId: z.number(),
-  labelId: z.number(),
-  startDate: z.date(),
-  endDate: z.date(),
+  televisionId: z.number().optional(),
+  labelId: z.number().optional(),
+  startDate: z.string().transform((a) => new Date(a)),
+  endDate: z.string().transform((a) => new Date(a)),
   cron: z.string()
 });
 

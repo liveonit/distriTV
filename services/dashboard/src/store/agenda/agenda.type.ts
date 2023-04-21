@@ -1,6 +1,7 @@
 import * as z from 'zod'
 
 export const agendaSchema = z.object({
+  id: z.number().optional(),
   contentId: z.number(),
   televisionId: z.number().optional(),
   labelId: z.number().optional(),

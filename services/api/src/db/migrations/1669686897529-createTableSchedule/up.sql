@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `schedule` (
-  `id` varchar(36) NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `contentId` INT NOT NULL,
   `televisionId` INT NULL,
   `labelId` INT NULL,

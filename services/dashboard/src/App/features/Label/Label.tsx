@@ -79,18 +79,14 @@ export default function LabelList() {
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>City</TableCell>
-              <TableCell>Locality</TableCell>
+              <TableCell>Name</TableCell>            
+              <TableCell>Description</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {labels.map((label) => (
               <TableRow key={label.id}>
-                <TableCell component='th' scope='row'>
-                  {label.name}
-                </TableCell>
                 <TableCell>{label.name}</TableCell>
                 <TableCell>{label.description}</TableCell>
                 <TableCell>

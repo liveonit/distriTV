@@ -21,6 +21,7 @@ import { removeEmpty } from 'src/utils/removeEmpty'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { FormHelperText } from '@material-ui/core'
 import { Trans, useTranslation } from 'react-i18next'
+import { FormInputNumber } from 'src/App/components/molecules/Forms/FormInputNumber'
 
 type IProps = {
   isOpen: boolean
@@ -32,7 +33,7 @@ const contentType = ['Video', 'Image', 'Text']
 export default function CreateAndEditContentModal({ isOpen, handleCloseContentModal, content }: IProps) {
   const [file, setFile] = React.useState<File | null>(null)
   const [fileError, setFileError] = React.useState('')
-  const contentInitialState: ContentT = { name: '', type: 'Video', url: '', text: '', ...removeEmpty(content) }
+  const contentInitialState: ContentT = { name: '', duration: 5, type: 'Video', url: '', text: '', ...removeEmpty(content) }
   const { t } = useTranslation()
   const dispatch = useDispatch()
 
@@ -48,9 +49,11 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
     resolver: zodResolver(contentSchema),
     defaultValues: contentInitialState,
   })
-  const { reset, control, watch, getValues, handleSubmit } = methods
+  const { reset, control, watch, getValues, handleSubmit, register } = methods
 
   const onSubmit: SubmitHandler<ContentT> = (data) => {
+    console.log('la durationnnnn hermano', data.duration)
+    console.log(typeof data.duration)
     if ((data.type === 'Image' || data.type === 'Video') && file) {
       const renamedFile = new File([file], data.name)
       dispatch(
@@ -87,7 +90,7 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
             </Grid>
             {(watch('type') === 'Image' || watch('type') === 'Text') && (
               <Grid item xs={12}>
-                <FormInputText name='duration' control={control} fullWidth label='Duration' variant='outlined' />
+                <FormInputNumber type='number' name='duration' control={control} register={register} label='Duration' variant='outlined' fullWidth></FormInputNumber>
               </Grid>
             )}
             {watch('type') === 'Text' && (

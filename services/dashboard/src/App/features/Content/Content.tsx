@@ -18,6 +18,7 @@ import { listContents } from 'src/store/content/content.action'
 import { contentIsLoadingSelector, contentSelector } from 'src/store/content/content.selector'
 import AddIcon from '@material-ui/icons/Add'
 import { ContentT } from 'src/store/content/content.type'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 import CreateAndEditContentModal from './CreateAndEditContentModal'
 import ContentDeleteModal from './ContentDeleteModal'
@@ -55,7 +56,7 @@ export default function ContentList() {
     <>
       <Grid container alignItems='center'>
         <Grid item sm={8}>
-          <h2>Content</h2>
+          <h2><Trans>CONTENTS</Trans></h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
           <Button
@@ -65,7 +66,7 @@ export default function ContentList() {
             startIcon={<AddIcon />}
             onClick={() => setIsModalOpen(true)}
           >
-            New
+            <Trans>NEW</Trans>
           </Button>
         </Grid>
       </Grid>
@@ -73,10 +74,10 @@ export default function ContentList() {
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>URL</TableCell>
-              <TableCell> Action </TableCell>
+              <TableCell><Trans>NAME</Trans></TableCell>
+              <TableCell><Trans>TYPE</Trans></TableCell>
+              <TableCell><Trans>URL</Trans></TableCell>
+              <TableCell><Trans>ACTION</Trans></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

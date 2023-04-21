@@ -18,6 +18,7 @@ import { listAgendas } from 'src/store/agenda/agenda.action'
 import { AgendaT } from 'src/store/agenda/agenda.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 import AgendaCreateAndEditModal from './AgendaCreateAndEditModal'
 import AgendaDeleteModal from './AgendaDeleteModal'
@@ -58,7 +59,7 @@ export default function AgendaList() {
     <>
       <Grid container alignItems='center'>
         <Grid item sm={8}>
-          <h2>Schedule</h2>
+          <h2><Trans>SCHEDULE</Trans></h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
           <Button
@@ -67,11 +68,11 @@ export default function AgendaList() {
             size='small'
             startIcon={<AddIcon />}
             onClick={() => {
-              setModalTitle('Create Schedule')
+              setModalTitle('CREATE')
               setIsModalCreate(true)
             }}
           >
-            New
+            <Trans>NEW</Trans>
           </Button>
         </Grid>
       </Grid>
@@ -79,10 +80,10 @@ export default function AgendaList() {
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell>Television</TableCell>
-              <TableCell>Start date</TableCell>
-              <TableCell>End date</TableCell>
-              <TableCell>Content</TableCell>
+              <TableCell><Trans>TELEVISION</Trans></TableCell>
+              <TableCell><Trans>START_DATE</Trans></TableCell>
+              <TableCell><Trans>END_DATE</Trans></TableCell>
+              <TableCell><Trans>CONTENT</Trans></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -96,7 +97,7 @@ export default function AgendaList() {
                 <TableCell>
                   <IconButton
                     onClick={() => {
-                      setModalTitle('Editar Agenda')
+                      setModalTitle('EDIT')
                       setAgendaToEdit(agenda)
                     }}
                     color='primary'

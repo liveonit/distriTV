@@ -12,6 +12,7 @@ import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { removeEmpty } from 'src/utils/removeEmpty'
 import { createLabel, updateLabel } from 'src/store/label/label.action'
 import { useDispatch } from 'react-redux'
+import { Trans, useTranslation } from 'react-i18next'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -28,7 +29,8 @@ export default function LabelCreateAndEditModal({ handleCloseEditModal, label, t
   })
 
   const { reset, handleSubmit, control } = methods
-  const dispatch = useDispatch() 
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
   const onSubmit: SubmitHandler<LabelT> = (data) => {
     if (!label) dispatch(createLabel(data))
     else dispatch(updateLabel(data))
@@ -39,18 +41,18 @@ export default function LabelCreateAndEditModal({ handleCloseEditModal, label, t
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            {title}
+            {t(title)} {t('LABEL')}
           </Typography>
           <br />
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <FormInputText name='name' control={control} fullWidth label='Name' variant='outlined' />
+              <FormInputText name='name' control={control} fullWidth label={t('NAME')} variant='outlined' />
             </Grid>
             
           </Grid>{' '}
           <br />
           <Grid item xs={12}>
-            <FormInputText fullWidth label='Description' variant='outlined' name='description' control={control} />
+            <FormInputText fullWidth label={t('DESCRIPTION')} variant='outlined' name='description' control={control} />
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -59,12 +61,12 @@ export default function LabelCreateAndEditModal({ handleCloseEditModal, label, t
               reset()
               handleCloseEditModal()
             }}
-            variant='contained' color='primary' size='small'
+            color='primary' size='small'
           >
-            Close
+            <Trans>CLOSE</Trans>
           </Button>
           <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
-            Save
+            <Trans>SAVE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

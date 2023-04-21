@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import { TelevisionT } from 'src/store/television/television.type'
 import { useDispatch } from 'react-redux'
 import { deleteTelevision } from 'src/store/television/television.action'
+import { Trans } from 'react-i18next'
 
 type IProps = {
   isOpen: boolean
@@ -28,17 +29,17 @@ export default function InstitutionDeleteModal({ isOpen, handleCloseDeleteModal,
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            Está seguro que desea borrar la Televisión con ip:  {television.ip} ?
+            <Trans>DELETE_WARNING</Trans><Trans>TELEVISION</Trans> {television.ip} ?
           </Typography>
           <br />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDeleteModal} color='primary'>
-            Cerrar
+            <Trans>CLOSE</Trans>
           </Button>
           <Button onClick={() => handleDeleteTelevision()}
             variant='contained' color='primary' size='small'>
-            Borrar
+            <Trans>DELETE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

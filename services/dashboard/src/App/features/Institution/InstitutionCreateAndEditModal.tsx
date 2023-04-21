@@ -14,6 +14,7 @@ import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputD
 import { removeEmpty } from 'src/utils/removeEmpty'
 import { useDispatch } from 'react-redux'
 import { createInstitution, updateInstitution } from 'src/store/institution/institution.action'
+import { Trans, useTranslation } from 'react-i18next'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -24,6 +25,7 @@ type IProps = {
 export default function InstitutionCreateAndEditModal({ handleCloseEditModal, institution, title }: IProps) {
   const institutionInitialState: InstitutionT = { name: '', city: '', locality: '', ...removeEmpty(institution) }
 
+  const { t } = useTranslation()
   const dispatch = useDispatch()
 
   const methods = useForm<InstitutionT>({
@@ -43,17 +45,17 @@ export default function InstitutionCreateAndEditModal({ handleCloseEditModal, in
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            {title}
+            {t(title)} {t('INSTITUTION')}
           </Typography>
           <br />
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <FormInputText name='name' control={control} fullWidth label='Name' variant='outlined' />
+              <FormInputText name='name' control={control} fullWidth label={t('NAME')} variant='outlined' />
             </Grid>
             <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label='City'
+                label={t('CITY')}
                 name='city'
                 control={control}
                 selectOptions={CITIES.map((dep) => ({ label: dep, value: dep }))}
@@ -62,7 +64,7 @@ export default function InstitutionCreateAndEditModal({ handleCloseEditModal, in
           </Grid>{' '}
           <br />
           <Grid item xs={12}>
-            <FormInputText fullWidth label='Locality' variant='outlined' name='locality' control={control} />
+            <FormInputText fullWidth label={t('LOCALITY')} variant='outlined' name='locality' control={control} />
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -73,10 +75,10 @@ export default function InstitutionCreateAndEditModal({ handleCloseEditModal, in
             }}
             color='primary'
           >
-            Close
+            <Trans>CLOSE</Trans>
           </Button>
           <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
-            Save
+            <Trans>SAVE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

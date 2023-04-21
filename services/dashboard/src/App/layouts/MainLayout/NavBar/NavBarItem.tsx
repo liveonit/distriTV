@@ -8,6 +8,7 @@ import Link from '@material-ui/core/Link';
 // types
 import { canAction } from '@app/helpers';
 import { NavBarItem } from 'src/store/app/app.type';
+import { Trans } from 'react-i18next';
 
 import NavBarExpandItem from './NavBarExpandItem';
 // styles
@@ -58,7 +59,7 @@ const NavBarItem: FC<NavBarItem> = ({
               style={style}
             >
               {Icon && <Icon className={classes.icon} size="20" />}
-              <span className={classes.title}>{title}</span>
+              <span className={classes.title}><Trans>{title}</Trans></span>
             </Button>
           )}
         </>

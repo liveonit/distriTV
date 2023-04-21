@@ -17,6 +17,7 @@ import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputD
 import { useSelector } from 'react-redux'
 import { institutionsSelector } from 'src/store/institution/institutions.selector'
 import { listInstitutions } from 'src/store/institution/institution.action'
+import { Trans, useTranslation } from 'react-i18next'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -34,6 +35,7 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
   const institutions = useSelector(institutionsSelector)
 
   const dispatch = useDispatch() 
+  const { t } = useTranslation()
   const { reset, handleSubmit, setValue, control } = methods
 
   React.useEffect(() => {
@@ -52,7 +54,7 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            {title}
+            {t(title)} {t('TELEVISION')}
           </Typography>
           <br />
           <Grid container spacing={2}>
@@ -62,7 +64,7 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
           <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label='Institution'
+                label={t('INSTITUTION')}
                 name='institutionId'
                 control={control}
                 selectOptions={institutions.map((ins) => ({ label: ins.name, value: ins.id! }))}
@@ -70,19 +72,19 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
             </Grid>
            
             <Grid item xs={12}>
-              <FormInputText name='ip' control={control} fullWidth label='IP' variant='outlined' />
+              <FormInputText name='ip' control={control} fullWidth label={t('IP')} variant='outlined' />
             </Grid>
           </Grid>{' '}
           <br/>
           <Grid item xs={12}>
-            <FormInputText fullWidth label='MAC' variant='outlined' name='mac' control={control} />
+            <FormInputText fullWidth label={t('MAC')} variant='outlined' name='mac' control={control} />
           </Grid>
            <><br/>             
               <Grid container>
               <Grid item>
               </Grid>
               <Grid item alignItems="stretch" style={{ display: 'flex' }}>
-              <FormInputText name='tvCode' control={control} fullWidth label='TV Code' variant='outlined' />
+              <FormInputText name='tvCode' control={control} fullWidth label={t('TV_CODE')} variant='outlined' />
               <Button startIcon={<RefreshIcon />} color="primary" onClick={() => setValue('tvCode', Math.random().toString(36).slice(2, 8))} />
               </Grid>
               </Grid> </>
@@ -95,10 +97,10 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
             }}
             color='primary'
           >
-            Close
+            <Trans>CLOSE</Trans>
           </Button>
           <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
-            Save
+            <Trans>SAVE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

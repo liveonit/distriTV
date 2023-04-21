@@ -1,4 +1,40 @@
 {
   "PROFILE": "Profile",
-  "LOGOUT": "Logout"
+  "LOGOUT": "Logout",
+
+  "INSTITUTIONS": "Institutions",
+  "INSTITUTION":  "Institution",
+  "CONTENTS":     "Contents",
+  "CONTENT":      "Content",
+  "TELEVISIONS":  "Televisions",
+  "TELEVISION":   "Television",
+  "LABELS":       "Labels",
+  "LABEL":        "Label",
+  "USERS":        "Users",
+  "SCHEDULE":     "Schedule",
+
+  "CREATE":         "Create",
+  "EDIT":           "Edit",
+  "DELETE_WARNING": "Are you sure you want to delete the ",
+
+  "ACTION":     "Action",
+  "NEW":        "New",
+  "CLOSE":      "Close",
+  "SAVE":       "Save",
+  "DELETE":     "Delete",
+
+  "LOCALITY":   "Locality",
+  "CITY":       "City",
+  "TYPE":       "Type",
+  "URL":        "URL",
+  "IP":         "IP",
+  "MAC":        "MAC",
+  "START_DATE": "Start Date",
+  "END_DATE":   "End Date",
+  "FIRST_NAME": "First name",
+  "LAST_NAME":  "Last name",
+  "EMAIL":      "Email",
+  "DESCRIPTION":"Description",
+  "TV_CODE":    "TV Code",
+  "NAME":       "Name"  
 }

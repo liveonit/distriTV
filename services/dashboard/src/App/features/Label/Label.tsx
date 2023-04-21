@@ -18,6 +18,7 @@ import { listLabels } from 'src/store/label/label.action'
 import { LabelT } from 'src/store/label/label.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 import LabelCreateAndEditModal from './LabelCreateAndEditModal'
 import LabelDeleteModal from './LabelDeleteModal'
@@ -58,7 +59,7 @@ export default function LabelList() {
     <>
       <Grid container alignItems='center'>
         <Grid item sm={8}>
-          <h2>Labels</h2>
+          <h2><Trans>LABELS</Trans></h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
           <Button
@@ -67,11 +68,11 @@ export default function LabelList() {
             size='small'
             startIcon={<AddIcon />}
             onClick={() => {
-              setModalTitle('Create Label')
+              setModalTitle('CREATE')
               setIsModalCreate(true)
             }}
           >
-            New
+            <Trans>NEW</Trans>
           </Button>
         </Grid>
       </Grid>
@@ -92,7 +93,7 @@ export default function LabelList() {
                 <TableCell>
                   <IconButton
                     onClick={() => {
-                      setModalTitle('Editar etiqueta')
+                      setModalTitle('EDIT')
                       setLabelToEdit(label)
                     }}
                     color='primary'

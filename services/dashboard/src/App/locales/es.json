@@ -1,4 +1,40 @@
 {
   "PROFILE": "Perfil",
-  "LOGOUT": "Cerrar Sesión"
+  "LOGOUT": "Cerrar Sesión",
+
+  "INSTITUTIONS": "Instituciones",
+  "INSTITUTION":  "Institución",
+  "CONTENTS":     "Contenidos",
+  "CONTENT":      "Contenido",
+  "TELEVISIONS":  "Televisiones",
+  "TELEVISION":   "Televisión",
+  "LABELS":       "Etiquetas",
+  "LABEL":       "Etiqueta",
+  "USERS":        "Usuarios",
+  "SCHEDULE":     "Agenda",
+
+  "CREATE":         "Crear",
+  "EDIT":           "Editar",
+  "DELETE_WARNING": "¿Está seguro que desea eliminar ",
+
+  "ACTION":     "Acción",
+  "NEW":        "Nuevo",
+  "CLOSE":      "Cerrar",
+  "SAVE":       "Guardar",
+  "DELETE":     "Eliminar",
+
+  "LOCALITY":   "Localidad",
+  "CITY":       "Ciudad",
+  "TYPE":       "Tipo",
+  "URL":        "URL",
+  "IP":         "IP",
+  "MAC":        "MAC",
+  "START_DATE": "Fecha de inicio",
+  "END_DATE":   "Fecha de fin",
+  "FIRST_NAME": "Nombre",
+  "LAST_NAME":  "Apellido",
+  "EMAIL":      "Email",
+  "DESCRIPTION":"Descripción",
+  "TV_CODE":    "Código TV",
+  "NAME":       "Nombre"
 }

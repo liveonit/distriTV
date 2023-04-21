@@ -19,6 +19,9 @@ export class Schedule extends BaseEntity {
   contentId!: number;
 
   @PrimaryColumn()
+  labelId!: number;
+
+  @PrimaryColumn()
   televisionId!: number;
 
   @PrimaryColumn()

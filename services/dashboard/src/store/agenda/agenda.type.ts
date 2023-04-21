@@ -2,7 +2,8 @@ import * as z from 'zod'
 
 export const agendaSchema = z.object({
   contentId: z.number(),
-  televisionId: z.number(),
+  televisionId: z.number().optional(),
+  labelId: z.number().optional(),
   startDate: z.date(),
   endDate: z.date(),
   cron: z.string(),

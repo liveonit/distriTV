@@ -53,7 +53,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
 
   const onSubmit: SubmitHandler<AgendaT> = (data) => {
     if (!agenda) {
-    console.log("aver"+data.startDate)
+    
     dispatch(createAgenda(data))}
     else {
       dispatch(updateAgenda(data))
@@ -98,6 +98,16 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
                 selectOptions={televisions.map((tel) => ({ label: tel.ip, value: tel.id! }))}
               />
             </Grid>}
+            {watch('type') === 'Etiqueta' &&
+            <Grid item xs={12}>
+              <FormInputDropdown
+                fullWidth
+                label='Etiqueta'
+                name='labelId'
+                control={control}
+                selectOptions={televisions.map((tel) => ({ label: tel.ip, value: tel.id! }))}
+              />
+            </Grid>}
           </Grid>{' '}
           <br />
           <FormInputDate  name='startDate' control={control} label='Start date' />
@@ -109,14 +119,14 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             onClick={() => {
               reset()
               handleCloseEditModal()
-              
+
             }}
             color='primary'
           >
             Close
           </Button>
           <Button onClick={() => {
-            console.log("test"+typeof(watch("startDate"))) 
+            
             handleSubmit(onSubmit) }
             } 
             variant='contained' color='primary' size='small'>

@@ -28,7 +28,7 @@ type IProps = {
 }
 
 export default function TelevisionCreateAndEditModal({ handleCloseEditModal, television, title }: IProps) {
-  const televisionInitialState: TelevisionT = { id: 0, name:'', ip: '', mac: '', label: [], ...removeEmpty(television) }
+  const televisionInitialState: TelevisionT = { id: 0, name:'', ip: '', mac: '', label: [], tvCode: Math.random().toString(36).slice(2, 8), ...removeEmpty(television) }
 
   const methods = useForm<TelevisionT>({
     resolver: zodResolver(televisionSchema),
@@ -94,7 +94,6 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
                 multiple selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id?.toString()!!}))}
               />
             </Grid>
-          {!television &&
            <><br/>             
               <Grid container>
               <Grid item>
@@ -104,7 +103,6 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
               <Button startIcon={<RefreshIcon />} color="primary" onClick={() => setValue('tvCode', Math.random().toString(36).slice(2, 8))} />
               </Grid>
               </Grid> </>
-          }
         </DialogContent>
         <DialogActions>
           <Button

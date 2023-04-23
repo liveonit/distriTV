@@ -196,7 +196,9 @@ class ContentRequestDaemon: Service() {
 
         var resultId: Long? = -1L
 
-        if (isImage(content.type) || isVideo(content.type)) {
+        //type.substringBefore("/")
+
+        if (isImage(content.type.toString()) || isVideo(content.type.toString())) {
             val response = contentRepository.fetchContent(getResourceName(content))
             resultId = action(content, response)
         } else if (isText(content.type)) {

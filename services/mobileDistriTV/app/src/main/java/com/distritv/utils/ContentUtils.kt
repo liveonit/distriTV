@@ -1,9 +1,8 @@
 package com.distritv.utils
 
 import android.net.Uri
-import android.webkit.MimeTypeMap
 import com.distritv.data.model.Content
-import java.net.URLConnection
+
 
 
 const val CONTENTS_DIRECTORY = ""
@@ -24,24 +23,21 @@ const val TEXT = "text"
 const val ACTIVE_NO = 0
 const val ACTIVE_YES = 1
 
-val VIDEO_TYPES = listOf("video/mp4", "video/webm")
-val IMAGE_TYPES = listOf("image/jpeg", "image/jpg", "image/png")
-val TEXT_TYPES = listOf("text")
 
 fun getResourceName(content: Content): String {
     return Uri.parse(content.url).lastPathSegment ?: ""
 }
 
 fun isImage(type: String): Boolean {
-    return type.substringBefore("/") == "image"
+    return type.substringBefore("/") == IMAGE
 }
 
 fun isVideo(type: String): Boolean {
-    return type.substringBefore("/") == "video"
+    return type.substringBefore("/") == VIDEO
 }
 
 fun isText(type: String): Boolean {
-    return (TEXT_TYPES.contains(type) && !IMAGE_TYPES.contains(type) && !VIDEO_TYPES.contains(type))
+    return type.substringBefore("/") == TEXT
 }
 
 fun areEquals(c1: Content, c2: Content): Boolean {

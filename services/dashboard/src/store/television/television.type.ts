@@ -7,7 +7,9 @@ export const televisionSchema = z.object({
   ip: z.string().nonempty('Ip is required').min(7, 'Ip must have at least 7 characters'),
   mac: z.string().nonempty('Mac is required'),
   tvCode: z.string().nonempty(),
-  label: z.array(z.number()).optional(),
+  m2mRelations: z.object({
+    labels: z.array(z.number()).optional()
+  }).optional(),
   institution: z.object({
     id: z.number(),
     name: z.string(),

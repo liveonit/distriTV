@@ -29,7 +29,7 @@ type IProps = {
 }
 
 export default function TelevisionCreateAndEditModal({ handleCloseEditModal, television, title }: IProps) {
-  const televisionInitialState: TelevisionT = { id: 0, name:'', ip: '', mac: '', label: [], tvCode: Math.random().toString(36).slice(2, 8), ...removeEmpty(television) }
+  const televisionInitialState: TelevisionT = { id: 0, name:'', ip: '', mac: '', m2mRelations: {labels: []}, tvCode: Math.random().toString(36).slice(2, 8), ...removeEmpty(television) }
 
   const methods = useForm<TelevisionT>({
     resolver: zodResolver(televisionSchema),
@@ -52,10 +52,10 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
   
   
   const onSubmit: SubmitHandler<TelevisionT> = (data) => {
+    console.log(data)
     if (!television) dispatch(createTelevision(data))
     else dispatch(updateTelevision(data))
-    handleCloseEditModal()
-    console.log(data.label)
+    handleCloseEditModal()    
   }
 
   return (
@@ -93,7 +93,7 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
               <FormInputDropdownMulti
                 fullWidth
                 label={t('LABEL')}
-                name='label'
+                name='m2mRelations.labels'
                 control={control}
                 selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id! }))}
               />

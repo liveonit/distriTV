@@ -1,7 +1,9 @@
 package com.distritv.utils
 
 import android.net.Uri
+import android.webkit.MimeTypeMap
 import com.distritv.data.model.Content
+import java.net.URLConnection
 
 
 const val CONTENTS_DIRECTORY = ""
@@ -30,12 +32,12 @@ fun getResourceName(content: Content): String {
     return Uri.parse(content.url).lastPathSegment ?: ""
 }
 
-fun isVideo(type: String): Boolean {
-    return (VIDEO_TYPES.contains(type) && !IMAGE_TYPES.contains(type) && !TEXT_TYPES.contains(type))
+fun isImage(type: String): Boolean {
+    return type.substringBefore("/") == "image"
 }
 
-fun isImage(type: String): Boolean {
-    return (IMAGE_TYPES.contains(type) && !VIDEO_TYPES.contains(type) && !TEXT_TYPES.contains(type))
+fun isVideo(type: String): Boolean {
+    return type.substringBefore("/") == "video"
 }
 
 fun isText(type: String): Boolean {

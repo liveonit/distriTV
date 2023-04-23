@@ -18,6 +18,9 @@ import { useSelector } from 'react-redux'
 import { institutionsSelector } from 'src/store/institution/institutions.selector'
 import { listInstitutions } from 'src/store/institution/institution.action'
 import { Trans, useTranslation } from 'react-i18next'
+import { listLabels } from 'src/store/label/label.action'
+import { labelsSelector } from 'src/store/label/label.selector'
+import { FormInputDropdownMulti } from 'src/App/components/molecules/Forms/FormInputDropdownMulti'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -33,6 +36,7 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
     defaultValues: televisionInitialState,
   })
   const institutions = useSelector(institutionsSelector)
+  const labels = useSelector(labelsSelector)
 
   const dispatch = useDispatch() 
   const { t } = useTranslation()
@@ -41,6 +45,11 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
   React.useEffect(() => {
     dispatch(listInstitutions())
   }, [dispatch])
+  
+  React.useEffect(() => {
+    dispatch(listLabels())
+  }, [dispatch])
+  
   
   const onSubmit: SubmitHandler<TelevisionT> = (data) => {
     if (!television) dispatch(createTelevision(data))
@@ -79,6 +88,16 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
           <Grid item xs={12}>
             <FormInputText fullWidth label={t('MAC')} variant='outlined' name='mac' control={control} />
           </Grid>
+          <br/>
+          <Grid item xs={12}>
+              <FormInputDropdownMulti
+                fullWidth
+                label={t('LABEL')}
+                name='label'
+                control={control}
+                selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id! }))}
+              />
+            </Grid>
            <><br/>             
               <Grid container>
               <Grid item>

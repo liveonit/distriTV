@@ -15,6 +15,10 @@ router.get('/', authSvc.authRequiredMiddleware([]), scheduleController.getMany);
  * Devuelve un usuario según su ID
  */
 router.get('/:id', authSvc.authRequiredMiddleware([]), scheduleController.getById);
+
+
+router.get('/tvCode/:id', authSvc.authRequiredMiddleware([]), scheduleController.getByTVcode);
+
 /**
  * Crea un nuevo usuario
  */

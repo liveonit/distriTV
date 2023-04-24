@@ -12,7 +12,7 @@ export class BaseService<T extends BaseCustomEntity> {
     this.model = model;
     this.db = db;
   }
-  protected getEntity = () => this.db.getConnection().getRepository<T>(this.model);
+  public getEntity = () => this.db.getConnection().getRepository<T>(this.model);
 
   public readonly get = async (options?: FindOneOptions<T>) => {
     return this.getEntity().findOneOrFail({ ...options });

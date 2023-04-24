@@ -52,8 +52,6 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
   const { reset, control, watch, getValues, handleSubmit, register } = methods
 
   const onSubmit: SubmitHandler<ContentT> = (data) => {
-    console.log('la durationnnnn hermano', data.duration)
-    console.log(typeof data.duration)
     if ((data.type === 'Image' || data.type === 'Video') && file) {
       const renamedFile = new File([file], data.name)
       dispatch(

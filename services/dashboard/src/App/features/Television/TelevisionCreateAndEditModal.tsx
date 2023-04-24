@@ -52,7 +52,6 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
   
   
   const onSubmit: SubmitHandler<TelevisionT> = (data) => {
-    console.log(data)
     if (!television) dispatch(createTelevision(data))
     else dispatch(updateTelevision(data))
     handleCloseEditModal()    

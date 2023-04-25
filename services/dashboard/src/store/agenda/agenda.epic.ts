@@ -70,7 +70,7 @@ const createAgenda: Epic = (action$) =>
 // === Update agenda
 const updateAgenda: Epic = (action$) =>
   action$.pipe(
-    ofType(AgendaActionTypes.CREATE_REQUEST),
+    ofType(AgendaActionTypes.EDIT_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(({ payload }) => {
@@ -84,7 +84,7 @@ const updateAgenda: Epic = (action$) =>
         }),
         catchError((err) =>
           of({
-            type: AgendaActionTypes.CREATE_FAILURE,
+            type: AgendaActionTypes.EDIT_FAILURE,
             payload: err,
           }),
         ),
@@ -93,24 +93,24 @@ const updateAgenda: Epic = (action$) =>
   )
 
 
-// === Update agenda
+// === Delete agenda
 const deleteAgenda: Epic = (action$) =>
   action$.pipe(
-    ofType(AgendaActionTypes.CREATE_REQUEST),
+    ofType(AgendaActionTypes.DELETE_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ method: 'PUT', path: `/schedule/${payload.id}`, requireAuthType: session?.type, body: payload }).pipe(
+      return apiSvc.request({ method: 'DELETE', path: `/schedule/${payload.id}`, requireAuthType: session?.type}).pipe(
         mergeMap(({ response }) => {
           return of({
-            type: AgendaActionTypes.EDIT_SUCCESS,
+            type: AgendaActionTypes.DELETE_SUCCESS,
             payload: response,
           })
         }),
         catchError((err) =>
           of({
-            type: AgendaActionTypes.CREATE_FAILURE,
+            type: AgendaActionTypes.DELETE_FAILURE,
             payload: err,
           }),
         ),

@@ -29,7 +29,7 @@ type IProps = {
 }
 
 export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda, title }: IProps) {
-  const agendaInitialState: AgendaT = {televisionId: 0, labelId: 0, startDate: new Date(), endDate: new Date(),...removeEmpty(agenda)
+  const agendaInitialState: AgendaT = {televisionId: undefined, labelId: undefined, startDate: new Date(), endDate: new Date(),...removeEmpty(agenda)
   }
   const contents = useSelector(contentSelector)
   const televisions = useSelector(televisionsSelector)
@@ -55,12 +55,12 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
   const onSubmit: SubmitHandler<AgendaT> = (data) => {
     console.log(data)
     if (!agenda) {
-    dispatch(createAgenda(data))
-    handleCloseEditModal()}
+      dispatch(createAgenda(data))
+    }
     else {
       dispatch(updateAgenda(data))
-      handleCloseEditModal()
     }
+    handleCloseEditModal()
   }
 
   return (

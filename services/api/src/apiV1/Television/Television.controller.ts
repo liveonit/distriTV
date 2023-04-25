@@ -10,7 +10,7 @@ import { Request, Response } from 'express';
 
 class TelevisionController extends BaseController<Television, TelevisionSvc> {
     public getByTVcode = handleErrorAsync(async (req: Request, res: Response) => {
-        let tvCode: string = req.params.tvCode
+        const tvCode: string = req.params.tvCode
         if(tvCode.length !== 6) {
             throw new BadRequest('tvCode should be 6 char long')
         }

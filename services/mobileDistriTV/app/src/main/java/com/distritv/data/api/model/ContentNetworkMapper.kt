@@ -6,6 +6,7 @@ import com.distritv.utils.ACTIVE_YES
 import com.distritv.utils.DATE_FORMAT
 import com.distritv.utils.isVideo
 import com.distritv.utils.localDateTimeToMillis
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 object ContentNetworkMapper: EntityMapper<ContentResponse, Content> {
@@ -47,16 +48,16 @@ object ContentNetworkMapper: EntityMapper<ContentResponse, Content> {
 
         val pattern = DateTimeFormatter.ofPattern(DATE_FORMAT)
 
-        val startDate = "2023-04-07 20:00:00"
-        //entity.startDate = LocalDateTime.parse(startDate, pattern)
+        val startDate = "2023-04-01T22:10:00.000Z"
+        entity.startDate = LocalDateTime.parse(startDate, pattern)
 
-        val endDate = "2023-04-30 20:00:00"
-        //entity.endDate = LocalDateTime.parse(endDate, pattern)
+        val endDate = "2023-04-30T22:10:00.000Z"
+        entity.endDate = LocalDateTime.parse(endDate, pattern)
 
         //content.cron = "0 0/2 * * * ?" //cada 2 minutos
         //content.cron = "0 0/1 * * * ?" //cada 1 minuto
         //content.cron = "0 0/5 * * * ?" //cada 5 minutos
-        entity.cron = "0/50 * * * * ?" //cada 30 segundos
+        entity.cron = "0/30 * * * * ?" //cada 30 segundos
 
         if(!entity.type.isNullOrBlank() && isVideo(entity.type)){
             entity.duration = 0

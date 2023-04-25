@@ -19,6 +19,7 @@ import { televisionsSelector } from 'src/store/television/television.selector'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { listLabels } from 'src/store/label/label.action'
 import { createAgenda, updateAgenda } from 'src/store/agenda/agenda.action'
+import { labelsSelector } from 'src/store/label/label.selector'
 
 
 type IProps = {
@@ -28,11 +29,11 @@ type IProps = {
 }
 
 export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda, title }: IProps) {
-  const agendaInitialState: AgendaT = {contentId: 0, televisionId: 0, startDate: '', endDate: '',  cron: '', ...removeEmpty(agenda)
+  const agendaInitialState: AgendaT = {televisionId: 0, labelId: 0, startDate: new Date(), endDate: new Date(),...removeEmpty(agenda)
   }
   const contents = useSelector(contentSelector)
   const televisions = useSelector(televisionsSelector)
-  //const labels = useSelector(labelsSelector)
+  const labels = useSelector(labelsSelector)
   const methods = useForm<AgendaT>({
     resolver: zodResolver(agendaSchema),
     defaultValues: agendaInitialState,
@@ -52,9 +53,10 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
   const { reset, handleSubmit, watch, control } = methods
 
   const onSubmit: SubmitHandler<AgendaT> = (data) => {
+    console.log(data)
     if (!agenda) {
-    
-    dispatch(createAgenda(data))}
+    dispatch(createAgenda(data))
+    handleCloseEditModal()}
     else {
       dispatch(updateAgenda(data))
       handleCloseEditModal()
@@ -105,7 +107,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
                 label='Etiqueta'
                 name='labelId'
                 control={control}
-                selectOptions={televisions.map((tel) => ({ label: tel.ip, value: tel.id! }))}
+                selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id! }))}
               />
             </Grid>}
           </Grid>{' '}
@@ -119,13 +121,12 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             onClick={() => {
               reset()
               handleCloseEditModal()
-
             }}
             color='primary'
           >
             Close
           </Button>
-          <Button onClick={handleSubmit(onSubmit) }
+          <Button onClick={handleSubmit(onSubmit)}
             variant='contained' color='primary' size='small'>
             Save
           </Button>

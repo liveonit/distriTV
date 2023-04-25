@@ -1,4 +1,4 @@
-package com.distritv.data
+package com.distritv.data.api
 
 import com.distritv.data.api.model.ContentResponse
 import com.distritv.data.model.InfoDevice

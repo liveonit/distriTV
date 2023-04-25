@@ -9,7 +9,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
+const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
 /**
  * Conversion from LocalDateTime to milliseconds

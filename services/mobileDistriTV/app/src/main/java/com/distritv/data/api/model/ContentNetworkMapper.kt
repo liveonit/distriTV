@@ -6,7 +6,6 @@ import com.distritv.utils.ACTIVE_YES
 import com.distritv.utils.DATE_FORMAT
 import com.distritv.utils.isVideo
 import com.distritv.utils.localDateTimeToMillis
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 object ContentNetworkMapper: EntityMapper<ContentResponse, Content> {

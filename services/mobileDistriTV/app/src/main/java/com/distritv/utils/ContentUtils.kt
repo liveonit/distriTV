@@ -2,7 +2,6 @@ package com.distritv.utils
 
 import android.net.Uri
 import android.util.Log
-import com.distritv.daemon.ContentRequestDaemon
 import com.distritv.data.model.Content
 
 

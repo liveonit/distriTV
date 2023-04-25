@@ -15,7 +15,6 @@ object ContentNetworkMapper: EntityMapper<ContentResponse, Content> {
 
         // TODO: prueba -> eliminar
         tempSetFields(entity)
-        val pattern = DateTimeFormatter.ofPattern(DATE_FORMAT)
 
         return Content(
             idDB = null,
@@ -25,8 +24,8 @@ object ContentNetworkMapper: EntityMapper<ContentResponse, Content> {
             url = entity.url ?: "",
             type = entity.type ?: "",
             text = entity.text ?: "",
-            startDate = localDateTimeToMillis(LocalDateTime.parse(entity.startDate, pattern)) ?: 0L,
-            endDate = localDateTimeToMillis(LocalDateTime.parse(entity.endDate, pattern)) ?: 0L,
+            startDate = localDateTimeToMillis(entity.startDate) ?: 0L,
+            endDate = localDateTimeToMillis(entity.endDate) ?: 0L,
             cron = entity.cron ?: "",
             durationInSeconds = entity.duration ?: 0L,
             active = ACTIVE_YES

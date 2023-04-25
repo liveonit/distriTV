@@ -1,6 +1,6 @@
 package com.distritv.data.repositories
 
-import com.distritv.data.ApiService
+import com.distritv.data.api.ApiService
 import com.distritv.data.api.model.ContentNetworkMapper
 import com.distritv.data.model.Content
 import com.distritv.data.model.InfoDevice

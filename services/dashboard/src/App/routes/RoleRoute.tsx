@@ -1,25 +1,25 @@
 import React, { FC, PropsWithChildren, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-// configs
-import { PATH_NAME, USER_ROLE } from '@app/configs'
 
+import { useUser } from '../hooks/useUser'
 
 type IProps = {
-  requireRoles: string[] | []
+  requiredRoles: string[] | []
 }
 
-const RoleRoute: FC<IProps & PropsWithChildren> = ({ children, requireRoles = [] }) => {
+const RoleRoute: FC<IProps & PropsWithChildren> = ({ children, requiredRoles = [] }) => {
   const navigate = useNavigate()
-  const role = USER_ROLE.ADMIN
+  const user = useUser()
 
   useEffect(() => {
-    if (!role && requireRoles.length > 0) return
+    if (requiredRoles.length > 0) return
+    const checkRole = user?.roleMappings.reduce((prev, curr) => prev || requiredRoles.includes(curr.role.name), false)
 
-    const checkRole = true // requireRoles.includes(role)
     if (!checkRole) {
-      navigate(PATH_NAME.ERROR_403)
+      console.log({ checkRole, requiredRoles, user })
+      //navigate(PATH_NAME.LOGIN)
     }
-  }, [navigate, role, requireRoles])
+  }, [navigate, requiredRoles, user])
   return <>{children}</>
 }
 

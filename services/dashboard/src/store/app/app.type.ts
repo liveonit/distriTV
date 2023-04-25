@@ -11,7 +11,7 @@ type Common = {
       }>
   layout?: React.FunctionComponent
   component?: any
-  requireRoles?: string[] | []
+  requiredRoles?: string[] | []
 }
 
 export type RoutesT = Common & {
@@ -23,65 +23,65 @@ export type IParams = {
 }
 
 export type HeadCell = {
-  id: string;
-  label: string;
-};
+  id: string
+  label: string
+}
 
-export type Order = 'asc' | 'desc';
+export type Order = 'asc' | 'desc'
 
 export type IPagination = {
-  perPage: number;
-  totalPage: number;
-  pageIndex: number;
-  order: Order;
-  orderBy: string;
-  handleRequestSort: (property: string) => () => void;
-  changePage: (value: number) => void;
-  changePerPage: (value: number) => void;
-};
+  perPage: number
+  totalPage: number
+  pageIndex: number
+  order: Order
+  orderBy: string
+  handleRequestSort: (property: string) => () => void
+  changePage: (value: number) => void
+  changePerPage: (value: number) => void
+}
 
 export type History = {
-  push(url: string): void;
-  replace(url: string): void;
-};
+  push(url: string): void
+  replace(url: string): void
+}
 
 type Irems = {
-  title?: string;
-  icon?: React.ReactNode;
-  href?: string;
-  depth?: number;
-};
+  title?: string
+  icon?: React.ReactNode
+  href?: string
+  depth?: number
+}
 
 type IStyle = {
-  paddingLeft: number;
-};
+  paddingLeft: number
+}
 
 export type ChildNavBar = Irems & {
-  items?: Irems[];
-  pathname: string;
-  label?: string;
-};
+  items?: Irems[]
+  pathname: string
+  label?: string
+}
 
 export type NavBarCommon = {
-  subheader?: string;
-  items: ChildNavBar[];
-};
+  subheader?: string
+  items: ChildNavBar[]
+}
 
 export type NavBarItem = {
-  depth: number;
-  icon: any;
-  title: string;
-  open?: boolean;
-  href: string;
-  label?: string;
-  isExternalLink: boolean;
-  children?: any;
-};
+  depth: number
+  icon: any
+  title: string
+  open?: boolean
+  href: string
+  label?: string
+  isExternalLink: boolean
+  children?: any
+}
 
 export type NavBarExpandItem = {
-  icon: any;
-  title: string;
-  open?: boolean;
-  children?: any;
-  style: IStyle;
-};
+  icon: any
+  title: string
+  open?: boolean
+  children?: any
+  style: IStyle
+}

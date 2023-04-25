@@ -27,7 +27,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class ContentSchedulingDaemon: Service() {
+class ContentSchedulingDaemon : Service() {
 
     private val contentService: ContentService by inject()
     private val alarmService: AlarmService by inject()
@@ -83,14 +83,17 @@ class ContentSchedulingDaemon: Service() {
 
     private fun launcherContent() {
         val currentTimeInMillis = localDateTimeToMillis(LocalDateTime.now())!!
-        val intervalEndTimeInMillis = currentTimeInMillis.plus(TimeUnit.SECONDS.toMillis(periodTimeInSecond))
+        val intervalEndTimeInMillis =
+            currentTimeInMillis.plus(TimeUnit.SECONDS.toMillis(periodTimeInSecond))
 
         val currentContents = contentService.getCurrentContents(currentTimeInMillis, intervalEndTimeInMillis)
 
         for (content in currentContents) {
 
             val nextExecutionTime = content.cron?.let { it ->
-                millisToDate(currentTimeInMillis)?.let { it1 -> calculateNextExecutionTime(it, it1) }
+                millisToDate(currentTimeInMillis)?.let { it1 ->
+                    calculateNextExecutionTime(it, it1)
+                }
             }
 
             if (nextExecutionTime != null) {
@@ -99,7 +102,7 @@ class ContentSchedulingDaemon: Service() {
                 if (nextExecutionTimeInMillis in currentTimeInMillis until intervalEndTimeInMillis) {
                     // If the next execution minus the current time (waiting time) is greater than one minute,
                     // an alarm is programmed, otherwise it is played instantly
-                    if (nextExecutionTimeInMillis.minus(currentTimeInMillis)  > TimeUnit.MINUTES.toMillis(1)) {
+                    if (nextExecutionTimeInMillis.minus(currentTimeInMillis) > TimeUnit.MINUTES.toMillis(1)) {
                         setAlarm(content, nextExecutionTime)
                     } else {
                         launchContentNow(content)
@@ -127,59 +130,42 @@ class ContentSchedulingDaemon: Service() {
             calendar.get(Calendar.SECOND)
         )
 
-        if (isVideo(content.type) || isImage(content.type)) {
-            if (content.localPath.isNullOrBlank()) {
-                Log.e(TAG, ERROR_LOCAL_PATH_NULL_OR_BLANK)
-                return
-            }
-            alarmService.createAllowWhileIdleAlarm(
-                calendarModel,
-                content.localPath!!,
-                content.type,
-                content.durationInSeconds,
-                content.id.toInt()
-            )
-        } else if (isText(content.type)) {
-            if (content.text.isNullOrBlank()) {
-                Log.e(TAG, ERROR_TEXT_NULL_OR_BLANK)
-                return
-            }
-            alarmService.createAllowWhileIdleAlarm(
-                calendarModel,
-                content.text,
-                content.type,
-                content.durationInSeconds,
-                content.id.toInt()
-            )
+        if (!contentIsValid(content)) {
+            Log.e(TAG, ERROR_LOCAL_PATH_OR_TEXT_NULL_OR_BLANK)
+            return
         }
+
+        alarmService.createAllowWhileIdleAlarm(
+            calendarModel,
+            content,
+            content.id.toInt()
+        )
     }
 
     private fun launchContentNow(content: Content) {
-        val intent = Intent(applicationContext, ContentPlaybackLauncher::class.java)
-            .putExtra(CONTENT_TYPE_PARAM, content.type)
-            .putExtra(CONTENT_ID_PARAM, content.id.toInt())
-            .putExtra(CONTENT_DURATION_PARAM, content.durationInSeconds)
-            .putExtra(IS_ALARM_PARAM, false)
-
-        if (isVideo(content.type) || isImage(content.type)) {
-            if (content.localPath.isNullOrBlank()) {
-                Log.e(TAG, ERROR_LOCAL_PATH_NULL_OR_BLANK)
-                return
-            }
-            sendBroadcast(intent.putExtra(CONTENT_PARAM, content.localPath))
-        } else if (isText(content.type)) {
-            if (content.text.isNullOrBlank()) {
-                Log.e(TAG, ERROR_TEXT_NULL_OR_BLANK)
-                return
-            }
-            sendBroadcast(intent.putExtra(CONTENT_PARAM, content.text))
+        if (!contentIsValid(content)) {
+            Log.e(TAG, ERROR_LOCAL_PATH_OR_TEXT_NULL_OR_BLANK)
+            return
         }
+        val intent = createIntent(applicationContext, content, false)
+        sendBroadcast(intent)
+    }
+
+    private fun contentIsValid(content: Content): Boolean {
+        if (isVideo(content.type) || isImage(content.type)) {
+            return !content.localPath.isNullOrBlank()
+        } else if (isText(content.type)) {
+            return !content.text.isNullOrBlank()
+        }
+        return false
     }
 
     companion object {
         const val TAG = "[ContentSchedulingDaemon]"
         private val periodTimeInSecond: Long = BuildConfig.SCHEDULE_TIME_PERIOD
-        private const val ERROR_LOCAL_PATH_NULL_OR_BLANK = "It is not possible to schedule the reproduction of the content, it does not have any local path of the downloaded content"
-        private const val ERROR_TEXT_NULL_OR_BLANK = "It is not possible to schedule the reproduction of the content, it is of type TEXT but it does not have any text"
+        private const val ERROR_LOCAL_PATH_OR_TEXT_NULL_OR_BLANK =
+            "It is not possible to schedule the reproduction of the content, " +
+                    "it does not have any local path of the downloaded content, " +
+                    "or it is of type TEXT but it does not have any text"
     }
 }

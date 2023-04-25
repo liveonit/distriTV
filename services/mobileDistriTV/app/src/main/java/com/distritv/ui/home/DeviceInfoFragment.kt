@@ -1,4 +1,4 @@
-package com.distritv.ui
+package com.distritv.ui.home
 
 import android.content.Context
 import android.os.Bundle

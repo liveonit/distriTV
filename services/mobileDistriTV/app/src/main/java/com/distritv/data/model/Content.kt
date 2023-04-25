@@ -1,6 +1,10 @@
 package com.distritv.data.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import java.time.LocalDateTime
 
+@Parcelize
 data class Content(
     var idDB: Long?,
     val id: Long,
@@ -14,4 +18,4 @@ data class Content(
     var cron: String,
     var durationInSeconds: Long,
     var active: Int
-    )
+    ) : Parcelable

@@ -11,6 +11,7 @@ const val CONTENTS_DIRECTORY = ""
 const val DEVICE_ID = "deviceId"
 
 const val CONTENT_PARAM = "contentParam"
+const val CONTENT_BUNDLE_PARAM = "contentBundleParam"
 const val CONTENT_TYPE_PARAM = "contentType"
 const val CONTENT_ID_PARAM = "contentId"
 const val CONTENT_DURATION_PARAM = "contentPlaybackDuration"

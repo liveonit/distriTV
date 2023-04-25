@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.VideoFragment">
+    tools:context=".ui.player.VideoFragment">
 
-    <VideoView
+    <com.distritv.ui.player.CustomVideoView
         android:id="@+id/video_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

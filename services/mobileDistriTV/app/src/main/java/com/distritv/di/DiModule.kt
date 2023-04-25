@@ -5,7 +5,7 @@ import com.distritv.BuildConfig
 import com.distritv.R
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
-import com.distritv.ui.ImageViewModel
+import com.distritv.ui.player.ImageViewModel
 import com.distritv.data.service.AlarmService
 import com.distritv.data.service.ContentDbService
 import com.distritv.data.service.ContentDbHelper

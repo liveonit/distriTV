@@ -1,4 +1,4 @@
-package com.distritv.ui
+package com.distritv.ui.home
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -6,7 +6,6 @@ import android.app.ActivityManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -21,7 +20,7 @@ import com.distritv.utils.*
 import org.koin.android.ext.android.inject
 
 
-class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteractionListener {
+class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteractionListener {
 
     private val sharedPreferences: SharedPreferencesService by inject()
 
@@ -30,8 +29,6 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
     private lateinit var binding: ActivityHomeBinding
 
     private lateinit var myApp: DistriTVApp
-
-    private lateinit var contentParam: String
 
 
     @SuppressLint("AppCompatMethod")
@@ -46,12 +43,7 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
 
         myApp = this.applicationContext as DistriTVApp
 
-        contentParam = intent.extras?.getString(CONTENT_PARAM).toString()
-
-        val contentType = intent.extras?.getString(CONTENT_TYPE_PARAM)
-        val contentDuration = intent.extras?.getLong(CONTENT_DURATION_PARAM) ?: -1L
-
-        addFragment(contentType, contentDuration)
+        addFragment()
 
         actionBar?.hide()
     }
@@ -74,7 +66,6 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
     override fun onDestroy() {
         super.onDestroy()
         clearReferences()
-        (this.applicationContext as DistriTVApp).setContentCurrentlyPlaying(false)
     }
 
     private fun clearReferences() {
@@ -82,52 +73,21 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
         if (this == currActivity) myApp.setCurrentActivity(null)
     }
 
-    private fun addFragment(contentType: String?, contentDuration: Long) {
-        if (contentType.isNullOrBlank()) {
-            //Default load
-            if(sharedPreferences.isDeviceRegistered()){
-                supportFragmentManager.addFragment(
-                    R.id.home_fragment_container,
-                    HomeFragment(),
-                    false,
-                    HomeFragment.TAG
-                )
-            } else {
-                supportFragmentManager.addFragment(
-                    R.id.home_fragment_container,
-                    DeviceInfoFragment(),
-                    false,
-                    DeviceInfoFragment.TAG
-                )
-            }
+    private fun addFragment() {
+        if (sharedPreferences.isDeviceRegistered()) {
+            supportFragmentManager.addFragment(
+                R.id.home_fragment_container,
+                HomeFragment(),
+                false,
+                HomeFragment.TAG
+            )
         } else {
-            //Content load
-            when (contentType) {
-                IMAGE ->
-                    supportFragmentManager.addFragment(
-                        R.id.home_fragment_container,
-                        ImageFragment.newInstance(contentParam, contentDuration),
-                        false,
-                        ImageFragment.TAG
-                    )
-                VIDEO ->
-                    supportFragmentManager.addFragment(
-                        R.id.home_fragment_container,
-                        VideoFragment.newInstance(contentParam, contentDuration),
-                        false,
-                        VideoFragment.TAG
-                    )
-                TEXT ->
-                    supportFragmentManager.addFragment(
-                        R.id.home_fragment_container,
-                        TextFragment.newInstance(contentParam, contentDuration),
-                        false,
-                        TextFragment.TAG
-                    )
-                else -> {
-                    Log.e(TAG, "Unsupported content type: $contentType")
-                }
-            }
+            supportFragmentManager.addFragment(
+                R.id.home_fragment_container,
+                DeviceInfoFragment(),
+                false,
+                DeviceInfoFragment.TAG
+            )
         }
     }
 
@@ -146,15 +106,18 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
 
     private fun startServices() {
         if (!isServiceRunning(ContentRequestDaemon::class.java)) {
-            ContextCompat.startForegroundService(this, Intent(this, ContentRequestDaemon::class.java))
+            ContextCompat.startForegroundService(this,
+                Intent(this, ContentRequestDaemon::class.java))
         }
 
         if (!isServiceRunning(ContentSchedulingDaemon::class.java)) {
-            ContextCompat.startForegroundService(this, Intent(this, ContentSchedulingDaemon::class.java))
+            ContextCompat.startForegroundService(this,
+                Intent(this, ContentSchedulingDaemon::class.java))
         }
 
         if (!isServiceRunning(GarbageCollectorDaemon::class.java)) {
-            ContextCompat.startForegroundService(this, Intent(this, GarbageCollectorDaemon::class.java))
+            ContextCompat.startForegroundService(this,
+                Intent(this, GarbageCollectorDaemon::class.java))
         }
     }
 
@@ -167,6 +130,7 @@ class HomeActivity : AppCompatActivity() , DeviceInfoFragment.OnFragmentInteract
         }
         return false
     }
+
     override fun onRegisterButtonPressed(id: String) {
         sharedPreferences.addDeviceId(id)
         supportFragmentManager.addFragment(

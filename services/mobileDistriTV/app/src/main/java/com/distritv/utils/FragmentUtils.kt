@@ -1,13 +1,12 @@
 package com.distritv.utils
 
 import android.app.Activity
+import android.content.Intent
 import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.distritv.DistriTVApp
-import com.distritv.R
-import com.distritv.ui.HomeActivity
-import com.distritv.ui.HomeFragment
+import com.distritv.ui.home.HomeActivity
 
 fun FragmentManager.addFragment(
     containerId: Int,
@@ -51,19 +50,14 @@ fun Fragment.onAfterCompletion(tag: String) {
     // Notice that the content has finished playing
     application?.setContentCurrentlyPlaying(false)
 
-    // If the view is created: back home after end of the duration
     val currentActivity: Activity? = application?.getCurrentActivity()
-    if (currentActivity != null) {
-        (currentActivity as HomeActivity?)?.supportFragmentManager
-            ?.replaceFragment(
-                R.id.home_fragment_container,
-                HomeFragment(),
-                false,
-                HomeFragment.TAG
-            )
+    if (currentActivity != null && currentActivity !is HomeActivity) {
+        val intent = Intent(context, HomeActivity::class.java)
+        context?.startActivity(intent)
+        activity?.finish()
         Log.i(tag, "Playback finished, coming home...")
     } else {
-        Log.i(tag, "Playback finished")
+        Log.i(tag, "Playback finished.")
     }
 }
 
@@ -71,15 +65,10 @@ fun Fragment.backHomeOnResume() {
     // If the view is created: back home after end of the duration
     val isPlaying =
         (context?.applicationContext as DistriTVApp?)?.isContentCurrentlyPlaying() ?: false
+
     if (!isPlaying) {
-        val currentActivity: Activity? =
-            (context?.applicationContext as DistriTVApp?)?.getCurrentActivity()
-        (currentActivity as HomeActivity?)?.supportFragmentManager
-            ?.replaceFragment(
-                R.id.home_fragment_container,
-                HomeFragment(),
-                false,
-                HomeFragment.TAG
-            )
+        val intent = Intent(context, HomeActivity::class.java)
+        context?.startActivity(intent)
+        activity?.finish()
     }
 }

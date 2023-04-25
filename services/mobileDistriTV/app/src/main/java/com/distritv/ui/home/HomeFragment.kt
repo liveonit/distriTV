@@ -1,4 +1,4 @@
-package com.distritv.ui
+package com.distritv.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.distritv.R
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.databinding.FragmentHomeBinding
+import com.distritv.ui.FullscreenManager
 import org.koin.android.ext.android.inject
 
 class HomeFragment: Fragment() {

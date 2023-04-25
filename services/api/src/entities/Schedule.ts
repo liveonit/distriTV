@@ -33,15 +33,15 @@ export class Schedule extends BaseEntity {
   @PrimaryColumn()
   cron!: string;
 
-  @ManyToOne(() => Television, (tv) => tv.id)
+  @ManyToOne(() => Television, (tv) => tv.schedules)
   @JoinColumn({ name: 'televisionId' })
   television!: Television;
 
-  @ManyToOne(() => Label, (label) => label.id)
+  @ManyToOne(() => Label, (label) => label.schedules)
   @JoinColumn({ name: 'labelId' })
   label!: Label;
 
-  @ManyToOne(() => Content, (content) => content.id)
+  @ManyToOne(() => Content, (content) => content.schedules)
   @JoinColumn({ name: 'contentId' })
   content!: Content;
 

@@ -29,7 +29,7 @@ type IProps = {
 }
 
 export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda, title }: IProps) {
-  const agendaInitialState: AgendaT = {televisionId: 0, labelId: 1, startDate: new Date(), endDate: new Date(),...removeEmpty(agenda)
+  const agendaInitialState: AgendaT = {televisionId: undefined, labelId: undefined, startDate: new Date(), endDate: new Date(),...removeEmpty(agenda)
   }
   const contents = useSelector(contentSelector)
   const televisions = useSelector(televisionsSelector)

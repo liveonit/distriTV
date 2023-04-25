@@ -20,7 +20,7 @@ router.get('/:id', authSvc.authRequiredMiddleware([]), televisionController.getB
 /**
  * Devuelve una tv con todas sus agendas
  */
-router.get('/:tvCode/schedules', authSvc.authRequiredMiddleware([]), televisionController.getByTVcode);
+router.get('/:tvCode/schedules', televisionController.getByTVcode, );
 
 /**
  * Crea un nuevo usuario

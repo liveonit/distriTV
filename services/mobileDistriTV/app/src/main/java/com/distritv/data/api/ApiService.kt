@@ -9,8 +9,8 @@ import retrofit2.http.*
 interface ApiService {
 
     // TODO: Eliminar esta fun luego de que quede habilitado el POST con body en el server
-    @GET("content")
-    suspend fun fetchContentList(): List<ContentResponse>
+    @GET("television/{tvCode}/schedule")
+    suspend fun fetchContentList(@Path("tvCode") tvCode: String): List<ContentResponse>
 
     /*
     @Headers("Content-Type: application/json")

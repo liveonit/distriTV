@@ -12,6 +12,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import { UserT } from 'src/store/user/user.type'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 type IProps = {
   isOpen: boolean
@@ -59,17 +60,17 @@ export default function UserEditModal({ isOpen, handleCloseEditModal, user, hand
           </Grid>
           <Box mt={2}>
             <Typography variant='subtitle1' color='textPrimary'>
-              Description
+              <Trans>DESCRIPTION</Trans>
             </Typography>
             <TextField multiline rows={6} fullWidth variant='outlined' placeholder='Leave a message' />
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseEditModal} color='primary'>
-            Close
+            <Trans>CLOSE</Trans>
           </Button>
           <Button onClick={() => handleSaveUser(localUser)} variant='contained' color='primary' size='small'>
-            Save
+            <Trans>SAVE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

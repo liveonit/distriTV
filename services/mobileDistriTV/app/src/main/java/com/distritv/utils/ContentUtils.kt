@@ -6,6 +6,7 @@ import com.distritv.daemon.ContentRequestDaemon
 import com.distritv.data.model.Content
 
 
+
 const val CONTENTS_DIRECTORY = ""
 
 const val DEVICE_ID = "deviceId"
@@ -24,24 +25,21 @@ const val TEXT = "text"
 const val ACTIVE_NO = 0
 const val ACTIVE_YES = 1
 
-val VIDEO_TYPES = listOf("video/mp4", "video/webm")
-val IMAGE_TYPES = listOf("image/jpeg", "image/jpg", "image/png")
-val TEXT_TYPES = listOf("text")
 
 fun getResourceName(content: Content): String {
     return Uri.parse(content.url).lastPathSegment ?: ""
 }
 
-fun isVideo(type: String): Boolean {
-    return (VIDEO_TYPES.contains(type) && !IMAGE_TYPES.contains(type) && !TEXT_TYPES.contains(type))
+fun isImage(type: String): Boolean {
+    return type.substringBefore("/") == IMAGE
 }
 
-fun isImage(type: String): Boolean {
-    return (IMAGE_TYPES.contains(type) && !VIDEO_TYPES.contains(type) && !TEXT_TYPES.contains(type))
+fun isVideo(type: String): Boolean {
+    return type.substringBefore("/") == VIDEO
 }
 
 fun isText(type: String): Boolean {
-    return (TEXT_TYPES.contains(type) && !IMAGE_TYPES.contains(type) && !VIDEO_TYPES.contains(type))
+    return type.substringBefore("/") == TEXT
 }
 
 fun areEquals(c1: Content, c2: Content): Boolean {

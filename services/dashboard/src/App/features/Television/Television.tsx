@@ -18,6 +18,7 @@ import { listTelevisionsJoin } from 'src/store/television/television.action'
 import { TelevisionT } from 'src/store/television/television.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { Trans } from 'react-i18next/TransWithoutContext'
 
 import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
 import TelevisionDeleteModal from './TelevisionDeleteModal'
@@ -59,7 +60,7 @@ export default function TelevisionList() {
     <>
       <Grid container alignItems='center'>
         <Grid item sm={8}>
-          <h2>Televisiones</h2>
+          <h2><Trans>TELEVISIONS</Trans></h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
           <Button
@@ -68,11 +69,11 @@ export default function TelevisionList() {
             size='small'
             startIcon={<AddIcon />}
             onClick={() => {
-              setModalTitle('Crear Television')
+              setModalTitle('CREATE')
               setIsModalCreate(true)
             }}
           >
-            Nuevo
+            <Trans>NEW</Trans>
           </Button>
         </Grid>
       </Grid>
@@ -81,10 +82,10 @@ export default function TelevisionList() {
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
-              <TableCell>Ip</TableCell>
-              <TableCell>Mac</TableCell>
-              <TableCell>Institución</TableCell>
-              <TableCell>Action</TableCell>
+              <TableCell><Trans>IP</Trans></TableCell>
+              <TableCell><Trans>MAC</Trans></TableCell>
+              <TableCell><Trans>INSTITUTION</Trans></TableCell>
+              <TableCell><Trans>ACTION</Trans></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -99,7 +100,7 @@ export default function TelevisionList() {
                 <TableCell>
                   <IconButton
                     onClick={() => {
-                      setModalTitle('Editar Institución')
+                      setModalTitle('EDIT')
                       setTelevisionToEdit(television)
                     }}
                     color='primary'

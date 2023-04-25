@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { listContents } from 'src/store/content/content.action'
 import { listTelevisions } from 'src/store/television/television.action'
 import { televisionsSelector } from 'src/store/television/television.selector'
+import { Trans, useTranslation } from 'react-i18next'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -24,6 +25,7 @@ type IProps = {
 }
 
 export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda, title }: IProps) {
+  const { t } = useTranslation()
   const agendaInitialState: AgendaT = {contentId: 0, televisionId: 0, startDate: '', endDate: '',  cron: '', ...removeEmpty(agenda)
   }
   const contents = useSelector(contentSelector)
@@ -50,14 +52,14 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            {title}
+            {t(title)} {t('SCHEDULE')}
           </Typography>
           <br />
           <Grid container spacing={2}>
           <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label='Contenido'
+                label={t('CONTENT')}
                 name='contenidoId'
                 control={control}
                 selectOptions={contents.map((con) => ({ label: con.name, value: con.id! }))}
@@ -66,7 +68,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label='Televisión'
+                label={t('TELEVISION')}
                 name='televisionId'
                 control={control}
                 selectOptions={televisions.map((tel) => ({ label: tel.ip, value: tel.id! }))}
@@ -74,8 +76,8 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             </Grid>
           </Grid>{' '}
           <br />
-          <FormInputDate  name='startDate' control={control} label='Fecha inicio' />
-          <FormInputDate  name='endDate' control={control} label='Fecha fin' />
+          <FormInputDate  name='startDate' control={control} label={t('START_DATE')} />
+          <FormInputDate  name='endDate' control={control} label={t('END_DATE')} />
         </DialogContent>
         <DialogActions>
           <Button
@@ -85,10 +87,10 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             }}
             color='primary'
           >
-            Cerrar
+            <Trans>CLOSE</Trans>
           </Button>
           <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
-            Guardar
+            <Trans>SAVE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

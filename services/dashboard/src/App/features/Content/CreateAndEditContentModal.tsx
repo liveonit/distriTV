@@ -20,6 +20,7 @@ import { removeEmpty } from 'src/utils/removeEmpty'
 //import { createContent } from 'src/store/content/content.action'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { FormHelperText } from '@material-ui/core'
+import { Trans, useTranslation } from 'react-i18next'
 
 type IProps = {
   isOpen: boolean
@@ -32,6 +33,7 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
   const [file, setFile] = React.useState<File | null>(null)
   const [fileError, setFileError] = React.useState('')
   const contentInitialState: ContentT = { name: '', type: 'Video', url: '', text: '', ...removeEmpty(content) }
+  const { t } = useTranslation()
   const dispatch = useDispatch()
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -77,7 +79,7 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
             <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
-                label='Content type'
+                label={t('TYPE')}
                 name='type'
                 control={control}
                 selectOptions={contentType.map((tp) => ({ label: tp, value: tp }))}
@@ -97,7 +99,7 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
             )}
 
             <Grid item xs={12}>
-              <FormInputText name='name' control={control} fullWidth label='Content name' variant='outlined' />
+              <FormInputText name='name' control={control} fullWidth label={t('NAME')} variant='outlined' />
             </Grid>
           </Grid>
           {watch('type') !== 'Text' && (
@@ -143,7 +145,7 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
             }}
             color='primary'
           >
-            Close
+            <Trans>CLOSE</Trans>
           </Button>
           <Button
             onClick={() => {
@@ -157,7 +159,7 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
             color='primary'
             size='small'
           >
-            Save
+            <Trans>SAVE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

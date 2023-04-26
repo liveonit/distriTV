@@ -6,6 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent'
 import Typography from '@material-ui/core/Typography'
 import { AgendaT } from 'src/store/agenda/agenda.type'
 import { Trans } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+import { deleteAgenda } from 'src/store/agenda/agenda.action'
 
 type IProps = {
   isOpen: boolean
@@ -13,31 +15,26 @@ type IProps = {
   agenda: AgendaT
 }
 
-
-
-
 let nombreAgenda = 0
-
 
 export default function AgendaDeleteModal({ isOpen, handleCloseDeleteModal, agenda}: IProps) {
   
+  const dispatch = useDispatch()
+
   function handleDeleteAgenda() {
-    //TODO: Delete agenda
-    console.log(agenda)
+    dispatch(deleteAgenda({ id: agenda.id! }))
+    handleCloseDeleteModal()
   }
 
   function agendaFieldsValues(){
     if (agenda) {
-       nombreAgenda = agenda.contentId
-  } 
-  
+      nombreAgenda = agenda.contentId
+    } 
   }
   
-  agendaFieldsValues()
-  
+  agendaFieldsValues()  
 
-  return (
-    
+  return (    
     <>
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>

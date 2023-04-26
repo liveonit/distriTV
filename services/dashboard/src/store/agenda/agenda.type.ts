@@ -15,14 +15,14 @@ export const agendaSchema = z.object({
     ctx.addIssue({
       message: 'Television must be specified',
       code: z.ZodIssueCode.custom,
-      path: ["televisionId"],
+      path: ['televisionId'],
     })
   }
     if (value.labelId === undefined   && value.type == 'Etiqueta') {
       ctx.addIssue({
         message: 'Label must be specified',
         code: z.ZodIssueCode.custom,
-        path: ["labelId"],
+        path: ['labelId'],
       })
     }
   })

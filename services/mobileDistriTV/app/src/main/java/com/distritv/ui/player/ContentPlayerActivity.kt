@@ -72,21 +72,21 @@ class ContentPlayerActivity : AppCompatActivity() {
     }
 
     private fun addFragment() {
-        if (isImage(content?.type ?: "")) {
+        if (content?.isImage() == true) {
             supportFragmentManager.addFragment(
                 R.id.player_fragment_container,
                 ImageFragment.newInstance(content!!),
                 false,
                 ImageFragment.TAG
             )
-        } else if (isVideo(content?.type ?: "")) {
+        } else if (content?.isVideo() == true) {
             supportFragmentManager.addFragment(
                 R.id.player_fragment_container,
                 VideoFragment.newInstance(content!!),
                 false,
                 VideoFragment.TAG
             )
-        } else if (isText(content?.type ?: "")) {
+        } else if (content?.isText() == true) {
             supportFragmentManager.addFragment(
                 R.id.player_fragment_container,
                 TextFragment.newInstance(content!!),

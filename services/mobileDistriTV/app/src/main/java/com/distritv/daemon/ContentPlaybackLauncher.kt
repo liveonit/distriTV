@@ -80,9 +80,9 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
     private fun contentIsValid(content: Content?): Boolean {
         if (content == null) return false
         if (content.type.isBlank()) return false
-        if (isVideo(content.type) || isImage(content.type)) {
+        if (content.isVideo() || content.isImage()) {
             return !content.localPath.isNullOrBlank()
-        } else if (isText(content.type)) {
+        } else if (content.isText()) {
             return !content.text.isNullOrBlank()
         }
         return false

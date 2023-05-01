@@ -83,7 +83,7 @@
         </service>
 
         <service
-            android:name=".daemon.ContentRequestDaemon"
+            android:name=".daemon.RequestDaemon"
             android:label="Daemon Request Service"
             android:enabled="true"
             android:exported="true" />

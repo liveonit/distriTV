@@ -8,8 +8,5 @@ data class ContentResponse(
     val url: String?,
     val type: String?,
     val text: String?,
-    var startDate: LocalDateTime?,
-    var endDate: LocalDateTime?,
-    var cron: String?,
     var duration: Long?,
 )

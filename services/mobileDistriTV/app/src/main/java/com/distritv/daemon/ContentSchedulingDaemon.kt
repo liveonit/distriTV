@@ -18,7 +18,7 @@ import com.distritv.BuildConfig
 import com.distritv.data.model.CalendarModel
 import com.distritv.data.model.Content
 import com.distritv.data.service.AlarmService
-import com.distritv.data.service.ContentService
+import com.distritv.data.service.ScheduleService
 import com.distritv.utils.*
 import org.koin.android.ext.android.inject
 import org.quartz.CronExpression
@@ -29,7 +29,8 @@ import java.util.concurrent.TimeUnit
 
 class ContentSchedulingDaemon : Service() {
 
-    private val contentService: ContentService by inject()
+
+    private val scheduleService: ScheduleService by inject()
     private val alarmService: AlarmService by inject()
 
     private val handler = Handler(Looper.myLooper()!!)
@@ -86,11 +87,11 @@ class ContentSchedulingDaemon : Service() {
         val intervalEndTimeInMillis =
             currentTimeInMillis.plus(TimeUnit.SECONDS.toMillis(periodTimeInSecond))
 
-        val currentContents = contentService.getCurrentContents(currentTimeInMillis, intervalEndTimeInMillis)
+        val currentSchedules = scheduleService.getCurrentSchedulesWithContents(currentTimeInMillis, intervalEndTimeInMillis)
 
-        for (content in currentContents) {
+        for (schedule in currentSchedules) {
 
-            val nextExecutionTime = content.cron?.let { it ->
+            val nextExecutionTime = schedule.cron?.let { it ->
                 millisToDate(currentTimeInMillis)?.let { it1 ->
                     calculateNextExecutionTime(it, it1)
                 }
@@ -103,9 +104,9 @@ class ContentSchedulingDaemon : Service() {
                     // If the next execution minus the current time (waiting time) is greater than one minute,
                     // an alarm is programmed, otherwise it is played instantly
                     if (nextExecutionTimeInMillis.minus(currentTimeInMillis) > TimeUnit.MINUTES.toMillis(1)) {
-                        setAlarm(content, nextExecutionTime)
+                        schedule.content?.let { setAlarm(it, nextExecutionTime) }
                     } else {
-                        launchContentNow(content)
+                        schedule.content?.let { launchContentNow(it) }
                     }
                 }
             }
@@ -152,9 +153,9 @@ class ContentSchedulingDaemon : Service() {
     }
 
     private fun contentIsValid(content: Content): Boolean {
-        if (isVideo(content.type) || isImage(content.type)) {
+        if (content.isVideo() || content.isImage()) {
             return !content.localPath.isNullOrBlank()
-        } else if (isText(content.type)) {
+        } else if (content.isText()) {
             return !content.text.isNullOrBlank()
         }
         return false

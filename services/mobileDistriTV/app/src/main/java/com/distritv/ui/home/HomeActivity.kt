@@ -13,7 +13,7 @@ import com.distritv.DistriTVApp
 import com.distritv.R
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.databinding.ActivityHomeBinding
-import com.distritv.daemon.ContentRequestDaemon
+import com.distritv.daemon.RequestDaemon
 import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
@@ -105,9 +105,9 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
     }
 
     private fun startServices() {
-        if (!isServiceRunning(ContentRequestDaemon::class.java)) {
+        if (!isServiceRunning(RequestDaemon::class.java)) {
             ContextCompat.startForegroundService(this,
-                Intent(this, ContentRequestDaemon::class.java))
+                Intent(this, RequestDaemon::class.java))
         }
 
         if (!isServiceRunning(ContentSchedulingDaemon::class.java)) {

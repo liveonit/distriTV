@@ -16,6 +16,12 @@ router.get('/', authSvc.authRequiredMiddleware([]), televisionController.getMany
  * Devuelve un usuario según su ID
  */
 router.get('/:id', authSvc.authRequiredMiddleware([]), televisionController.getById);
+
+/**
+ * Devuelve una tv con todas sus agendas
+ */
+router.get('/:tvCode/schedules', authSvc.authRequiredMiddleware([]), televisionController.getByTVcode);
+
 /**
  * Crea un nuevo usuario
  */

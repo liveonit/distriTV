@@ -81,9 +81,10 @@ export default function AgendaList() {
           <TableHead>
             <TableRow>
               <TableCell><Trans>TELEVISION</Trans></TableCell>
-              <TableCell><Trans>START_DATE</Trans></TableCell>
-              <TableCell><Trans>END_DATE</Trans></TableCell>
               <TableCell><Trans>CONTENT</Trans></TableCell>
+              <TableCell><Trans>START_DATE</Trans></TableCell>
+              <TableCell><Trans>END_DATE</Trans></TableCell>              
+              <TableCell><Trans>ACTION</Trans></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -92,8 +93,9 @@ export default function AgendaList() {
                 <TableCell component='th' scope='row'>
                   {agenda.televisionId}
                 </TableCell>
+                <TableCell>{agenda.contentId.toString()}</TableCell>
                 <TableCell>{agenda.startDate.toString()}</TableCell>
-                <TableCell>{agenda.endDate.toString()}</TableCell>
+                <TableCell>{agenda.endDate.toString()}</TableCell>                
                 <TableCell>
                   <IconButton
                     onClick={() => {

@@ -81,7 +81,7 @@ const createTelevision: Epic = (action$) =>
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ method: 'POST', path: '/television', requireAuthType: session?.type, body: payload }).pipe(
+      return apiSvc.request({ method: 'POST', path: '/television?relations=institution', requireAuthType: session?.type, body: payload }).pipe(
         mergeMap(({ response }) => {
           return of({
             type: TelevisionActionTypes.CREATE_SUCCESS,
@@ -106,7 +106,7 @@ const updateTelevision: Epic = (action$) =>
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ method: 'PUT', path: `/television/${payload.id}`, requireAuthType: session?.type, body: payload }).pipe(
+      return apiSvc.request({ method: 'PUT', path: `/television/${payload.id}?relations=institution`, requireAuthType: session?.type, body: payload }).pipe(
         mergeMap(({ response }) => {
           return of({
             type: TelevisionActionTypes.EDIT_SUCCESS,

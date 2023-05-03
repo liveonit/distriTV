@@ -21,29 +21,32 @@ export class Television extends BaseEntity {
   id!: number;
 
   @Column()
+  name!: string;
+
+  @Column()
   institutionId!: number;
 
   @Column()
-  ip!: String;
+  ip!: string;
 
   @Column()
-  mac!: String;
+  mac!: string;
 
   @Column()
-  tvCode!: String;
+  tvCode!: string;
 
   @ManyToOne(() => Institution, (institution) => institution.televisions)
   @JoinColumn({ name: 'institutionId' })
   public institution?: Institution;
 
-  @ManyToMany(() => Notification, (notification) => notification.id)
+  @ManyToMany(() => Notification, (notification) => notification.televisions)
   @JoinTable({ name: 'television_has_notification' })
   notifications?: Notification[];
 
-  @ManyToMany(() => Label, (label) => label.id)
+  @ManyToMany(() => Label, (label) => label.tvs)
   @JoinTable({ name: 'television_has_label' })
   labels?: Label[];
 
-  @OneToMany(() => Schedule, (schedule) => schedule.id)
+  @OneToMany(() => Schedule, (schedule) => schedule.television)
   schedules?: Schedule[];
 }

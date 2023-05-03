@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import { uploadContent } from 'src/store/content/content.action'
+import { createContent, uploadContent } from 'src/store/content/content.action'
 import { useDispatch } from 'react-redux'
 import { useDropzone } from 'react-dropzone'
 import { Box } from '@mui/material'
@@ -21,6 +21,7 @@ import { removeEmpty } from 'src/utils/removeEmpty'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { FormHelperText } from '@material-ui/core'
 import { Trans, useTranslation } from 'react-i18next'
+import { FormInputNumber } from 'src/App/components/molecules/Forms/FormInputNumber'
 
 type IProps = {
   isOpen: boolean
@@ -32,7 +33,14 @@ const contentType = ['Video', 'Image', 'Text']
 export default function CreateAndEditContentModal({ isOpen, handleCloseContentModal, content }: IProps) {
   const [file, setFile] = React.useState<File | null>(null)
   const [fileError, setFileError] = React.useState('')
-  const contentInitialState: ContentT = { name: '', type: 'Video', url: '', text: '', ...removeEmpty(content) }
+  const contentInitialState: ContentT = {
+    name: '',
+    duration: 5,
+    type: 'Video',
+    url: '',
+    text: '',
+    ...removeEmpty(content),
+  }
   const { t } = useTranslation()
   const dispatch = useDispatch()
 
@@ -48,7 +56,7 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
     resolver: zodResolver(contentSchema),
     defaultValues: contentInitialState,
   })
-  const { reset, control, watch, getValues, handleSubmit } = methods
+  const { reset, control, watch, getValues, handleSubmit, register } = methods
 
   const onSubmit: SubmitHandler<ContentT> = (data) => {
     if ((data.type === 'Image' || data.type === 'Video') && file) {
@@ -56,10 +64,13 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
       dispatch(
         uploadContent({
           name: data.name,
-          type: renamedFile.type,
+          type: file.type,
           file: renamedFile,
         }),
       )
+    }
+    if (data.type === 'Text') {
+      dispatch(createContent(data))
     }
     setFile(null)
     handleCloseContentModal()
@@ -87,7 +98,15 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
             </Grid>
             {(watch('type') === 'Image' || watch('type') === 'Text') && (
               <Grid item xs={12}>
-                <FormInputText name='duration' control={control} fullWidth label='Duration' variant='outlined' />
+                <FormInputNumber
+                  type='number'
+                  name='duration'
+                  control={control}
+                  register={register}
+                  label='Duration'
+                  variant='outlined'
+                  fullWidth
+                ></FormInputNumber>
               </Grid>
             )}
             {watch('type') === 'Text' && (

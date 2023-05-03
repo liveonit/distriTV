@@ -13,6 +13,6 @@ export class Notification extends BaseEntity {
   @Column()
   title!: String;
 
-  @ManyToMany(() => Television, (tv) => tv.id) // Entidad fuerte TV por eso va acá.
+  @ManyToMany(() => Television, (tv) => tv.notifications) // Entidad fuerte TV por eso va acá.
   televisions?: Television[];
 }

@@ -23,6 +23,8 @@
   "SAVE":       "Guardar",
   "DELETE":     "Eliminar",
 
+  "TYPE_OF_AGENDA": "Tipo de agenda",
+
   "LOCALITY":   "Localidad",
   "CITY":       "Ciudad",
   "TYPE":       "Tipo",
@@ -36,5 +38,6 @@
   "EMAIL":      "Email",
   "DESCRIPTION":"Descripción",
   "TV_CODE":    "Código TV",
+  "CRONTAB":    "Crontab",
   "NAME":       "Nombre"
 }

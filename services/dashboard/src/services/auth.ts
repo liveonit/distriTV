@@ -10,23 +10,28 @@ export const checkOrRefreshToken = async () => {
     throw new Error('User requires authentication')
   }
   if (session?.session.refreshToken && session?.session.accessToken) {
-    const accessExp = parseJwt<UserT>(session.session.accessToken)?.exp
-    const refreshExp = parseJwt<UserT>(session.session.refreshToken)?.exp
-    if (!refreshExp || !accessExp || new Date() > new Date(refreshExp * 1000))
-      throw new Error('User requires authentication')
-    if (new Date() > new Date(accessExp * 1000)) {
-      const result = await fetch(`${GLOBAL_CONFIGS.API_URL}/auth/refresh-token`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken: session.session.refreshToken }),
-      })
-      const response = await result.json()
-      const userPayload = parseJwt<UserT>(response.refreshToken)
-      if (!userPayload) throw Error('Invalid user payload')
-      storage.set('session', {
-        session: { ...(response as any), type: 'local' },
-        roleMappings: userPayload.roleMappings,
-      })
+    try {
+      const accessExp = parseJwt<UserT>(session.session.accessToken)?.exp
+      const refreshExp = parseJwt<UserT>(session.session.refreshToken)?.exp
+      if (!refreshExp || !accessExp || new Date() > new Date(refreshExp * 1000))
+        throw new Error('User requires authentication')
+      if (new Date() > new Date(accessExp * 1000)) {
+        const result = await fetch(`${GLOBAL_CONFIGS.API_URL}/auth/refresh-token`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refreshToken: session.session.refreshToken }),
+        })
+        const response = await result.json()
+        const userPayload = parseJwt<UserT>(response.refreshToken)
+        if (!userPayload) throw Error('Invalid user payload')
+        storage.set('session', {
+          session: { ...(response as any), type: 'local' },
+          roleMappings: userPayload.roleMappings,
+        })
+      }
+    } catch (err) {
+      console.error(err)
+      storage.set('session', null)
     }
   }
   return session

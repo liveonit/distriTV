@@ -5,7 +5,7 @@ import { Box, Button, Container, Typography, Grid, useTheme, useMediaQuery, make
 import { logout } from 'src/store/auth/auth.action'
 import { storage } from 'src/utils/general/Storage'
 import { useGoogleLogout } from 'react-google-login'
-import { GOOGLE_CONFIGS } from 'src/App/configs'
+import { GOOGLE_CONFIGS, PATH_NAME } from 'src/App/configs'
 import { SessionT } from 'src/store/auth/auth.type'
 // actions
 
@@ -40,7 +40,7 @@ function DenyView() {
   const { signOut } = useGoogleLogout({
     onFailure: onGoogleLogoutFailure,
     clientId: GOOGLE_CONFIGS.clientId,
-    // redirectUri: PATH_NAME.LOGIN,
+    redirectUri: PATH_NAME.LOGIN,
     onLogoutSuccess: onGoogleLogoutSuccess,
   })
 
@@ -48,7 +48,7 @@ function DenyView() {
   const theme = useTheme()
   const mobileDevice = useMediaQuery(theme.breakpoints.down('sm'))
   const dispatch = useDispatch()
-  
+
   const _handleLogout = () => {
     const session = storage.get<SessionT>('session')
     if (session?.session.type === 'local') {

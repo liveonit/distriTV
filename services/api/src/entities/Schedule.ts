@@ -3,7 +3,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryColumn,
+  Column,
   PrimaryGeneratedColumn
 } from 'typeorm';
 import { Television } from './Television';
@@ -15,30 +15,33 @@ export class Schedule extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @PrimaryColumn()
+  @Column()
   contentId!: number;
 
-  @PrimaryColumn()
-  televisionId!: number;
+  @Column()
+  labelId?: number;
 
-  @PrimaryColumn()
+  @Column()
+  televisionId?: number;
+
+  @Column()
   startDate!: Date;
 
-  @PrimaryColumn()
+  @Column()
   endDate!: Date;
 
-  @PrimaryColumn()
+  @Column()
   cron!: string;
 
-  @ManyToOne(() => Television, (tv) => tv.id)
+  @ManyToOne(() => Television, (tv) => tv.schedules)
   @JoinColumn({ name: 'televisionId' })
   television!: Television;
 
-  @ManyToOne(() => Label, (label) => label.id)
+  @ManyToOne(() => Label, (label) => label.schedules)
   @JoinColumn({ name: 'labelId' })
   label!: Label;
 
-  @ManyToOne(() => Content, (content) => content.id)
+  @ManyToOne(() => Content, (content) => content.schedules)
   @JoinColumn({ name: 'contentId' })
   content!: Content;
 

@@ -18,6 +18,9 @@ import { useSelector } from 'react-redux'
 import { institutionsSelector } from 'src/store/institution/institutions.selector'
 import { listInstitutions } from 'src/store/institution/institution.action'
 import { Trans, useTranslation } from 'react-i18next'
+import { listLabels } from 'src/store/label/label.action'
+import { labelsSelector } from 'src/store/label/label.selector'
+import { FormInputDropdownMulti } from 'src/App/components/molecules/Forms/FormInputDropdownMulti'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -26,13 +29,15 @@ type IProps = {
 }
 
 export default function TelevisionCreateAndEditModal({ handleCloseEditModal, television, title }: IProps) {
-  const televisionInitialState: TelevisionT = { id: 0, ip: '', mac: '', ...removeEmpty(television) }
+  const televisionInitialState: TelevisionT = { id: 0, name:'', ip: '', mac: '', m2mRelations: {labels: []}, tvCode: Math.random().toString(36).slice(2, 8), ...removeEmpty(television) }
 
   const methods = useForm<TelevisionT>({
     resolver: zodResolver(televisionSchema),
     defaultValues: televisionInitialState,
   })
   const institutions = useSelector(institutionsSelector)
+  const labels = useSelector(labelsSelector)
+
   const dispatch = useDispatch() 
   const { t } = useTranslation()
   const { reset, handleSubmit, setValue, control } = methods
@@ -40,11 +45,16 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
   React.useEffect(() => {
     dispatch(listInstitutions())
   }, [dispatch])
-
+  
+  React.useEffect(() => {
+    dispatch(listLabels())
+  }, [dispatch])
+  
+  
   const onSubmit: SubmitHandler<TelevisionT> = (data) => {
     if (!television) dispatch(createTelevision(data))
     else dispatch(updateTelevision(data))
-    handleCloseEditModal()
+    handleCloseEditModal()    
   }
 
   return (
@@ -57,6 +67,9 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
           <br />
           <Grid container spacing={2}>
           <Grid item xs={12}>
+            <FormInputText fullWidth label='TV Name' variant='outlined' name='name' control={control} />
+          </Grid>
+          <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
                 label={t('INSTITUTION')}
@@ -65,15 +78,25 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
                 selectOptions={institutions.map((ins) => ({ label: ins.name, value: ins.id! }))}
               />
             </Grid>
+           
             <Grid item xs={12}>
-              <FormInputText name='IP' control={control} fullWidth label={t('IP')} variant='outlined' />
+              <FormInputText name='ip' control={control} fullWidth label={t('IP')} variant='outlined' />
             </Grid>
           </Grid>{' '}
           <br/>
           <Grid item xs={12}>
             <FormInputText fullWidth label={t('MAC')} variant='outlined' name='mac' control={control} />
           </Grid>
-          {!television &&
+          <br/>
+          <Grid item xs={12}>
+              <FormInputDropdownMulti
+                fullWidth
+                label={t('LABEL')}
+                name='m2mRelations.labels'
+                control={control}
+                selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id! }))}
+              />
+            </Grid>
            <><br/>             
               <Grid container>
               <Grid item>
@@ -83,7 +106,6 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
               <Button startIcon={<RefreshIcon />} color="primary" onClick={() => setValue('tvCode', Math.random().toString(36).slice(2, 8))} />
               </Grid>
               </Grid> </>
-          }
         </DialogContent>
         <DialogActions>
           <Button

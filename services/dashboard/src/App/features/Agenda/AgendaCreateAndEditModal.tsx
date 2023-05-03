@@ -16,7 +16,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { listContents } from 'src/store/content/content.action'
 import { listTelevisions } from 'src/store/television/television.action'
 import { televisionsSelector } from 'src/store/television/television.selector'
+import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
+import { listLabels } from 'src/store/label/label.action'
+import { createAgenda, updateAgenda } from 'src/store/agenda/agenda.action'
+import { labelsSelector } from 'src/store/label/label.selector'
 import { Trans, useTranslation } from 'react-i18next'
+
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -25,17 +30,18 @@ type IProps = {
 }
 
 export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda, title }: IProps) {
-  const { t } = useTranslation()
-  const agendaInitialState: AgendaT = {contentId: 0, televisionId: 0, startDate: '', endDate: '',  cron: '', ...removeEmpty(agenda)
+  const agendaInitialState: AgendaT = {televisionId: undefined, labelId: undefined, startDate: new Date(), endDate: new Date(),...removeEmpty(agenda)
   }
   const contents = useSelector(contentSelector)
   const televisions = useSelector(televisionsSelector)
-
+  const labels = useSelector(labelsSelector)
   const methods = useForm<AgendaT>({
     resolver: zodResolver(agendaSchema),
     defaultValues: agendaInitialState,
   })
+  const tipos = ['Etiqueta','Televisión']
 
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   React.useEffect(() => {
     dispatch(listContents())
@@ -43,10 +49,22 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
   React.useEffect(() => {
     dispatch(listTelevisions())
   }, [dispatch])
-  
-  const { reset, handleSubmit, control } = methods
+  React.useEffect(() => {
+    dispatch(listLabels())
+  }, [dispatch])
+  const { reset, handleSubmit, watch, control } = methods
 
-  const onSubmit: SubmitHandler<AgendaT> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<AgendaT> = (data) => {
+    console.log(data)
+    if (!agenda) {
+      dispatch(createAgenda(data))
+    }
+    else {
+      dispatch(updateAgenda(data))
+    }
+    handleCloseEditModal()
+  }
+
   return (
     <>
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
@@ -60,11 +78,21 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
               <FormInputDropdown
                 fullWidth
                 label={t('CONTENT')}
-                name='contenidoId'
+                name='contentId'
                 control={control}
                 selectOptions={contents.map((con) => ({ label: con.name, value: con.id! }))}
               />
             </Grid>
+            <Grid item xs={12}>
+              <FormInputDropdown
+                fullWidth
+                label={t('TYPE_OF_AGENDA')}
+                name='type'
+                control={control}
+                selectOptions={tipos.map((tip) => ({ label: tip, value: tip }))}
+              />
+            </Grid>
+          {watch('type') === 'Televisión' &&
             <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
@@ -73,11 +101,22 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
                 control={control}
                 selectOptions={televisions.map((tel) => ({ label: tel.ip, value: tel.id! }))}
               />
-            </Grid>
+            </Grid>}
+            {watch('type') === 'Etiqueta' &&
+            <Grid item xs={12}>
+              <FormInputDropdown
+                fullWidth
+                label={t('LABEL')}
+                name='labelId'
+                control={control}
+                selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id! }))}
+              />
+            </Grid>}
           </Grid>{' '}
           <br />
           <FormInputDate  name='startDate' control={control} label={t('START_DATE')} />
           <FormInputDate  name='endDate' control={control} label={t('END_DATE')} />
+          <FormInputText name='cron' control={control} fullWidth label={t('CRONTAB')} variant='outlined' />
         </DialogContent>
         <DialogActions>
           <Button

@@ -6,6 +6,7 @@ export const contentSchema = z
     name: z.string().nonempty('Name is required').min(2, 'Name must have at least 2 characters'),
     type: z.string().nonempty('Type is required'),
     url: z.string().optional(),
+    file: z.instanceof(File).optional(),
     text: z.string().optional(),
     duration: z.number().optional(),
   })

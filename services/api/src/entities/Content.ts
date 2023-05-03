@@ -30,7 +30,7 @@ export class Content extends BaseEntity {
   @Column()
   duration!: number;
 
-  @ManyToMany(() => Schedule, (schedule) => schedule.id)
+  @ManyToMany(() => Schedule, (schedule) => schedule.content)
   @JoinTable({ name: 'schedule'})
   schedules?: Schedule[];
 }

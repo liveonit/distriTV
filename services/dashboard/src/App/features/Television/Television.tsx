@@ -82,6 +82,7 @@ export default function TelevisionList() {
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
+              <TableCell><Trans>NAME</Trans></TableCell>
               <TableCell><Trans>IP</Trans></TableCell>
               <TableCell><Trans>MAC</Trans></TableCell>
               <TableCell><Trans>INSTITUTION</Trans></TableCell>
@@ -94,6 +95,7 @@ export default function TelevisionList() {
                 <TableCell component='th' scope='row'>
                   {television.id}
                 </TableCell>
+                <TableCell>{television.name}</TableCell>
                 <TableCell>{television.ip}</TableCell>
                 <TableCell>{television.mac}</TableCell>
                 <TableCell>{television?.institution?.name}</TableCell>

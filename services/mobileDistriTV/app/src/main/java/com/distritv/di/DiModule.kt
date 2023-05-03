@@ -13,7 +13,7 @@ import com.distritv.data.service.SharedPreferencesService
 import com.distritv.data.repositories.ContentRepository
 import com.distritv.data.repositories.IContentRepository
 import com.distritv.data.service.ContentService
-import com.distritv.data.ApiService
+import com.distritv.data.api.ApiService
 import com.distritv.utils.LocalDateTimeDeserializer
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

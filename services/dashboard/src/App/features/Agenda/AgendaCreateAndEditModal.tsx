@@ -128,9 +128,8 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
           >
             <Trans>CLOSE</Trans>
           </Button>
-          <Button onClick={handleSubmit(onSubmit)}
-            variant='contained' color='primary' size='small'>
-            Save
+          <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
+            <Trans>SAVE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

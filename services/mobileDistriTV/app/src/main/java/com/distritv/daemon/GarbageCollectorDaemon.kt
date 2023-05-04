@@ -2,8 +2,9 @@
  * This service starts running in the background when start the app and continues even if the app is closed.
  * Stops only if the app is force stopped.
  *
- * Periodically inactivates content that expired on the endDate and deletes files
- * from inactive content and files that no longer belong to any content.
+ * Periodically deletes schedules that expired on the endDate,
+ * deletes contents that no longer has schedules
+ * and deletes files that no longer belong to any content.
  */
 
 package com.distritv.daemon
@@ -16,6 +17,7 @@ import android.os.Looper
 import android.util.Log
 import com.distritv.BuildConfig
 import com.distritv.data.service.ContentService
+import com.distritv.data.service.ScheduleService
 import com.distritv.utils.CONTENTS_DIRECTORY
 import com.distritv.utils.createNotification
 import org.koin.android.ext.android.inject
@@ -25,6 +27,7 @@ import java.util.concurrent.TimeUnit
 class GarbageCollectorDaemon: Service() {
 
     private val contentService: ContentService by inject()
+    private val scheduleService: ScheduleService by inject()
 
     private val handler = Handler(Looper.myLooper()!!)
     private lateinit var runnable: Runnable
@@ -44,7 +47,8 @@ class GarbageCollectorDaemon: Service() {
         runnable = object : Runnable {
             override fun run() {
 
-                inactivateExpiredContent()
+                deleteExpiredSchedule()
+                deleteExpiredContent()
                 removeContentFile()
 
                 // Schedule the next execution in periodTime milliseconds:
@@ -77,8 +81,12 @@ class GarbageCollectorDaemon: Service() {
         stopForeground(true)
     }
 
-    private fun inactivateExpiredContent() {
-        contentService.inactivateExpiredContent()
+    private fun deleteExpiredSchedule() {
+        scheduleService.deleteExpiredSchedule()
+    }
+
+    private fun deleteExpiredContent() {
+        contentService.deleteExpiredContent()
     }
 
     private fun removeContentFile() {

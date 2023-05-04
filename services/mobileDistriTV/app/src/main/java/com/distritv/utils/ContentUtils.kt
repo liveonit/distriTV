@@ -5,49 +5,32 @@ import android.util.Log
 import com.distritv.data.model.Content
 
 
-
-const val CONTENTS_DIRECTORY = ""
-
-const val DEVICE_ID = "deviceId"
-
-const val CONTENT_PARAM = "contentParam"
-const val CONTENT_TYPE_PARAM = "contentType"
-const val CONTENT_ID_PARAM = "contentId"
-const val CONTENT_DURATION_PARAM = "contentPlaybackDuration"
-
-const val IS_ALARM_PARAM = "isAnAlarm"
+private const val MSG_IS_INVALID_ERROR = "The content %s is not valid => %s"
 
 const val VIDEO = "video"
 const val IMAGE = "image"
 const val TEXT = "text"
 
-const val ACTIVE_NO = 0
-const val ACTIVE_YES = 1
-
-
-fun getResourceName(content: Content): String {
-    return Uri.parse(content.url).lastPathSegment ?: ""
+fun Content.getResourceName(): String {
+    return Uri.parse(this.url).lastPathSegment ?: ""
 }
 
-fun isImage(type: String): Boolean {
-    return type.substringBefore("/") == IMAGE
+fun Content.isImage(): Boolean {
+    return this.type.substringBefore("/") == IMAGE
 }
 
-fun isVideo(type: String): Boolean {
-    return type.substringBefore("/") == VIDEO
+fun Content.isVideo(): Boolean {
+    return this.type.substringBefore("/") == VIDEO
 }
 
-fun isText(type: String): Boolean {
-    return type.substringBefore("/") == TEXT
+fun Content.isText(): Boolean {
+    return this.type.substringBefore("/").lowercase() == TEXT
 }
 
-fun areEquals(c1: Content, c2: Content): Boolean {
-    return c1.id == c2.id && c1.name == c2.name && c1.type == c2.type && c1.url == c2.url
-            && c1.text == c2.text && c1.startDate == c2.startDate && c1.endDate == c2.endDate
-            && c1.cron == c2.cron && c1.durationInSeconds == c2.durationInSeconds
+fun Content.areEquals(other: Content): Boolean {
+    return this.id == other.id && this.name == other.name && this.type == other.type && this.url == other.url
+            && this.text == other.text && this.durationInSeconds == other.durationInSeconds
 }
-
-private const val MSG_IS_INVALID_ERROR = "The content %s is not valid => %s"
 
 fun Content.isValid(tag: String): Boolean {
     if (this.id == -1L) {
@@ -58,7 +41,7 @@ fun Content.isValid(tag: String): Boolean {
         Log.e(tag, String.format(MSG_IS_INVALID_ERROR, "type", this))
         return false
     }
-    if (isText(this.type)) {
+    if (this.isText()) {
         if (this.text.isBlank()) {
             Log.e(tag, String.format(MSG_IS_INVALID_ERROR, "text", this))
             return false
@@ -76,20 +59,17 @@ fun Content.isValid(tag: String): Boolean {
     return true
 }
 
-
 /**
  * If content type is not Text, check if the content name already exists.
  * @param tag: TAG
  * @param contentList: active content list
  */
 fun Content.existsContentName(tag: String, contentList: List<Content>): Boolean {
-    if (isText(this.type)) {
+    if (this.isText()) {
         return false
     }
-    val result = contentList.firstOrNull {
-        !isText(it.type) && it.active == ACTIVE_YES
-                && it.id != this.id && it.name == this.name
-    }
+    val result =
+        contentList.firstOrNull { !it.isText() && it.id != this.id && it.name == this.name }
     if (result != null) {
         Log.e(tag, "The content name already exists => id: ${this.id}, name: ${this.name}")
         return true

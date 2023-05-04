@@ -1,4 +1,4 @@
-package com.distritv.ui
+package com.distritv.ui.player
 
 import android.os.Bundle
 import android.os.Handler
@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.distritv.data.model.Content
 import com.distritv.databinding.FragmentTextBinding
+import com.distritv.ui.FullscreenManager
 import com.distritv.utils.*
 import java.util.concurrent.TimeUnit
 
@@ -17,8 +19,9 @@ class TextFragment : Fragment() {
     private var _binding: FragmentTextBinding? = null
     private val binding get() = _binding!!
 
-    private var textParam = ""
-    private var contentDuration = 0L
+    private val handler = Handler(Looper.getMainLooper())
+
+    private var content: Content? = null
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -36,15 +39,18 @@ class TextFragment : Fragment() {
         _binding = FragmentTextBinding.inflate(layoutInflater, container, false)
 
         arguments?.let {
-            textParam = it.getString(CONTENT_PARAM, "")
-            contentDuration = it.getLong(CONTENT_DURATION_PARAM, 0L)
+            content = it.getParcelable(CONTENT_PARAM)
+            if (content == null) {
+                Log.e(TAG, "An error occurred while trying to play, back to home...")
+                onAfterCompletion(VideoFragment.TAG)
+            }
         }
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         fullscreenManager?.enterFullscreen()
         showText()
     }
@@ -54,23 +60,33 @@ class TextFragment : Fragment() {
         backHomeOnResume()
     }
 
-    private fun showText() {
-        binding.textContainer.text = textParam
-        Log.i(TAG, "Playback started.")
+    override fun onDestroy() {
+        super.onDestroy()
+        removeAllCallbacksAndMessagesFromHandler()
+    }
 
-        Handler(Looper.getMainLooper()).postDelayed({
+    private fun showText() {
+        binding.textContainer.text = content?.text ?: ""
+        Log.i(TAG, "Playback started.")
+        handler.postDelayed({
             onAfterCompletion(TAG)
-        }, TimeUnit.SECONDS.toMillis(contentDuration))
+        }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
+    }
+
+    /**
+     * Remove all pending posts of callbacks and sent messages.
+     */
+    private fun removeAllCallbacksAndMessagesFromHandler() {
+        handler.removeCallbacksAndMessages(null)
     }
 
     companion object {
         const val TAG = "[TextFragment]"
 
         @JvmStatic
-        fun newInstance(text: String, duration: Long) = TextFragment().apply {
+        fun newInstance(content: Content) = TextFragment().apply {
             arguments = Bundle().apply {
-                putString(CONTENT_PARAM, text)
-                putLong(CONTENT_DURATION_PARAM, duration)
+                putParcelable(CONTENT_PARAM, content)
             }
         }
     }

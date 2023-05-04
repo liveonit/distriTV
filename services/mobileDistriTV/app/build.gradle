@@ -27,7 +27,7 @@ android {
         versionName "1.0"
     }
 
-    buildToolsVersion '34.0.0 rc2'
+    buildToolsVersion '34.0.0 rc3'
     compileOptions {
         targetCompatibility JavaVersion.VERSION_11
     }

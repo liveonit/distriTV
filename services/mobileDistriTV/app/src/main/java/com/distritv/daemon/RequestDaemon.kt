@@ -2,7 +2,8 @@
  * This service starts running in the background when start the app and continues even if the app is closed.
  * Stops only if the app is force stopped.
  *
- * Periodically makes requests to the server to bring the contents that correspond to the device.
+ * Periodically makes requests to the server to bring the schedules and their contents that correspond to the device.
+ * It also deletes schedules that no longer appear in the response.
  */
 
 package com.distritv.daemon
@@ -18,7 +19,9 @@ import com.distritv.BuildConfig
 import com.distritv.data.model.Content
 import com.distritv.data.model.InfoDevice
 import com.distritv.data.repositories.ContentRepository
+import com.distritv.data.repositories.ScheduleRepository
 import com.distritv.data.service.ContentService
+import com.distritv.data.service.ScheduleService
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
 import kotlinx.coroutines.CoroutineScope
@@ -30,10 +33,13 @@ import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
 
-class ContentRequestDaemon: Service() {
+class RequestDaemon: Service() {
 
     private val contentRepository: ContentRepository by inject()
+    private val scheduleRepository: ScheduleRepository by inject()
     private val contentService: ContentService by inject()
+    private val scheduleService: ScheduleService by inject()
+
     private val sharedPreferences: SharedPreferencesService by inject()
 
     private val handler = Handler(Looper.myLooper()!!)
@@ -90,57 +96,47 @@ class ContentRequestDaemon: Service() {
             try {
 
                 val id = sharedPreferences.getDeviceId()
-                if(id.isNullOrEmpty()){
+                if (id.isNullOrEmpty()) {
                     return@launch
                 }
 
-                val contentList = contentService.getAllContents()
+                val scheduleList = scheduleService.getAllSchedules()
 
-                val responseContentList = contentRepository.fetchContentList(InfoDevice(id))
+                val responseScheduleList = scheduleRepository.fetchScheduleList(InfoDevice(id))
 
-                // Check if any content was removed to inactivate
-                contentList.filter { it.active == ACTIVE_YES }.forEach { content ->
-                    contentService.checkAndInactivateDeletedContent(content, responseContentList)
+                // Check if any schedule was removed to delete
+                scheduleList.forEach { schedule ->
+                    scheduleService.checkAndDeletedSchedule(schedule, responseScheduleList)
                 }
 
-                for (content in responseContentList) {
-                    Log.v(TAG, "content: $content")
+                for (schedule in responseScheduleList) {
 
-                    if (!content.isValid(TAG)) {
+                    if (!schedule.isValidWithContent(TAG)) {
                         continue
                     }
 
-                    val originalContent = contentList.firstOrNull { it.id == content.id }
+                    schedule.content?.let { contentProcessing(it) }
 
-                    // If no content exists: insert new content
-                    if (originalContent == null) {
-                        if (content.existsContentName(TAG, contentList)) {
-                            continue
+                    val originalSchedule = scheduleList.firstOrNull { it.id == schedule.id }
+
+                    // If no schedule exists: insert new schedule
+                    if (originalSchedule == null) {
+                        if (scheduleService.saveNewSchedule(schedule) > 0) {
+                            Log.i(TAG, "Schedule was saved: $schedule")
                         }
-                        saveContent(
-                            content,
-                            contentService::downloadAndInsertContent,
-                            contentService::saveNewContent,
-                            "inserted"
-                        )
+
                         continue
                     }
 
-                    // If content already exists and if it has changes: update content
-                    if (!areEquals(originalContent, content)) {
-                        if (content.existsContentName(TAG, contentList)) {
-                            continue
+                    // If schedule already exists and if it has changes: update schedule
+                    if (!originalSchedule.areEquals(schedule)) {
+                        if (scheduleService.saveExistingSchedule(schedule) > 0) {
+                            Log.i(TAG, "Schedule was updated: $schedule")
                         }
-                        content.idDB = originalContent.idDB
-                        saveContent(
-                            content,
-                            contentService::downloadAndUpdateContent,
-                            contentService::saveExistingContent,
-                            "updated"
-                        )
                     }
 
                 }
+
             } catch (e: SocketTimeoutException) {
                 Log.e(
                     TAG, "Could not connect to the server -> ${e.javaClass}: ${e.message}"
@@ -148,6 +144,45 @@ class ContentRequestDaemon: Service() {
             } catch (e: Exception) {
                 Log.e(TAG, "$e")
             }
+        }
+    }
+
+    private suspend fun contentProcessing(content: Content) {
+
+        val contentList = contentService.getAllContents()
+
+        if (!content.isValid(TAG)) {
+            return
+        }
+
+        val originalContent = contentList.firstOrNull { it.id == content.id }
+
+        // If no content exists: insert new content
+        if (originalContent == null) {
+            if (content.existsContentName(TAG, contentList)) {
+                return
+            }
+            saveContent(
+                content,
+                contentService::downloadAndInsertContent,
+                contentService::saveNewContent,
+                "inserted"
+
+            )
+            return
+        }
+
+        // If content already exists and if it has changes: update content
+        if (!originalContent.areEquals(content)) {
+            if (content.existsContentName(TAG, contentList)) {
+                return
+            }
+            saveContent(
+                content,
+                contentService::downloadAndUpdateContent,
+                contentService::saveExistingContent,
+                "updated"
+            )
         }
     }
 
@@ -159,10 +194,10 @@ class ContentRequestDaemon: Service() {
     ) {
         var resultId: Long? = -1L
 
-        if (isImage(content.type) || isVideo(content.type)) {
-            val response = contentRepository.fetchContent(getResourceName(content))
+        if (content.isVideo() || content.isImage()) {
+            val response = contentRepository.fetchContent(content.getResourceName())
             resultId = action(content, response)
-        } else if (isText(content.type)) {
+        } else if (content.isText()) {
             resultId = actionTypeText(content)
         }
 
@@ -172,7 +207,7 @@ class ContentRequestDaemon: Service() {
     }
 
     companion object {
-        const val TAG = "[ContentRequestDaemon]"
+        const val TAG = "[RequestDaemon]"
         private val periodTime: Long = BuildConfig.REQUEST_TIME_PERIOD
     }
 }

@@ -3,23 +3,13 @@ package com.distritv.data.service
 import android.content.Context
 import android.util.Log
 import com.distritv.data.model.Content
-import com.distritv.utils.ACTIVE_NO
 import com.distritv.utils.CONTENTS_DIRECTORY
 import okhttp3.ResponseBody
 import java.io.*
 
-class ContentService(private val contentDbService: ContentDbService,
+class ContentService(private val contentDbService: ContentDBService,
+                     private val scheduleDBService: ScheduleDBService,
                      private val context: Context) {
-
-    fun checkAndInactivateDeletedContent(content: Content, responseContentList: List<Content>) {
-        val result = responseContentList.firstOrNull { it.id == content.id }
-        if (result == null) {
-            content.active = ACTIVE_NO
-            if (contentDbService.update(content.idDB!!, content) > 0) {
-                Log.i(TAG, "Content was inactivated: $content")
-            }
-        }
-    }
 
     /**
      * Insert content into DB
@@ -38,9 +28,9 @@ class ContentService(private val contentDbService: ContentDbService,
      */
     fun saveExistingContent(content: Content): Long {
         return try {
-            val countResult = contentDbService.update(content.idDB!!, content)
+            val countResult = contentDbService.update(content.id, content)
             if (countResult > 0) {
-                return content.idDB!!
+                return content.id
             }
             -1L
         } catch (e: Exception) {
@@ -74,9 +64,9 @@ class ContentService(private val contentDbService: ContentDbService,
             val localPath = writeContentToLocalStorage(content, response)
             if (localPath != null) {
                 content.localPath = localPath
-                val countResult = contentDbService.update(content.idDB!!, content)
+                val countResult = contentDbService.update(content.id, content)
                 if (countResult > 0) {
-                    return content.idDB!!
+                    return content.id
                 }
             }
             -1L
@@ -135,38 +125,27 @@ class ContentService(private val contentDbService: ContentDbService,
         }
     }
 
-    fun getCurrentContents(currentMillisecond: Long, intervalEndTimeInMillis: Long): List<Content> {
-        return contentDbService.findCurrentContents(currentMillisecond, intervalEndTimeInMillis)
-    }
-
     fun getLocalPathActiveContents(): List<String> {
-        return contentDbService.findLocalPathActiveContents()
+        return contentDbService.findLocalPathContents()
     }
 
     fun getAllContents(): List<Content> {
         return contentDbService.findAllContents()
     }
 
-    fun inactivateExpiredContent() {
-        val expiredContents = contentDbService.findExpiredContents()
-        expiredContents.forEach {content ->
-            content.active = ACTIVE_NO
-            if (contentDbService.update(content.idDB!!, content) > 0) {
-                Log.i(TAG, "Content was inactivated: ${content.id}")
+    fun getContentById(id: Long): Content? {
+        return contentDbService.findByContentId(id)
+    }
+
+    fun deleteExpiredContent() {
+        val contentList = contentDbService.findAllContents()
+        contentList.forEach { content ->
+            if (!scheduleDBService.existsScheduleWithContentId(content.id)
+                && contentDbService.delete(content.id) > 0) {
+                Log.i(TAG, "Content was deleted: $content")
             }
         }
     }
-
-    fun existsContent(id: Long): Boolean {
-        return try {
-            val content = contentDbService.findByContentId(id)
-            return true
-        } catch (e: Exception) {
-            Log.d(TAG, "${e.message}")
-            false
-        }
-    }
-
 
     companion object {
         const val TAG = "[ContentService]"

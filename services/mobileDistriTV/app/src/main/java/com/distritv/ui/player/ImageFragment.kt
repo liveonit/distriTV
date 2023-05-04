@@ -1,4 +1,4 @@
-package com.distritv.ui
+package com.distritv.ui.player
 
 import android.os.Bundle
 import android.os.Handler
@@ -9,7 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.distritv.data.model.Content
 import com.distritv.databinding.FragmentImageBinding
+import com.distritv.ui.FullscreenManager
 import com.distritv.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -22,8 +24,9 @@ class ImageFragment : Fragment() {
 
     private val viewModel by viewModel<ImageViewModel>()
 
-    private var localPathParam = ""
-    private var contentDuration = 0L
+    private val handler = Handler(Looper.getMainLooper())
+
+    private var content: Content? = null
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -41,8 +44,11 @@ class ImageFragment : Fragment() {
         _binding = FragmentImageBinding.inflate(layoutInflater, container, false)
 
         arguments?.let {
-            localPathParam = it.getString(CONTENT_PARAM, "")
-            contentDuration = it.getLong(CONTENT_DURATION_PARAM, 0L)
+            content = it.getParcelable(CONTENT_PARAM)
+            if (content == null) {
+                Log.e(TAG, "An error occurred while trying to play, back to home...")
+                onAfterCompletion(VideoFragment.TAG)
+            }
         }
 
         loadImageObserver()
@@ -53,8 +59,7 @@ class ImageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fullscreenManager?.enterFullscreen()
-
-        viewModel.fetchImage(localPathParam)
+        viewModel.fetchImage(content?.localPath ?: "")
     }
 
     override fun onResume() {
@@ -62,30 +67,41 @@ class ImageFragment : Fragment() {
         backHomeOnResume()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        removeAllCallbacksAndMessagesFromHandler()
+    }
+
     private fun loadImageObserver() {
         viewModel.image.observe(viewLifecycleOwner) {
             if (it != null) {
                 binding.imageContainer.setImageBitmap(it)
                 Log.i(TAG, "Playback started.")
-
-                Handler(Looper.getMainLooper()).postDelayed({
+                handler.postDelayed({
                     onAfterCompletion(TAG)
-                }, TimeUnit.SECONDS.toMillis(contentDuration))
+                }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
             } else {
                 Log.e(TAG, "No image available.")
-                Toast.makeText(activity, "There is no content available.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "There is no content available.",
+                    Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    /**
+     * Remove all pending posts of callbacks and sent messages.
+     */
+    private fun removeAllCallbacksAndMessagesFromHandler() {
+        handler.removeCallbacksAndMessages(null)
     }
 
     companion object {
         const val TAG = "[ImageFragment]"
 
         @JvmStatic
-        fun newInstance(localPath: String, duration: Long) = ImageFragment().apply {
+        fun newInstance(content: Content) = ImageFragment().apply {
             arguments = Bundle().apply {
-                putString(CONTENT_PARAM, localPath)
-                putLong(CONTENT_DURATION_PARAM, duration)
+                putParcelable(CONTENT_PARAM, content)
             }
         }
     }

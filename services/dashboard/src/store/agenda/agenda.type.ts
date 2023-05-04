@@ -10,19 +10,19 @@ export const agendaSchema = z.object({
   cron: z.string(),
   type: z.string(),
 }).superRefine((value, ctx) => {
-  if (value.televisionId == 0 && value.type === 'Televisión') {
+  if (value.televisionId === undefined && value.type === 'Televisión') {
     
     ctx.addIssue({
       message: 'Television must be specified',
       code: z.ZodIssueCode.custom,
-      path: ["televisionId"],
+      path: ['televisionId'],
     })
   }
-    if (value.labelId == 0   && value.type == 'Etiqueta') {
+    if (value.labelId === undefined   && value.type == 'Etiqueta') {
       ctx.addIssue({
         message: 'Label must be specified',
         code: z.ZodIssueCode.custom,
-        path: ["labelId"],
+        path: ['labelId'],
       })
     }
   })

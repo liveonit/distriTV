@@ -1,4 +1,5 @@
 import { AgendaActionTypes, AgendasState } from './agenda.state'
+import { insertNewAddedEntity, refreshUpdatedEntity, removeDeletedEntity } from '../helpers'
 
 const initialState: AgendasState = {
   items: [],
@@ -37,6 +38,7 @@ const reducer = (state = initialState, { type, payload }: any) => {
     case AgendaActionTypes.CREATE_SUCCESS:
       return {
         ...state,
+        items: insertNewAddedEntity(state.items, payload),
         isLoading: false
       }
     case AgendaActionTypes.EDIT_REQUEST:
@@ -52,7 +54,25 @@ const reducer = (state = initialState, { type, payload }: any) => {
     case AgendaActionTypes.EDIT_SUCCESS:
       return {
         ...state,
+        items: refreshUpdatedEntity(state.items, payload),
         isLoading: false
+      }
+    case AgendaActionTypes.DELETE_FAILURE:
+      return {
+        ...state,
+        isLoading: false
+      }
+    case AgendaActionTypes.DELETE_SUCCESS:
+      return {
+        ...state,
+        items: removeDeletedEntity(state.items, payload.id),
+        isLoading: false
+      }
+
+    case AgendaActionTypes.DELETE_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
       }
     default:
       return state

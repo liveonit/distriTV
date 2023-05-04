@@ -20,6 +20,7 @@ router.get('/:id', authSvc.authRequiredMiddleware([]), televisionController.getB
 /**
  * Devuelve una tv con todas sus agendas
  */
+// TODO: Temporalmente se deshabilita la autenticacion para probar desde la app android 
 router.get('/:tvCode/schedules', televisionController.getByTVcode, );
 
 /**

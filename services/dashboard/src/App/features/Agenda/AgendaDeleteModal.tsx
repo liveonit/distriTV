@@ -5,6 +5,9 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import Typography from '@material-ui/core/Typography'
 import { AgendaT } from 'src/store/agenda/agenda.type'
+import { Trans } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+import { deleteAgenda } from 'src/store/agenda/agenda.action'
 
 type IProps = {
   isOpen: boolean
@@ -12,55 +15,40 @@ type IProps = {
   agenda: AgendaT
 }
 
-
-
-
 let nombreAgenda = 0
-
 
 export default function AgendaDeleteModal({ isOpen, handleCloseDeleteModal, agenda}: IProps) {
   
+  const dispatch = useDispatch()
+
   function handleDeleteAgenda() {
-    //TODO: Save agenda
-    console.log(agenda)
-      
-    
+    dispatch(deleteAgenda({ id: agenda.id! }))
+    handleCloseDeleteModal()
   }
 
   function agendaFieldsValues(){
     if (agenda) {
-       nombreAgenda = agenda.contentId
-  } 
-  
+      nombreAgenda = agenda.contentId
+    } 
   }
   
-  agendaFieldsValues()
-  
+  agendaFieldsValues()  
 
-  return (
-    
+  return (    
     <>
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            Está seguro que desea borrar la institución {nombreAgenda} ?
-             
-          </Typography>
-          <br />
-          
-       
+            <Trans>DELETE_WARNING</Trans><Trans>SCHEDULE</Trans> {nombreAgenda}?
+          </Typography>          
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDeleteModal} color='primary'>
-            Cerrar
+            <Trans>CLOSE</Trans>
           </Button>
-          <Button onClick={
-
-            () => handleDeleteAgenda()
-            
-          }
+          <Button onClick={handleDeleteAgenda}
             variant='contained' color='primary' size='small'>
-            Borrar
+            <Trans>DELETE</Trans>
           </Button>
         </DialogActions>
       </Dialog>

@@ -20,7 +20,7 @@ import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { listLabels } from 'src/store/label/label.action'
 import { createAgenda, updateAgenda } from 'src/store/agenda/agenda.action'
 import { labelsSelector } from 'src/store/label/label.selector'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 
 type IProps = {

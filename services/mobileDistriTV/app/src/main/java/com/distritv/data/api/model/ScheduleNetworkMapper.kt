@@ -6,6 +6,7 @@ import com.distritv.data.model.Schedule
 import com.distritv.utils.DATE_FORMAT
 import com.distritv.utils.localDateTimeToMillis
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 object ScheduleNetworkMapper: EntityMapper<ScheduleResponse, Schedule> {
@@ -18,8 +19,8 @@ object ScheduleNetworkMapper: EntityMapper<ScheduleResponse, Schedule> {
         return Schedule(
             id = entity.id ?: -1L,
             contentId = entity.contentId ?: -1L,
-            startDate = localDateTimeToMillis(entity.startDate) ?: 0L,
-            endDate = localDateTimeToMillis(entity.endDate) ?: 0L,
+            startDate = localDateTimeToMillis(entity.startDate, ZoneOffset.ofHours(+3)) ?: 0L,
+            endDate = localDateTimeToMillis(entity.endDate, ZoneOffset.ofHours(+3)) ?: 0L,
             cron = entity.cron ?: "",
             Content(
                 id = entity.content?.id ?: -1L,

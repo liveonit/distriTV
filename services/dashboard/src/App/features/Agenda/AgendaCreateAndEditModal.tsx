@@ -20,7 +20,7 @@ import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { listLabels } from 'src/store/label/label.action'
 import { createAgenda, updateAgenda } from 'src/store/agenda/agenda.action'
 import { labelsSelector } from 'src/store/label/label.selector'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
 
 type IProps = {
@@ -70,7 +70,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            {title}
+            {t(title)} {t('SCHEDULE')}
           </Typography>
           <br />
           <Grid container spacing={2}>
@@ -126,7 +126,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
             }}
             color='primary'
           >
-            Close
+            <Trans>CLOSE</Trans>
           </Button>
           <Button onClick={handleSubmit(onSubmit)}
             variant='contained' color='primary' size='small'>

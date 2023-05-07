@@ -16,7 +16,7 @@ class DeviceInfoFragment : Fragment() {
     private val binding get() = _binding!!
     private var listener: OnFragmentInteractionListener? = null
 
-    private lateinit var viewModel: HomeViewModel
+    private lateinit var homeActivityViewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +32,7 @@ class DeviceInfoFragment : Fragment() {
             }
         }
 
-        viewModel = (requireActivity() as HomeActivity).viewModel
+        homeActivityViewModel = (requireActivity() as HomeActivity).viewModel
 
         setEventToClearError()
 
@@ -71,14 +71,14 @@ class DeviceInfoFragment : Fragment() {
     }
 
     private fun progressBarObserver() {
-        viewModel.loading.observe(viewLifecycleOwner) { visible ->
+        homeActivityViewModel.loading.observe(viewLifecycleOwner) { visible ->
             binding.progressBar.visibility = if (visible) View.VISIBLE else View.GONE
         }
     }
 
     private fun tvCodeValidationObserver() {
-        viewModel.isValid.observe(this) {
-            if (!it) {
+        homeActivityViewModel.isValid.observe(this) { isValid ->
+            if (!isValid) {
                 binding.tvCodeLayoutContainer.error = MSG_TV_CODE_INVALID
             }
         }

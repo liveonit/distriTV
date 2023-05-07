@@ -15,14 +15,10 @@ class ScheduleRepository(private val apiService: ApiService) : IScheduleReposito
     }
 
     override suspend fun validateTvCode(tvCode: String): Boolean {
-        try {
-            val televisionListResponse = apiService.fetchTelevisionSchedule(tvCode)
-            if (televisionListResponse.isNotEmpty()) {
-                return true
-            }
-            return false
-        } catch (e: Exception) {
-            return false
+        val televisionListResponse = apiService.fetchTelevisionSchedule(tvCode)
+        if (televisionListResponse.isNotEmpty()) {
+            return true
         }
+        return false
     }
 }

@@ -79,7 +79,7 @@ class DeviceInfoFragment : Fragment() {
     private fun tvCodeValidationObserver() {
         homeActivityViewModel.isValid.observe(this) { isValid ->
             if (!isValid) {
-                binding.tvCodeLayoutContainer.error = MSG_TV_CODE_INVALID
+                binding.tvCodeLayoutContainer.error = homeActivityViewModel.errorMessage.value
             }
         }
     }
@@ -95,7 +95,7 @@ class DeviceInfoFragment : Fragment() {
 
     companion object {
         const val TAG = "[DeviceInfoFragment]"
-        private const val MSG_TV_CODE_INVALID = "El código ingresado no es válido"
+
     }
 
 

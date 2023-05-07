@@ -6,6 +6,7 @@ import com.distritv.R
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 import com.distritv.ui.player.ImageViewModel
+import com.distritv.ui.home.HomeViewModel
 import com.distritv.data.service.AlarmService
 import com.distritv.data.service.ContentDBService
 import com.distritv.data.service.ScheduleDBService
@@ -69,6 +70,7 @@ val repositoriesModule = module {
 
 val viewModelsModule = module {
     viewModelOf(::ImageViewModel)
+    viewModelOf(::HomeViewModel)
 }
 
 val servicesModule = module {

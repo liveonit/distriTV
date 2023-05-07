@@ -6,6 +6,8 @@ import android.app.ActivityManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -15,14 +17,22 @@ import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.daemon.RequestDaemon
 import com.distritv.daemon.ContentSchedulingDaemon
+import com.distritv.data.repositories.ScheduleRepository
 import com.distritv.data.service.SharedPreferencesService
+import com.distritv.ui.player.ImageFragment
+import com.distritv.ui.player.ImageViewModel
 import com.distritv.utils.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.TimeUnit
 
 
 class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteractionListener {
 
-    private val sharedPreferences: SharedPreferencesService by inject()
+    private val viewModel by viewModel<HomeViewModel>()
 
     private val MY_PERMISSIONS_REQUEST = 100
 
@@ -46,6 +56,8 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         addFragment()
 
         actionBar?.hide()
+
+        loadObserver()
     }
 
     override fun onResume() {
@@ -74,21 +86,7 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
     }
 
     private fun addFragment() {
-        if (sharedPreferences.isDeviceRegistered()) {
-            supportFragmentManager.addFragment(
-                R.id.home_fragment_container,
-                HomeFragment(),
-                false,
-                HomeFragment.TAG
-            )
-        } else {
-            supportFragmentManager.addFragment(
-                R.id.home_fragment_container,
-                DeviceInfoFragment(),
-                false,
-                DeviceInfoFragment.TAG
-            )
-        }
+         viewModel.isRegistered()
     }
 
     private fun setPermission() {
@@ -132,14 +130,42 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
     }
 
     override fun onRegisterButtonPressed(id: String) {
-        sharedPreferences.addDeviceId(id)
-        supportFragmentManager.addFragment(
-            R.id.home_fragment_container,
-            HomeFragment(),
-            false,
-            HomeFragment.TAG
-        )
+        viewModel.registerDeviceId(id)
     }
+
+    private fun loadObserver() {
+        viewModel.isValid.observe(this) {
+            if (it) {
+                supportFragmentManager.addFragment(
+                    R.id.home_fragment_container,
+                    HomeFragment(),
+                    false,
+                    HomeFragment.TAG
+                )
+            } else {
+                Toast.makeText(this, "ID INVALIDA", Toast.LENGTH_SHORT).show()
+            }
+        }
+        viewModel.isRegistered.observe(this){
+            if(it){
+                supportFragmentManager.addFragment(
+                    R.id.home_fragment_container,
+                    HomeFragment(),
+                    false,
+                    HomeFragment.TAG
+                )
+            } else {
+            supportFragmentManager.addFragment(
+                R.id.home_fragment_container,
+                DeviceInfoFragment(),
+                false,
+                DeviceInfoFragment.TAG
+            )
+        }
+        }
+    }
+
+
 
     companion object {
         const val TAG = "[HomeActivity]"

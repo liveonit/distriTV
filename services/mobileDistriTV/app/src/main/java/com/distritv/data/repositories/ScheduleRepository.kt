@@ -13,4 +13,13 @@ class ScheduleRepository(private val apiService: ApiService) : IScheduleReposito
         }
         return ScheduleNetworkMapper.fromFetchScheduleListResponse(televisionListResponse[0].schedules)
     }
+
+    override suspend fun validateTvCode(tvID: String): Boolean {
+        val response = apiService.validateTvCode(tvID)
+        if(response.code()==200){
+            return true
+        }
+        return false
+
+    }
 }

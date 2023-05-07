@@ -88,6 +88,8 @@ class ImageFragment : Fragment() {
         }
     }
 
+
+
     /**
      * Remove all pending posts of callbacks and sent messages.
      */

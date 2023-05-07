@@ -6,8 +6,6 @@ import android.app.ActivityManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -17,24 +15,13 @@ import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.daemon.RequestDaemon
 import com.distritv.daemon.ContentSchedulingDaemon
-import com.distritv.data.repositories.ScheduleRepository
-import com.distritv.data.service.SharedPreferencesService
-import com.distritv.ui.player.ImageFragment
-import com.distritv.ui.player.ImageViewModel
 import com.distritv.utils.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.concurrent.TimeUnit
 
 
 class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteractionListener {
 
-    private val viewModel by viewModel<HomeViewModel>()
-
-    private val MY_PERMISSIONS_REQUEST = 100
+    val viewModel by viewModel<HomeViewModel>()
 
     private lateinit var binding: ActivityHomeBinding
 
@@ -53,11 +40,13 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
 
         myApp = this.applicationContext as DistriTVApp
 
-        addFragment()
+        tvCodeValidationObserver()
+        addFragmentObserver()
+
+        checkIfDeviceIsRegistered()
 
         actionBar?.hide()
 
-        loadObserver()
     }
 
     override fun onResume() {
@@ -85,10 +74,6 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         if (this == currActivity) myApp.setCurrentActivity(null)
     }
 
-    private fun addFragment() {
-         viewModel.isRegistered()
-    }
-
     private fun setPermission() {
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -97,7 +82,7 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         ) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), MY_PERMISSIONS_REQUEST
+                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), PERMISSIONS_REQUEST
             )
         }
     }
@@ -129,25 +114,30 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         return false
     }
 
-    override fun onRegisterButtonPressed(id: String) {
-        viewModel.registerDeviceId(id)
+    private fun checkIfDeviceIsRegistered() {
+        viewModel.checkIfDeviceIsRegistered()
     }
 
-    private fun loadObserver() {
-        viewModel.isValid.observe(this) {
-            if (it) {
+    override fun onRegisterButtonPressed(code: String) {
+        viewModel.registerTvCode(code)
+    }
+
+    private fun tvCodeValidationObserver() {
+        viewModel.isValid.observe(this) { isValid ->
+            if (isValid) {
                 supportFragmentManager.addFragment(
                     R.id.home_fragment_container,
                     HomeFragment(),
                     false,
                     HomeFragment.TAG
                 )
-            } else {
-                Toast.makeText(this, "ID INVALIDA", Toast.LENGTH_SHORT).show()
             }
         }
-        viewModel.isRegistered.observe(this){
-            if(it){
+    }
+
+    private fun addFragmentObserver() {
+        viewModel.isRegistered.observe(this) { isRegistered ->
+            if (isRegistered) {
                 supportFragmentManager.addFragment(
                     R.id.home_fragment_container,
                     HomeFragment(),
@@ -155,20 +145,19 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
                     HomeFragment.TAG
                 )
             } else {
-            supportFragmentManager.addFragment(
-                R.id.home_fragment_container,
-                DeviceInfoFragment(),
-                false,
-                DeviceInfoFragment.TAG
-            )
-        }
+                supportFragmentManager.addFragment(
+                    R.id.home_fragment_container,
+                    DeviceInfoFragment(),
+                    false,
+                    DeviceInfoFragment.TAG
+                )
+            }
         }
     }
-
-
 
     companion object {
         const val TAG = "[HomeActivity]"
+        private const val PERMISSIONS_REQUEST = 100
     }
 
 }

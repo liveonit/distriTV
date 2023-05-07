@@ -7,17 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.distritv.R
-import com.distritv.data.service.SharedPreferencesService
 import com.distritv.databinding.FragmentHomeBinding
 import com.distritv.ui.FullscreenManager
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment: Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val sharedPreferences: SharedPreferencesService by inject()
+    private val viewModel by viewModel<HomeViewModel>()
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -41,7 +40,8 @@ class HomeFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         fullscreenManager?.enterFullscreen()
         loadImage()
-        idDisplay()
+        tvCodeDisplayObserver()
+        getTvCode()
     }
 
     private fun loadImage() {
@@ -49,8 +49,14 @@ class HomeFragment: Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun idDisplay() {
-        binding.idInformationDisplay.text = "id : ${sharedPreferences.getDeviceId()}"
+    private fun tvCodeDisplayObserver() {
+        viewModel.tvCode.observe(this) { tvCode ->
+            binding.idInformationDisplay.text = "Id: $tvCode"
+        }
+    }
+
+    private fun getTvCode() {
+        viewModel.getTvCode()
     }
 
     companion object {

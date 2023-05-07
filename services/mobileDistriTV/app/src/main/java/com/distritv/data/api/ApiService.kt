@@ -1,9 +1,7 @@
 package com.distritv.data.api
 
 import com.distritv.data.api.model.TelevisionResponse
-import com.distritv.data.model.InfoDevice
 import okhttp3.ResponseBody
-import retrofit2.Response
 import retrofit2.http.*
 
 
@@ -17,13 +15,10 @@ interface ApiService {
     /*
     @Headers("Content-Type: application/json")
     @POST("television/{tvCode}/schedules")
-    suspend fun fetchTelevisionSchedule(@Path("tvCode") tvCode: String, @Body infoDevice: InfoDevice): TelevisionResponse
+    suspend fun fetchTelevisionSchedule(@Path("tvCode") tvCode: String, @Body infoDevice: DeviceInfo): TelevisionResponse
     */
 
     @GET("content/download/{content}")
     suspend fun fetchContent(@Path("content") content: String): ResponseBody
-
-    @GET("television/{tvCode}/schedules")
-    suspend fun validateTvCode(@Path("tvCode") tvCode: String): Response<Any>
 
 }

@@ -2,7 +2,7 @@ package com.distritv.utils
 
 const val CONTENTS_DIRECTORY = ""
 
-const val DEVICE_ID = "deviceId"
+const val TV_CODE = "tvCode"
 
 const val CONTENT_PARAM = "contentParam"
 const val CONTENT_BUNDLE_PARAM = "contentBundleParam"

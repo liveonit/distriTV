@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.distritv.databinding.FragmentDeviceInfoBinding
 
@@ -15,6 +16,8 @@ class DeviceInfoFragment : Fragment() {
     private val binding get() = _binding!!
     private var listener: OnFragmentInteractionListener? = null
 
+    private lateinit var viewModel: HomeViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -22,12 +25,19 @@ class DeviceInfoFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentDeviceInfoBinding.inflate(layoutInflater, container, false)
 
-        binding.deviceId.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+        binding.tvCode.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
             if (!hasFocus) {
                 val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
             }
         }
+
+        viewModel = (requireActivity() as HomeActivity).viewModel
+
+        setEventToClearError()
+
+        progressBarObserver()
+        tvCodeValidationObserver()
 
         return binding.root
     }
@@ -49,8 +59,28 @@ class DeviceInfoFragment : Fragment() {
 
     private fun setupRegisterButton() {
         binding.registerButton.setOnClickListener {
-            listener?.onRegisterButtonPressed(binding.deviceId.text.toString())
-            binding.deviceId.clearFocus()
+            listener?.onRegisterButtonPressed(binding.tvCode.text.toString())
+            binding.tvCode.clearFocus()
+        }
+    }
+
+    private fun setEventToClearError() {
+        binding.tvCode.doOnTextChanged { _, _, _, _ ->
+            binding.tvCodeLayoutContainer.error = null
+        }
+    }
+
+    private fun progressBarObserver() {
+        viewModel.loading.observe(viewLifecycleOwner) { visible ->
+            binding.progressBar.visibility = if (visible) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun tvCodeValidationObserver() {
+        viewModel.isValid.observe(this) {
+            if (!it) {
+                binding.tvCodeLayoutContainer.error = MSG_TV_CODE_INVALID
+            }
         }
     }
 
@@ -58,12 +88,14 @@ class DeviceInfoFragment : Fragment() {
         super.onDetach()
         listener = null
     }
+
     interface OnFragmentInteractionListener {
-        fun onRegisterButtonPressed(id: String)
+        fun onRegisterButtonPressed(code: String)
     }
 
     companion object {
         const val TAG = "[DeviceInfoFragment]"
+        private const val MSG_TV_CODE_INVALID = "El código ingresado no es válido"
     }
 
 

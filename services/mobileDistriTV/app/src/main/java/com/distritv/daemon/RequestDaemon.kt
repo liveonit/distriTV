@@ -17,7 +17,7 @@ import android.os.Looper
 import android.util.Log
 import com.distritv.BuildConfig
 import com.distritv.data.model.Content
-import com.distritv.data.model.InfoDevice
+import com.distritv.data.model.DeviceInfo
 import com.distritv.data.repositories.ContentRepository
 import com.distritv.data.repositories.ScheduleRepository
 import com.distritv.data.service.ContentService
@@ -95,14 +95,14 @@ class RequestDaemon: Service() {
         CoroutineScope(Dispatchers.Main).launch {
             try {
 
-                val id = sharedPreferences.getDeviceId()
-                if (id.isNullOrEmpty()) {
+                val tvCode = sharedPreferences.getTvCode()
+                if (tvCode.isNullOrEmpty()) {
                     return@launch
                 }
 
                 val scheduleList = scheduleService.getAllSchedules()
 
-                val responseScheduleList = scheduleRepository.fetchScheduleList(InfoDevice(id))
+                val responseScheduleList = scheduleRepository.fetchScheduleList(DeviceInfo(tvCode))
 
                 // Check if any schedule was removed to delete
                 scheduleList.forEach { schedule ->

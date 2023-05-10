@@ -1,48 +1,59 @@
 import React from 'react'
-import DateFnsUtils from '@date-io/date-fns'
-import { format } from 'date-fns'
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
-import { Controller } from 'react-hook-form'
+import { Control, Controller } from 'react-hook-form'
+import { Box, FormControl } from '@mui/material'
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker'
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import clsx from 'clsx'
 
-const DATE_FORMAT = 'yyyy-MM-dd HH:mm:ss'
+import TypographyBase from '../../atoms/TypographyBase'
+
+const useStyles = makeStyles((theme: Theme) => ({
+  borderColor: {
+    border: `1px solid ${theme.palette.type === 'light' ? 'rgba(0, 0, 0, 0.12)' : 'rgba(206, 203, 203, 0.12)'}`,
+  },
+  borderRadius: {
+    borderRadius: '0.5em',
+  },
+}))
 
 type FormInputDatePropsT = {
-  name: string;
-  control: any;
-  label: string;
-  setValue?: any;
+  name: string
+  control: Control<any, any>
+  label: string
+  setValue?: any
 }
 
 export const FormInputDate: React.FC<FormInputDatePropsT> = ({ name, control, label }) => {
+  const classes = useStyles()
+
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <Controller
-        name={name}
-        control={control}
-        render={({ field }) => (
-          <KeyboardDatePicker
-            fullWidth
-            variant='inline'
-            placeholder={DATE_FORMAT}
-            defaultValue={format((new Date()),DATE_FORMAT)}
-            id={`date-${Math.random()}`}
-            label={label}
-            rifmFormatter={(val: string) => val.replace(/[^[a-zA-Z0-9-]*$]+/gi, '')}
-            refuse={/[^[a-zA-Z0-9-]*$]+/gi}
-            autoOk
-            disablePast={true}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-            format={DATE_FORMAT}
-            
-            {...field}
-          />
-        )}
-      />
-    </MuiPickersUtilsProvider>
+    <FormControl fullWidth variant='outlined'>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Controller
+          name={name}
+          control={control}
+          render={({ field }) => (
+            <Box
+              className={clsx(classes.borderColor, classes.borderRadius)}
+              style={{ padding: '1em', marginBottom: '1.5em' }}
+            >
+              <TypographyBase>{label}</TypographyBase>
+              <DemoContainer components={['DesktopDatePicker', 'DesktopTimePicker']}>
+                <div style={{ width: '50%', display: 'flex', justifyContent: 'center' }}>
+                  <DesktopDatePicker label='Basic date picker' onChange={field.onChange} value={field.value} />
+                </div>
+                <div style={{ width: '50%', display: 'flex', justifyContent: 'center' }}>
+                  <DesktopTimePicker label={label} />
+                </div>
+              </DemoContainer>
+            </Box>
+          )}
+        />
+      </LocalizationProvider>
+    </FormControl>
   )
 }
-
-
-

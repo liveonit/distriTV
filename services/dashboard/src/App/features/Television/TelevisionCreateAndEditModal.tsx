@@ -21,6 +21,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { listLabels } from 'src/store/label/label.action'
 import { labelsSelector } from 'src/store/label/label.selector'
 import { FormInputDropdownMulti } from 'src/App/components/molecules/Forms/FormInputDropdownMulti'
+import { LabelT } from 'src/store/label/label.type'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -29,34 +30,42 @@ type IProps = {
 }
 
 export default function TelevisionCreateAndEditModal({ handleCloseEditModal, television, title }: IProps) {
-  const televisionInitialState: TelevisionT = { id: 0, name:'', ip: '', mac: '', m2mRelations: {labels: []}, tvCode: Math.random().toString(36).slice(2, 8), ...removeEmpty(television) }
+  type FormStateT = TelevisionT & { labels: number[] }
 
-  const methods = useForm<TelevisionT>({
+  const televisionInitialState: FormStateT = {
+    id: 0,
+    name: '',
+    ip: '',
+    mac: '',
+    tvCode: Math.random().toString(36).slice(2, 8),
+    ...removeEmpty(television),
+    labels: television?.labels?.map((label: LabelT) => label.id!) || [],
+  }
+  const methods = useForm<FormStateT>({
     resolver: zodResolver(televisionSchema),
     defaultValues: televisionInitialState,
   })
+  const { reset, handleSubmit, setValue, control, getValues } = methods
+
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
+
   const institutions = useSelector(institutionsSelector)
   const labels = useSelector(labelsSelector)
 
-  const dispatch = useDispatch() 
-  const { t } = useTranslation()
-  const { reset, handleSubmit, setValue, control } = methods
-
   React.useEffect(() => {
     dispatch(listInstitutions())
-  }, [dispatch])
-  
-  React.useEffect(() => {
     dispatch(listLabels())
   }, [dispatch])
-  
-  
-  const onSubmit: SubmitHandler<TelevisionT> = (data) => {
-    if (!television) dispatch(createTelevision(data))
-    else dispatch(updateTelevision(data))
-    handleCloseEditModal()    
-  }
 
+  const onSubmit: SubmitHandler<FormStateT> = (data) => {
+    const parsedData = data.labels?.length ? { ...data, m2mRelations: { labels: data.labels } } : data
+    console.log({ parsedData })
+    if (!television) dispatch(createTelevision(parsedData))
+    else dispatch(updateTelevision(parsedData))
+    handleCloseEditModal()
+  }
+  console.log(televisionInitialState)
   return (
     <>
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
@@ -66,10 +75,10 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
           </Typography>
           <br />
           <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <FormInputText fullWidth label='TV Name' variant='outlined' name='name' control={control} />
-          </Grid>
-          <Grid item xs={12}>
+            <Grid item xs={12}>
+              <FormInputText fullWidth label='TV Name' variant='outlined' name='name' control={control} />
+            </Grid>
+            <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
                 label={t('INSTITUTION')}
@@ -78,34 +87,39 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
                 selectOptions={institutions.map((ins) => ({ label: ins.name, value: ins.id! }))}
               />
             </Grid>
-           
+
             <Grid item xs={12}>
               <FormInputText name='ip' control={control} fullWidth label={t('IP')} variant='outlined' />
             </Grid>
           </Grid>{' '}
-          <br/>
+          <br />
           <Grid item xs={12}>
             <FormInputText fullWidth label={t('MAC')} variant='outlined' name='mac' control={control} />
           </Grid>
-          <br/>
+          <br />
           <Grid item xs={12}>
-              <FormInputDropdownMulti
-                fullWidth
-                label={t('LABEL')}
-                name='m2mRelations.labels'
-                control={control}
-                selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id! }))}
-              />
-            </Grid>
-           <><br/>             
-              <Grid container>
-              <Grid item>
+            <FormInputDropdownMulti
+              fullWidth
+              label={t('LABEL')}
+              name='labels'
+              control={control}
+              selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id! }))}
+            />
+          </Grid>
+          <>
+            <br />
+            <Grid container>
+              <Grid item></Grid>
+              <Grid item alignItems='stretch' style={{ display: 'flex' }}>
+                <FormInputText name='tvCode' control={control} fullWidth label={t('TV_CODE')} variant='outlined' />
+                <Button
+                  startIcon={<RefreshIcon />}
+                  color='primary'
+                  onClick={() => setValue('tvCode', Math.random().toString(36).slice(2, 8))}
+                />
               </Grid>
-              <Grid item alignItems="stretch" style={{ display: 'flex' }}>
-              <FormInputText name='tvCode' control={control} fullWidth label={t('TV_CODE')} variant='outlined' />
-              <Button startIcon={<RefreshIcon />} color="primary" onClick={() => setValue('tvCode', Math.random().toString(36).slice(2, 8))} />
-              </Grid>
-              </Grid> </>
+            </Grid>{' '}
+          </>
         </DialogContent>
         <DialogActions>
           <Button
@@ -117,7 +131,15 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
           >
             <Trans>CLOSE</Trans>
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
+          <Button
+            onClick={() => {
+              console.log('values', getValues())
+              handleSubmit(onSubmit)()
+            }}
+            variant='contained'
+            color='primary'
+            size='small'
+          >
             <Trans>SAVE</Trans>
           </Button>
         </DialogActions>

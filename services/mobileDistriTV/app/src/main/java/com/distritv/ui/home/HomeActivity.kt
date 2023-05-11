@@ -4,12 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.distritv.DistriTVApp
 import com.distritv.R
@@ -35,8 +33,6 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        //setPermission()
 
         // Request for user to grant this permission,
         // only for Android 10 and higher:
@@ -78,19 +74,6 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
     private fun clearReferences() {
         val currActivity: Activity? = myApp.getCurrentActivity()
         if (this == currActivity) myApp.setCurrentActivity(null)
-    }
-
-    private fun setPermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), PERMISSIONS_REQUEST
-            )
-        }
     }
 
     private fun requestPermissionDisplayOverOtherApps() {
@@ -169,7 +152,6 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
 
     companion object {
         const val TAG = "[HomeActivity]"
-        private const val PERMISSIONS_REQUEST = 100
     }
 
 }

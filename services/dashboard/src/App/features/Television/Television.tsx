@@ -36,8 +36,6 @@ export default function TelevisionList() {
   React.useEffect(() => {
     dispatch(listTelevisionsJoin())
   }, [dispatch])
-  
-
   const isLoading = useSelector(televisionsIsLoadingSelector)
   const televisions = useSelector(televisionsSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
@@ -60,7 +58,9 @@ export default function TelevisionList() {
     <>
       <Grid container alignItems='center'>
         <Grid item sm={8}>
-          <h2><Trans>TELEVISIONS</Trans></h2>
+          <h2>
+            <Trans>TELEVISIONS</Trans>
+          </h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
           <Button
@@ -82,11 +82,24 @@ export default function TelevisionList() {
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
-              <TableCell><Trans>NAME</Trans></TableCell>
-              <TableCell><Trans>IP</Trans></TableCell>
-              <TableCell><Trans>MAC</Trans></TableCell>
-              <TableCell><Trans>INSTITUTION</Trans></TableCell>
-              <TableCell><Trans>ACTION</Trans></TableCell>
+              <TableCell>
+                <Trans>CODE</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>NAME</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>IP</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>MAC</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>INSTITUTION</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>ACTION</Trans>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -95,6 +108,7 @@ export default function TelevisionList() {
                 <TableCell component='th' scope='row'>
                   {television.id}
                 </TableCell>
+                <TableCell>{television.tvCode}</TableCell>
                 <TableCell>{television.name}</TableCell>
                 <TableCell>{television.ip}</TableCell>
                 <TableCell>{television.mac}</TableCell>

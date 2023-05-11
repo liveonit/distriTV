@@ -34,6 +34,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
     labelId: undefined,
     startDate: new Date(),
     endDate: new Date(),
+    destinationType: 'TELEVISION',
     ...removeEmpty(agenda),
   }
   const contents = useSelector(contentSelector)
@@ -85,7 +86,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
               <FormInputDropdown
                 fullWidth
                 label={t('TYPE_OF_AGENDA')}
-                name='type'
+                name='destinationType'
                 control={control}
                 selectOptions={associationTypes.map((associationType) => ({
                   label: t(associationType),
@@ -93,7 +94,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
                 }))}
               />
             </Grid>
-            {watch('type') === 'TELEVISION' && (
+            {watch('destinationType') === 'TELEVISION' && (
               <Grid item xs={12}>
                 <FormInputDropdown
                   fullWidth
@@ -104,7 +105,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
                 />
               </Grid>
             )}
-            {watch('type') === 'LABEL' && (
+            {watch('destinationType') === 'LABEL' && (
               <Grid item xs={12}>
                 <FormInputDropdown
                   fullWidth

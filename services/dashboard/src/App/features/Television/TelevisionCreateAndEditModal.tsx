@@ -41,11 +41,13 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
     ...removeEmpty(television),
     labels: television?.labels?.map((label: LabelT) => label.id!) || [],
   }
+
+  console.log({ televisionInitialState })
   const methods = useForm<FormStateT>({
     resolver: zodResolver(televisionSchema),
     defaultValues: televisionInitialState,
   })
-  const { reset, handleSubmit, setValue, control, getValues } = methods
+  const { reset, handleSubmit, setValue, control } = methods
 
   const dispatch = useDispatch()
   const { t } = useTranslation()
@@ -65,7 +67,6 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
     else dispatch(updateTelevision(parsedData))
     handleCloseEditModal()
   }
-  console.log(televisionInitialState)
   return (
     <>
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
@@ -133,7 +134,6 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
           </Button>
           <Button
             onClick={() => {
-              console.log('values', getValues())
               handleSubmit(onSubmit)()
             }}
             variant='contained'

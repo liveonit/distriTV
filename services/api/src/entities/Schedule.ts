@@ -16,6 +16,9 @@ export class Schedule extends BaseEntity {
   id!: number;
 
   @Column()
+  destinationType!: string
+
+  @Column()
   contentId!: number;
 
   @Column()

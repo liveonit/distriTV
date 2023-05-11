@@ -51,7 +51,7 @@
         </activity>
 
         <receiver
-            android:name=".bootup.BootUpReceiver"
+            android:name=".afterBoot.StarterReceiver"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
@@ -72,15 +72,6 @@
             android:name=".daemon.ContentPlaybackLauncher"
             android:enabled="true"
             android:exported="true" />
-
-        <service
-            android:name=".bootup.BootUpService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.softniels.autostartonboot.ForegroundService" />
-            </intent-filter>
-        </service>
 
         <service
             android:name=".daemon.RequestDaemon"

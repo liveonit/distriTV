@@ -5,17 +5,20 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.distritv.DistriTVApp
 import com.distritv.R
-import com.distritv.daemon.GarbageCollectorDaemon
-import com.distritv.databinding.ActivityHomeBinding
-import com.distritv.daemon.RequestDaemon
 import com.distritv.daemon.ContentSchedulingDaemon
+import com.distritv.daemon.GarbageCollectorDaemon
+import com.distritv.daemon.RequestDaemon
 import com.distritv.data.service.SharedPreferencesService
+import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.utils.*
 import org.koin.android.ext.android.inject
 
@@ -38,6 +41,10 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         setContentView(binding.root)
 
         //setPermission()
+
+        // Request for user to grant this permission,
+        // only for Android 10 and higher:
+        requestPermissionDisplayOverOtherApps()
 
         startServices()
 
@@ -101,6 +108,12 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
                 this,
                 arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), MY_PERMISSIONS_REQUEST
             )
+        }
+    }
+
+    private fun requestPermissionDisplayOverOtherApps() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !Settings.canDrawOverlays(this)) {
+            startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION))
         }
     }
 

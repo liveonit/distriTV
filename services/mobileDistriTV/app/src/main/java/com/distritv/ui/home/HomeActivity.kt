@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -17,17 +16,14 @@ import com.distritv.R
 import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
-import com.distritv.data.service.SharedPreferencesService
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.utils.*
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteractionListener {
 
-    private val sharedPreferences: SharedPreferencesService by inject()
-
-    private val MY_PERMISSIONS_REQUEST = 100
+    val viewModel by viewModel<HomeViewModel>()
 
     private lateinit var binding: ActivityHomeBinding
 
@@ -50,9 +46,13 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
 
         myApp = this.applicationContext as DistriTVApp
 
-        addFragment()
+        tvCodeValidationObserver()
+        addFragmentObserver()
+
+        checkIfDeviceIsRegistered()
 
         actionBar?.hide()
+
     }
 
     override fun onResume() {
@@ -80,24 +80,6 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         if (this == currActivity) myApp.setCurrentActivity(null)
     }
 
-    private fun addFragment() {
-        if (sharedPreferences.isDeviceRegistered()) {
-            supportFragmentManager.addFragment(
-                R.id.home_fragment_container,
-                HomeFragment(),
-                false,
-                HomeFragment.TAG
-            )
-        } else {
-            supportFragmentManager.addFragment(
-                R.id.home_fragment_container,
-                DeviceInfoFragment(),
-                false,
-                DeviceInfoFragment.TAG
-            )
-        }
-    }
-
     private fun setPermission() {
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -106,7 +88,7 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         ) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), MY_PERMISSIONS_REQUEST
+                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), PERMISSIONS_REQUEST
             )
         }
     }
@@ -144,18 +126,50 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         return false
     }
 
-    override fun onRegisterButtonPressed(id: String) {
-        sharedPreferences.addDeviceId(id)
-        supportFragmentManager.addFragment(
-            R.id.home_fragment_container,
-            HomeFragment(),
-            false,
-            HomeFragment.TAG
-        )
+    private fun checkIfDeviceIsRegistered() {
+        viewModel.checkIfDeviceIsRegistered()
+    }
+
+    override fun onRegisterButtonPressed(code: String) {
+        viewModel.registerTvCode(code)
+    }
+
+    private fun tvCodeValidationObserver() {
+        viewModel.isValid.observe(this) { isValid ->
+            if (isValid) {
+                supportFragmentManager.addFragment(
+                    R.id.home_fragment_container,
+                    HomeFragment(),
+                    false,
+                    HomeFragment.TAG
+                )
+            }
+        }
+    }
+
+    private fun addFragmentObserver() {
+        viewModel.isRegistered.observe(this) { isRegistered ->
+            if (isRegistered) {
+                supportFragmentManager.addFragment(
+                    R.id.home_fragment_container,
+                    HomeFragment(),
+                    false,
+                    HomeFragment.TAG
+                )
+            } else {
+                supportFragmentManager.addFragment(
+                    R.id.home_fragment_container,
+                    DeviceInfoFragment(),
+                    false,
+                    DeviceInfoFragment.TAG
+                )
+            }
+        }
     }
 
     companion object {
         const val TAG = "[HomeActivity]"
+        private const val PERMISSIONS_REQUEST = 100
     }
 
 }

@@ -3,41 +3,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.home.DeviceInfoFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/device_info_title"
         android:layout_gravity="center_horizontal"
+        android:textSize="20sp"
         android:layout_marginTop="100dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="600dp"
-        android:layout_height="75dp"
-        android:layout_marginTop="150dp"
-        android:paddingHorizontal="40dp"
-        android:layout_gravity="center_horizontal">
+        android:id="@+id/tv_code_layout_container"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_marginVertical="150dp"
+        android:layout_gravity="center_horizontal"
+        app:errorEnabled="true" >
 
-
-        <EditText
-            android:id="@+id/device_id"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tv_code"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:inputType="text"
-            android:textSize="16sp" />
+            android:textSize="24sp"
+            android:maxLength="6"
+            android:textAlignment="center"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/register_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="@string/device_info_register_button"
-        android:gravity="center"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
+    <LinearLayout
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:alpha="0.8"
+        android:gravity="center"
+        android:visibility="visible">
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+        />
+    </LinearLayout>
 
 </FrameLayout>

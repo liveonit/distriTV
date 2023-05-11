@@ -1,15 +1,8 @@
 // material icon
-// import AddIcon from '@material-ui/icons/Add';
-import ShopIcon from '@material-ui/icons/Shop';
-import TvIcon from '@material-ui/icons/Tv';
-import LabelIcon from '@material-ui/icons/Label';
-// import ViewListIcon from '@material-ui/icons/ViewList';
-import PeopleIcon from '@material-ui/icons/People';
-// import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
-import DashboardIcon from '@material-ui/icons/Dashboard';
+import { Dashboard, Shop, Apartment, People, Label, Tv, Schedule } from '@material-ui/icons'
 // import AssessmentIcon from '@material-ui/icons/Assessment';
 // configs
-import { PATH_NAME, DRAWER_MENU_LABEL } from '@app/configs';
+import { PATH_NAME, DRAWER_MENU_LABEL } from '@app/configs'
 
 export const navBarCommon = [
   {
@@ -18,7 +11,7 @@ export const navBarCommon = [
       {
         title: 'Report',
         href: PATH_NAME.DASHBOARD,
-        icon: DashboardIcon,
+        icon: Dashboard,
         label: DRAWER_MENU_LABEL.DASHBOARD,
       },
     ],
@@ -28,7 +21,7 @@ export const navBarCommon = [
     items: [
       {
         title: 'INSTITUTIONS',
-        icon: ShopIcon,
+        icon: Apartment,
         IconColor: 'primary',
         href: PATH_NAME.INSTITUTION,
         label: DRAWER_MENU_LABEL.INSTITUTIONS,
@@ -36,28 +29,28 @@ export const navBarCommon = [
       {
         title: 'CONTENTS',
         IconColor: 'primary',
-        icon: ShopIcon,
+        icon: Shop,
         href: PATH_NAME.CONTENT,
         label: DRAWER_MENU_LABEL.CONTENTS,
       },
       {
         title: 'TELEVISIONS',
         IconColor: 'primary',
-        icon: TvIcon,
+        icon: Tv,
         href: PATH_NAME.TELEVISION,
         label: DRAWER_MENU_LABEL.TELEVISIONS,
       },
       {
         title: 'LABELS',
         IconColor: 'primary',
-        icon: LabelIcon,
+        icon: Label,
         href: PATH_NAME.LABEL,
         label: DRAWER_MENU_LABEL.TELEVISIONS,
       },
       {
         title: 'SCHEDULE',
         IconColor: 'primary',
-        icon: LabelIcon,
+        icon: Schedule,
         href: PATH_NAME.AGENDA,
         label: DRAWER_MENU_LABEL.AGENDAS,
       },
@@ -68,11 +61,11 @@ export const navBarCommon = [
     items: [
       {
         title: 'USERS',
-        icon: PeopleIcon,
+        icon: People,
         IconColor: 'primary',
         href: PATH_NAME.USERS,
         label: DRAWER_MENU_LABEL.USERS,
       },
     ],
   },
-];
+]

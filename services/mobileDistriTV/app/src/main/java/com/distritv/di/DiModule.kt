@@ -30,6 +30,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import org.koin.core.module.dsl.bind
 import java.time.LocalDateTime
+import com.distritv.data.service.DeviceInfoService
 
 val networkModule = module {
     singleOf(::OkHttpClient) {
@@ -81,6 +82,7 @@ val servicesModule = module {
     factoryOf(::ScheduleService)
     factoryOf(::AlarmService)
     factoryOf(::SharedPreferencesService)
+    factoryOf(::DeviceInfoService)
 }
 
 val sharedPreferencesModule = module {

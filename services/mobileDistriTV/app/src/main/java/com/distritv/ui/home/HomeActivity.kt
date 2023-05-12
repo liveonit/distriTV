@@ -14,8 +14,10 @@ import com.distritv.R
 import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
+import com.distritv.data.service.DeviceInfoService
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.utils.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -23,10 +25,11 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
 
     val viewModel by viewModel<HomeViewModel>()
 
+    private val deviceInfoService:DeviceInfoService by inject()
+
     private lateinit var binding: ActivityHomeBinding
 
     private lateinit var myApp: DistriTVApp
-
 
     @SuppressLint("AppCompatMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +51,9 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         checkIfDeviceIsRegistered()
 
         actionBar?.hide()
+
+        //deviceinfo
+        deviceInfoService.getDeviceInfo()
 
     }
 

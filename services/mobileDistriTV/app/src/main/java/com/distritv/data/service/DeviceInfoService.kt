@@ -1,10 +1,11 @@
 package com.distritv.data.service
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.Context
+import android.content.Context.ACTIVITY_SERVICE
 import android.os.*
 import com.distritv.data.model.DeviceInfo
-import android.util.Log
 import com.distritv.DistriTVApp
 import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
@@ -12,56 +13,98 @@ import com.distritv.daemon.RequestDaemon
 import com.distritv.utils.isServiceRunning
 import java.io.File
 
-class DeviceInfoService(private val context: Context) {
+class DeviceInfoService(
+    private val context: Context,
+    private val sharedPreferences: SharedPreferencesService
+) {
+
     fun getDeviceInfo(): DeviceInfo {
-        getStorageInfo()
-        return DeviceInfo("123456")
+        val mem = getMemoryInfo()
+        val availableMem = mem[0]
+        val totalMem = mem[1]
+        val storage = getStorageInfo()
+        val availableStorage = storage[0] as Double
+        val totalStorage = storage[1] as Double
+        return DeviceInfo(
+            getTvCode(),
+            availableMem,
+            totalMem,
+            "GB",
+            availableStorage,
+            totalStorage,
+            storage[2].toString(),
+            storage[3].toString(),
+            allProcessesAreRunning(),
+            appIsVisible(),
+            isAnyContentPlaying()
+        )
     }
 
-    private fun getStorageInfo(): DeviceInfo {
+    private fun getTvCode(): String {
+        return sharedPreferences.getTvCode() ?: ""
+    }
 
-
+    private fun getStorageInfo(): Array<Any> {
         // Fetching internal memory information
-        val iPath: File = Environment.getDataDirectory()
-        val iStat = StatFs(iPath.path)
-        val iBlockSize = iStat.blockSizeLong
-        val iAvailableBlocks = iStat.availableBlocksLong
-        val iTotalBlocks = iStat.blockCountLong
-        val iAvailableSpace = formatSize(iAvailableBlocks * iBlockSize)
-        val iTotalSpace = formatSize(iTotalBlocks * iBlockSize)
+        val path: File = Environment.getDataDirectory()
+        val stat = StatFs(path.path)
+        val blockSize = stat.blockSizeLong
+        val availableBlocks = stat.availableBlocksLong
+        val totalBlocks = stat.blockCountLong
+        val availableSpace = formatSize(availableBlocks * blockSize).first
+        val totalSpace = formatSize(totalBlocks * blockSize).first
+        val availableStorageUnit = formatSize(availableBlocks * blockSize).second
+        val totalStorageUnit = formatSize(totalBlocks * blockSize).second
 
-        // Displaying the fetched info
-        Log.v(TAG,"Internal Available: $iAvailableSpace\nInternal Total: $iTotalSpace")
-        return DeviceInfo("123456")
+        return arrayOf(availableSpace,totalSpace, availableStorageUnit, totalStorageUnit)
 
 
     }
 
 
-    // Function to convert byter to KB and MB
-    private fun formatSize(sizeL: Long): String? {
+    // Function to convert bytes to KB and MB
+    private fun formatSize(sizeL: Long): Pair<Double, String> {
         var sizeF = 0F
+        var unit = "B"
         sizeF = sizeL.toFloat()
-        var suffix: String? = null
         if (sizeF >= 1024) {
-            suffix = "KB"
             sizeF /= 1024
+            unit = "KB"
             if (sizeF >= 1024) {
-                suffix = "MB"
                 sizeF /= 1024
+                unit = "MB"
                 if (sizeF >= 1024) {
-                    suffix = "GB"
                     sizeF /= 1024
+                    unit = "GB"
                 }
             }
 
         }
-        val resultBuffer = StringBuilder(String.format("%.2f", sizeF))
 
-
-        if (suffix != null) resultBuffer.append(suffix)
-        return resultBuffer.toString()
+        return Pair(String.format("%.2f", sizeF).toDouble(), unit)
     }
+
+    private fun getMemoryInfo(): List<Double> {
+        // Declaring and Initializing the ActivityManager
+        val actManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+
+        // Declaring MemoryInfo object
+        val memInfo = ActivityManager.MemoryInfo()
+
+        // Fetching the data from the ActivityManager
+        actManager.getMemoryInfo(memInfo)
+
+        // Fetching the available and total memory and converting into Giga Bytes
+        var availMemory = memInfo.availMem.toDouble() / (1024 * 1024 * 1024)
+        var totalMemory = memInfo.totalMem.toDouble() / (1024 * 1024 * 1024)
+
+        availMemory = String.format("%.2f", availMemory).toDouble()
+        totalMemory = String.format("%.2f", totalMemory).toDouble()
+
+        //Log.v(TAG,"Available RAM: $availMemory GB\nTotal RAM: $totalMemory GB")
+        return listOf(availMemory, totalMemory)
+    }
+
 
     /**
      * @return true if all background services are running,

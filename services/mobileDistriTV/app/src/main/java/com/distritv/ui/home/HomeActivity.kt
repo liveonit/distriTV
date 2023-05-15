@@ -24,8 +24,6 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
 
     val viewModel by viewModel<HomeViewModel>()
 
-    private val deviceInfoService:DeviceInfoService by inject()
-
     private lateinit var binding: ActivityHomeBinding
 
     private lateinit var myApp: DistriTVApp
@@ -50,9 +48,6 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         checkIfDeviceIsRegistered()
 
         actionBar?.hide()
-
-        //deviceinfo
-        deviceInfoService.getDeviceInfo()
 
     }
 

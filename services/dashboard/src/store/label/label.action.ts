@@ -1,8 +1,9 @@
 import { LabelActionTypes } from './label.state'
 import { LabelT } from './label.type'
 
-export const listLabels = () => ({
+export const listLabels = (payload?: object) => ({
   type: LabelActionTypes.LIST_ALL_REQUEST,
+  payload
 })
 
 export const createLabel = (payload: LabelT) => ({

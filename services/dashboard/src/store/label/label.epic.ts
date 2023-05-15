@@ -9,6 +9,7 @@ import { enqueueSnackbarAction } from '../app/app.action'
 import apiSvc from '../../services/api'
 import { LabelActionTypes } from './label.state'
 import { SessionT } from '../auth/auth.type'
+import { stringifyQuery } from 'src/utils/functions'
 
 const refreshToken$ = defer(() => checkOrRefreshToken())
 
@@ -18,10 +19,11 @@ const listLabels: Epic = (action$) =>
     ofType(LabelActionTypes.LIST_ALL_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
-    mergeMap(() => {
+    mergeMap(({payload}) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ path: '/label', requireAuthType: session?.type }).pipe(
-        map(({ response }) => {
+          
+      return apiSvc.request({ path: `/label?` + stringifyQuery(payload.search), requireAuthType: session?.type }).pipe(
+        map(({ response }) => { 
           return {
             type: LabelActionTypes.LIST_ALL_SUCCESS,
             payload: response

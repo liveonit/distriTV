@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Table from '@material-ui/core/Table'
@@ -22,6 +22,7 @@ import { Trans } from 'react-i18next/TransWithoutContext'
 
 import LabelCreateAndEditModal from './LabelCreateAndEditModal'
 import LabelDeleteModal from './LabelDeleteModal'
+import { Input } from '@material-ui/core'
 
 const useStyles = makeStyles({
   table: {
@@ -33,9 +34,11 @@ export default function LabelList() {
   const classes = useStyles()
   const dispatch = useDispatch()
 
+  const [search, setSearch] = useState({name: '', description: ''})
+
   React.useEffect(() => {
-    dispatch(listLabels())
-  }, [dispatch])
+    dispatch(listLabels({ search }))
+  }, [dispatch, search])
 
   const isLoading = useSelector(labelsIsLoadingSelector)
   const labels = useSelector(labelsSelector)
@@ -51,6 +54,16 @@ export default function LabelList() {
 
   function handleCloseDeleteLabelModal() {
     setLabelToDelete(null)
+  }
+
+  function handleSearchChange (event: {target: { value: any } }) {
+    setSearch({...search, name: event.target.value})
+    dispatch(listLabels({payload: search}))
+  }
+
+  function handleSearchChange2 (event: {target: { value: any } }) {
+    setSearch({...search, description: event.target.value})
+    dispatch(listLabels({payload: search}))
   }
 
   return isLoading ? (
@@ -80,8 +93,8 @@ export default function LabelList() {
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>            
-              <TableCell>Description</TableCell>
+              <TableCell>Name<Input onChange={handleSearchChange} value={search.name} type='text' key='busca' autoFocus/></TableCell>            
+              <TableCell>Description<Input onChange={handleSearchChange2} value={search.description} type='text' key='busca2' autoFocus/></TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>

@@ -17,13 +17,11 @@ import android.os.Looper
 import android.util.Log
 import com.distritv.BuildConfig
 import com.distritv.data.model.Content
-import com.distritv.data.model.DeviceInfo
 import com.distritv.data.repositories.ContentRepository
 import com.distritv.data.repositories.ScheduleRepository
 import com.distritv.data.service.ContentService
 import com.distritv.data.service.DeviceInfoService
 import com.distritv.data.service.ScheduleService
-import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +38,6 @@ class RequestDaemon: Service() {
     private val scheduleRepository: ScheduleRepository by inject()
     private val contentService: ContentService by inject()
     private val scheduleService: ScheduleService by inject()
-
 
     private val deviceInfoService:DeviceInfoService by inject()
 

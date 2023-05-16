@@ -11,6 +11,7 @@ import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
 import com.distritv.utils.isServiceRunning
+import com.distritv.utils.roundTo
 import java.io.File
 
 class DeviceInfoService(
@@ -22,18 +23,21 @@ class DeviceInfoService(
         val mem = getMemoryInfo()
         val availableMem = mem[0]
         val totalMem = mem[1]
+        val memUnit = "GB"
         val storage = getStorageInfo()
         val availableStorage = storage[0] as Double
         val totalStorage = storage[1] as Double
+        val availableStorageUnit = storage[2] as String
+        val totalStorageUnit = storage[3] as String
         return DeviceInfo(
             getTvCode(),
             availableMem,
             totalMem,
-            "GB",
+            memUnit,
             availableStorage,
             totalStorage,
-            storage[2].toString(),
-            storage[3].toString(),
+            availableStorageUnit,
+            totalStorageUnit,
             allProcessesAreRunning(),
             appIsVisible(),
             isAnyContentPlaying()
@@ -44,47 +48,51 @@ class DeviceInfoService(
         return sharedPreferences.getTvCode() ?: ""
     }
 
+    /**
+     * Fetching internal memory storage information
+     */
     private fun getStorageInfo(): Array<Any> {
-        // Fetching internal memory information
         val path: File = Environment.getDataDirectory()
         val stat = StatFs(path.path)
         val blockSize = stat.blockSizeLong
         val availableBlocks = stat.availableBlocksLong
         val totalBlocks = stat.blockCountLong
-        val availableSpace = formatSize(availableBlocks * blockSize).first
-        val totalSpace = formatSize(totalBlocks * blockSize).first
-        val availableStorageUnit = formatSize(availableBlocks * blockSize).second
-        val totalStorageUnit = formatSize(totalBlocks * blockSize).second
 
-        return arrayOf(availableSpace,totalSpace, availableStorageUnit, totalStorageUnit)
+        val available = formatSize(availableBlocks * blockSize)
+        val total = formatSize(totalBlocks * blockSize)
+        val availableSpace = available.first
+        val totalSpace = total.first
+        val availableStorageUnit = available.second
+        val totalStorageUnit = total.second
 
-
+        return arrayOf(availableSpace, totalSpace, availableStorageUnit, totalStorageUnit)
     }
 
-
-    // Function to convert bytes to KB and MB
+    /**
+     * Function to convert bytes to KB, MB and GB
+     */
     private fun formatSize(sizeL: Long): Pair<Double, String> {
-        var sizeF = 0F
-        var unit = "B"
-        sizeF = sizeL.toFloat()
-        if (sizeF >= 1024) {
-            sizeF /= 1024
+        var unit = "Byte"
+        var size = sizeL.toDouble()
+        if (size >= 1024) {
+            size /= 1024
             unit = "KB"
-            if (sizeF >= 1024) {
-                sizeF /= 1024
+            if (size >= 1024) {
+                size /= 1024
                 unit = "MB"
-                if (sizeF >= 1024) {
-                    sizeF /= 1024
+                if (size >= 1024) {
+                    size /= 1024
                     unit = "GB"
                 }
             }
-
         }
-
-        return Pair(String.format("%.2f", sizeF).toDouble(), unit)
+        return Pair(size.roundTo(2), unit)
     }
 
-    private fun getMemoryInfo(): List<Double> {
+    /**
+     * Fetching RAM memory information
+     */
+    private fun getMemoryInfo(): Array<Double> {
         // Declaring and Initializing the ActivityManager
         val actManager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
 
@@ -95,14 +103,10 @@ class DeviceInfoService(
         actManager.getMemoryInfo(memInfo)
 
         // Fetching the available and total memory and converting into Giga Bytes
-        var availMemory = memInfo.availMem.toDouble() / (1024 * 1024 * 1024)
-        var totalMemory = memInfo.totalMem.toDouble() / (1024 * 1024 * 1024)
+        val availMemory = memInfo.availMem.toDouble() / (1024 * 1024 * 1024)
+        val totalMemory = memInfo.totalMem.toDouble() / (1024 * 1024 * 1024)
 
-        availMemory = String.format("%.2f", availMemory).toDouble()
-        totalMemory = String.format("%.2f", totalMemory).toDouble()
-
-        //Log.v(TAG,"Available RAM: $availMemory GB\nTotal RAM: $totalMemory GB")
-        return listOf(availMemory, totalMemory)
+        return arrayOf(availMemory.roundTo(2), totalMemory.roundTo(2))
     }
 
 

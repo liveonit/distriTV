@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Table from '@material-ui/core/Table'
@@ -15,14 +15,16 @@ import { labelsIsLoadingSelector, labelsSelector } from 'src/store/label/label.s
 import { CircularProgress } from 'node_modules/@mui/material'
 import Button from '@material-ui/core/Button'
 import { listLabels } from 'src/store/label/label.action'
-import { LabelT } from 'src/store/label/label.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
-
+import { labelSchema, LabelT } from 'src/store/label/label.type'
 import LabelCreateAndEditModal from './LabelCreateAndEditModal'
 import LabelDeleteModal from './LabelDeleteModal'
-import { Input } from '@material-ui/core'
+import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
+import { t } from 'i18next'
 
 const useStyles = makeStyles({
   table: {
@@ -34,11 +36,11 @@ export default function LabelList() {
   const classes = useStyles()
   const dispatch = useDispatch()
 
-  const [search, setSearch] = useState({name: '', description: ''})
+  const labelInitialState: Partial<LabelT> = { name: '', description: '' }
 
   React.useEffect(() => {
-    dispatch(listLabels({ search }))
-  }, [dispatch, search])
+    dispatch(listLabels())
+  }, [dispatch])
 
   const isLoading = useSelector(labelsIsLoadingSelector)
   const labels = useSelector(labelsSelector)
@@ -56,14 +58,15 @@ export default function LabelList() {
     setLabelToDelete(null)
   }
 
-  function handleSearchChange (event: {target: { value: any } }) {
-    setSearch({...search, name: event.target.value})
-    dispatch(listLabels({payload: search}))
-  }
+  const methods = useForm<Partial<LabelT>>({
+    resolver: zodResolver(labelSchema),
+    defaultValues: labelInitialState,
+  })
 
-  function handleSearchChange2 (event: {target: { value: any } }) {
-    setSearch({...search, description: event.target.value})
-    dispatch(listLabels({payload: search}))
+  const { handleSubmit, control } = methods
+  
+  const onSubmit: SubmitHandler<Partial<LabelT>> = (data) => {
+    dispatch(listLabels(data))    
   }
 
   return isLoading ? (
@@ -89,12 +92,26 @@ export default function LabelList() {
           </Button>
         </Grid>
       </Grid>
+      <Grid container spacing={2}>      
+        <Grid item xs={2}>
+          <FormInputText name='name' control={control} fullWidth label={t('NAME')} variant='outlined'  />
+        </Grid>
+        <Grid item xs={2}>
+          <FormInputText name='description' control={control} fullWidth label={t('DESCRIPTION')} variant='outlined'  />            
+        </Grid>
+        <Grid item xs={2}>
+          <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
+            Buscar
+          </Button>
+        </Grid>
+      </Grid>
+      <br/>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell>Name<Input onChange={handleSearchChange} value={search.name} type='text' key='busca' autoFocus/></TableCell>            
-              <TableCell>Description<Input onChange={handleSearchChange2} value={search.description} type='text' key='busca2' autoFocus/></TableCell>
+              <TableCell>Name</TableCell>            
+              <TableCell>Description</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>

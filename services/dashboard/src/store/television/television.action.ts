@@ -5,8 +5,9 @@ export const listTelevisions = () => ({
   type: TelevisionActionTypes.LIST_ALL_REQUEST,
 })
 
-export const listTelevisionsJoin = () => ({
+export const listTelevisionsJoin = (payload? :object) => ({
   type: TelevisionActionTypes.LIST_ALL_JOIN_REQUEST,
+  payload
 })
 
 export const createTelevision = (payload: TelevisionT) => ({

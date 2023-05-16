@@ -8,6 +8,7 @@ import { enqueueSnackbarAction } from '../app/app.action'
 import apiSvc from '../../services/api'
 import { TelevisionActionTypes } from './television.state'
 import { SessionT } from '../auth/auth.type'
+import { stringifyQuery } from 'src/utils/functions'
 
 const refreshToken$ = defer(() => checkOrRefreshToken())
 
@@ -45,9 +46,10 @@ const listTelevisionsJoin: Epic = (action$) =>
     ofType(TelevisionActionTypes.LIST_ALL_JOIN_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
-    mergeMap(() => {
+    mergeMap(({payload}) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ path: '/television?relations=institution,labels', requireAuthType: session?.type }).pipe(
+      
+      return apiSvc.request({ path: `/television?relations=institution,labels${payload ? '&' + stringifyQuery(payload) : ''}`, requireAuthType: session?.type }).pipe(
         map(({ response }) => {
           return {
             type: TelevisionActionTypes.LIST_ALL_JOIN_SUCCESS,

@@ -49,6 +49,7 @@ class HomeViewModel(
                         sharedPreferences.addTvCode(code)
                         _isValid.postValue(true)
                     } else {
+                        _errorMessage.postValue(MSG_TV_CODE_INVALID)
                         _isValid.postValue(false)
                     }
                 }

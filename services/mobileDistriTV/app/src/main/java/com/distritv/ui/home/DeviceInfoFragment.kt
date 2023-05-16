@@ -73,6 +73,8 @@ class DeviceInfoFragment : Fragment() {
     private fun progressBarObserver() {
         homeActivityViewModel.loading.observe(viewLifecycleOwner) { visible ->
             binding.progressBar.visibility = if (visible) View.VISIBLE else View.GONE
+            binding.registerButton.isEnabled = !visible
+            binding.tvCode.isEnabled = !visible
         }
     }
 

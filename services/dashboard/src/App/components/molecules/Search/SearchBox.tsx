@@ -12,8 +12,20 @@ interface SearchBoxT {
   }[]
 }
 export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
-  const [, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [state, setState] = React.useState<any>({})
+
+  React.useEffect(() => {
+    const initialState: any = {}
+    searchParams
+      .get('search')
+      ?.split(';')
+      .forEach((searchTerm) => {
+        const [searchKey, searchValue] = searchTerm.split(':')
+        initialState[searchKey] = searchValue
+      })
+    setState(initialState)
+  }, [])
 
   const setSearch = () =>
     setSearchParams((prevParams) => {

@@ -45,15 +45,15 @@ export default function TelevisionList() {
   const [televisionToEdit, setTelevisionToEdit] = React.useState<TelevisionT | null>(null)
   const [televisionToDelete, setTelevisionToDelete] = React.useState<TelevisionT | null>(null)
   const [titleModal, setModalTitle] = React.useState('Titulo')
-  const queryString = useSearchQueryString()
+  const searchQueryString = useSearchQueryString()
 
   React.useEffect(() => {
     dispatch(
       listTelevisionsJoin({
-        query: queryString,
+        query: `search=${searchQueryString}`,
       }),
     )
-  }, [dispatch, queryString])
+  }, [dispatch, searchQueryString])
 
   function handleCloseEditTelevisionModal() {
     setTelevisionToEdit(null)
@@ -70,7 +70,7 @@ export default function TelevisionList() {
     <>
       <SearchBox
         searches={[
-          { type: 'Input', name: 'code' },
+          { type: 'Input', name: 'tvCode' },
           { type: 'Input', name: 'name' },
         ]}
       />

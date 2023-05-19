@@ -12,13 +12,18 @@ interface SearchBoxT {
   }[]
 }
 export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [, setSearchParams] = useSearchParams()
   const [state, setState] = React.useState<any>({})
 
-  React.useEffect(() => {
-    setState(searchParams)
-  }, [])
-
+  const setSearch = () =>
+    setSearchParams((prevParams) => {
+      return new URLSearchParams({
+        ...Object.fromEntries(prevParams.entries()),
+        search: Object.entries(state)
+          .map(([key, value]) => `${key}:${value}`)
+          .join(';'),
+      })
+    })
   const searchBar = searches.map((search: { type: any; name: string }) => {
     switch (search.type) {
       case 'Input': {
@@ -35,7 +40,7 @@ export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
   return (
     <Box>
       {searchBar}
-      <button onClick={() => setSearchParams(state)}>Search</button>
+      <button onClick={setSearch}>Search</button>
     </Box>
   )
 }

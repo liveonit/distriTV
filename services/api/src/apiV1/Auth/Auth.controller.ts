@@ -7,9 +7,9 @@ import {
 import { Request, Response } from 'express';
 
 import _ from 'lodash';
-import { BadRequest, Unauthorized } from '@src/utils/errors';
+import { BadRequest, Unauthorized } from '@lib/errors';
 import { authSvc } from '@src/apiV1/Auth/AuthService';
-import { querySchema } from '@src/utils/BaseClasses/QueryType';
+import { querySchema } from '@lib/BaseClasses/QueryType';
 import { googleAuthSvc } from '@src/apiV1/Auth/AuthService/GoogleAuthService';
 import { User } from '@src/entities/User';
 import { updateProfileBody, UpdateProfileBodyType } from './types/UpdateProfileBody';

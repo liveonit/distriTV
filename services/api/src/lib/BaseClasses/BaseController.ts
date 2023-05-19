@@ -1,12 +1,12 @@
 import { handleErrorAsync } from '@src/middlewares/errorCatcher';
-import { BadRequest } from '@src/utils/errors';
+import { BadRequest } from '@lib/errors';
 import { Request, Response } from 'express';
 import { BaseService } from './BaseService';
 import { BaseCustomEntity } from './BaseCustomEntity';
 import { z } from 'zod';
 import { DeepPartial, FindOptionsWhere } from 'typeorm';
 
-class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
+export class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
   public readonly service: S;
 
   public readonly createSchema?: z.ZodObject<any>;
@@ -25,7 +25,7 @@ class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
     this.createSchema = createSchema;
     this.updateSchema = updateSchema;
     this.responseSchema = responseSchema;
-    this.querySchema = querySchema
+    this.querySchema = querySchema;
   }
 
   public create = handleErrorAsync(async (req: Request, res: Response) => {
@@ -45,7 +45,7 @@ class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
   public update = handleErrorAsync(async (req: Request, res: Response) => {
     let id: string | number = req.params.id?.toString();
     if (!id) throw new BadRequest('Id is required');
-    if (!isNaN(+id)) id = +id
+    if (!isNaN(+id)) id = +id;
     const body = this.createSchema?.parse(req.body) || req.body;
     const { relations } = this.querySchema?.parse(req.query) || {};
     let result = await this.service.update(id, body as T, { relations });
@@ -56,7 +56,7 @@ class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
   public getById = handleErrorAsync(async (req: Request, res: Response) => {
     let id: string | number = req.params.id?.toString();
     if (!id) throw new BadRequest('Id is required');
-    if (!isNaN(+id)) id = +id
+    if (!isNaN(+id)) id = +id;
     const { relations } = this.querySchema?.parse(req.query) || {};
     const result = await this.service.get({ where: { id } as FindOptionsWhere<T>, relations });
     return res.status(200).json(result);
@@ -65,10 +65,8 @@ class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
   public delete = handleErrorAsync(async (req: Request, res: Response) => {
     let id: string | number = req.params.id?.toString();
     if (!id) throw new BadRequest('Id is required');
-    if (!isNaN(+id)) id = +id
+    if (!isNaN(+id)) id = +id;
     await this.service.delete(id);
     return res.status(200).json({ id });
   });
 }
-
-export default BaseController;

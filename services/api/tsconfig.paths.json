@@ -2,12 +2,9 @@
   "compilerOptions": {
     "paths": {
       "@src/*": ["./src/*"],
-      "@utils/*": ["./src/utils/*"],
+      "@lib/*": ["./src/lib/*"],
       "@entities/*": ["./src/entities/*"],
-      "@resolvers/*": ["./src/resolvers/*"],
       "@middlewares/*": ["./src/middlewares/*"],
-      "@services/*": ["./src/services/*"],
-      "@typeDefs/*": ["./src/typeDefs/*"]
     }
   }
 }

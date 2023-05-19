@@ -1,5 +1,5 @@
 import morgan from "morgan";
-import { logger } from "@utils/Logger";
+import { logger } from "@lib/Logger";
 import { config } from "@src/config";
 
 const stream = {

@@ -8,7 +8,7 @@ import { loggerMiddleware } from '@middlewares/logger.middleware';
 import router from './apiV1';
 
 import { config } from './config';
-import { NotFound } from '@utils/errors';
+import { NotFound } from '@lib/errors';
 import fileUpload from 'express-fileupload';
 
 export class App {

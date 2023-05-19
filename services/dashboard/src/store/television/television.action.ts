@@ -5,7 +5,7 @@ export const listTelevisions = () => ({
   type: TelevisionActionTypes.LIST_ALL_REQUEST,
 })
 
-export const listTelevisionsJoin = (payload?: { query: string }) => ({
+export const listTelevisionsJoin = (payload?: { query?: string }) => ({
   type: TelevisionActionTypes.LIST_ALL_JOIN_REQUEST,
   payload,
 })

@@ -1,4 +1,4 @@
-import { BaseCustomEntity } from '@src/utils/BaseClasses/BaseCustomEntity';
+import { BaseCustomEntity } from '@lib/BaseClasses/BaseCustomEntity';
 import {
   BaseEntity,
   Column,

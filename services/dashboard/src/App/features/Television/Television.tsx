@@ -20,7 +20,7 @@ import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
-import { useQueryString } from 'src/App/hooks/useQueryString'
+import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 
 import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
 import TelevisionDeleteModal from './TelevisionDeleteModal'
@@ -45,7 +45,7 @@ export default function TelevisionList() {
   const [televisionToEdit, setTelevisionToEdit] = React.useState<TelevisionT | null>(null)
   const [televisionToDelete, setTelevisionToDelete] = React.useState<TelevisionT | null>(null)
   const [titleModal, setModalTitle] = React.useState('Titulo')
-  const queryString = useQueryString()
+  const queryString = useSearchQueryString()
 
   React.useEffect(() => {
     dispatch(
@@ -70,8 +70,8 @@ export default function TelevisionList() {
     <>
       <SearchBox
         searches={[
-          { type: 'Input', name: 'OneInput' },
-          { type: 'Input', name: 'AnotherInput' },
+          { type: 'Input', name: 'code' },
+          { type: 'Input', name: 'name' },
         ]}
       />
       <Grid container alignItems='center'>

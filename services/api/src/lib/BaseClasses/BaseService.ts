@@ -1,6 +1,6 @@
 import { db, Db } from '@src/db';
-import { BaseCustomEntity } from '@src/utils/BaseClasses/BaseCustomEntity';
-import { NotFound } from '@src/utils/errors';
+import { BaseCustomEntity } from '@lib/BaseClasses/BaseCustomEntity';
+import { NotFound } from '@lib/errors';
 import _ from 'lodash';
 import { FindManyOptions, FindOneOptions, FindOptionsWhere, ObjectID, ObjectType } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';

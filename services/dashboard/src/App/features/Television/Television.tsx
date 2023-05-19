@@ -19,6 +19,8 @@ import { TelevisionT } from 'src/store/television/television.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
+import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
+import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 
 import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
 import TelevisionDeleteModal from './TelevisionDeleteModal'
@@ -36,12 +38,22 @@ export default function TelevisionList() {
   React.useEffect(() => {
     dispatch(listTelevisionsJoin())
   }, [dispatch])
+
   const isLoading = useSelector(televisionsIsLoadingSelector)
   const televisions = useSelector(televisionsSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
   const [televisionToEdit, setTelevisionToEdit] = React.useState<TelevisionT | null>(null)
   const [televisionToDelete, setTelevisionToDelete] = React.useState<TelevisionT | null>(null)
   const [titleModal, setModalTitle] = React.useState('Titulo')
+  const searchQueryString = useSearchQueryString()
+
+  React.useEffect(() => {
+    dispatch(
+      listTelevisionsJoin({
+        query: `search=${searchQueryString}`,
+      }),
+    )
+  }, [dispatch, searchQueryString])
 
   function handleCloseEditTelevisionModal() {
     setTelevisionToEdit(null)
@@ -56,6 +68,12 @@ export default function TelevisionList() {
     <CircularProgress />
   ) : (
     <>
+      <SearchBox
+        searches={[
+          { type: 'Input', name: 'tvCode' },
+          { type: 'Input', name: 'name' },
+        ]}
+      />
       <Grid container alignItems='center'>
         <Grid item sm={8}>
           <h2>
@@ -77,6 +95,7 @@ export default function TelevisionList() {
           </Button>
         </Grid>
       </Grid>
+      <br />
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>

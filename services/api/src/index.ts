@@ -5,7 +5,7 @@ import { App } from './App';
 import { db } from './db';
 import { redisClient } from './redisCient';
 
-import { logger } from '@utils/Logger';
+import { logger } from '@lib/Logger';
 global.logger = logger;
 
 async function main() {

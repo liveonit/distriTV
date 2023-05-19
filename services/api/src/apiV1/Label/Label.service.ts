@@ -1,5 +1,5 @@
 import { Label } from '@src/entities/Label';
-import { BaseService } from '@src/utils/BaseClasses/BaseService';
+import { BaseService } from '@lib/BaseClasses/BaseService';
 
 export class LabelSvc extends BaseService<Label> {}
 

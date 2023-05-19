@@ -45,22 +45,28 @@ const listTelevisionsJoin: Epic = (action$) =>
     ofType(TelevisionActionTypes.LIST_ALL_JOIN_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
-    mergeMap(() => {
+    mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ path: '/television?relations=institution,labels', requireAuthType: session?.type }).pipe(
-        map(({ response }) => {
-          return {
-            type: TelevisionActionTypes.LIST_ALL_JOIN_SUCCESS,
-            payload: response,
-          }
-        }),
-        catchError((err) =>
-          of({
-            type: TelevisionActionTypes.LIST_ALL_JOIN_FAILURE,
-            payload: err,
+
+      return apiSvc
+        .request({
+          path: `/television?relations=institution,labels${payload?.query ? `&${payload.query}` : ''}`,
+          requireAuthType: session?.type,
+        })
+        .pipe(
+          map(({ response }) => {
+            return {
+              type: TelevisionActionTypes.LIST_ALL_JOIN_SUCCESS,
+              payload: response,
+            }
           }),
-        ),
-      )
+          catchError((err) =>
+            of({
+              type: TelevisionActionTypes.LIST_ALL_JOIN_FAILURE,
+              payload: err,
+            }),
+          ),
+        )
     }),
   )
 const listTelevisionsJoinFailed: Epic = (action$) =>

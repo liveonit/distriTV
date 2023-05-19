@@ -13,7 +13,7 @@ const createMigration = (migrationName: string, type: string) => {
   );
 
   const migrationFileContent = `import path from "path";
-import { TypeOrmMigrationFromFile } from "@utils/dbMigrations/TypeOrmMigrationFromFile";
+import { TypeOrmMigrationFromFile } from "@lib/dbMigrations/TypeOrmMigrationFromFile";
 
 export class ${migrationName}${currentTime} extends TypeOrmMigrationFromFile {
   constructor() {
@@ -45,7 +45,7 @@ if (require.main === module) {
   const args = process.argv.slice(2).filter((arg) => arg !== '--');
   if (!args[0] || (args[0] !== 'migration' && args[0] !== 'seed') || !args[1])
     logger.error(`Invalid params, migration or seed should include 'type' and 'name'.
-  Ex: npx ts-node @src/utils/dbMigrations/createMigration.ts <type> <name>
+  Ex: npx ts-node @lib/dbMigrations/createMigration.ts <type> <name>
   Args:
     type: possible values 'migrations' or 'seed'
     name: the name of your migration. Ex: 'CreateUserTable'

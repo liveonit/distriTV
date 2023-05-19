@@ -1,5 +1,5 @@
 import { Notification } from '@src/entities/Notification';
-import { BaseService } from '@src/utils/BaseClasses/BaseService';
+import { BaseService } from '@lib/BaseClasses/BaseService';
 
 export class NotificationSvc extends BaseService<Notification> {}
 

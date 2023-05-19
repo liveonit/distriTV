@@ -1,53 +1,29 @@
-import { Box } from '@mui/material';
+import { Box } from '@mui/material'
 import React from 'react'
-import { useSearchParams } from "react-router-dom";
-import { SearchInput } from './SearchInput';
-import { SearchDropdown } from './SearchDropdown'
-// <SearchBox search={{ name: InputText ,  "television.institution.id": Select,  }} />
+import { useSearchParams } from 'react-router-dom'
 
-interface SearchBoxT<T> {
-  searches: { [K in keyof T]: {
-      type: "Input" | "Select",
-      name: string,
-      options?: string[]
-  } }
-  onChange: (apiQuery: string) => void
+import { SearchInput } from './SearchInput'
+
+interface SearchBoxT {
+  searches: {
+    type: 'Input' | 'Select'
+    name: string
+    options?: string[]
+  }[]
 }
-
-
-
-export const SearchBox: React.FC<SearchBoxT> = ({ searches, onChange }) => {
+export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [state, setState] = React.useState<any>({})
-  const [searchParams, setSearchParams] = useSearchParams();
 
   React.useEffect(() => {
-      searchParams.forEach(search => {s})
-      setState() }, []) 
+    setState(searchParams)
+  }, [])
 
-  React.useEffect(() => {
-      const query = Object.values(state).join(';')
-      setSearchParams(query)
-      onChange(query)
-  }, [state])
-
-  const searchBar = searches.map((search: { type: any; name: string; }) => {
+  const searchBar = searches.map((search: { type: any; name: string }) => {
     switch (search.type) {
       case 'Input': {
         return (
-          <SearchInput
-            name={search.name}
-            value={state[search.name]}
-            onChange={(value) => setState({ ...state, [search.name]: value })}
-          />
-        )
-      }
-      case 'Select': {
-        return (
-          <SearchDropdown
-            name={search.name}
-            value={state[search.name]}
-            onChange={(value) => setState({ ...state, [search.name]: value })}
-          />
+          <SearchInput value={state[search.name]} onChange={(value) => setState({ ...state, [search.name]: value })} />
         )
       }
       default: {
@@ -56,6 +32,10 @@ export const SearchBox: React.FC<SearchBoxT> = ({ searches, onChange }) => {
     }
   })
 
-  return <Box>{searchBar}</Box>
+  return (
+    <Box>
+      {searchBar}
+      <button onClick={() => setSearchParams(state)}>Search</button>
+    </Box>
+  )
 }
-

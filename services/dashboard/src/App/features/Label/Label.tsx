@@ -19,12 +19,13 @@ import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
 import { labelSchema, LabelT } from 'src/store/label/label.type'
-import LabelCreateAndEditModal from './LabelCreateAndEditModal'
-import LabelDeleteModal from './LabelDeleteModal'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
 import { t } from 'i18next'
+
+import LabelDeleteModal from './LabelDeleteModal'
+import LabelCreateAndEditModal from './LabelCreateAndEditModal'
 
 const useStyles = makeStyles({
   table: {

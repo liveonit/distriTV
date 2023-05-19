@@ -1,16 +1,13 @@
 import React from 'react'
 import { MenuItem, Select, SelectProps } from '@material-ui/core'
 
-
-
 type FormInputDropdownPropsT = {
-  name: string
   label: string
   setValue?: any
   selectOptions: { value: string | number; label: string }[]
 } & SelectProps
 
-export const SearchDropdown: React.FC<FormInputDropdownPropsT> = ({ name, label, selectOptions, ...otherProps }) => {
+export const SearchDropdown: React.FC<FormInputDropdownPropsT> = ({ label, selectOptions, ...otherProps }) => {
   const generateSingleOptions = () => {
     return selectOptions.map((option) => {
       return (
@@ -21,6 +18,9 @@ export const SearchDropdown: React.FC<FormInputDropdownPropsT> = ({ name, label,
     })
   }
 
-  return <Select {...otherProps} labelId="demo-simple-select-label" label={label}>
-              {generateSingleOptions()}
-            </Select>}
+  return (
+    <Select {...otherProps} labelId='demo-simple-select-label' label={label}>
+      {generateSingleOptions()}
+    </Select>
+  )
+}

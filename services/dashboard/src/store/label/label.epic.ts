@@ -3,13 +3,12 @@ import { map, mergeMap, catchError, debounceTime, concatMap } from 'rxjs/operato
 import { defer, of } from 'rxjs'
 import { storage } from '@utils/general/Storage'
 import { checkOrRefreshToken } from 'src/services/auth'
-
+import { stringifyQuery } from 'src/utils/functions'
 
 import { enqueueSnackbarAction } from '../app/app.action'
 import apiSvc from '../../services/api'
 import { LabelActionTypes } from './label.state'
 import { SessionT } from '../auth/auth.type'
-import { stringifyQuery } from 'src/utils/functions'
 
 const refreshToken$ = defer(() => checkOrRefreshToken())
 

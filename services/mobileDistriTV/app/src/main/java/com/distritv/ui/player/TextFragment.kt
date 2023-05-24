@@ -42,7 +42,7 @@ class TextFragment : Fragment() {
             content = it.getParcelable(CONTENT_PARAM)
             if (content == null) {
                 Log.e(TAG, "An error occurred while trying to play, back to home...")
-                onAfterCompletion(VideoFragment.TAG)
+                onAfterCompletion(TAG)
             }
         }
 
@@ -67,9 +67,9 @@ class TextFragment : Fragment() {
 
     private fun showText() {
         binding.textContainer.text = content?.text ?: ""
-        Log.i(TAG, "Playback started.")
+        Log.i(TAG, "Playback started. Content id: ${content?.id}")
         handler.postDelayed({
-            onAfterCompletion(TAG)
+            onAfterCompletion(TAG, content?.id)
         }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
     }
 

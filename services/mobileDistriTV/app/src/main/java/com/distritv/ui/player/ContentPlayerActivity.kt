@@ -19,7 +19,7 @@ class ContentPlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityContentPlayerBinding
 
-    private lateinit var myApp: DistriTVApp
+    private var myApp: DistriTVApp? = null
 
     private var content: Content? = null
 
@@ -30,7 +30,7 @@ class ContentPlayerActivity : AppCompatActivity() {
         binding = ActivityContentPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        myApp = this.applicationContext as DistriTVApp
+        myApp = this.applicationContext as DistriTVApp?
 
         content = intent.extras?.getParcelable(CONTENT_PARAM)
         if (content == null) {
@@ -47,7 +47,10 @@ class ContentPlayerActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        myApp.setCurrentActivity(this)
+        // Set the current activity
+        myApp?.setCurrentActivity(this)
+        // Set the identifier of the currently playing content:
+        myApp?.setCurrentlyPlayingContentId(content?.id)
     }
 
     override fun onStop() {
@@ -63,12 +66,15 @@ class ContentPlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         clearReferences()
-        (this.applicationContext as DistriTVApp).setContentCurrentlyPlaying(false)
+        // Notice that the content playback has finished:
+        myApp?.setIfAnyContentIsCurrentlyPlaying(false)
+        // Clear the identifier of the content that was playing:
+        myApp?.setCurrentlyPlayingContentId(null)
     }
 
     private fun clearReferences() {
-        val currActivity: Activity? = myApp.getCurrentActivity()
-        if (this == currActivity) myApp.setCurrentActivity(null)
+        val currActivity: Activity? = myApp?.getCurrentActivity()
+        if (this == currActivity) myApp?.setCurrentActivity(null)
     }
 
     private fun addFragment() {

@@ -63,6 +63,11 @@ fun dateToMillis(date: Date): Long? {
     return localDateTimeToMillis(localDateTime)
 }
 
+fun getCurrentTime(): String {
+    val formatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
+    return LocalDateTime.now().format(formatter)
+}
+
 class LocalDateTimeDeserializer : JsonDeserializer<LocalDateTime> {
     override fun deserialize(
         json: JsonElement?,

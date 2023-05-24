@@ -70,7 +70,7 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
         }
 
         // Notice that some content is being played
-        (context.applicationContext as DistriTVApp).setContentCurrentlyPlaying(true)
+        (context.applicationContext as DistriTVApp).setIfAnyContentIsCurrentlyPlaying(true)
 
         if (isAlarm != null && isAlarm) {
             cancelAlarm(context, content)

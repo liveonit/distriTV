@@ -44,20 +44,26 @@ fun FragmentManager.removeFragment(fragment: Fragment) {
 }
 
 fun Fragment.onAfterCompletion(tag: String) {
+    this.onAfterCompletion(tag, null)
+}
+
+fun Fragment.onAfterCompletion(tag: String, contentId: Long?) {
     val application: DistriTVApp? =
         (context?.applicationContext as DistriTVApp?)
 
-    // Notice that the content has finished playing
-    application?.setContentCurrentlyPlaying(false)
+    // Notice that the content has finished playing:
+    application?.setIfAnyContentIsCurrentlyPlaying(false)
+    // Clear the identifier of the content that was playing:
+    application?.setCurrentlyPlayingContentId(null)
 
     val currentActivity: Activity? = application?.getCurrentActivity()
     if (currentActivity != null && currentActivity !is HomeActivity) {
         val intent = Intent(context, HomeActivity::class.java)
         context?.startActivity(intent)
         activity?.finish()
-        Log.i(tag, "Playback finished, coming home...")
+        Log.i(tag, "Playback finished, coming home... Content id: $contentId")
     } else {
-        Log.i(tag, "Playback finished.")
+        Log.i(tag, "Playback finished. Content id: $contentId")
     }
 }
 

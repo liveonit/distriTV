@@ -110,7 +110,7 @@ class VideoFragment : Fragment() {
 
         binding.videoContainer.setOnCompletionListener {
             handler.postDelayed({
-                onAfterCompletion(TAG)
+                onAfterCompletion(TAG, content?.id)
             }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
         }
 
@@ -132,7 +132,7 @@ class VideoFragment : Fragment() {
 
         binding.videoContainer.start()
 
-        Log.i(TAG, "Playback started.")
+        Log.i(TAG, "Playback started. Content id: ${content?.id}")
     }
 
     private fun addPostHandlerWhenVideoIsPaused(duration: Int, currentPosition: Int) {
@@ -144,7 +144,7 @@ class VideoFragment : Fragment() {
 
         handler.postDelayed({
             Log.i(TAG, "Ending video while paused")
-            onAfterCompletion(TAG)
+            onAfterCompletion(TAG, content?.id)
         }, remainingTime.toLong())
     }
 

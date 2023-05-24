@@ -4,12 +4,15 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
+import android.content.pm.PackageManager
 import android.os.*
+import android.util.Log
 import com.distritv.data.model.DeviceInfo
 import com.distritv.DistriTVApp
 import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
+import com.distritv.utils.getCurrentTime
 import com.distritv.utils.isServiceRunning
 import com.distritv.utils.roundTo
 import java.io.File
@@ -19,7 +22,11 @@ class DeviceInfoService(
     private val sharedPreferences: SharedPreferencesService
 ) {
 
+    private var myApp: DistriTVApp? = null
+
     fun getDeviceInfo(): DeviceInfo {
+        myApp = context.applicationContext as DistriTVApp?
+
         val mem = getMemoryInfo()
         val availableMem = mem[0]
         val totalMem = mem[1]
@@ -29,8 +36,10 @@ class DeviceInfoService(
         val totalStorage = storage[1] as Double
         val availableStorageUnit = storage[2] as String
         val totalStorageUnit = storage[3] as String
+
         return DeviceInfo(
             getTvCode(),
+            getCurrentVersionApp(),
             availableMem,
             totalMem,
             memUnit,
@@ -40,12 +49,29 @@ class DeviceInfoService(
             totalStorageUnit,
             allProcessesAreRunning(),
             appIsVisible(),
-            isAnyContentPlaying()
+            isAnyContentPlaying(),
+            getCurrentlyPlayingContentId(),
+            getCurrentTime()
         )
     }
 
     private fun getTvCode(): String {
         return sharedPreferences.getTvCode() ?: ""
+    }
+
+    /**
+     * @return current version name application.
+     */
+    private fun getCurrentVersionApp(): String {
+        val packageManager = context.packageManager
+        val packageName = context.packageName
+        try {
+            val packageInfo = packageManager.getPackageInfo(packageName, 0)
+            return packageInfo.versionName
+        } catch (e: PackageManager.NameNotFoundException) {
+            Log.e(TAG, "[getCurrentVersionNameApp] -> ${e.javaClass}: ${e.message}")
+        }
+        return ""
     }
 
     /**
@@ -129,8 +155,7 @@ class DeviceInfoService(
      * false otherwise.
      */
     private fun appIsVisible(): Boolean {
-        val currentActivity: Activity? =
-            (context.applicationContext as DistriTVApp?)?.getCurrentActivity()
+        val currentActivity: Activity? = myApp?.getCurrentActivity()
         return currentActivity != null
     }
 
@@ -139,7 +164,11 @@ class DeviceInfoService(
      * false otherwise.
      */
     private fun isAnyContentPlaying(): Boolean {
-        return (context.applicationContext as DistriTVApp?)?.isContentCurrentlyPlaying() ?: false
+        return myApp?.isContentCurrentlyPlaying() ?: false
+    }
+
+    private fun getCurrentlyPlayingContentId(): Long? {
+        return myApp?.getCurrentlyPlayingContentId()
     }
 
     companion object {

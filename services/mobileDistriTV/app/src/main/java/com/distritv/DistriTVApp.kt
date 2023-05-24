@@ -29,6 +29,7 @@ class DistriTVApp: Application() {
 
     private var currentActivity: Activity? = null
     private var isContentCurrentlyPlaying = false
+    private var currentlyPlayingContentId: Long? = null
 
     fun getCurrentActivity(): Activity? {
         return currentActivity
@@ -42,8 +43,16 @@ class DistriTVApp: Application() {
         return this.isContentCurrentlyPlaying
     }
 
-    fun setContentCurrentlyPlaying(isPlaying: Boolean) {
+    fun setIfAnyContentIsCurrentlyPlaying(isPlaying: Boolean) {
         this.isContentCurrentlyPlaying = isPlaying
+    }
+
+    fun getCurrentlyPlayingContentId(): Long? {
+        return this.currentlyPlayingContentId
+    }
+
+    fun setCurrentlyPlayingContentId(contentId: Long?) {
+        this.currentlyPlayingContentId = contentId
     }
 
 }

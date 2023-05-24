@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class DeviceInfo(
     val tvCode: String,
+    val currentVersionApp: String,
     val availableMem: Double,
     val totalMem: Double,
     val memUnit: String,
@@ -13,9 +14,10 @@ data class DeviceInfo(
     val totalStorage: Double,
     val availableStorageUnit: String,
     val totalStorageUnit: String,
-    val allProcessesAreRunning:Boolean,
-    val appIsVisible:Boolean,
-    val isAnyContentPlaying:Boolean
-    ) : Parcelable {
-
+    val allProcessesAreRunning: Boolean,
+    val appIsVisible: Boolean,
+    val isAnyContentPlaying: Boolean,
+    val currentlyPlayingContentId: Long?,
+    val currentDate: String
+) : Parcelable {
 }

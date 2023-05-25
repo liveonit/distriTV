@@ -17,12 +17,11 @@ import android.os.Looper
 import android.util.Log
 import com.distritv.BuildConfig
 import com.distritv.data.model.Content
-import com.distritv.data.model.DeviceInfo
 import com.distritv.data.repositories.ContentRepository
 import com.distritv.data.repositories.ScheduleRepository
 import com.distritv.data.service.ContentService
+import com.distritv.data.service.DeviceInfoService
 import com.distritv.data.service.ScheduleService
-import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +39,7 @@ class RequestDaemon: Service() {
     private val contentService: ContentService by inject()
     private val scheduleService: ScheduleService by inject()
 
-    private val sharedPreferences: SharedPreferencesService by inject()
+    private val deviceInfoService:DeviceInfoService by inject()
 
     private val handler = Handler(Looper.myLooper()!!)
     private lateinit var runnable: Runnable
@@ -95,14 +94,15 @@ class RequestDaemon: Service() {
         CoroutineScope(Dispatchers.Main).launch {
             try {
 
-                val tvCode = sharedPreferences.getTvCode()
-                if (tvCode.isNullOrEmpty()) {
+                val deviceInfo = deviceInfoService.getDeviceInfo()
+                Log.v(TAG, "$deviceInfo")
+                if (deviceInfo.tvCode.isEmpty()) {
                     return@launch
                 }
 
                 val scheduleList = scheduleService.getAllSchedules()
 
-                val responseScheduleList = scheduleRepository.fetchScheduleList(DeviceInfo(tvCode))
+                val responseScheduleList = scheduleRepository.fetchScheduleList(deviceInfo)
 
                 // Check if any schedule was removed to delete
                 scheduleList.forEach { schedule ->

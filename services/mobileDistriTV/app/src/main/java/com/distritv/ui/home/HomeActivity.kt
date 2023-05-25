@@ -2,7 +2,6 @@ package com.distritv.ui.home
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.ActivityManager
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -27,7 +26,6 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
 
     private lateinit var myApp: DistriTVApp
 
-
     @SuppressLint("AppCompatMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +46,6 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         checkIfDeviceIsRegistered()
 
         actionBar?.hide()
-
     }
 
     override fun onResume() {
@@ -84,29 +81,23 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
 
     private fun startServices() {
         if (!isServiceRunning(RequestDaemon::class.java)) {
-            ContextCompat.startForegroundService(this,
-                Intent(this, RequestDaemon::class.java))
+            startService(RequestDaemon::class.java)
         }
-
         if (!isServiceRunning(ContentSchedulingDaemon::class.java)) {
-            ContextCompat.startForegroundService(this,
-                Intent(this, ContentSchedulingDaemon::class.java))
+            startService(ContentSchedulingDaemon::class.java)
         }
-
         if (!isServiceRunning(GarbageCollectorDaemon::class.java)) {
-            ContextCompat.startForegroundService(this,
-                Intent(this, GarbageCollectorDaemon::class.java))
+            startService(GarbageCollectorDaemon::class.java)
         }
     }
 
+    private fun startService(serviceClass: Class<*>) {
+        ContextCompat.startForegroundService(this,
+            Intent(this, serviceClass))
+    }
+
     private fun isServiceRunning(serviceClass: Class<*>): Boolean {
-        val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
-            if (serviceClass.name == service.service.className) {
-                return true
-            }
-        }
-        return false
+        return isServiceRunning(this, serviceClass)
     }
 
     private fun checkIfDeviceIsRegistered() {

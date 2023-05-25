@@ -17,7 +17,7 @@ data class DeviceInfo(
     val allProcessesAreRunning: Boolean,
     val appIsVisible: Boolean,
     val isAnyContentPlaying: Boolean,
-    val currentlyPlayingContentId: Long?,
+    val currentlyPlayingContentId: Long,
     val currentDate: String
 ) : Parcelable {
 }

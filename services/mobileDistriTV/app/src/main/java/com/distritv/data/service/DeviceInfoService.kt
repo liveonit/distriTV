@@ -167,8 +167,8 @@ class DeviceInfoService(
         return myApp?.isContentCurrentlyPlaying() ?: false
     }
 
-    private fun getCurrentlyPlayingContentId(): Long? {
-        return myApp?.getCurrentlyPlayingContentId()
+    private fun getCurrentlyPlayingContentId(): Long {
+        return myApp?.getCurrentlyPlayingContentId() ?: -1L
     }
 
     companion object {

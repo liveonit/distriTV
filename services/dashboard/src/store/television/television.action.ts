@@ -5,21 +5,22 @@ export const listTelevisions = () => ({
   type: TelevisionActionTypes.LIST_ALL_REQUEST,
 })
 
-export const listTelevisionsJoin = () => ({
+export const listTelevisionsJoin = (payload?: { query?: string }) => ({
   type: TelevisionActionTypes.LIST_ALL_JOIN_REQUEST,
+  payload,
 })
 
 export const createTelevision = (payload: TelevisionT) => ({
   type: TelevisionActionTypes.CREATE_REQUEST,
-  payload
+  payload,
 })
 
 export const updateTelevision = (payload: TelevisionT) => ({
   type: TelevisionActionTypes.EDIT_REQUEST,
-  payload
+  payload,
 })
 
 export const deleteTelevision = (payload: { id: number | string }) => ({
   type: TelevisionActionTypes.DELETE_REQUEST,
-  payload
+  payload,
 })

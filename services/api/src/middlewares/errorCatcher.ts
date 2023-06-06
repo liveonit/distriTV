@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { BaseError } from '@utils/errors';
+import { BaseError } from '@lib/errors';
 import { config } from '@src/config';
 import { ZodError } from 'zod';
 

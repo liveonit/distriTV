@@ -17,9 +17,9 @@ import _ from 'lodash';
 import { redisClient } from '@src/redisCient';
 
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { BadRequest, Forbidden, NotFound, Unauthorized } from '@src/utils/errors';
+import { BadRequest, Forbidden, NotFound, Unauthorized } from '@lib/errors';
 import { handleErrorAsync } from '@middlewares/errorCatcher';
-import { uuid } from '@src/utils/helpers/uuid';
+import { uuid } from '@lib/helpers/uuid';
 import { googleAuthSvc } from './GoogleAuthService';
 import { authPayloadSchema, authSessionSchema } from '../types/AuthSessionBody';
 import { UpdateProfileBodyType } from '../types/UpdateProfileBody';

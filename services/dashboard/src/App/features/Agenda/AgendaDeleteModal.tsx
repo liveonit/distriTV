@@ -17,8 +17,7 @@ type IProps = {
 
 let nombreAgenda = 0
 
-export default function AgendaDeleteModal({ isOpen, handleCloseDeleteModal, agenda}: IProps) {
-  
+export default function AgendaDeleteModal({ isOpen, handleCloseDeleteModal, agenda }: IProps) {
   const dispatch = useDispatch()
 
   function handleDeleteAgenda() {
@@ -26,28 +25,28 @@ export default function AgendaDeleteModal({ isOpen, handleCloseDeleteModal, agen
     handleCloseDeleteModal()
   }
 
-  function agendaFieldsValues(){
+  // TODO: fix the next function
+  function agendaFieldsValues() {
     if (agenda) {
       nombreAgenda = agenda.contentId
-    } 
+    }
   }
-  
-  agendaFieldsValues()  
+  agendaFieldsValues()
 
-  return (    
+  return (
     <>
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            <Trans>DELETE_WARNING</Trans><Trans>SCHEDULE</Trans> {nombreAgenda}?
-          </Typography>          
+            <Trans>DELETE_WARNING</Trans>
+            <Trans>SCHEDULE</Trans> {nombreAgenda}?
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDeleteModal} color='primary'>
             <Trans>CLOSE</Trans>
           </Button>
-          <Button onClick={handleDeleteAgenda}
-            variant='contained' color='primary' size='small'>
+          <Button onClick={handleDeleteAgenda} variant='contained' color='primary' size='small'>
             <Trans>DELETE</Trans>
           </Button>
         </DialogActions>

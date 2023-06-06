@@ -1,5 +1,5 @@
 import { Role } from '@src/entities/Role';
-import { BaseService } from '@src/utils/BaseClasses/BaseService';
+import { BaseService } from '@lib/BaseClasses/BaseService';
 
 export class RoleSvc extends BaseService<Role> {}
 

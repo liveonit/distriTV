@@ -5,7 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.distritv.data.model.DeviceInfoCard
 import com.distritv.data.repositories.ScheduleRepository
+import com.distritv.data.service.DeviceInfoService
 import com.distritv.data.service.SharedPreferencesService
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -13,6 +15,7 @@ import java.net.SocketTimeoutException
 
 class HomeViewModel(
     private val sharedPreferences: SharedPreferencesService,
+    private val deviceInfoService: DeviceInfoService,
     private val scheduleRepository: ScheduleRepository
 ) : ViewModel() {
 
@@ -28,9 +31,9 @@ class HomeViewModel(
     val isRegistered: LiveData<Boolean>
         get() = _isRegistered
 
-    private val _tvCode = MutableLiveData<String>()
-    val tvCode: LiveData<String>
-        get() = _tvCode
+    private val _deviceInfo = MutableLiveData<DeviceInfoCard>()
+    val deviceInfo: LiveData<DeviceInfoCard>
+        get() = _deviceInfo
 
     private val _loading = MutableLiveData<Boolean>(false)
     val loading: LiveData<Boolean> get() = _loading
@@ -78,8 +81,17 @@ class HomeViewModel(
         _isRegistered.postValue(sharedPreferences.isDeviceRegistered())
     }
 
-    fun getTvCode() {
-        _tvCode.postValue(sharedPreferences.getTvCode())
+    fun getDeviceInfo() {
+        val info = deviceInfoService.getDeviceInfoCard()
+        _deviceInfo.postValue(info)
+        viewModelScope.launch {
+            sharedPreferences.getTvCode()?.let {
+                scheduleRepository.validateConnection(it).run {
+                    info.connectionStatus = this
+                    _deviceInfo.postValue(info)
+                }
+            }
+        }
     }
 
     companion object {

@@ -1,5 +1,7 @@
 package com.distritv.data.repositories
 
+import android.util.Log
+import com.distritv.daemon.RequestDaemon
 import com.distritv.data.api.ApiService
 import com.distritv.data.api.model.ScheduleNetworkMapper
 import com.distritv.data.model.DeviceInfo
@@ -20,5 +22,14 @@ class ScheduleRepository(private val apiService: ApiService) : IScheduleReposito
             return true
         }
         return false
+    }
+
+    override suspend fun validateConnection(tvCode: String): Boolean {
+        return try {
+            apiService.fetchTelevisionSchedule(tvCode)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 }

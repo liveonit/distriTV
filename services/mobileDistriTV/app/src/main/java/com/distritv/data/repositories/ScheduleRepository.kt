@@ -7,7 +7,7 @@ import com.distritv.data.model.Schedule
 
 class ScheduleRepository(private val apiService: ApiService) : IScheduleRepository {
     override suspend fun fetchScheduleList(deviceInfo: DeviceInfo): List<Schedule> {
-        val televisionListResponse = apiService.fetchTelevisionSchedule(deviceInfo.tvCode)
+        val televisionListResponse = apiService.fetchTelevisionSchedule(deviceInfo.tvCode, deviceInfo)
         if (televisionListResponse.isEmpty()) {
             return listOf()
         }

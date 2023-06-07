@@ -12,6 +12,8 @@ import com.distritv.DistriTVApp
 import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
+import com.distritv.data.model.DeviceInfoCard
+import com.distritv.data.repositories.ScheduleRepository
 import com.distritv.utils.getCurrentTime
 import com.distritv.utils.isServiceRunning
 import com.distritv.utils.roundTo
@@ -52,6 +54,14 @@ class DeviceInfoService(
             isAnyContentPlaying(),
             getCurrentlyPlayingContentId(),
             getCurrentTime()
+        )
+    }
+
+    fun getDeviceInfoCard(): DeviceInfoCard {
+        return DeviceInfoCard(
+            getTvCode(),
+            getCurrentVersionApp(),
+            null
         )
     }
 

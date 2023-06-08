@@ -1,6 +1,6 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { config } from '@src/config';
-import { Unauthorized } from '@src/utils/errors';
+import { Unauthorized } from '@lib/errors';
 
 export const signJwt = (
   payload: Object,

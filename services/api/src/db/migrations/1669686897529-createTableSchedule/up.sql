@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS `schedule` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `destinationType` VARCHAR(10),
   `contentId` INT NOT NULL,
   `televisionId` INT NULL,
   `labelId` INT NULL,

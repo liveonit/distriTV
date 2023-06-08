@@ -1,5 +1,5 @@
 import { Television } from '@src/entities/Television';
-import { BaseService } from '@src/utils/BaseClasses/BaseService';
+import { BaseService } from '@lib/BaseClasses/BaseService';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 
 export class TelevisionSvc extends BaseService<Television> {

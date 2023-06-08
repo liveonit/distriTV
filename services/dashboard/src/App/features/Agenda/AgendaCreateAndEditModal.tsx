@@ -22,7 +22,6 @@ import { createAgenda, updateAgenda } from 'src/store/agenda/agenda.action'
 import { labelsSelector } from 'src/store/label/label.selector'
 import { Trans, useTranslation } from 'react-i18next'
 
-
 type IProps = {
   handleCloseEditModal: () => void
   agenda: Partial<AgendaT>
@@ -30,7 +29,13 @@ type IProps = {
 }
 
 export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda, title }: IProps) {
-  const agendaInitialState: AgendaT = {televisionId: undefined, labelId: undefined, startDate: new Date(), endDate: new Date(),...removeEmpty(agenda)
+  const agendaInitialState: AgendaT = {
+    televisionId: undefined,
+    labelId: undefined,
+    startDate: new Date(),
+    endDate: new Date(),
+    destinationType: 'TELEVISION',
+    ...removeEmpty(agenda),
   }
   const contents = useSelector(contentSelector)
   const televisions = useSelector(televisionsSelector)
@@ -39,27 +44,21 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
     resolver: zodResolver(agendaSchema),
     defaultValues: agendaInitialState,
   })
-  const tipos = ['Etiqueta','Televisión']
+  const { reset, handleSubmit, watch, control } = methods
+  const associationTypes = ['LABEL', 'TELEVISION']
 
   const { t } = useTranslation()
   const dispatch = useDispatch()
   React.useEffect(() => {
     dispatch(listContents())
-  }, [dispatch])
-  React.useEffect(() => {
     dispatch(listTelevisions())
-  }, [dispatch])
-  React.useEffect(() => {
     dispatch(listLabels())
   }, [dispatch])
-  const { reset, handleSubmit, watch, control } = methods
 
   const onSubmit: SubmitHandler<AgendaT> = (data) => {
-    console.log(data)
     if (!agenda) {
       dispatch(createAgenda(data))
-    }
-    else {
+    } else {
       dispatch(updateAgenda(data))
     }
     handleCloseEditModal()
@@ -74,7 +73,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
           </Typography>
           <br />
           <Grid container spacing={2}>
-          <Grid item xs={12}>
+            <Grid item xs={12}>
               <FormInputDropdown
                 fullWidth
                 label={t('CONTENT')}
@@ -87,35 +86,40 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
               <FormInputDropdown
                 fullWidth
                 label={t('TYPE_OF_AGENDA')}
-                name='type'
+                name='destinationType'
                 control={control}
-                selectOptions={tipos.map((tip) => ({ label: tip, value: tip }))}
+                selectOptions={associationTypes.map((associationType) => ({
+                  label: t(associationType),
+                  value: associationType,
+                }))}
               />
             </Grid>
-          {watch('type') === 'Televisión' &&
-            <Grid item xs={12}>
-              <FormInputDropdown
-                fullWidth
-                label={t('TELEVISION')}
-                name='televisionId'
-                control={control}
-                selectOptions={televisions.map((tel) => ({ label: tel.ip, value: tel.id! }))}
-              />
-            </Grid>}
-            {watch('type') === 'Etiqueta' &&
-            <Grid item xs={12}>
-              <FormInputDropdown
-                fullWidth
-                label={t('LABEL')}
-                name='labelId'
-                control={control}
-                selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id! }))}
-              />
-            </Grid>}
+            {watch('destinationType') === 'TELEVISION' && (
+              <Grid item xs={12}>
+                <FormInputDropdown
+                  fullWidth
+                  label={t('TELEVISION')}
+                  name='televisionId'
+                  control={control}
+                  selectOptions={televisions.map((tel) => ({ label: tel.name, value: tel.id! }))}
+                />
+              </Grid>
+            )}
+            {watch('destinationType') === 'LABEL' && (
+              <Grid item xs={12}>
+                <FormInputDropdown
+                  fullWidth
+                  label={t('LABEL')}
+                  name='labelId'
+                  control={control}
+                  selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id! }))}
+                />
+              </Grid>
+            )}
           </Grid>{' '}
           <br />
-          <FormInputDate  name='startDate' control={control} label={t('START_DATE')} />
-          <FormInputDate  name='endDate' control={control} label={t('END_DATE')} />
+          <FormInputDate name='startDate' control={control} label={t('START_DATE')} />
+          <FormInputDate name='endDate' control={control} label={t('END_DATE')} />
           <FormInputText name='cron' control={control} fullWidth label={t('CRONTAB')} variant='outlined' />
         </DialogContent>
         <DialogActions>

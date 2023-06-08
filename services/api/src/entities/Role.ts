@@ -1,4 +1,4 @@
-import { BaseCustomEntity } from '@src/utils/BaseClasses/BaseCustomEntity';
+import { BaseCustomEntity } from '@lib/BaseClasses/BaseCustomEntity';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Permission } from './Permission';
 import { RoleMapping } from './RoleMapping';

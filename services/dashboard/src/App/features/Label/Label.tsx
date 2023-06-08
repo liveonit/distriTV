@@ -15,13 +15,17 @@ import { labelsIsLoadingSelector, labelsSelector } from 'src/store/label/label.s
 import { CircularProgress } from 'node_modules/@mui/material'
 import Button from '@material-ui/core/Button'
 import { listLabels } from 'src/store/label/label.action'
-import { LabelT } from 'src/store/label/label.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
+import { labelSchema, LabelT } from 'src/store/label/label.type'
+import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
+import { t } from 'i18next'
 
-import LabelCreateAndEditModal from './LabelCreateAndEditModal'
 import LabelDeleteModal from './LabelDeleteModal'
+import LabelCreateAndEditModal from './LabelCreateAndEditModal'
 
 const useStyles = makeStyles({
   table: {
@@ -32,6 +36,8 @@ const useStyles = makeStyles({
 export default function LabelList() {
   const classes = useStyles()
   const dispatch = useDispatch()
+
+  const labelInitialState: Partial<LabelT> = { name: '', description: '' }
 
   React.useEffect(() => {
     dispatch(listLabels())
@@ -51,6 +57,17 @@ export default function LabelList() {
 
   function handleCloseDeleteLabelModal() {
     setLabelToDelete(null)
+  }
+
+  const methods = useForm<Partial<LabelT>>({
+    resolver: zodResolver(labelSchema),
+    defaultValues: labelInitialState,
+  })
+
+  const { handleSubmit, control } = methods
+  
+  const onSubmit: SubmitHandler<Partial<LabelT>> = (data) => {
+    dispatch(listLabels(data))    
   }
 
   return isLoading ? (
@@ -76,6 +93,20 @@ export default function LabelList() {
           </Button>
         </Grid>
       </Grid>
+      <Grid container spacing={2}>      
+        <Grid item xs={2}>
+          <FormInputText name='name' control={control} fullWidth label={t('NAME')} variant='outlined'  />
+        </Grid>
+        <Grid item xs={2}>
+          <FormInputText name='description' control={control} fullWidth label={t('DESCRIPTION')} variant='outlined'  />            
+        </Grid>
+        <Grid item xs={2}>
+          <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
+            Buscar
+          </Button>
+        </Grid>
+      </Grid>
+      <br/>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>

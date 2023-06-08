@@ -19,6 +19,8 @@ import { TelevisionT } from 'src/store/television/television.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
+import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
+import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 
 import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
 import TelevisionDeleteModal from './TelevisionDeleteModal'
@@ -36,7 +38,6 @@ export default function TelevisionList() {
   React.useEffect(() => {
     dispatch(listTelevisionsJoin())
   }, [dispatch])
-  
 
   const isLoading = useSelector(televisionsIsLoadingSelector)
   const televisions = useSelector(televisionsSelector)
@@ -44,6 +45,15 @@ export default function TelevisionList() {
   const [televisionToEdit, setTelevisionToEdit] = React.useState<TelevisionT | null>(null)
   const [televisionToDelete, setTelevisionToDelete] = React.useState<TelevisionT | null>(null)
   const [titleModal, setModalTitle] = React.useState('Titulo')
+  const searchQueryString = useSearchQueryString()
+
+  React.useEffect(() => {
+    dispatch(
+      listTelevisionsJoin({
+        query: `search=${searchQueryString}`,
+      }),
+    )
+  }, [dispatch, searchQueryString])
 
   function handleCloseEditTelevisionModal() {
     setTelevisionToEdit(null)
@@ -58,9 +68,17 @@ export default function TelevisionList() {
     <CircularProgress />
   ) : (
     <>
+      <SearchBox
+        searches={[
+          { type: 'Input', name: 'tvCode' },
+          { type: 'Input', name: 'name' },
+        ]}
+      />
       <Grid container alignItems='center'>
         <Grid item sm={8}>
-          <h2><Trans>TELEVISIONS</Trans></h2>
+          <h2>
+            <Trans>TELEVISIONS</Trans>
+          </h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
           <Button
@@ -77,16 +95,30 @@ export default function TelevisionList() {
           </Button>
         </Grid>
       </Grid>
+      <br />
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
               <TableCell>Id</TableCell>
-              <TableCell><Trans>NAME</Trans></TableCell>
-              <TableCell><Trans>IP</Trans></TableCell>
-              <TableCell><Trans>MAC</Trans></TableCell>
-              <TableCell><Trans>INSTITUTION</Trans></TableCell>
-              <TableCell><Trans>ACTION</Trans></TableCell>
+              <TableCell>
+                <Trans>CODE</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>NAME</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>IP</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>MAC</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>INSTITUTION</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>ACTION</Trans>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -95,6 +127,7 @@ export default function TelevisionList() {
                 <TableCell component='th' scope='row'>
                   {television.id}
                 </TableCell>
+                <TableCell>{television.tvCode}</TableCell>
                 <TableCell>{television.name}</TableCell>
                 <TableCell>{television.ip}</TableCell>
                 <TableCell>{television.mac}</TableCell>

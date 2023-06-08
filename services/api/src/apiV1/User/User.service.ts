@@ -1,5 +1,5 @@
 import { User } from '@src/entities/User';
-import { BaseService } from '@src/utils/BaseClasses/BaseService';
+import { BaseService } from '@lib/BaseClasses/BaseService';
 
 export class UserSvc extends BaseService<User> {}
 

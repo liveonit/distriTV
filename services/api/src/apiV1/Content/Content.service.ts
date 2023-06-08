@@ -1,6 +1,6 @@
 import { config } from '@src/config';
 import { Content } from '@src/entities/Content';
-import { BaseService } from '@src/utils/BaseClasses/BaseService';
+import { BaseService } from '@lib/BaseClasses/BaseService';
 import fileUpload, { UploadedFile } from 'express-fileupload';
 import { rm } from 'fs';
 import path from 'path';

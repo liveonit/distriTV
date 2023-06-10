@@ -1,7 +1,5 @@
 package com.distritv.data.repositories
 
-import android.util.Log
-import com.distritv.daemon.RequestDaemon
 import com.distritv.data.api.ApiService
 import com.distritv.data.api.model.ScheduleNetworkMapper
 import com.distritv.data.model.DeviceInfo

@@ -18,14 +18,12 @@ import { listLabels } from 'src/store/label/label.action'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
-import { labelSchema, LabelT } from 'src/store/label/label.type'
-import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod/dist/zod'
-import { t } from 'i18next'
 
 import LabelDeleteModal from './LabelDeleteModal'
 import LabelCreateAndEditModal from './LabelCreateAndEditModal'
+import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
+import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
+import { LabelT } from 'src/store/label/label.type'
 
 const useStyles = makeStyles({
   table: {
@@ -37,11 +35,15 @@ export default function LabelList() {
   const classes = useStyles()
   const dispatch = useDispatch()
 
-  const labelInitialState: Partial<LabelT> = { name: '', description: '' }
+  const searchQueryString = useSearchQueryString()
 
   React.useEffect(() => {
-    dispatch(listLabels())
-  }, [dispatch])
+    dispatch(
+      listLabels({
+        query: searchQueryString ? `search=${searchQueryString}` : '',
+      }),
+    )
+  }, [dispatch, searchQueryString])
 
   const isLoading = useSelector(labelsIsLoadingSelector)
   const labels = useSelector(labelsSelector)
@@ -57,17 +59,6 @@ export default function LabelList() {
 
   function handleCloseDeleteLabelModal() {
     setLabelToDelete(null)
-  }
-
-  const methods = useForm<Partial<LabelT>>({
-    resolver: zodResolver(labelSchema),
-    defaultValues: labelInitialState,
-  })
-
-  const { handleSubmit, control } = methods
-  
-  const onSubmit: SubmitHandler<Partial<LabelT>> = (data) => {
-    dispatch(listLabels(data))    
   }
 
   return isLoading ? (
@@ -93,19 +84,12 @@ export default function LabelList() {
           </Button>
         </Grid>
       </Grid>
-      <Grid container spacing={2}>      
-        <Grid item xs={2}>
-          <FormInputText name='name' control={control} fullWidth label={t('NAME')} variant='outlined'  />
-        </Grid>
-        <Grid item xs={2}>
-          <FormInputText name='description' control={control} fullWidth label={t('DESCRIPTION')} variant='outlined'  />            
-        </Grid>
-        <Grid item xs={2}>
-          <Button onClick={handleSubmit(onSubmit)} variant='contained' color='primary' size='small'>
-            Buscar
-          </Button>
-        </Grid>
-      </Grid>
+      <SearchBox
+        searches={[
+          { type: 'Input', name: 'name' },
+          { type: 'Input', name: 'description' },
+        ]}
+      />
       <br/>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>

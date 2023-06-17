@@ -50,7 +50,7 @@ export default function TelevisionList() {
   React.useEffect(() => {
     dispatch(
       listTelevisionsJoin({
-        query: `search=${searchQueryString}`,
+        query: searchQueryString ? `search=${searchQueryString}` : '',
       }),
     )
   }, [dispatch, searchQueryString])

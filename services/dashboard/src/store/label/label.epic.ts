@@ -3,7 +3,6 @@ import { map, mergeMap, catchError, debounceTime, concatMap } from 'rxjs/operato
 import { defer, of } from 'rxjs'
 import { storage } from '@utils/general/Storage'
 import { checkOrRefreshToken } from 'src/services/auth'
-import { stringifyQuery } from 'src/utils/functions'
 
 import { enqueueSnackbarAction } from '../app/app.action'
 import apiSvc from '../../services/api'
@@ -20,8 +19,11 @@ const listLabels: Epic = (action$) =>
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(({payload}) => {
       const { session } = storage.get<SessionT>('session') || {}
-
-      return apiSvc.request({ path: `/label?${payload ? stringifyQuery(payload) : ''}`, requireAuthType: session?.type }).pipe(
+      
+      return apiSvc.request({
+        path: `/label${payload?.query ? `?${payload.query}` : ''}`,
+        requireAuthType: session?.type 
+      }).pipe(
         map(({ response }) => { 
           return {
             type: LabelActionTypes.LIST_ALL_SUCCESS,

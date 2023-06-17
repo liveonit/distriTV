@@ -4,9 +4,10 @@ import React from 'react'
 
 interface SearchInput {
   onChange: (value: string) => void
-  value: string
+  value: string,
+  placeholder: string
 }
 
-export const SearchInput: React.FC<SearchInput> = ({ value, onChange }) => {
-  return <input value={value} onChange={(e) => onChange(e.target.value)}></input>
+export const SearchInput: React.FC<SearchInput> = ({ value, onChange, placeholder }) => {
+  return <input placeholder={placeholder} value={value} onChange={(e) => onChange(e.target.value)}></input>
 }

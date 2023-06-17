@@ -86,8 +86,8 @@ export default function LabelList() {
       </Grid>
       <SearchBox
         searches={[
-          { type: 'Input', name: 'name' },
-          { type: 'Input', name: 'description' },
+          { type: 'Input', name: 'name', placeholder: 'NAME' },
+          { type: 'Input', name: 'description', placeholder: 'DESCRIPTION' },
         ]}
       />
       <br/>

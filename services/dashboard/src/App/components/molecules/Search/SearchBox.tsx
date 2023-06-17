@@ -8,6 +8,7 @@ interface SearchBoxT {
   searches: {
     type: 'Input' | 'Select'
     name: string
+    placeholder: string
     options?: string[]
   }[]
 }
@@ -36,11 +37,12 @@ export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
           .join(';'),
       })
     })
-  const searchBar = searches.map((search: { type: any; name: string }) => {
+
+  const searchBar = searches.map((search: { type: any; name: string; placeholder: string }) => {
     switch (search.type) {
       case 'Input': {
         return (
-          <SearchInput value={state[search.name]} onChange={(value) => setState({ ...state, [search.name]: value })} />
+          <SearchInput value={state[search.name]} placeholder={search.placeholder} onChange={(value) => setState({ ...state, [search.name]: value })} />
         )
       }
       default: {

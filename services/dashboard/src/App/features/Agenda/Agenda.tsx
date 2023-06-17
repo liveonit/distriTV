@@ -23,6 +23,8 @@ import dayjs from 'dayjs'
 
 import AgendaCreateAndEditModal from './AgendaCreateAndEditModal'
 import AgendaDeleteModal from './AgendaDeleteModal'
+import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
+import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 
 const useStyles = makeStyles({
   table: {
@@ -33,10 +35,15 @@ const useStyles = makeStyles({
 export default function AgendaList() {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const searchQueryString = useSearchQueryString()
 
   React.useEffect(() => {
-    dispatch(listAgendas())
-  }, [dispatch])
+    dispatch(
+      listAgendas({
+        query: searchQueryString ? `search=${searchQueryString}` : '',
+      }),
+    )
+  }, [dispatch, searchQueryString])
 
   const isLoading = useSelector(agendasIsLoadingSelector)
   const agendas = useSelector(agendasSelector)
@@ -79,6 +86,14 @@ export default function AgendaList() {
           </Button>
         </Grid>
       </Grid>
+      <SearchBox
+            searches={[
+              { type: 'Input', name: 'content.name', placeholder: 'CONTENIDO' },
+              { type: 'Input', name: 'television.name', placeholder: 'TELEVISION' },
+              { type: 'Input', name: 'label.name', placeholder: 'LABEL' },
+            ]}
+          />
+          <br />
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>

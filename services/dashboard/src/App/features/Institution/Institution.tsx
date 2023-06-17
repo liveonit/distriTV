@@ -22,6 +22,8 @@ import { Trans } from 'react-i18next/TransWithoutContext'
 
 import InstitutionCreateAndEditModal from './InstitutionCreateAndEditModal'
 import InstitutionDeleteModal from './InstitutionDeleteModal'
+import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
+import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 
 const useStyles = makeStyles({
   table: {
@@ -32,10 +34,15 @@ const useStyles = makeStyles({
 export default function InstitutionList() {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const searchQueryString = useSearchQueryString()
 
   React.useEffect(() => {
-    dispatch(listInstitutions())
-  }, [dispatch])
+    dispatch(
+      listInstitutions({
+        query: searchQueryString ? `search=${searchQueryString}` : '',
+      }),
+    )
+  }, [dispatch, searchQueryString])
 
   const isLoading = useSelector(institutionsIsLoadingSelector)
   const institutions = useSelector(institutionsSelector)
@@ -76,6 +83,14 @@ export default function InstitutionList() {
           </Button>
         </Grid>
       </Grid>
+      <SearchBox
+        searches={[
+          { type: 'Input', name: 'name', placeholder: 'NAME' },
+          { type: 'Input', name: 'city', placeholder: 'CITY' },
+          { type: 'Input', name: 'locality', placeholder: 'LOCALITY' },          
+        ]}
+      />
+      <br/>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>

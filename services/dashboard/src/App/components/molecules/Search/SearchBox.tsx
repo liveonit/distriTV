@@ -3,6 +3,9 @@ import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { SearchInput } from './SearchInput'
+import Button from '@material-ui/core/Button'
+import { Trans } from 'react-i18next'
+import Search from '@material-ui/icons/Search'
 
 interface SearchBoxT {
   searches: {
@@ -52,9 +55,17 @@ export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
   })
 
   return (
-    <Box>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2}}>
       {searchBar}
-      <button onClick={setSearch}>Search</button>
+      <Button
+        variant='contained'
+        color='primary'
+        size='small'
+        startIcon={<Search />}
+        onClick={setSearch}            
+      >
+        <Trans>SEARCH</Trans>
+      </Button>
     </Box>
   )
 }

@@ -1,3 +1,4 @@
+import {TextField} from '@material-ui/core'
 import React from 'react'
 
 // <SearchBox search={{ name: InputText ,  "television.institution.id": Select,  }} />
@@ -9,5 +10,10 @@ interface SearchInput {
 }
 
 export const SearchInput: React.FC<SearchInput> = ({ value, onChange, placeholder }) => {
-  return <input placeholder={placeholder} value={value} onChange={(e) => onChange(e.target.value)}></input>
+  return <TextField 
+            value={value} 
+            variant='outlined'
+            label={placeholder}
+            onChange={(e) => onChange(e.target.value)}>
+          </TextField>
 }

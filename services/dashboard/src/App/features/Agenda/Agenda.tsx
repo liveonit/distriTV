@@ -83,11 +83,14 @@ export default function AgendaList() {
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
+            <TableCell>
+                <Trans>CONTENT</Trans>
+              </TableCell>
               <TableCell>
                 <Trans>TELEVISION</Trans>
               </TableCell>
               <TableCell>
-                <Trans>CONTENT</Trans>
+                <Trans>LABEL</Trans>
               </TableCell>
               <TableCell>
                 <Trans>START_DATE</Trans>
@@ -103,10 +106,13 @@ export default function AgendaList() {
           <TableBody>
             {agendas.map((agenda) => (
               <TableRow key={agenda.contentId}>
+                <TableCell>{agenda.contentId.toString()}</TableCell>
                 <TableCell component='th' scope='row'>
                   {agenda.televisionId}
                 </TableCell>
-                <TableCell>{agenda.contentId.toString()}</TableCell>
+                <TableCell component='th' scope='row'>
+                  {agenda.labelId}
+                </TableCell>
                 <TableCell>{dayjs(agenda.startDate.toLocaleString()).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
                 <TableCell>{dayjs(agenda.endDate.toLocaleString()).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
                 <TableCell>

@@ -20,7 +20,7 @@ const listAgendas: Epic = (action$) =>
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(() => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ path: '/schedule', requireAuthType: session?.type }).pipe(
+      return apiSvc.request({ path: '/schedule?relations=television,content,label', requireAuthType: session?.type }).pipe(
         map(({ response }) => {
           return {
             type: AgendaActionTypes.LIST_ALL_SUCCESS,

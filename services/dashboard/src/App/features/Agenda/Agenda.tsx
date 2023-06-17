@@ -106,12 +106,12 @@ export default function AgendaList() {
           <TableBody>
             {agendas.map((agenda) => (
               <TableRow key={agenda.contentId}>
-                <TableCell>{agenda.contentId.toString()}</TableCell>
+                <TableCell>{agenda.content?.name}</TableCell>
                 <TableCell component='th' scope='row'>
-                  {agenda.televisionId}
+                  {agenda.television?.name || '-'}
                 </TableCell>
                 <TableCell component='th' scope='row'>
-                  {agenda.labelId}
+                  {agenda.label?.name || '-'}
                 </TableCell>
                 <TableCell>{dayjs(agenda.startDate.toLocaleString()).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
                 <TableCell>{dayjs(agenda.endDate.toLocaleString()).format('YYYY-MM-DD HH:mm:ss')}</TableCell>

@@ -8,7 +8,7 @@ usage() {
 Development commands
 
 USAGE:
-    distri dev <COMMAND> <SUBCOMMAND> [OPTIONS]
+    distri dev <SUBCOMMAND>
 
 OPTIONS:
     -h, --help    Print help information

@@ -56,9 +56,6 @@
         src: "/home/{{ ansible_user }}/.kube/config"
         dest: cluster_config
         flat: true
-    - name: Set cluster credentials in variable
-      ansible.builtin.set_fact:
-        cluster_credentials: "{{ (credentials_output | from_yaml).clusters[0] }}"
 
 - name: Joining the cluster with workers
   hosts: workers

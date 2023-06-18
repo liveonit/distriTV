@@ -6,7 +6,7 @@ source $ROOT/commons/print.sh
 # @cmd Returns the information about how to run the cli.
 usage() {
   tee <<-EOF
-DistriTV DevOps CLI
+Infrastructure commands
 
 USAGE:
     distri <COMMAND> <SUBCOMMAND> [OPTIONS]

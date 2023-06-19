@@ -1,26 +1,33 @@
-import React from 'react'
-import { MenuItem, Select, SelectProps } from '@material-ui/core'
+import { MenuItem, Select } from '@material-ui/core';
+import React from 'react';
+interface SearchDropdownProps {
+  options: string[];
+  value: string;
+  onChange: (event: string) => void;
+}
 
-type FormInputDropdownPropsT = {
-  label: string
-  setValue?: any
-  selectOptions: { value: string | number; label: string }[]
-} & SelectProps
-
-export const SearchDropdown: React.FC<FormInputDropdownPropsT> = ({ label, selectOptions, ...otherProps }) => {
-  const generateSingleOptions = () => {
-    return selectOptions.map((option) => {
-      return (
-        <MenuItem key={option.value} value={option.value}>
-          {option.label}
-        </MenuItem>
-      )
-    })
-  }
+export const SearchDropdown: React.FC<SearchDropdownProps> = ({ options, value, onChange }) => {
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const selectedValues = event.target.value as string;
+    onChange(selectedValues);
+  };
 
   return (
-    <Select {...otherProps} labelId='demo-simple-select-label' label={label}>
-      {generateSingleOptions()}
+    <Select 
+      value={value} 
+      onChange={handleChange} 
+      variant='outlined'
+      style={{minWidth: 200}}>      
+      {options.map((option) => (
+        <MenuItem key={option} value={option}>
+          {option}
+        </MenuItem>
+      ))}
+      <MenuItem value="">
+        <em>None</em>
+      </MenuItem>
     </Select>
-  )
-}
+  );
+};
+
+export default SearchDropdown;

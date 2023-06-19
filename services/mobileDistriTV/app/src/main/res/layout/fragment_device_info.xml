@@ -6,7 +6,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.home.DeviceInfoFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="vertical"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp">
+
+    <Spinner
+        android:id="@+id/languageSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/device_info_title"

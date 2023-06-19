@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">mobileDistriTV</string>
+    <string name="app_preference_file_key">DistriTVApp</string>
+    <string name="device_info_title">Ingresar el código</string>
+    <string name="device_info_register_button">Registrar</string>
+    <string name="msg_tv_code_invalid">El código ingresado no es válido</string>
+    <string name="msg_tv_code_error">Ha ocurrido un error</string>
+    <string name="msg_tv_code_connection_error">Ha ocurrido un error de conexión</string>
+    <string name="msg_unavailable_content">No hay contenido disponible.</string>
+    <string-array name="languages">
+        <item>Idioma</item>
+        <item>Automático</item>
+        <item>English</item>
+        <item>Español</item>
+    </string-array>
+</resources>

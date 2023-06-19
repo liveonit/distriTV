@@ -7,6 +7,7 @@ import android.content.Context.ACTIVITY_SERVICE
 const val CONTENTS_DIRECTORY = ""
 
 const val TV_CODE = "tvCode"
+const val LOCALE = "locale"
 
 const val CONTENT_PARAM = "contentParam"
 const val CONTENT_BUNDLE_PARAM = "contentBundleParam"

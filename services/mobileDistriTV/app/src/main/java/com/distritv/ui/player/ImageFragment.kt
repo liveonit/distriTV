@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.distritv.R
 import com.distritv.data.model.Content
 import com.distritv.databinding.FragmentImageBinding
 import com.distritv.ui.FullscreenManager
@@ -82,7 +83,7 @@ class ImageFragment : Fragment() {
                 }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
             } else {
                 Log.e(TAG, "No image available.")
-                Toast.makeText(activity, "There is no content available.",
+                Toast.makeText(activity, getString(R.string.msg_unavailable_content),
                     Toast.LENGTH_SHORT).show()
             }
         }

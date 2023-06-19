@@ -24,6 +24,8 @@ import CreateAndEditContentModal from './CreateAndEditContentModal'
 import ContentDeleteModal from './ContentDeleteModal'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
+import { useTranslation } from 'react-i18next'
+import Link from '@material-ui/core/Link'
 
 const useStyles = makeStyles({
   table: {
@@ -35,6 +37,7 @@ export default function ContentList() {
   const classes = useStyles()
   const dispatch = useDispatch()
   const searchQueryString = useSearchQueryString()
+  const { t } = useTranslation()
 
   React.useEffect(() => {
     dispatch(
@@ -79,8 +82,8 @@ export default function ContentList() {
       </Grid>
       <SearchBox
         searches={[
-          { type: 'Input', name: 'name', placeholder: 'NAME' },
-          { type: 'Input', name: 'type', placeholder: 'TYPE' },
+          { type: 'Input', name: 'name', placeholder: t('NAME') },
+          { type: 'Input', name: 'type', placeholder: t('TYPE') },
         ]}
       />
       <br/>
@@ -101,7 +104,7 @@ export default function ContentList() {
                   {content.name}
                 </TableCell>
                 <TableCell>{content.type}</TableCell>
-                <TableCell>{content.url}</TableCell>
+                <TableCell><Link href={content.url}>{content.url}</Link></TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => {

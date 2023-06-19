@@ -24,6 +24,7 @@ import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 
 import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
 import TelevisionDeleteModal from './TelevisionDeleteModal'
+import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles({
   table: {
@@ -42,6 +43,7 @@ export default function TelevisionList() {
   const [televisionToDelete, setTelevisionToDelete] = React.useState<TelevisionT | null>(null)
   const [titleModal, setModalTitle] = React.useState('Titulo')
   const searchQueryString = useSearchQueryString()
+  const { t } = useTranslation()
 
   React.useEffect(() => {
     dispatch(
@@ -87,8 +89,8 @@ export default function TelevisionList() {
       </Grid>
       <SearchBox
         searches={[
-          { type: 'Input', name: 'tvCode', placeholder: 'TVCODE' },
-          { type: 'Input', name: 'name', placeholder: 'NAME' },
+          { type: 'Input', name: 'tvCode', placeholder: t('TV_CODE') },
+          { type: 'Input', name: 'name', placeholder: t('NAME') },
         ]}
       />
       <br />

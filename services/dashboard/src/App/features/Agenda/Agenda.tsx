@@ -25,6 +25,7 @@ import AgendaCreateAndEditModal from './AgendaCreateAndEditModal'
 import AgendaDeleteModal from './AgendaDeleteModal'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
+import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles({
   table: {
@@ -36,6 +37,7 @@ export default function AgendaList() {
   const classes = useStyles()
   const dispatch = useDispatch()
   const searchQueryString = useSearchQueryString()
+  const { t } = useTranslation()
 
   React.useEffect(() => {
     dispatch(
@@ -88,9 +90,9 @@ export default function AgendaList() {
       </Grid>
       <SearchBox
             searches={[
-              { type: 'Input', name: 'content.name', placeholder: 'CONTENIDO' },
-              { type: 'Input', name: 'television.name', placeholder: 'TELEVISION' },
-              { type: 'Input', name: 'label.name', placeholder: 'LABEL' },
+              { type: 'Input', name: 'content.name', placeholder: t('CONTENT') },
+              { type: 'Input', name: 'television.name', placeholder: t('TELEVISION') },
+              { type: 'Input', name: 'label.name', placeholder: t('LABEL') },
             ]}
           />
           <br />

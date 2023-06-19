@@ -24,6 +24,7 @@ import LabelCreateAndEditModal from './LabelCreateAndEditModal'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 import { LabelT } from 'src/store/label/label.type'
+import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles({
   table: {
@@ -36,6 +37,7 @@ export default function LabelList() {
   const dispatch = useDispatch()
 
   const searchQueryString = useSearchQueryString()
+  const { t } = useTranslation()
 
   React.useEffect(() => {
     dispatch(
@@ -86,8 +88,8 @@ export default function LabelList() {
       </Grid>
       <SearchBox
         searches={[
-          { type: 'Input', name: 'name', placeholder: 'NAME' },
-          { type: 'Input', name: 'description', placeholder: 'DESCRIPTION' },
+          { type: 'Input', name: 'name', placeholder: t('NAME') },
+          { type: 'Input', name: 'description', placeholder: t('DESCRIPTION') },
         ]}
       />
       <br/>

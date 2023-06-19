@@ -24,6 +24,7 @@ import InstitutionCreateAndEditModal from './InstitutionCreateAndEditModal'
 import InstitutionDeleteModal from './InstitutionDeleteModal'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
+import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles({
   table: {
@@ -35,6 +36,7 @@ export default function InstitutionList() {
   const classes = useStyles()
   const dispatch = useDispatch()
   const searchQueryString = useSearchQueryString()
+  const { t } = useTranslation()
 
   React.useEffect(() => {
     dispatch(
@@ -85,9 +87,9 @@ export default function InstitutionList() {
       </Grid>
       <SearchBox
         searches={[
-          { type: 'Input', name: 'name', placeholder: 'NAME' },
-          { type: 'Input', name: 'city', placeholder: 'CITY' },
-          { type: 'Input', name: 'locality', placeholder: 'LOCALITY' },          
+          { type: 'Input', name: 'name', placeholder: t('NAME') },
+          { type: 'Input', name: 'city', placeholder: t('CITY') },
+          { type: 'Input', name: 'locality', placeholder: t('LOCALITY') },          
         ]}
       />
       <br/>

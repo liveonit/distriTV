@@ -111,6 +111,10 @@ class RequestDaemon: Service() {
 
                 for (schedule in responseScheduleList) {
 
+                    if (!schedule.startDownloadRestriction()) {
+                        continue
+                    }
+
                     if (!schedule.isValidWithContent(TAG)) {
                         continue
                     }

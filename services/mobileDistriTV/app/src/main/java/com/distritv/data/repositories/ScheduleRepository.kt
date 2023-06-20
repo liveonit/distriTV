@@ -21,4 +21,13 @@ class ScheduleRepository(private val apiService: ApiService) : IScheduleReposito
         }
         return false
     }
+
+    override suspend fun validateConnection(tvCode: String): Boolean {
+        return try {
+            apiService.fetchTelevisionSchedule(tvCode)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 }

@@ -8,7 +8,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.distritv.R
+import com.distritv.data.model.DeviceInfoCard
 import com.distritv.data.repositories.ScheduleRepository
+import com.distritv.data.service.DeviceInfoService
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
 import kotlinx.coroutines.launch
@@ -17,9 +19,10 @@ import java.net.SocketTimeoutException
 import java.util.*
 
 class HomeViewModel(
+    private val context: Context,
+    private val deviceInfoService: DeviceInfoService,
     private val sharedPreferences: SharedPreferencesService,
-    private val scheduleRepository: ScheduleRepository,
-    private val context: Context
+    private val scheduleRepository: ScheduleRepository
 ) : ViewModel() {
 
     private val _isValid = MutableLiveData<Boolean>()
@@ -34,9 +37,9 @@ class HomeViewModel(
     val isRegistered: LiveData<Boolean>
         get() = _isRegistered
 
-    private val _tvCode = MutableLiveData<String>()
-    val tvCode: LiveData<String>
-        get() = _tvCode
+    private val _deviceInfo = MutableLiveData<DeviceInfoCard>()
+    val deviceInfo: LiveData<DeviceInfoCard>
+        get() = _deviceInfo
 
     private val _loading = MutableLiveData<Boolean>(false)
     val loading: LiveData<Boolean> get() = _loading
@@ -104,8 +107,17 @@ class HomeViewModel(
         _isRegistered.postValue(sharedPreferences.isDeviceRegistered())
     }
 
-    fun getTvCode() {
-        _tvCode.postValue(sharedPreferences.getTvCode())
+    fun getDeviceInfo() {
+        val info = deviceInfoService.getDeviceInfoCard()
+        _deviceInfo.postValue(info)
+        viewModelScope.launch {
+            sharedPreferences.getTvCode()?.let {
+                scheduleRepository.validateConnection(it).run {
+                    info.connectionStatus = this
+                    _deviceInfo.postValue(info)
+                }
+            }
+        }
     }
 
     fun setLocale() {

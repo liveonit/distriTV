@@ -11,8 +11,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.box = "ubuntu/focal64"
     config.ssh.insert_key = false
     config.vm.provider "virtualbox" do |v|
-      v.cpus = 2
-      v.memory = 2048
+
+      v.customize ["modifyvm", :id, "--memory", 4096]
+      v.customize ["modifyvm", :id, "--cpus", 2]
+      v.customize ["modifyvm", :id, "--ioapic", "on"]
+
     end
     config.vm.box_check_update = false
 
@@ -28,7 +31,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 config.vm.provision "shell", inline: <<-SHELL
                         cat /home/vagrant/.ssh/ssh-key.pub >> /home/vagrant/.ssh/authorized_keys
                 SHELL
-        end
+
+      config.vm.provider "virtualbox" do |v|
+      # Creating a virtual disk called "diskn2" with a size of 100GB
+        v.customize ["createhd", "--filename", "./diskn1", "--size", 100 * 1024]
+      # Attaching the newly created virtual disk to our node
+        v.customize ["storageattach", :id, "--storagectl", "SCSI", "--port", 3, "--device", 0, "--type", "hdd", "--medium", "./diskn1"]
+      end
+    end
 #=======================================================
 # Worker 1
 #=======================================================
@@ -40,7 +50,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 config.vm.provision "shell", inline: <<-SHELL
                         cat /home/vagrant/.ssh/ssh-key.pub >> /home/vagrant/.ssh/authorized_keys
                 SHELL
-        end
+      config.vm.provider "virtualbox" do |v|
+      # Creating a virtual disk called "diskn2" with a size of 100GB
+        v.customize ["createhd", "--filename", "./diskn2", "--size", 100 * 1024]
+      # Attaching the newly created virtual disk to our node
+        v.customize ["storageattach", :id, "--storagectl", "SCSI", "--port", 3, "--device", 0, "--type", "hdd", "--medium", "./diskn2"]
+      end
+    end
 #=======================================================
 # Worker 2
 #=======================================================
@@ -52,8 +68,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 config.vm.provision "shell", inline: <<-SHELL
                         cat /home/vagrant/.ssh/ssh-key.pub >> /home/vagrant/.ssh/authorized_keys
                 SHELL
-        end
-
+      config.vm.provider "virtualbox" do |v|
+      # Creating a virtual disk called "diskn2" with a size of 100GB
+        v.customize ["createhd", "--filename", "./diskn3", "--size", 100 * 1024]
+      # Attaching the newly created virtual disk to our node
+        v.customize ["storageattach", :id, "--storagectl", "SCSI", "--port", 3, "--device", 0, "--type", "hdd", "--medium", "./diskn3"]
+      end
+    end
 #=======================================================
 # Worker 3
 #=======================================================
@@ -65,5 +86,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                 config.vm.provision "shell", inline: <<-SHELL
                         cat /home/vagrant/.ssh/ssh-key.pub >> /home/vagrant/.ssh/authorized_keys
                 SHELL
-        end
+      config.vm.provider "virtualbox" do |v|
+      # Creating a virtual disk called "diskn2" with a size of 100GB
+        v.customize ["createhd", "--filename", "./diskn4", "--size", 100 * 1024]
+      # Attaching the newly created virtual disk to our node
+        v.customize ["storageattach", :id, "--storagectl", "SCSI", "--port", 3, "--device", 0, "--type", "hdd", "--medium", "./diskn4"]
+      end
+    end
 end

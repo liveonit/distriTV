@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.distritv.databinding.FragmentDeviceInfoBinding
+import com.distritv.ui.home.HomeViewModel.Companion.DEVICE_INFO
 import com.distritv.utils.*
 
 
@@ -89,32 +89,7 @@ class DeviceInfoFragment : Fragment() {
     }
 
     private fun languageSpinnerAdapter(): ArrayAdapter<String> {
-        val spinnerAdapter =
-            object : ArrayAdapter<String>(
-                context!!,
-                android.R.layout.simple_spinner_item,
-                languages
-            ) {
-                override fun isEnabled(position: Int): Boolean {
-                    // Disable the first item from Spinner
-                    // First item will be used for hint
-                    return position != HINT_POS
-                }
-
-                override fun getDropDownView(
-                    position: Int,
-                    convertView: View?,
-                    parent: ViewGroup
-                ): View {
-                    val view: TextView =
-                        super.getDropDownView(position, convertView, parent) as TextView
-                    // Set the color of first item in the drop down list to gray
-                    if (position == HINT_POS) {
-                        view.setTextColor(Color.GRAY)
-                    }
-                    return view
-                }
-            }
+        val spinnerAdapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, languages)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         return spinnerAdapter
     }
@@ -131,20 +106,9 @@ class DeviceInfoFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-                    // Set the color of first item in the drop down list to gray
-                    val value = parent!!.getItemAtPosition(position).toString()
-                    if (value == languages[HINT_POS]) {
-                        (view as TextView).setTextColor(Color.GRAY)
-                    }
-
                     // Change locale
-                    val selectedLanguage = parent.getItemIdAtPosition(position)
-                    homeActivityViewModel.changeLocale(selectedLanguage)
-
-                    // If "Auto" is selected, select the hint
-                    if (selectedLanguage == AUTOMATIC_POS.toLong()) {
-                        binding.languageSpinner.setSelection(HINT_POS)
-                    }
+                    val selectedLanguage = parent!!.getItemIdAtPosition(position)
+                    homeActivityViewModel.changeLocale(DEVICE_INFO, selectedLanguage)
 
                     updateErrorMessageLanguage()
                     updateLanguageItems(spinnerAdapter)
@@ -181,7 +145,7 @@ class DeviceInfoFragment : Fragment() {
                     binding.languageSpinner.setSelection(SPANISH_POS)
                 }
                 else -> {
-                    binding.languageSpinner.setSelection(HINT_POS)
+                    binding.languageSpinner.setSelection(AUTOMATIC_POS)
                 }
             }
         }

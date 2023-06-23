@@ -56,6 +56,22 @@ class HomeViewModel(
     val textButton: LiveData<String>
         get() = _textButton
 
+    private val _textInfoCardVersion = MutableLiveData<String>()
+    val textInfoCardVersion: LiveData<String>
+        get() = _textInfoCardVersion
+
+    private val _textInfoCardTvCode = MutableLiveData<String>()
+    val textInfoCardTvCode: LiveData<String>
+        get() = _textInfoCardTvCode
+
+    private val _textInfoCardConnStatus = MutableLiveData<String>()
+    val textInfoCardConnStatus: LiveData<String>
+        get() = _textInfoCardConnStatus
+
+    private val _textInfoCardLang = MutableLiveData<String>()
+    val textInfoCardLang: LiveData<String>
+        get() = _textInfoCardLang
+
     private var error: Int = -1
 
     fun registerTvCode(code: String) {
@@ -121,25 +137,17 @@ class HomeViewModel(
     }
 
     fun setLocale() {
-        val locale = sharedPreferences.getCustomLocale()
-        if (locale != null) {
-            val localeData = locale.split("_")
-            LocaleHelper.setLocale(context, Locale(localeData[0], localeData[1]))
-            _locale.postValue(localeData[0])
-        } else {
-            _locale.postValue("")
-        }
+        _locale.postValue(getCurrentLocale())
     }
 
-    fun changeLocale(itemPosition: Long) {
-        if (itemPosition == HINT_POS.toLong()) {
-            return
-        }
+    fun getCurrentLocale(): String {
+        return sharedPreferences.getCustomLocale()?.split("_")?.get(0) ?: ""
+    }
+
+    fun changeLocale(referrer: Int, itemPosition: Long) {
         when (itemPosition) {
             AUTOMATIC_POS.toLong() -> {
-                sharedPreferences.removeCustomLocale()
-                val systemLocale: Locale = Resources.getSystem().configuration.locales[0]
-                LocaleHelper.setLocale(context, systemLocale)
+                setSystemLocale()
             }
             ENGLISH_POS.toLong() -> {
                 saveLocale(Locale(EN_LANG, DEFAULT_COUNTRY))
@@ -148,13 +156,23 @@ class HomeViewModel(
                 saveLocale(Locale(ES_LANG, DEFAULT_COUNTRY))
             }
             else -> {
-                saveLocale(Locale(EN_LANG, DEFAULT_COUNTRY))
+                setSystemLocale()
             }
         }
-        updateUI()
+        if (referrer == DEVICE_INFO) {
+            updateUI()
+        } else {
+            updateInfoCardUI()
+        }
     }
 
-    private fun saveLocale(locale: Locale){
+    private fun setSystemLocale() {
+        sharedPreferences.removeCustomLocale()
+        val systemLocale: Locale = Resources.getSystem().configuration.locales[0]
+        LocaleHelper.setLocale(context, systemLocale)
+    }
+
+    private fun saveLocale(locale: Locale) {
         LocaleHelper.setLocale(context, locale)
         sharedPreferences.addCustomLocale("${locale.language}_${locale.country}")
     }
@@ -162,6 +180,13 @@ class HomeViewModel(
     private fun updateUI() {
         _textTitle.postValue(context.getString(R.string.device_info_title))
         _textButton.postValue(context.getString(R.string.device_info_register_button))
+    }
+
+    private fun updateInfoCardUI() {
+        _textInfoCardVersion.value = context.getString(R.string.info_card_version)
+        _textInfoCardTvCode.value = context.getString(R.string.info_card_tv_code)
+        _textInfoCardConnStatus.value = context.getString(R.string.info_card_connection_status)
+        _textInfoCardLang.value = context.getString(R.string.language)
     }
 
     fun getErrorMessage(): String {
@@ -174,5 +199,7 @@ class HomeViewModel(
 
     companion object {
         const val TAG = "[HomeViewModel]"
+        const val DEVICE_INFO = 0
+        const val HOME = 1
     }
 }

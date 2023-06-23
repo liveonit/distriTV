@@ -4,10 +4,9 @@ import android.content.Context
 import android.content.res.Configuration
 import java.util.*
 
-const val HINT_POS = 0
-const val AUTOMATIC_POS = 1
-const val ENGLISH_POS = 2
-const val SPANISH_POS = 3
+const val AUTOMATIC_POS = 0
+const val ENGLISH_POS = 1
+const val SPANISH_POS = 2
 
 const val EN_LANG = "en"
 const val ES_LANG = "es"

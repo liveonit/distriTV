@@ -7,8 +7,12 @@
     <string name="msg_tv_code_error">An error has occurred</string>
     <string name="msg_tv_code_connection_error">A connection error has occurred</string>
     <string name="msg_unavailable_content">There is no content available.</string>
+    <string name="info_card_version">Version:</string>
+    <string name="info_card_tv_code">TV code:</string>
+    <string name="info_card_connection_status">Connection status:</string>
+    <string name="language">Language:</string>
+    <string name="language_select">Select language</string>
     <string-array name="languages">
-        <item>Language</item>
         <item>Auto</item>
         <item>English</item>
         <item>Español</item>

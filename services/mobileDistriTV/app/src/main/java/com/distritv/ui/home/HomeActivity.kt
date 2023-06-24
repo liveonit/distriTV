@@ -3,10 +3,12 @@ package com.distritv.ui.home
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.distritv.DistriTVApp
 import com.distritv.R
@@ -44,6 +46,8 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         addFragmentObserver()
 
         checkIfDeviceIsRegistered()
+
+        requestPermissionExternalStorage()
 
         actionBar?.hide()
     }
@@ -141,7 +145,21 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         }
     }
 
+    private fun requestPermissionExternalStorage() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), MY_PERMISSIONS_REQUEST
+            )
+        }
+    }
+
     companion object {
+        private const val MY_PERMISSIONS_REQUEST = 100
         const val TAG = "[HomeActivity]"
     }
 

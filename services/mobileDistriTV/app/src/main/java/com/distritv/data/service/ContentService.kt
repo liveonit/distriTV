@@ -1,6 +1,7 @@
 package com.distritv.data.service
 
 import android.content.Context
+import android.os.Environment
 import android.util.Log
 import com.distritv.data.model.Content
 import com.distritv.utils.CONTENTS_DIRECTORY
@@ -78,12 +79,38 @@ class ContentService(private val contentDbService: ContentDBService,
 
     private fun writeContentToLocalStorage(content: Content, body: ResponseBody): String? {
         return try {
+          /*  val extStorageState = Environment.getExternalStorageState()
+            if (Environment.MEDIA_MOUNTED == extStorageState) {
+                Log.v(TAG, "siiiiii")
+            } else{
+                Log.v(TAG, "noooo")
+            }
 
-            val directory = File(context.filesDir, CONTENTS_DIRECTORY)
+            val directory = Environment.getExternalStorageDirectory()*/
 
+            ////////////////////////////////
+
+            val rootDir = Environment.getExternalStorageDirectory().absolutePath
+            val customDirectoryName = "MyCustomDirectory"
+            val customDirectory = File(rootDir, customDirectoryName)
+            if (!customDirectory.exists()) {
+                val directoryCreated = customDirectory.mkdirs()
+                if (!directoryCreated) {
+                    // Directory creation failed. Handle the situation accordingly.
+                }
+            }
+            //val fileName = "example.txt"
+           // val file = File(customDirectory, fileName)
             val fileName = "${content.name}.${content.type.substringAfterLast("/")}"
+            val file = File(customDirectory, fileName)
 
-            val file = File(directory, fileName)
+//////////////////////////////////////
+
+        //    val directory = File(context.filesDir, CONTENTS_DIRECTORY)
+//
+           // val fileName = "${content.name}.${content.type.substringAfterLast("/")}"
+
+     //       val file = File(directory, fileName)
 
             var inputStream: InputStream? = null
             var outputStream: OutputStream? = null

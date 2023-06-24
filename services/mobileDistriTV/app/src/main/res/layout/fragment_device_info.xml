@@ -17,17 +17,17 @@
         <ImageView
             android:layout_width="25dp"
             android:layout_height="25dp"
+            android:gravity="center_vertical"
             android:scaleType="fitCenter"
             android:src="@drawable/lang_64"
-            android:gravity="center_vertical"
-            app:tint="@color/white"/>
+            app:tint="@color/white" />
 
         <Spinner
             android:id="@+id/languageSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:gravity="center_vertical"/>
+            android:gravity="center_vertical" />
 
     </LinearLayout>
 

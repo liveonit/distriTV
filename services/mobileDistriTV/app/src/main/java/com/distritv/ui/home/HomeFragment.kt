@@ -124,7 +124,7 @@ class HomeFragment: Fragment() {
             progressBar.layoutParams = LinearLayout.LayoutParams(CIRCLE_SIZE, CIRCLE_SIZE)
             progressBar.indeterminateTintList = ColorStateList.valueOf(Color.BLACK)
 
-           binding.connectionStatusValue.addView(progressBar)
+            binding.connectionStatusValue.addView(progressBar)
         } else {
             val imageView = ImageView(context)
             imageView.layoutParams = LinearLayout.LayoutParams(CIRCLE_SIZE, CIRCLE_SIZE)

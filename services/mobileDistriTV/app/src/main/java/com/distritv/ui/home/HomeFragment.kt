@@ -3,22 +3,20 @@ package com.distritv.ui.home
 
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.distritv.R
 import com.distritv.databinding.FragmentHomeBinding
 import com.distritv.ui.FullscreenManager
+import com.distritv.ui.home.HomeViewModel.Companion.HOME
+import com.distritv.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -33,6 +31,8 @@ class HomeFragment: Fragment() {
     var infoBtnVisible = false
 
     private val handler = Handler(Looper.getMainLooper())
+
+    private lateinit var languages: Array<String>
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -57,6 +57,10 @@ class HomeFragment: Fragment() {
         fullscreenManager?.enterFullscreen()
         loadImage()
         deviceInfoObserver()
+        textsObserver()
+        setSpinnerSelection()
+
+        viewModel.setLocale()
 
         setupInformationButton()
     }
@@ -72,11 +76,11 @@ class HomeFragment: Fragment() {
 
     private fun deviceInfoObserver() {
         viewModel.deviceInfo.observe(this) { deviceInfoCard ->
-            binding.cardContent.removeAllViews()
-            addTextView(resources.getString(R.string.app_name), true)
-            addTextView("$CARD_INFO_VERSION: ${deviceInfoCard.currentVersionApp}", false)
-            addTextView("$CARD_INFO_TV_CODE: ${deviceInfoCard.tvCode}", false)
+            binding.versionValue.text = deviceInfoCard.currentVersionApp
+            binding.tvCodeValue.text = deviceInfoCard.tvCode
             addStatus(deviceInfoCard.connectionStatus)
+            languageSpinner()
+            setSpinnerSelection()
         }
     }
 
@@ -113,35 +117,14 @@ class HomeFragment: Fragment() {
         }
     }
 
-    private fun addTextView(text: String, bold: Boolean) {
-        val textView = TextView(context)
-        textView.text = text
-        textView.setTextColor(Color.BLACK)
-        if (bold) {
-            textView.typeface = Typeface.DEFAULT_BOLD
-        }
-        binding.cardContent.addView(textView)
-    }
-
     private fun addStatus(status: Boolean?) {
-        val linearLayout = LinearLayout(context)
-        linearLayout.orientation = LinearLayout.HORIZONTAL
-        linearLayout.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        val textView = TextView(context)
-        textView.text = "$CARD_INFO_CONN_STATUS: "
-        textView.setTextColor(Color.BLACK)
-        linearLayout.addView(textView)
-
+        binding.connectionStatusValue.removeAllViews()
         if (status == null) {
             val progressBar = ProgressBar(context)
             progressBar.layoutParams = LinearLayout.LayoutParams(CIRCLE_SIZE, CIRCLE_SIZE)
             progressBar.indeterminateTintList = ColorStateList.valueOf(Color.BLACK)
 
-            linearLayout.addView(progressBar)
+            binding.connectionStatusValue.addView(progressBar)
         } else {
             val imageView = ImageView(context)
             imageView.layoutParams = LinearLayout.LayoutParams(CIRCLE_SIZE, CIRCLE_SIZE)
@@ -153,18 +136,86 @@ class HomeFragment: Fragment() {
                 imageView.background =
                     ContextCompat.getDrawable(requireContext(), R.drawable.circle_shape_red)
             }
-            linearLayout.addView(imageView)
-        }
 
-        binding.cardContent.addView(linearLayout)
+            binding.connectionStatusValue.addView(imageView)
+        }
+    }
+
+    private fun textsObserver() {
+        viewModel.textInfoCardVersion.observe(viewLifecycleOwner) { text ->
+            binding.versionKey.text = text
+        }
+        viewModel.textInfoCardTvCode.observe(viewLifecycleOwner) { text ->
+            binding.tvCodeKey.text = text
+        }
+        viewModel.textInfoCardConnStatus.observe(viewLifecycleOwner) { text ->
+            binding.connectionStatusKey.text = text
+        }
+        viewModel.textInfoCardLang.observe(viewLifecycleOwner) { text ->
+            binding.languageKey.text = text
+        }
+    }
+
+    private fun languageSpinner() {
+        languages = viewModel.getLanguages()
+        val spinnerAdapter = languageSpinnerAdapter()
+        binding.languageSpinner.adapter = spinnerAdapter
+        languageSpinnerListener(spinnerAdapter)
+    }
+
+    private fun languageSpinnerAdapter(): ArrayAdapter<String> {
+        val spinnerAdapter = ArrayAdapter(context!!, R.layout.spinner_item, languages)
+        spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice)
+        return spinnerAdapter
+    }
+
+    private fun languageSpinnerListener(spinnerAdapter: ArrayAdapter<String>) {
+        binding.languageSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    // Change locale
+                    val selectedLanguage = parent!!.getItemIdAtPosition(position)
+                    viewModel.changeLocale(HOME, selectedLanguage)
+
+                    updateLanguageItems(spinnerAdapter)
+                }
+            }
+    }
+
+    private fun updateLanguageItems(spinnerAdapter: ArrayAdapter<String>) {
+        var auxPosition = 0
+        viewModel.getLanguages().forEach { lang ->
+            languages[auxPosition] = lang
+            auxPosition++
+        }
+        spinnerAdapter.notifyDataSetChanged()
+    }
+
+    private fun setSpinnerSelection() {
+        when (viewModel.getCurrentLocale()) {
+            EN_LANG -> {
+                binding.languageSpinner.setSelection(ENGLISH_POS)
+            }
+            ES_LANG -> {
+                binding.languageSpinner.setSelection(SPANISH_POS)
+            }
+            else -> {
+                binding.languageSpinner.setSelection(AUTOMATIC_POS)
+            }
+        }
     }
 
     companion object {
         const val TAG = "[HomeFragment]"
         private const val CIRCLE_SIZE = 40
-        private const val CARD_INFO_VERSION = "Versión"
-        private const val CARD_INFO_TV_CODE = "Código de TV"
-        private const val CARD_INFO_CONN_STATUS = "Estado de conexión"
     }
 
 }

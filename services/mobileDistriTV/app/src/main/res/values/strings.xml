@@ -1,6 +1,20 @@
 <resources>
     <string name="app_name">mobileDistriTV</string>
     <string name="app_preference_file_key">DistriTVApp</string>
-    <string name="device_info_title">Ingresar el código</string>
-    <string name="device_info_register_button">Registrar</string>
+    <string name="device_info_title">Enter the TV code</string>
+    <string name="device_info_register_button">Register</string>
+    <string name="msg_tv_code_invalid">The code entered is invalid</string>
+    <string name="msg_tv_code_error">An error has occurred</string>
+    <string name="msg_tv_code_connection_error">A connection error has occurred</string>
+    <string name="msg_unavailable_content">There is no content available.</string>
+    <string name="info_card_version">Version:</string>
+    <string name="info_card_tv_code">TV code:</string>
+    <string name="info_card_connection_status">Connection status:</string>
+    <string name="language">Language:</string>
+    <string name="language_select">Select language</string>
+    <string-array name="languages">
+        <item>Auto</item>
+        <item>English</item>
+        <item>Español</item>
+    </string-array>
 </resources>

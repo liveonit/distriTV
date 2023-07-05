@@ -21,10 +21,12 @@ export class App {
   }
 
   private setMiddlewares = (): void => {
-    this.app.use(fileUpload({
-      useTempFiles: true,
-      tempFileDir: '/tmp/',
-    }),)
+    this.app.use(
+      fileUpload({
+        useTempFiles: true,
+        tempFileDir: '/tmp/',
+      }),
+    );
     this.app.use(express.json());
     this.app.use(urlencoded({ extended: true }));
     this.app.use(helmet());
@@ -45,7 +47,11 @@ export class App {
     const dbMigrations = (await db.getConnection().showMigrations())
       ? 'There are pending migrations'
       : "There aren't pending migrations";
-    const redisStatus = (await redisClient.ping()) === 'PONG' ? 'Connected' : 'Disconnected';
+    const redisStatus = config.REDIS_ENABLED
+      ? (await redisClient.ping()) === 'PONG'
+        ? 'Connected'
+        : 'Disconnected'
+      : 'disabled';
     return res.status(200).json({
       dbStatus,
       dbMigrations,

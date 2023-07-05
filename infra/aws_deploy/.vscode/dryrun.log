@@ -1,0 +1,13 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/ignaciobarreto/Documents/projects/aws-academy/cdkExamples/5.0_elb-ecs-rds-cloudfront'
+if [ ! -d infra/node_modules ]; then \
+		cd infra && npm install && cd -; \
+	fi
+if [ ! -d frontend/node_modules ]; then \
+		cd frontend && npm install && cd -; \
+	fi
+cd frontend && npm run build && cd -
+make bootstrap
+cd infra && npx cdk --profile december deploy --all --require-approval never && cd -
+make: Leaving directory `/Users/ignaciobarreto/Documents/projects/aws-academy/cdkExamples/5.0_elb-ecs-rds-cloudfront'
+ 

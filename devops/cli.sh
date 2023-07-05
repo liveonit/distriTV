@@ -18,6 +18,7 @@ COMMANDS:
     infra                     Run or deploy the base hardware/software in an On Premises environment. [alias: i]
     dev                       Set of commands to run the project on the local development environmnet. [alias: d]
     services                  Deploy services to specific environment. [alias: s]
+    minikube                  Setup minikube environment. [alias: m]
 EOF
 }
 
@@ -35,6 +36,11 @@ case $1 in
   s|services)
     shift
     "$ROOT/commands/services.sh" "$@"
+    exit 0
+    ;;
+   m|minikube)
+    shift
+    "$ROOT/commands/minikube.sh" "$@"
     exit 0
     ;;
   *)

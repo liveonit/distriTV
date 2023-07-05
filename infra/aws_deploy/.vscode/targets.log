@@ -1,0 +1,490 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 3.81
+# Copyright (C) 2006  Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.
+# There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# This program built for i386-apple-darwin11.3.0
+
+# Make data base, printed on Wed Jul 13 11:41:39 2022
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# makefile (from `.env', line 10)
+DB_PORT = 5432
+# environment
+RESET_ALL = \x1b[0m
+# environment
+LC_CTYPE = en_US.UTF-8
+# environment
+NVM_INC = /Users/ignaciobarreto/.nvm/versions/node/v18.4.0/include/node
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# environment
+CPPFLAGS = -I/usr/local/opt/openssl@1.1/include
+# environment
+FG_CYAN = \x1b[36;
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# automatic
+@F = $(notdir $@)
+# makefile
+CURDIR := /Users/ignaciobarreto/Documents/projects/aws-academy/cdkExamples/5.0_elb-ecs-rds-cloudfront
+# makefile
+SHELL = /bin/sh
+# environment
+MANPAGER = nvim +Man!
+# environment
+FZF_DEFAULT_COMMAND = fd --type file --follow --hidden --exclude .git --exclude node_modules
+# makefile (from `.env', line 2)
+AWS_PROFILE = december
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# environment
+EDITOR = nvim
+# environment
+_ = /usr/bin/make
+# makefile (from `.env', line 1)
+MAKEFILE_LIST :=  Makefile .env
+# makefile (from `.env', line 17)
+ENCRYPT_PASSWORD = 3ncryp7passw0rd
+# environment
+HISTCONTROL = ignoreboth
+# environment
+GO111MODULE = on
+# environment
+FS_BOLD = 1m
+# environment
+FS_REG = 21;24m
+# environment
+PERL_MM_OPT = INSTALL_BASE=/Users/ignaciobarreto/perl5
+# environment
+BG_MAGENTA = 45;
+# environment
+__CFBundleIdentifier = com.microsoft.VSCode
+# environment
+INFOPATH = /opt/homebrew/share/info:/opt/homebrew/share/info:
+# environment
+BG_GREEN = 42;
+# environment
+FG_WHITE = \x1b[37;
+# environment
+FG_BLUE = \x1b[34;
+# environment
+NVM_COMPLETION = true
+# environment
+VSCODE_CWD = /Users/ignaciobarreto/Documents/projects/aws-academy/cdkExamples/5.0_elb-ecs-rds-cloudfront
+# environment
+LESS_TERMCAP_me = [0m
+# environment
+LESS_TERMCAP_mb = [1;32m
+# environment
+LSCOLORS = Gxfxcxdxbxegedabagacad
+# environment
+LESS_TERMCAP_se = [0m
+# makefile (from `.env', line 16)
+JWT_SECRET_KEY = jw7s3cr37k3y0f3c4mpl3!
+# environment
+ZDOTDIR = /Users/ignaciobarreto
+# environment
+FG_BR_MAGENTA = \x1b[95;
+# environment
+NVM_BIN = /Users/ignaciobarreto/.nvm/versions/node/v18.4.0/bin
+# environment
+FG_BR_GREEN = \x1b[92;
+# environment
+BG_RED = 41;
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+PYENV_ROOT = /Users/ignaciobarreto/.pyenv
+# environment
+LDFLAGS = -L/usr/local/opt/openssl@1.1/lib
+# environment
+BG_BLACK = 40;
+# default
+.FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
+# environment
+LS_COLORS = mh=0:cd=0;38;2;187;154;247;48;2;115;122;162:so=0;38;2;65;72;104;48;2;187;154;247:*~=0;38;2;84;92;126:sg=0:ln=0;38;2;187;154;247:ca=0:tw=0:mi=0;38;2;65;72;104;48;2;247;118;142:rs=0:or=0;38;2;65;72;104;48;2;247;118;142:st=0:pi=0;38;2;65;72;104;48;2;61;89;161:fi=0:ex=1;38;2;247;118;142:no=0:bd=0;38;2;125;207;255;48;2;115;122;162:di=0;38;2;61;89;161:do=0:ow=0:su=0:*.p=0;38;2;158;206;106:*.d=0;38;2;158;206;106:*.r=0;38;2;158;206;106:*.o=0;38;2;84;92;126:*.z=4;38;2;125;207;255:*.c=0;38;2;158;206;106:*.h=0;38;2;158;206;106:*.t=0;38;2;158;206;106:*.m=0;38;2;158;206;106:*.a=1;38;2;247;118;142:*.ml=0;38;2;158;206;106:*.pm=0;38;2;158;206;106:*.7z=4;38;2;125;207;255:*.so=1;38;2;247;118;142:*.td=0;38;2;158;206;106:*.rs=0;38;2;158;206;106:*.py=0;38;2;158;206;106:*.lo=0;38;2;84;92;126:*.ll=0;38;2;158;206;106:*.kt=0;38;2;158;206;106:*.pl=0;38;2;158;206;106:*.hi=0;38;2;84;92;126:*.ui=0;38;2;224;175;104:*.el=0;38;2;158;206;106:*.xz=4;38;2;125;207;255:*.hs=0;38;2;158;206;106:*.cc=0;38;2;158;206;106:*.bc=0;38;2;84;92;126:*.cr=0;38;2;158;206;106:*.cs=0;38;2;158;206;106:*css=0;38;2;158;206;106:*.fs=0;38;2;158;206;106:*.vb=0;38;2;158;206;106:*.wv=0;38;2;187;154;247:*.jl=0;38;2;158;206;106:*.bz=4;38;2;125;207;255:*.ps=0;38;2;247;118;142:*.pp=0;38;2;158;206;106:*.di=0;38;2;158;206;106:*.nb=0;38;2;158;206;106:*.ts=0;38;2;158;206;106:*.la=0;38;2;84;92;126:*.hh=0;38;2;158;206;106:*.rb=0;38;2;158;206;106:*.md=0;38;2;224;175;104:*.ko=1;38;2;247;118;142:*.gv=0;38;2;158;206;106:*.cp=0;38;2;158;206;106:*.gz=4;38;2;125;207;255:*.as=0;38;2;158;206;106:*.sh=0;38;2;158;206;106:*.js=0;38;2;158;206;106:*.rm=0;38;2;187;154;247:*.ex=0;38;2;158;206;106:*.go=0;38;2;158;206;106:*.mn=0;38;2;158;206;106:*.pyc=0;38;2;84;92;126:*.asa=0;38;2;158;206;106:*.cfg=0;38;2;224;175;104:*.mli=0;38;2;158;206;106:*.rtf=0;38;2;247;118;142:*.h++=0;38;2;158;206;106:*.ods=0;38;2;247;118;142:*.kts=0;38;2;158;206;106:*.bst=0;38;2;224;175;104:*.bat=1;38;2;247;118;142:*.bbl=0;38;2;84;92;126:*.elm=0;38;2;158;206;106:*.bak=0;38;2;84;92;126:*.vim=0;38;2;158;206;106:*hgrc=0;38;2;158;206;106:*.def=0;38;2;158;206;106:*.bcf=0;38;2;84;92;126:*.odp=0;38;2;247;118;142:*.deb=4;38;2;125;207;255:*.bz2=4;38;2;125;207;255:*.tex=0;38;2;158;206;106:*.tml=0;38;2;224;175;104:*.m4a=0;38;2;187;154;247:*.tbz=4;38;2;125;207;255:*.img=4;38;2;125;207;255:*.mov=0;38;2;187;154;247:*.rpm=4;38;2;125;207;255:*.dox=0;38;2;158;206;106:*.psd=0;38;2;187;154;247:*.jpg=0;38;2;187;154;247:*.xmp=0;38;2;224;175;104:*.mkv=0;38;2;187;154;247:*.wmv=0;38;2;187;154;247:*.sbt=0;38;2;158;206;106:*.jar=4;38;2;125;207;255:*.ltx=0;38;2;158;206;106:*.apk=4;38;2;125;207;255:*.c++=0;38;2;158;206;106:*.fnt=0;38;2;187;154;247:*.bmp=0;38;2;187;154;247:*.mir=0;38;2;158;206;106:*.txt=0;38;2;224;175;104:*.nix=0;38;2;224;175;104:*.epp=0;38;2;158;206;106:*.ppt=0;38;2;247;118;142:*.lua=0;38;2;158;206;106:*.dot=0;38;2;158;206;106:*.sql=0;38;2;158;206;106:*.ipp=0;38;2;158;206;106:*.yml=0;38;2;224;175;104:*.odt=0;38;2;247;118;142:*.ps1=0;38;2;158;206;106:*.aif=0;38;2;187;154;247:*.exs=0;38;2;158;206;106:*.rar=4;38;2;125;207;255:*.ini=0;38;2;224;175;104:*.cgi=0;38;2;158;206;106:*.mp4=0;38;2;187;154;247:*.pro=0;38;2;158;206;106:*.ttf=0;38;2;187;154;247:*.otf=0;38;2;187;154;247:*.m4v=0;38;2;187;154;247:*.wma=0;38;2;187;154;247:*.mp3=0;38;2;187;154;247:*.pyo=0;38;2;84;92;126:*.ilg=0;38;2;84;92;126:*.mpg=0;38;2;187;154;247:*.tgz=4;38;2;125;207;255:*.doc=0;38;2;247;118;142:*.kex=0;38;2;247;118;142:*.tcl=0;38;2;158;206;106:*.xls=0;38;2;247;118;142:*.php=0;38;2;158;206;106:*.vcd=4;38;2;125;207;255:*.csv=0;38;2;224;175;104:*.svg=0;38;2;187;154;247:*.fsi=0;38;2;158;206;106:*.bsh=0;38;2;158;206;106:*.tif=0;38;2;187;154;247:*.ogg=0;38;2;187;154;247:*.tar=4;38;2;125;207;255:*.awk=0;38;2;158;206;106:*.csx=0;38;2;158;206;106:*.pod=0;38;2;158;206;106:*TODO=1:*.swp=0;38;2;84;92;126:*.wav=0;38;2;187;154;247:*.pkg=4;38;2;125;207;255:*.iso=4;38;2;125;207;255:*.sxi=0;38;2;247;118;142:*.xcf=0;38;2;187;154;247:*.dpr=0;38;2;158;206;106:*.htc=0;38;2;158;206;106:*.sxw=0;38;2;247;118;142:*.rst=0;38;2;224;175;104:*.hpp=0;38;2;158;206;106:*.arj=4;38;2;125;207;255:*.clj=0;38;2;158;206;106:*.inc=0;38;2;158;206;106:*.mid=0;38;2;187;154;247:*.ics=0;38;2;247;118;142:*.idx=0;38;2;84;92;126:*.swf=0;38;2;187;154;247:*.ppm=0;38;2;187;154;247:*.inl=0;38;2;158;206;106:*.git=0;38;2;84;92;126:*.bag=4;38;2;125;207;255:*.hxx=0;38;2;158;206;106:*.flv=0;38;2;187;154;247:*.zsh=0;38;2;158;206;106:*.aux=0;38;2;84;92;126:*.pas=0;38;2;158;206;106:*.out=0;38;2;84;92;126:*.png=0;38;2;187;154;247:*.dmg=4;38;2;125;207;255:*.tmp=0;38;2;84;92;126:*.blg=0;38;2;84;92;126:*.erl=0;38;2;158;206;106:*.exe=1;38;2;247;118;142:*.sty=0;38;2;84;92;126:*.cpp=0;38;2;158;206;106:*.bib=0;38;2;224;175;104:*.fls=0;38;2;84;92;126:*.cxx=0;38;2;158;206;106:*.pgm=0;38;2;187;154;247:*.zst=4;38;2;125;207;255:*.pbm=0;38;2;187;154;247:*.gif=0;38;2;187;154;247:*.vob=0;38;2;187;154;247:*.ico=0;38;2;187;154;247:*.pyd=0;38;2;84;92;126:*.fsx=0;38;2;158;206;106:*.avi=0;38;2;187;154;247:*.gvy=0;38;2;158;206;106:*.xlr=0;38;2;247;118;142:*.ind=0;38;2;84;92;126:*.com=1;38;2;247;118;142:*.toc=0;38;2;84;92;126:*.xml=0;38;2;224;175;104 
+make: *** No rule to make target `all'.  Stop.
+
+:*.htm=0;38;2;224;175;104:*.tsx=0;38;2;158;206;106:*.zip=4;38;2;125;207;255:*.pps=0;38;2;247;118;142:*.dll=1;38;2;247;118;142:*.log=0;38;2;84;92;126:*.eps=0;38;2;187;154;247:*.pdf=0;38;2;247;118;142:*.fon=0;38;2;187;154;247:*.bin=4;38;2;125;207;255:*.pid=0;38;2;84;92;126:*.docx=0;38;2;247;118;142:*.opus=0;38;2;187;154;247:*.mpeg=0;38;2;187;154;247:*.dart=0;38;2;158;206;106:*.epub=0;38;2;247;118;142:*.json=0;38;2;224;175;104:*.diff=0;38;2;158;206;106:*.conf=0;38;2;224;175;104:*.make=0;38;2;158;206;106:*.purs=0;38;2;158;206;106:*.psm1=0;38;2;158;206;106:*.less=0;38;2;158;206;106:*.webm=0;38;2;187;154;247:*.toml=0;38;2;224;175;104:*.yaml=0;38;2;224;175;104:*.flac=0;38;2;187;154;247:*.rlib=0;38;2;84;92;126:*.bash=0;38;2;158;206;106:*.pptx=0;38;2;247;118;142:*.fish=0;38;2;158;206;106:*.tbz2=4;38;2;125;207;255:*.h264=0;38;2;187;154;247:*.lisp=0;38;2;158;206;106:*.xlsx=0;38;2;247;118;142:*.html=0;38;2;224;175;104:*.hgrc=0;38;2;158;206;106:*.java=0;38;2;158;206;106:*.tiff=0;38;2;187;154;247:*.psd1=0;38;2;158;206;106:*.lock=0;38;2;84;92;126:*.jpeg=0;38;2;187;154;247:*.orig=0;38;2;84;92;126:*shadow=0;38;2;224;175;104:*.scala=0;38;2;158;206;106:*.mdown=0;38;2;224;175;104:*.xhtml=0;38;2;224;175;104:*.cache=0;38;2;84;92;126:*.class=0;38;2;84;92;126:*.toast=4;38;2;125;207;255:*.swift=0;38;2;158;206;106:*.dyn_o=0;38;2;84;92;126:*.cabal=0;38;2;158;206;106:*.ipynb=0;38;2;158;206;106:*README=0;38;2;26;27;38;48;2;224;175;104:*.shtml=0;38;2;224;175;104:*.patch=0;38;2;158;206;106:*.cmake=0;38;2;158;206;106:*passwd=0;38;2;224;175;104:*.flake8=0;38;2;158;206;106:*.config=0;38;2;224;175;104:*.ignore=0;38;2;158;206;106:*.gradle=0;38;2;158;206;106:*.matlab=0;38;2;158;206;106:*INSTALL=0;38;2;26;27;38;48;2;224;175;104:*.groovy=0;38;2;158;206;106:*TODO.md=1:*COPYING=0;38;2;86;95;137:*.dyn_hi=0;38;2;84;92;126:*LICENSE=0;38;2;86;95;137:*.gemspec=0;38;2;158;206;106:*.desktop=0;38;2;224;175;104:*Doxyfile=0;38;2;158;206;106:*setup.py=0;38;2;158;206;106:*TODO.txt=1:*Makefile=0;38;2;158;206;106:*configure=0;38;2;158;206;106:*README.md=0;38;2;26;27;38;48;2;224;175;104:*.markdown=0;38;2;224;175;104:*COPYRIGHT=0;38;2;86;95;137:*.fdignore=0;38;2;158;206;106:*.cmake.in=0;38;2;158;206;106:*.kdevelop=0;38;2;158;206;106:*.DS_Store=0;38;2;84;92;126:*.rgignore=0;38;2;158;206;106:*CODEOWNERS=0;38;2;158;206;106:*README.txt=0;38;2;26;27;38;48;2;224;175;104:*.localized=0;38;2;84;92;126:*SConscript=0;38;2;158;206;106:*.scons_opt=0;38;2;84;92;126:*Dockerfile=0;38;2;224;175;104:*INSTALL.md=0;38;2;26;27;38;48;2;224;175;104:*SConstruct=0;38;2;158;206;106:*.gitignore=0;38;2;158;206;106:*.gitconfig=0;38;2;158;206;106:*MANIFEST.in=0;38;2;158;206;106:*Makefile.in=0;38;2;84;92;126:*INSTALL.txt=0;38;2;26;27;38;48;2;224;175;104:*LICENSE-MIT=0;38;2;86;95;137:*Makefile.am=0;38;2;158;206;106:*.synctex.gz=0;38;2;84;92;126:*.gitmodules=0;38;2;158;206;106:*.travis.yml=0;38;2;158;206;106:*appveyor.yml=0;38;2;158;206;106:*configure.ac=0;38;2;158;206;106:*.fdb_latexmk=0;38;2;84;92;126:*CONTRIBUTORS=0;38;2;26;27;38;48;2;224;175;104:*.applescript=0;38;2;158;206;106:*.clang-format=0;38;2;158;206;106:*CMakeCache.txt=0;38;2;84;92;126:*LICENSE-APACHE=0;38;2;86;95;137:*.gitattributes=0;38;2;158;206;106:*CMakeLists.txt=0;38;2;158;206;106:*CONTRIBUTORS.md=0;38;2;26;27;38;48;2;224;175;104:*requirements.txt=0;38;2;158;206;106:*CONTRIBUTORS.txt=0;38;2;26;27;38;48;2;224;175;104:*.sconsign.dblite=0;38;2;84;92;126:*package-lock.json=0;38;2;84;92;126:*.CFUserTextEncoding=0;38;2;84;92;126
+# environment
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.GQixAcIcMB/Listeners
+# automatic
+%F = $(notdir $%)
+# environment
+RESET_BOLD = \x1b[21m
+# environment
+FZF_CTRL_T_COMMAND = fd --type file --follow --hidden --exclude .git --exclude node_modules
+# environment
+ZSH_TMUX_CONFIG = /Users/ignaciobarreto/.tmux.conf
+# environment
+TMUX_PANE = %6
+# environment
+PWD = /Users/ignaciobarreto/Documents/projects/aws-academy/cdkExamples/5.0_elb-ecs-rds-cloudfront
+# environment
+HOMEBREW_CELLAR = /opt/homebrew/Cellar
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+# environment
+FG_BR_RED = \x1b[91;
+# environment
+LESS_TERMCAP_ue = [0m
+# environment
+MANPATH = /Users/ignaciobarreto/.nvm/versions/node/v18.4.0/share/man:/opt/homebrew/share/man:/usr/share/man:/usr/local/share/man:/opt/homebrew/share/man:
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+PYENV_SHELL = zsh
+# environment
+HOME = /Users/ignaciobarreto
+# environment
+POWERLINE_COMMAND = oh-my-posh
+# environment
+PERL_MB_OPT = --install_base "/Users/ignaciobarreto/perl5"
+# environment
+PERL_LOCAL_LIB_ROOT = /Users/ignaciobarreto/perl5:/Users/ignaciobarreto/perl5
+# environment
+BG_YELLOW = 43;
+# environment
+VSCODE_CLI = 1
+# environment
+PERL5LIB = /Users/ignaciobarreto/perl5/lib/perl5
+# environment
+VSCODE_CODE_CACHE_PATH = /Users/ignaciobarreto/Library/Application Support/Code/CachedData/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9
+# environment
+LOGNAME = ignaciobarreto
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# environment
+CONDA_PROMPT_MODIFIER = false
+# environment
+NVM_CD_FLAGS = -q
+# environment
+ZSH = /Users/ignaciobarreto/.oh-my-zsh
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+FG_MAGENTA = \x1b[35;
+# environment
+LESS_TERMCAP_md = [1;32m
+# environment
+XPC_FLAGS = 0x0
+# environment
+COLORTERM = truecolor
+# default
+MAKE = $(MAKE_COMMAND)
+# environment
+LC_TERMINAL = iTerm2
+# default
+MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /Developer)/Makefiles
+# environment
+PATH = /Users/ignaciobarreto/Documents/projects/dev_conf_backup/installers/google-cloud-sdk/bin:/opt/homebrew/opt/mysql-client/bin:/Users/ignaciobarreto/vntana_bin:/Users/ignaciobarreto/bin:/Users/ignaciobarreto/perl5/bin:/usr/local/opt/openssl@1.1/bin:/usr/local/bin/aws_completer:/Users/ignaciobarreto/.pyenv/shims:/Users/ignaciobarreto/.pyenv/bin:/Users/ignaciobarreto/.nvm/versions/node/v18.4.0/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Users/ignaciobarreto/Documents/projects/dev_conf_backup/installers/google-cloud-sdk/bin:/opt/homebrew/opt/mysql-client/bin:/Users/ignaciobarreto/vntana_bin:/Users/ignaciobarreto/bin:/Users/ignaciobarreto/perl5/bin:/usr/local/opt/openssl@1.1/bin:/usr/local/bin/aws_completer:/Users/ignaciobarreto/.pyenv/shims:/Users/ignaciobarreto/.pyenv/bin:/Users/ignaciobarreto/.nvm/versions/node/v18.4.0/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/ignaciobarreto/.cargo/bin:/Users/ignaciobarreto/Documents/projects/dev_conf_backup/dotfiles/.oh-my-zsh/custom/plugins/jq/bin:/Users/ignaciobarreto/.local/bin:/Users/ignaciobarreto/.local/google-cloud-sdk/bin:/Users/ignaciobarreto/.local/n/bin:/Users/ignaciobarreto/go/bin:/Users/ignaciobarreto/Documents/projects/dev_conf_backup/dotfiles/.oh-my-zsh/custom/plugins/jq/bin:/Users/ignaciobarreto/.cargo/bin:/Users/ignaciobarreto/.local/bin:/Users/ignaciobarreto/.local/google-cloud-sdk/bin:/Users/ignaciobarreto/.local/n/bin:/Users/ignaciobarreto/go/bin
+# environment
+SHLVL = 5
+# environment
+POSH_THEME = /Users/ignaciobarreto/.config/ohmyposh/theme.json
+# environment
+ANSIBLE_CONFIG = /Users/ignaciobarreto/.ansible.cfg
+# environment
+LESS_TERMCAP_so = [01;33m
+# environment
+CC = /opt/homebrew/bin/gcc-11
+# environment
+FS_UL = 4m
+# default
+MAKE_VERSION := 3.81
+# environment
+USER = ignaciobarreto
+# makefile
+.DEFAULT_GOAL := deploy
+# environment
+N_PREFIX = /Users/ignaciobarreto/.local/n/versions
+# environment
+FG_BR_YELLOW = \x1b[93;
+# default
+MAKECMDGOALS := all
+# environment
+TERM_SESSION_ID = w0t0p1:AE4693B3-3823-4BD0-93E9-8F074F363337
+# environment
+FG_BR_BLACK = \x1b[90;
+# environment
+LESS = -R
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# default
+MAKE_COMMAND := /Library/Developer/CommandLineTools/usr/bin/make
+# environment
+MANWIDTH = 999
+# environment
+TERM_PROGRAM = tmux
+# default
+.VARIABLES := 
+# environment
+TMPDIR = /var/folders/r5/5p3mz5792938xg6g28j8qdxr0000gn/T/
+# automatic
+*F = $(notdir $*)
+# environment
+FG_GREEN = \x1b[32;
+# environment
+VSCODE_IPC_HOOK = /Users/ignaciobarreto/Library/Application Support/Code/1.69.0-main.sock
+# makefile (from `.env', line 3)
+ 
+PROJECT_NAME = aws-academy
+# environment
+MallocNanoZone = 0
+# environment
+BG_WHITE = 47;
+# makefile
+MAKEFLAGS = Rrqp
+# environment
+BG_BLUE = 44;
+# environment
+MFLAGS = -Rrqp
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+TERM_PROGRAM_VERSION = 3.2a
+# environment
+NVM_DIR = /Users/ignaciobarreto/.nvm
+# environment
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.18713587.18713594.C02E2E6A-4568-4E84-81B9-4C38B079D1E0
+# environment
+LESS_TERMCAP_us = [1;4;31m
+# environment
+LC_TERMINAL_VERSION = 3.4.15
+# environment
+ESC_SEQ = \x1b[
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+BG_CYAN = 46;
+# automatic
++F = $(notdir $+)
+# environment
+ITERM_SESSION_ID = w0t0p1:AE4693B3-3823-4BD0-93E9-8F074F363337
+# environment
+HOMEBREW_REPOSITORY = /opt/homebrew
+# environment
+HOMEBREW_PREFIX = /opt/homebrew
+# environment
+COLORFGBG = 15;0
+# makefile (from `.env', line 7)
+AWS_ACCOUNT = 136220063867
+# environment
+__CF_USER_TEXT_ENCODING = 0x1F5:0x0:0x0
+# environment
+COMMAND_MODE = unix2003
+# default
+MAKEFILES := 
+# environment
+RESET_UL = \x1b[24m
+# automatic
+<F = $(notdir $<)
+# environment
+ITERM_PROFILE = levelEight
+# environment
+FG_RED = \x1b[31;
+# environment
+ZSH_TMUX_AUTOSTART = true
+# environment
+FG_BR_WHITE = \x1b[97;
+# makefile (from `.env', line 12)
+DB_USER = demouser
+# environment
+FG_BR_BLUE = \x1b[94;
+# environment
+PAGER = less
+# environment
+FG_BLACK = \x1b[30;
+# environment
+LC_ALL = C
+# makefile (from `.env', line 4)
+ENVIRONMENT = development
+# environment
+FG_BR_CYAN = \x1b[96;
+# automatic
+^F = $(notdir $^)
+# makefile (from `.env', line 11)
+DB_NAME = demo_db
+# default
+SUFFIXES := 
+# environment
+USE_GKE_GCLOUD_AUTH_PLUGIN = True
+# default
+.INCLUDE_DIRS = /usr/local/include
+# makefile (from `.env', line 15)
+API_PORT = 4000
+# makefile (from `.env', line 6)
+AWS_REGION = us-east-1
+# environment
+TMUX = /private/tmp/tmux-501/default,11730,6
+# environment
+MAKELEVEL := 0
+# makefile (from `.env', line 18)
+REFRESH_TOKEN_MINUTES_TO_EXPIRE = 60
+# environment
+FZF_DEFAULT_OPTS = --color=bg+:#292e42,spinner:#bb9af7,hl:#565f89,fg:#c0caf5,header:#565f89,info:#7dcfff,pointer:#bb9af7,marker:#7dcfff,fg+:#c0caf5,preview-bg:#1f2335,prompt:#bb9af7,hl+:#bb9af7
+# environment
+LANG = C
+# environment
+TERM = screen
+# environment
+VSCODE_PID = 31222
+# environment
+FG_YELLOW = \x1b[33;
+# environment
+ZSH_TMUX_ITERM2 = true
+# environment
+NVM_RC_VERSION = 
+# variable set hash-table stats:
+# Load=166/1024=16%, Rehash=0, Collisions=22/192=11%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 16777233, inode 3475310): 12 files, no impossibilities.
+
+# 12 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+# Not a target:
+all:
+#  Command-line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+.PHONY: deploy destroy synth
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+deploy_back:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 20):
+	if [ ! -d infra/node_modules ]; then \
+	cd infra && npm install && cd -; \
+	fi
+	cd infra && npx cdk --profile ${AWS_PROFILE} deploy FargateDemoStack && cd -
+	
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-07-12 19:43:41
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+bootstrap:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 32):
+	cd infra && npx cdk --profile ${AWS_PROFILE} bootstrap --force --all && cd -
+	
+
+synth:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 35):
+	cd infra && npx cdk --profile ${AWS_PROFILE} synth --all && cd -
+	
+
+# Not a target:
+.env:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-17 23:06:27
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+force_destroy:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 29):
+	cd infra && npx cdk --profile ${AWS_PROFILE} destroy  -f --all && cd -
+	
+
+destroy:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 26):
+	cd infra && npx cdk --profile ${AWS_PROFILE} destroy --all && cd -
+	
+
+deploy:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 9):
+	if [ ! -d infra/node_modules ]; then \
+	cd infra && npm install && cd -; \
+	fi
+	if [ ! -d frontend/node_modules ]; then \
+	cd frontend && npm install && cd -; \
+	fi
+	cd frontend && npm run build && cd -
+	make bootstrap
+	cd infra && npx cdk --profile ${AWS_PROFILE} deploy --all --require-approval never && cd -
+	
+
+# files hash-table stats:
+# Load=12/1024=1%, Rehash=0, Collisions=0/28=0%
+# VPATH Search Paths
+
+# No `vpath' search paths.
+
+# No general (`VPATH' variable) search path.
+
+# # of strings in strcache: 2
+# # of strcache buffers: 1
+# strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
+# strcache free: total = 4082 / max = 4082 / min = 4082 / avg = 4082
+
+# Finished Make data base on Wed Jul 13 11:41:39 2022
+
+ 

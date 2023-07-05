@@ -16,31 +16,31 @@ OPTIONS:
 
 COMMANDS:
     create-ssh-key                   Create ssh-key to install in the VMs and connect to them.
-    vargrant-up                      Deploy the cluster using vagrant and virtualbox.
-    vagrant-down                     Destroy the cluster including all the data.
-    config-kubectl-vagrant-context   Configure kubectl to use the vagrant cluster credentials.
+    vargrant-k8s-up                  Deploy the k8s cluster using vagrant and virtualbox.
+    vagrant-k8s-down                 Destroy the k8s cluster including all the data.
+    config-kubectl-vagrant-context   Configure kubectl to use the vagrant k8s cluster credentials.
 EOF
 }
 
 case $1 in
-  vagrant-up)
+  vagrant-k8s-up)
     shift
-    cd $ROOT/../../infra/cluster && vagrant up
-	  docker run --rm -it -v $ROOT/../../infra/cluster/playbook:/playbooks -v $ROOT/../../infra/cluster/ssh-key:/playbooks/ssh-key -w /playbooks liveonit/nwtools ansible-playbook -i inventory.yml playbook.yml
+    cd $ROOT/../../infra/k8s-cluster && vagrant up
+	  docker run --rm -it -v $ROOT/../../infra/k8s-cluster/playbook:/playbooks -v $ROOT/../../infra/k8s-cluster/ssh-key:/playbooks/ssh-key -w /playbooks liveonit/nwtools ansible-playbook -i inventory.yml playbook.yml
     exit 0
     ;;
-  vagrant-down)
+  vagrant-k8s-down)
     shift
-    cd $ROOT/../../infra/cluster && vagrant destroy -f
+    cd $ROOT/../../infra/k8s-cluster && vagrant destroy -f
     exit 0
     ;;
   config-kubectl-vagrant-context)
     shift
-    kubectl config set-context distri-vagrant --kubeconfig="$ROOT/../../infra/cluster/playbook/cluster_config"
+    kubectl config set-context distri-vagrant --kubeconfig="$ROOT/../../infra/k8s-cluster/playbook/cluster_config"
     # Make a copy of your existing config
     cp ~/.kube/config ~/.kube/config.bak
     # Merge the two config files together into a new config file
-    KUBECONFIG=~/.kube/config:$ROOT/../../infra/cluster/playbook/cluster_config kubectl config view --flatten > /tmp/config
+    KUBECONFIG=~/.kube/config:$ROOT/../../infra/k8s-cluster/playbook/cluster_config kubectl config view --flatten > /tmp/config
     # Replace your old config with the new merged config
     mv /tmp/config ~/.kube/config
     kubectl config use-context distri-vagrant
@@ -48,7 +48,7 @@ case $1 in
     ;;
   create-ssh-key)
     shift
-    cd $ROOT/../../infra/cluster && ssh-keygen -b 2048 -t rsa -f ssh-key -q -N ""
+    cd $ROOT/../../infra/k8s-cluster && ssh-keygen -b 2048 -t rsa -f ssh-key -q -N ""
     exit 0
     ;;
   *)

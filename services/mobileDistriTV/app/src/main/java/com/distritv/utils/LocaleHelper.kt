@@ -23,4 +23,21 @@ object LocaleHelper {
 
         resources.updateConfiguration(configuration, resources.displayMetrics)
     }
+
+    object DeviceInfoFragmentTextIndex {
+        const val TITLE = 0
+        const val REGISTER_BUTTON = 1
+        const val SWITCH_EXTERNAL_STORAGE = 2
+        const val DIALOG_TITLE = 3
+        const val DIALOG_MESSAGE = 4
+        const val DIALOG_ACCEPT = 5
+        const val DIALOG_CANCEL = 6
+    }
+
+    object HomeFragmentTextIndex {
+        const val APP_VERSION = 0
+        const val TV_CODE = 1
+        const val CONNECTION_STATUS = 2
+        const val LANGUAGE = 3
+    }
 }

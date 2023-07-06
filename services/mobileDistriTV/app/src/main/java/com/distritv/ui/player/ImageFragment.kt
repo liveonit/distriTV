@@ -82,9 +82,10 @@ class ImageFragment : Fragment() {
                     onAfterCompletion(TAG, content?.id)
                 }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
             } else {
-                Log.e(TAG, "No image available.")
+                Log.e(TAG, "An error occurred while trying to play. Check storage. Back to home...")
                 Toast.makeText(activity, getString(R.string.msg_unavailable_content),
-                    Toast.LENGTH_SHORT).show()
+                    Toast.LENGTH_LONG).show()
+                onAfterCompletion(TAG, content?.id)
             }
         }
     }

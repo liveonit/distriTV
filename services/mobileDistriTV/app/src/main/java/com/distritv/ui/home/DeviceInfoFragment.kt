@@ -1,8 +1,10 @@
 package com.distritv.ui.home
 
+import android.app.AlertDialog
 import android.content.Context
-import android.graphics.Color
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,15 +13,30 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import com.distritv.BuildConfig
 import com.distritv.databinding.FragmentDeviceInfoBinding
 import com.distritv.ui.home.HomeViewModel.Companion.DEVICE_INFO
 import com.distritv.utils.*
+import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.DIALOG_ACCEPT
+import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.DIALOG_CANCEL
+import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.DIALOG_MESSAGE
+import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.DIALOG_TITLE
+import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.REGISTER_BUTTON
+import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.SWITCH_EXTERNAL_STORAGE
+import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.TITLE
 
 
 class DeviceInfoFragment : Fragment() {
     private var _binding: FragmentDeviceInfoBinding? = null
     private val binding get() = _binding!!
     private var listener: OnFragmentInteractionListener? = null
+
+    private val externalStorageEnabled: Boolean = BuildConfig.EXTERNAL_STORAGE_ENABLED
+
+    private var dialogTitle = ""
+    private var dialogMessage = ""
+    private var dialogAccept = ""
+    private var dialogCancel = ""
 
     private lateinit var homeActivityViewModel: HomeViewModel
 
@@ -48,6 +65,8 @@ class DeviceInfoFragment : Fragment() {
         tvCodeValidationObserver()
         languageSpinner()
 
+        switchButtonListener()
+
         homeActivityViewModel.setLocale()
 
         return binding.root
@@ -56,6 +75,7 @@ class DeviceInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setSwitchExternalStorageVisibility()
         setupRegisterButton()
     }
 
@@ -68,9 +88,14 @@ class DeviceInfoFragment : Fragment() {
         }
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
     private fun setupRegisterButton() {
         binding.registerButton.setOnClickListener {
-            listener?.onRegisterButtonPressed(binding.tvCode.text.toString())
+            listener?.onRegisterButtonPressed(binding.tvCode.text.toString(), binding.switchExternalStorage.isChecked)
             binding.tvCode.clearFocus()
         }
     }
@@ -152,11 +177,14 @@ class DeviceInfoFragment : Fragment() {
     }
 
     private fun textsObserver() {
-        homeActivityViewModel.textTitle.observe(viewLifecycleOwner) { text ->
-            binding.title.text = text
-        }
-        homeActivityViewModel.textButton.observe(viewLifecycleOwner) { text ->
-            binding.registerButton.text = text
+        homeActivityViewModel.deviceInfoFragmentTexts.observe(viewLifecycleOwner) { textList ->
+            binding.title.text = textList[TITLE]
+            binding.registerButton.text = textList[REGISTER_BUTTON]
+            binding.switchExternalStorage.text = textList[SWITCH_EXTERNAL_STORAGE]
+            dialogTitle = textList[DIALOG_TITLE]
+            dialogMessage = textList[DIALOG_MESSAGE]
+            dialogAccept = textList[DIALOG_ACCEPT]
+            dialogCancel = textList[DIALOG_CANCEL]
         }
     }
 
@@ -166,6 +194,7 @@ class DeviceInfoFragment : Fragment() {
             binding.registerButton.isEnabled = !visible
             binding.tvCode.isEnabled = !visible
             binding.languageSpinner.isEnabled = !visible
+            binding.switchExternalStorage.isEnabled = !visible
         }
     }
 
@@ -177,18 +206,50 @@ class DeviceInfoFragment : Fragment() {
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
+    private fun setSwitchExternalStorageVisibility() {
+        if (externalStorageEnabled) {
+            binding.switchExternalStorage.visibility = View.VISIBLE
+        } else {
+            binding.switchExternalStorage.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun switchButtonListener() {
+        binding.switchExternalStorage.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                showDialog()
+            } else {
+                homeActivityViewModel.setExternalStorage(false)
+            }
+        }
+    }
+
+    private fun showDialog() {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(dialogTitle)
+        builder.setMessage(dialogMessage)
+        builder.setPositiveButton(dialogAccept, dialogConfirmFun)
+        builder.setNegativeButton(dialogCancel, dialogCancelFun)
+        val externalStorageDialog = builder.create()
+        externalStorageDialog.setCanceledOnTouchOutside(false)
+        externalStorageDialog.show()
+    }
+
+    private val dialogConfirmFun = { dialog: DialogInterface, _: Int ->
+        dialog.dismiss()
+    }
+
+    private val dialogCancelFun = { dialog: DialogInterface, _: Int ->
+        binding.switchExternalStorage.isChecked = false
+        dialog.cancel()
     }
 
     interface OnFragmentInteractionListener {
-        fun onRegisterButtonPressed(code: String)
+        fun onRegisterButtonPressed(code: String, useExternalStorage: Boolean)
     }
 
     companion object {
         const val TAG = "[DeviceInfoFragment]"
-
     }
 
 

@@ -1,6 +1,7 @@
 package com.distritv.data.service
 
 import android.content.SharedPreferences
+import com.distritv.utils.USE_EXTERNAL_STORAGE
 import com.distritv.utils.LOCALE
 import com.distritv.utils.TV_CODE
 
@@ -33,5 +34,15 @@ class SharedPreferencesService (private var sharedPreferences: SharedPreferences
 
     fun getCustomLocale(): String? {
         return sharedPreferences.getString(LOCALE, null)
+    }
+
+    fun setExternalStorage(useExternalStorage: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean(USE_EXTERNAL_STORAGE, useExternalStorage)
+        editor.apply()
+    }
+
+    fun useExternalStorage(): Boolean {
+        return sharedPreferences.getBoolean(USE_EXTERNAL_STORAGE, false)
     }
 }

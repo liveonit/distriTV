@@ -10,8 +10,8 @@ import java.io.File
 
 class ImageViewModel : ViewModel() {
 
-    private val _image = MutableLiveData<Bitmap>()
-    val image: LiveData<Bitmap>
+    private val _image = MutableLiveData<Bitmap?>()
+    val image: LiveData<Bitmap?>
         get() = _image
 
     fun fetchImage(localPath: String) {
@@ -21,9 +21,11 @@ class ImageViewModel : ViewModel() {
                 if (imgFile.exists()) {
                     val imgBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
                     _image.postValue(imgBitmap)
+                } else {
+                    _image.postValue(null)
                 }
             } else {
-                RuntimeException()
+                throw RuntimeException()
             }
         } catch (e: Exception) {
             Log.v(TAG, "Could not get image.")

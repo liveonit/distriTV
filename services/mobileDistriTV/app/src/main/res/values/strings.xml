@@ -3,10 +3,16 @@
     <string name="app_preference_file_key">DistriTVApp</string>
     <string name="device_info_title">Enter the TV code</string>
     <string name="device_info_register_button">Register</string>
+    <string name="device_info_switch_external">Use external storage to save the contents</string>
+    <string name="dialog_title">Save content on external storage</string>
+    <string name="dialog_message">The downloaded contents will be stored in an external memory. Make sure you always have the storage connected, otherwise it may cause a malfunction.\nOnce you register the TV code, you cannot undo this decision.</string>
+    <string name="dialog_accept">Accept</string>
+    <string name="dialog_cancel">Cancel</string>
     <string name="msg_tv_code_invalid">The code entered is invalid</string>
     <string name="msg_tv_code_error">An error has occurred</string>
     <string name="msg_tv_code_connection_error">A connection error has occurred</string>
-    <string name="msg_unavailable_content">There is no content available.</string>
+    <string name="msg_unavailable_content">ERROR: Content not found</string>
+    <string name="msg_error_external_storage">ERROR: External storage may not be found or permission not granted</string>
     <string name="info_card_version">Version:</string>
     <string name="info_card_tv_code">TV code:</string>
     <string name="info_card_connection_status">Connection status:</string>

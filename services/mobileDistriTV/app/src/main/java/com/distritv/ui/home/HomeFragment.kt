@@ -17,6 +17,10 @@ import com.distritv.databinding.FragmentHomeBinding
 import com.distritv.ui.FullscreenManager
 import com.distritv.ui.home.HomeViewModel.Companion.HOME
 import com.distritv.utils.*
+import com.distritv.utils.LocaleHelper.HomeFragmentTextIndex.APP_VERSION
+import com.distritv.utils.LocaleHelper.HomeFragmentTextIndex.CONNECTION_STATUS
+import com.distritv.utils.LocaleHelper.HomeFragmentTextIndex.LANGUAGE
+import com.distritv.utils.LocaleHelper.HomeFragmentTextIndex.TV_CODE
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -142,17 +146,11 @@ class HomeFragment: Fragment() {
     }
 
     private fun textsObserver() {
-        viewModel.textInfoCardVersion.observe(viewLifecycleOwner) { text ->
-            binding.versionKey.text = text
-        }
-        viewModel.textInfoCardTvCode.observe(viewLifecycleOwner) { text ->
-            binding.tvCodeKey.text = text
-        }
-        viewModel.textInfoCardConnStatus.observe(viewLifecycleOwner) { text ->
-            binding.connectionStatusKey.text = text
-        }
-        viewModel.textInfoCardLang.observe(viewLifecycleOwner) { text ->
-            binding.languageKey.text = text
+        viewModel.homeFragmentTexts.observe(viewLifecycleOwner) { textList ->
+            binding.versionKey.text = textList[APP_VERSION]
+            binding.tvCodeKey.text = textList[TV_CODE]
+            binding.connectionStatusKey.text = textList[CONNECTION_STATUS]
+            binding.languageKey.text = textList[LANGUAGE]
         }
     }
 

@@ -18,10 +18,8 @@ import android.util.Log
 import com.distritv.BuildConfig
 import com.distritv.data.service.ContentService
 import com.distritv.data.service.ScheduleService
-import com.distritv.utils.CONTENTS_DIRECTORY
 import com.distritv.utils.createNotification
 import org.koin.android.ext.android.inject
-import java.io.File
 import java.util.concurrent.TimeUnit
 
 class GarbageCollectorDaemon: Service() {
@@ -91,17 +89,7 @@ class GarbageCollectorDaemon: Service() {
 
     private fun removeContentFile() {
         try {
-            val directory = File(applicationContext.filesDir, CONTENTS_DIRECTORY)
-            val files = directory.listFiles()
-
-            files?.forEach { file ->
-                if (!contentService.getLocalPathActiveContents().contains(file.path)) {
-                    file.delete()
-                }
-                if (!File(file.path).exists()) {
-                    Log.i(TAG, "Removal successful: ${file.path}")
-                }
-            }
+            contentService.deleteExpiredContentFiles()
         } catch (e: Exception) {
             Log.e(TAG, "${e.javaClass} -> ${e.message}")
         }

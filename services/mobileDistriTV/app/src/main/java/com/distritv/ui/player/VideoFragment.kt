@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.MediaController
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.distritv.DistriTVApp
+import com.distritv.R
 import com.distritv.data.model.Content
 import com.distritv.databinding.FragmentVideoBinding
 import com.distritv.ui.FullscreenManager
@@ -101,6 +103,15 @@ class VideoFragment : Fragment() {
     }
 
     private fun startVideo() {
+        val file = File(content?.localPath ?: "")
+
+        if (!file.exists()) {
+            Log.e(TAG, "An error occurred while trying to play. Check storage. Back to home...")
+            Toast.makeText(context, getString(R.string.msg_unavailable_content), Toast.LENGTH_LONG)
+                .show()
+            onAfterCompletion(TAG, content?.id)
+        }
+
         val path = File(content?.localPath ?: "").toURI().toString()
         binding.videoContainer.setVideoPath(path)
 

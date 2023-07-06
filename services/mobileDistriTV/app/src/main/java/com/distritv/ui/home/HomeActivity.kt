@@ -47,8 +47,6 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
 
         checkIfDeviceIsRegistered()
 
-        requestPermissionExternalStorage()
-
         actionBar?.hide()
     }
 
@@ -108,21 +106,29 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         viewModel.checkIfDeviceIsRegistered()
     }
 
-    override fun onRegisterButtonPressed(code: String) {
-        viewModel.registerTvCode(code)
+    override fun onRegisterButtonPressed(code: String, useExternalStorage: Boolean) {
+        viewModel.registerTvCode(code, useExternalStorage)
     }
 
     private fun tvCodeValidationObserver() {
         viewModel.isValid.observe(this) { isValid ->
             if (isValid) {
-                supportFragmentManager.addFragment(
-                    R.id.home_fragment_container,
-                    HomeFragment(),
-                    false,
-                    HomeFragment.TAG
-                )
+                if (viewModel.useExternalStorage()) {
+                    requestPermissionExternalStorage()
+                } else {
+                    addHomeFragment()
+                }
             }
         }
+    }
+
+    private fun addHomeFragment() {
+        supportFragmentManager.addFragment(
+            R.id.home_fragment_container,
+            HomeFragment(),
+            false,
+            HomeFragment.TAG
+        )
     }
 
     private fun addFragmentObserver() {
@@ -153,13 +159,24 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         ) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), MY_PERMISSIONS_REQUEST
+                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), PERMISSIONS_REQUEST
             )
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSIONS_REQUEST) {
+            addHomeFragment()
+        }
+    }
+
     companion object {
-        private const val MY_PERMISSIONS_REQUEST = 100
+        private const val PERMISSIONS_REQUEST = 100
         const val TAG = "[HomeActivity]"
     }
 

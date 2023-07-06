@@ -48,33 +48,17 @@ class HomeViewModel(
     val locale: LiveData<String>
         get() = _locale
 
-    private val _textTitle = MutableLiveData<String>()
-    val textTitle: LiveData<String>
-        get() = _textTitle
+    private val _deviceInfoFragmentTexts = MutableLiveData<List<String>>()
+    val deviceInfoFragmentTexts: LiveData<List<String>>
+        get() = _deviceInfoFragmentTexts
 
-    private val _textButton = MutableLiveData<String>()
-    val textButton: LiveData<String>
-        get() = _textButton
-
-    private val _textInfoCardVersion = MutableLiveData<String>()
-    val textInfoCardVersion: LiveData<String>
-        get() = _textInfoCardVersion
-
-    private val _textInfoCardTvCode = MutableLiveData<String>()
-    val textInfoCardTvCode: LiveData<String>
-        get() = _textInfoCardTvCode
-
-    private val _textInfoCardConnStatus = MutableLiveData<String>()
-    val textInfoCardConnStatus: LiveData<String>
-        get() = _textInfoCardConnStatus
-
-    private val _textInfoCardLang = MutableLiveData<String>()
-    val textInfoCardLang: LiveData<String>
-        get() = _textInfoCardLang
+    private val _homeFragmentTexts = MutableLiveData<List<String>>()
+    val homeFragmentTexts: LiveData<List<String>>
+        get() = _homeFragmentTexts
 
     private var error: Int = -1
 
-    fun registerTvCode(code: String) {
+    fun registerTvCode(code: String, useExternalStorage: Boolean) {
         if (code.length < 6) {
             _errorMessage.postValue(context.getString(R.string.msg_tv_code_invalid))
             _isValid.postValue(false)
@@ -87,6 +71,7 @@ class HomeViewModel(
                 scheduleRepository.validateTvCode(code).run {
                     if (this) {
                         sharedPreferences.addTvCode(code)
+                        setExternalStorage(useExternalStorage)
                         _isValid.postValue(true)
                     } else {
                         _errorMessage.postValue(context.getString(R.string.msg_tv_code_invalid))
@@ -136,6 +121,14 @@ class HomeViewModel(
         }
     }
 
+    fun setExternalStorage(useExternalStorage: Boolean) {
+        sharedPreferences.setExternalStorage(useExternalStorage)
+    }
+
+    fun useExternalStorage(): Boolean {
+        return sharedPreferences.useExternalStorage()
+    }
+
     fun setLocale() {
         _locale.postValue(getCurrentLocale())
     }
@@ -160,9 +153,9 @@ class HomeViewModel(
             }
         }
         if (referrer == DEVICE_INFO) {
-            updateUI()
+            updateDeviceInfoFragmentUI()
         } else {
-            updateInfoCardUI()
+            updateHomeFragmentUI()
         }
     }
 
@@ -177,16 +170,25 @@ class HomeViewModel(
         sharedPreferences.addCustomLocale("${locale.language}_${locale.country}")
     }
 
-    private fun updateUI() {
-        _textTitle.postValue(context.getString(R.string.device_info_title))
-        _textButton.postValue(context.getString(R.string.device_info_register_button))
+    private fun updateDeviceInfoFragmentUI() {
+        _deviceInfoFragmentTexts.value = listOf(
+            context.getString(R.string.device_info_title),
+            context.getString(R.string.device_info_register_button),
+            context.getString(R.string.device_info_switch_external),
+            context.getString(R.string.dialog_title),
+            context.getString(R.string.dialog_message),
+            context.getString(R.string.dialog_accept),
+            context.getString(R.string.dialog_cancel),
+        )
     }
 
-    private fun updateInfoCardUI() {
-        _textInfoCardVersion.value = context.getString(R.string.info_card_version)
-        _textInfoCardTvCode.value = context.getString(R.string.info_card_tv_code)
-        _textInfoCardConnStatus.value = context.getString(R.string.info_card_connection_status)
-        _textInfoCardLang.value = context.getString(R.string.language)
+    private fun updateHomeFragmentUI() {
+        _homeFragmentTexts.value = listOf(
+            context.getString(R.string.info_card_version),
+            context.getString(R.string.info_card_tv_code),
+            context.getString(R.string.info_card_connection_status),
+            context.getString(R.string.language)
+        )
     }
 
     fun getErrorMessage(): String {

@@ -31,40 +31,64 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="100dp"
-        android:text="@string/device_info_title"
-        android:textSize="20sp" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tv_code_layout_container"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginVertical="150dp"
-        app:errorEnabled="true">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tv_code"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:maxLength="6"
-            android:textAlignment="center"
-            android:textSize="24sp" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/register_button"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="24dp"
-        android:text="@string/device_info_register_button" />
+        android:orientation="vertical"
+        android:paddingTop="100dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:layout_marginTop="100dp"
+            android:text="@string/device_info_title"
+            android:textSize="20sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tv_code_layout_container"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:layout_marginVertical="150dp"
+            app:errorEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tv_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:maxLength="6"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/register_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/device_info_register_button" />
+
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchExternalStorage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80dp"
+            android:checked="false"
+            android:text="@string/device_info_switch_external"
+            android:visibility="invisible"
+            app:switchPadding="5dp" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/progress_bar"

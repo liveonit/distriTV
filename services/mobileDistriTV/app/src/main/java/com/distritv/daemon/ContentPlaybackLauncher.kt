@@ -12,7 +12,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.distritv.DistriTVApp
+import com.distritv.R
 import com.distritv.data.model.Content
 import com.distritv.ui.home.HomeActivity
 import com.distritv.ui.player.ContentPlayerActivity
@@ -48,6 +50,15 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
             if (isAlarm != null && isAlarm) {
                 cancelAlarm(context, content)
             }
+            return
+        }
+
+        if (!content.fileExists()) {
+            Log.e(TAG, "Content file not found. Content id: ${content.id}, path: ${content.localPath}")
+            Toast.makeText(
+                context, context.getString(R.string.msg_unavailable_content),
+                Toast.LENGTH_LONG
+            ).show()
             return
         }
 

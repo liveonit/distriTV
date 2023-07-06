@@ -13,6 +13,8 @@ import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
 import com.distritv.data.model.DeviceInfoCard
+import com.distritv.utils.StorageHelper.externalMemoryAvailable
+import com.distritv.utils.StorageHelper.externalStoragePermissionGranted
 import com.distritv.utils.getCurrentTime
 import com.distritv.utils.isServiceRunning
 import com.distritv.utils.roundTo
@@ -52,7 +54,11 @@ class DeviceInfoService(
             appIsVisible(),
             isAnyContentPlaying(),
             getCurrentlyPlayingContentId(),
-            getCurrentTime()
+            getCurrentTime(),
+            useExternalStorage(),
+            externalMemoryAvailable(),
+            externalStoragePermissionGranted(),
+            getSDKVersion()
         )
     }
 
@@ -66,6 +72,18 @@ class DeviceInfoService(
 
     private fun getTvCode(): String {
         return sharedPreferences.getTvCode() ?: ""
+    }
+
+    private fun useExternalStorage(): Boolean {
+        return sharedPreferences.useExternalStorage()
+    }
+
+    private fun externalMemoryAvailable(): Boolean {
+        return context.externalMemoryAvailable()
+    }
+
+    private fun externalStoragePermissionGranted(): Boolean {
+        return context.externalStoragePermissionGranted()
     }
 
     /**
@@ -178,6 +196,10 @@ class DeviceInfoService(
 
     private fun getCurrentlyPlayingContentId(): Long {
         return myApp?.getCurrentlyPlayingContentId() ?: -1L
+    }
+
+    private fun getSDKVersion(): Int {
+        return Build.VERSION.SDK_INT
     }
 
     companion object {

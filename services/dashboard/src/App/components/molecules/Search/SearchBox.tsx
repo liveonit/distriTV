@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button'
 import { Trans } from 'react-i18next'
 import Search from '@material-ui/icons/Search'
 import SearchDropdown from './SearchDropdown'
+import SearchDropdownMulti from './SearchDropdownMulti'
 
 interface SearchBoxT {
   searches: {
@@ -51,7 +52,23 @@ export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
       }
       case 'Select': {        
         return (
-          <SearchDropdown options={search.options || []} value={state[search.name] || ""} onChange={(value) => setState({ ...state, [search.name]: value })} />
+          <SearchDropdown options={search.options || []} placeholder={search.placeholder} value={state[search.name] || ""} onChange={(value) => setState({ ...state, [search.name]: value })} />
+        )
+      }
+      case 'Multi': {        
+        console.log('esto', search)
+        console.log('aquello', state)
+        console.log('famoso', state[search.name])
+        return (
+          <SearchDropdownMulti 
+            options={search.options || []} 
+            placeholder={search.placeholder} 
+            value={(typeof state[search.name]) === 'undefined' ? 
+              [] 
+              : Array.isArray(state[search.name]) ?
+                state[search.name] 
+                : state[search.name].split(',')} 
+            onChange={(value) => setState({ ...state, [search.name]: value })} />
         )
       }
       default: {

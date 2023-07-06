@@ -83,7 +83,7 @@ export default function ContentList() {
       <SearchBox
         searches={[
           { type: 'Input', name: 'name', placeholder: t('NAME') },
-          { type: 'Select', name: 'type', placeholder: t('TYPE'), options: contents.map(content => content.type) },
+          { type: 'Select', name: 'type', placeholder: t('TYPE'), options: ['Video', 'Text', 'Image'] },
         ]}
       />
       <br/>

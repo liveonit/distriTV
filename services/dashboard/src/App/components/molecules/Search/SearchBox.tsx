@@ -49,9 +49,9 @@ export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
           <SearchInput value={state[search.name]} placeholder={search.placeholder} onChange={(value) => setState({ ...state, [search.name]: value })} />
         )
       }
-      case 'Select': {
+      case 'Select': {        
         return (
-          <SearchDropdown options={search.options || []} value={state[search.name]} onChange={(value) => setState({ ...state, [search.name]: value })} />
+          <SearchDropdown options={search.options || []} value={state[search.name] || ""} onChange={(value) => setState({ ...state, [search.name]: value })} />
         )
       }
       default: {

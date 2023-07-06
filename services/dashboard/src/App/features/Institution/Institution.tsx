@@ -19,6 +19,7 @@ import { listInstitutions } from 'src/store/institution/institution.action'
 import { InstitutionT } from 'src/store/institution/institution.type'
 import AddIcon from '@material-ui/icons/Add'
 import { Trans } from 'react-i18next/TransWithoutContext'
+import { CITIES } from 'src/utils/constants/Cities'
 
 import InstitutionCreateAndEditModal from './InstitutionCreateAndEditModal'
 import InstitutionDeleteModal from './InstitutionDeleteModal'
@@ -88,7 +89,7 @@ export default function InstitutionList() {
       <SearchBox
         searches={[
           { type: 'Input', name: 'name', placeholder: t('NAME') },
-          { type: 'Input', name: 'city', placeholder: t('CITY') },
+          { type: 'Select', name: 'city', placeholder: t('CITY'), options: CITIES },
           { type: 'Input', name: 'locality', placeholder: t('LOCALITY') },          
         ]}
       />

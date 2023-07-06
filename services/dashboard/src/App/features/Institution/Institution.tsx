@@ -89,7 +89,7 @@ export default function InstitutionList() {
       <SearchBox
         searches={[
           { type: 'Input', name: 'name', placeholder: t('NAME') },
-          { type: 'Select', name: 'city', placeholder: t('CITY'), options: CITIES },
+          { type: 'Multi', name: 'city', placeholder: t('CITY'), options: CITIES },
           { type: 'Input', name: 'locality', placeholder: t('LOCALITY') },          
         ]}
       />

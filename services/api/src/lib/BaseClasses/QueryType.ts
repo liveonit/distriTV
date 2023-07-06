@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Like } from 'typeorm';
+import { Like, In } from 'typeorm';
 
 export const querySchema = z.object({
   skip: z
@@ -21,19 +21,29 @@ export const querySchema = z.object({
       if (typeof v === 'string') {
         const searches = v.split(';');
         const query: any = {};
-
+        console.log(searches)
         searches.forEach((search) => {
           const [column, value] = search.split(':');
           const [father, son] = column.split('.');
+
+          const parseValue = () => {
+            if(value.includes(',')){
+              return In(value.split(','));
+            } else {
+              return Like(`%${value}%`);
+            }
+          }
+          
           if (son) {
             const nested: any = {};
-            nested[son] = Like(`%${value}%`);
+            nested[son] = parseValue();
             query[father] = nested;
           } else {
-            query[column] = Like(`%${value}%`);
+            query[column] = parseValue();
           }
         });
 
+        console.log(query)
         // return {institution: {name: 'Ceibal'}}
         if (searches.length > 0) return query;
         else return undefined;

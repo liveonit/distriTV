@@ -11,7 +11,7 @@ import SearchDropdownMulti from './SearchDropdownMulti'
 
 interface SearchBoxT {
   searches: {
-    type: 'Input' | 'Select'
+    type: 'Input' | 'Select' | 'Multi'
     name: string
     placeholder: string
     options?: string[]

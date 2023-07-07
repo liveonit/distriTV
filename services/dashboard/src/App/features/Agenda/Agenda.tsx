@@ -26,6 +26,12 @@ import AgendaDeleteModal from './AgendaDeleteModal'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 import { useTranslation } from 'react-i18next'
+import { labelsSelector } from 'src/store/label/label.selector'
+import { listLabels } from 'src/store/label/label.action'
+import { televisionsSelector } from 'src/store/television/television.selector'
+import { listTelevisions } from 'src/store/television/television.action'
+import { listContents } from 'src/store/content/content.action'
+import { contentSelector } from 'src/store/content/content.selector'
 
 const useStyles = makeStyles({
   table: {
@@ -40,6 +46,9 @@ export default function AgendaList() {
   const { t } = useTranslation()
 
   React.useEffect(() => {
+    dispatch(listContents())
+    dispatch(listLabels())
+    dispatch(listTelevisions())
     dispatch(
       listAgendas({
         query: searchQueryString ? `search=${searchQueryString}` : '',
@@ -49,6 +58,9 @@ export default function AgendaList() {
 
   const isLoading = useSelector(agendasIsLoadingSelector)
   const agendas = useSelector(agendasSelector)
+  const labels = useSelector(labelsSelector)
+  const televisions = useSelector(televisionsSelector)
+  const contents = useSelector(contentSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
   const [agendaToEdit, setAgendaToEdit] = React.useState<AgendaT | null>(null)
   const [agendaToDelete, setAgendaToDelete] = React.useState<AgendaT | null>(null)
@@ -90,9 +102,9 @@ export default function AgendaList() {
       </Grid>
       <SearchBox
             searches={[
-              { type: 'Input', name: 'content.name', placeholder: t('CONTENT') },
-              { type: 'Input', name: 'television.name', placeholder: t('TELEVISION') },
-              { type: 'Input', name: 'label.name', placeholder: t('LABEL') },
+              { type: 'Multi', name: 'content.name', placeholder: t('CONTENT'), options: contents.map(content => content.name) },
+              { type: 'Multi', name: 'television.name', placeholder: t('TELEVISION'), options: televisions.map(tele => tele.name) },
+              { type: 'Multi', name: 'label.name', placeholder: t('LABEL'), options: labels.map(label => label.name) },
             ]}
           />
           <br />

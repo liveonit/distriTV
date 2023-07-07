@@ -21,7 +21,7 @@ const listLabels: Epic = (action$) =>
       const { session } = storage.get<SessionT>('session') || {}
       
       return apiSvc.request({
-        path: `/label${payload?.query ? `?${payload.query}` : ''}`,
+        path: `/label?relations=tvs${payload?.query ? `&${payload.query}` : ''}`,
         requireAuthType: session?.type 
       }).pipe(
         map(({ response }) => { 

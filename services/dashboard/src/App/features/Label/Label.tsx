@@ -25,6 +25,8 @@ import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 import { LabelT } from 'src/store/label/label.type'
 import { useTranslation } from 'react-i18next'
+import { FormatListBulleted } from '@material-ui/icons'
+import LabelModalListTelevisions from './LabelModalListTelevisions'
 
 const useStyles = makeStyles({
   table: {
@@ -51,16 +53,22 @@ export default function LabelList() {
   const labels = useSelector(labelsSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
   const [labelToEdit, setLabelToEdit] = React.useState<LabelT | null>(null)
+  const [listTelevisions, setListTelevisions] = React.useState<LabelT | null>(null)
   const [labelToDelete, setLabelToDelete] = React.useState<LabelT | null>(null)
   const [titleModal, setModalTitle] = React.useState('Titulo')
 
   function handleCloseEditLabelModal() {
     setLabelToEdit(null)
     setIsModalCreate(false)
+    setListTelevisions(null)
   }
 
   function handleCloseDeleteLabelModal() {
     setLabelToDelete(null)
+  }
+
+  function handleListTelevisionsModal() {
+    setListTelevisions(null)
   }
 
   return isLoading ? (
@@ -99,6 +107,7 @@ export default function LabelList() {
             <TableRow>
               <TableCell>Name</TableCell>            
               <TableCell>Description</TableCell>
+              <TableCell>Televisions</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
@@ -107,6 +116,19 @@ export default function LabelList() {
               <TableRow key={label.id}>
                 <TableCell>{label.name}</TableCell>
                 <TableCell>{label.description}</TableCell>
+                <TableCell>
+                <IconButton
+                    onClick={() => {
+                      setModalTitle(label.name)
+                      setListTelevisions(label)
+                    }}
+                    color='primary'
+                    aria-label='edit label'
+                    component='span'
+                  >
+                    <FormatListBulleted color='primary'/>
+                  </IconButton>
+                </TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => {
@@ -147,6 +169,13 @@ export default function LabelList() {
           isOpen={!!labelToDelete}
           label={labelToDelete!}
           handleCloseDeleteModal={handleCloseDeleteLabelModal}
+        />
+      )}
+      {!!listTelevisions && (
+        <LabelModalListTelevisions
+          isOpen={!!listTelevisions}
+          label={listTelevisions!}
+          handleListTelevisionsModal={handleListTelevisionsModal}
         />
       )}
     </>

@@ -56,9 +56,6 @@ export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
         )
       }
       case 'Multi': {        
-        console.log('esto', search)
-        console.log('aquello', state)
-        console.log('famoso', state[search.name])
         return (
           <SearchDropdownMulti 
             options={search.options || []} 

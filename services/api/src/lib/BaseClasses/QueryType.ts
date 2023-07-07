@@ -24,23 +24,25 @@ export const querySchema = z.object({
         console.log(searches)
         searches.forEach((search) => {
           const [column, value] = search.split(':');
-          const [father, son] = column.split('.');
+          if (value !== '') {
+            const [father, son] = column.split('.');
 
-          const parseValue = () => {
-            if(value.includes(',')){
-              return In(value.split(','));
-            } else {
-              return Like(`%${value}%`);
+            const parseValue = () => {
+              if(value.includes(',')){
+                return In(value.split(','));
+              } else {
+                return Like(`%${value}%`);
+              }
             }
-          }
-          
-          if (son) {
-            const nested: any = {};
-            nested[son] = parseValue();
-            query[father] = nested;
-          } else {
-            query[column] = parseValue();
-          }
+            
+            if (son) {
+              const nested: any = {};
+              nested[son] = parseValue();
+              query[father] = nested;
+            } else {
+              query[column] = parseValue();
+            }
+          }          
         });
 
         console.log(query)

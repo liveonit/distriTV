@@ -13,7 +13,6 @@ export const SearchDropdownMulti: React.FC<SearchDropdownProps> = ({ options, va
     onChange(selectedValues);
   };
 
-  console.log('adentro del select', value)
   return (
     <FormControl variant='outlined'>    
       <InputLabel variant='outlined'>{placeholder}</InputLabel>    

@@ -25,6 +25,8 @@ import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
 import TelevisionDeleteModal from './TelevisionDeleteModal'
 import { useTranslation } from 'react-i18next'
+import { FormatListBulleted } from '@material-ui/icons'
+import TelevisionModalListLabels from './TelevisionModalListLabels'
 
 const useStyles = makeStyles({
   table: {
@@ -41,6 +43,7 @@ export default function TelevisionList() {
   const [isModalCreate, setIsModalCreate] = React.useState(false)
   const [televisionToEdit, setTelevisionToEdit] = React.useState<TelevisionT | null>(null)
   const [televisionToDelete, setTelevisionToDelete] = React.useState<TelevisionT | null>(null)
+  const [listLabels, setListLabels] = React.useState<TelevisionT | null>(null)
   const [titleModal, setModalTitle] = React.useState('Titulo')
   const searchQueryString = useSearchQueryString()
   const { t } = useTranslation()
@@ -56,10 +59,15 @@ export default function TelevisionList() {
   function handleCloseEditTelevisionModal() {
     setTelevisionToEdit(null)
     setIsModalCreate(false)
+    setListLabels(null)
   }
 
   function handleCloseDeleteTelevisionModal() {
     setTelevisionToDelete(null)
+  }
+
+  function handleListLabelsModal() {
+    setListLabels(null)
   }
 
   return isLoading ? (
@@ -115,6 +123,9 @@ export default function TelevisionList() {
                 <Trans>INSTITUTION</Trans>
               </TableCell>
               <TableCell>
+                <Trans>LABELS</Trans>
+              </TableCell>
+              <TableCell>
                 <Trans>ACTION</Trans>
               </TableCell>
             </TableRow>
@@ -130,6 +141,19 @@ export default function TelevisionList() {
                 <TableCell>{television.ip}</TableCell>
                 <TableCell>{television.mac}</TableCell>
                 <TableCell>{television?.institution?.name}</TableCell>
+                <TableCell>
+                  <IconButton
+                    onClick={() => {
+                      setModalTitle(television.name)
+                      setListLabels(television)
+                    }}
+                    color='primary'
+                    aria-label='edit label'
+                    component='span'
+                  >
+                    <FormatListBulleted color='primary'/>
+                  </IconButton>
+                </TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => {
@@ -170,6 +194,13 @@ export default function TelevisionList() {
           isOpen={!!televisionToDelete}
           television={televisionToDelete!}
           handleCloseDeleteModal={handleCloseDeleteTelevisionModal}
+        />
+      )}
+      {!!listLabels && (
+        <TelevisionModalListLabels
+          isOpen={!!listLabels}
+          tv={listLabels!}
+          handleListLabelsModal={handleListLabelsModal}
         />
       )}
     </>

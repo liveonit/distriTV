@@ -4,15 +4,15 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import Typography from '@material-ui/core/Typography'
-import { LabelT } from 'src/store/label/label.type'
 import { Trans } from 'react-i18next'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, makeStyles } from '@material-ui/core'
 import Paper from '@material-ui/core/Paper'
+import { TelevisionT } from 'src/store/television/television.type'
 
 type IProps = {
   isOpen: boolean
-  handleListTelevisionsModal: () => void
-  label: LabelT
+  handleListLabelsModal: () => void
+  tv: TelevisionT
 }
 
 const useStyles = makeStyles({
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
   },
 })
 
-export default function LabelModalListTelevisions({ isOpen, handleListTelevisionsModal, label}: IProps) {
+export default function TelevisionModalListLabels({ isOpen, handleListLabelsModal, tv}: IProps) {
   const classes = useStyles()
 
   return (
@@ -30,7 +30,7 @@ export default function LabelModalListTelevisions({ isOpen, handleListTelevision
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>              
-            <Trans>TELEVISIONS</Trans> - {label.name} 
+            <Trans>LABELS</Trans> - {tv.name} 
           </Typography>
           <br />
           
@@ -42,9 +42,9 @@ export default function LabelModalListTelevisions({ isOpen, handleListTelevision
                 </TableRow>
               </TableHead>
               <TableBody>
-                {label.tvs?.map((tv) => (
-                  <TableRow key={tv.id}>
-                    <TableCell>{tv.name}</TableCell>                    
+                {tv.labels?.map((label) => (
+                  <TableRow key={label.id}>
+                    <TableCell>{label.name}</TableCell>                    
                   </TableRow>
                 ))}
               </TableBody>
@@ -53,7 +53,7 @@ export default function LabelModalListTelevisions({ isOpen, handleListTelevision
        
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleListTelevisionsModal} color='primary'>
+          <Button onClick={handleListLabelsModal} color='primary'>
             <Trans>CLOSE</Trans>
           </Button>        
         </DialogActions>

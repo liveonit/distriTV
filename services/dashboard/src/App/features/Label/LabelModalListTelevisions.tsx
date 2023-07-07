@@ -42,9 +42,9 @@ export default function LabelDeleteModal({ isOpen, handleListTelevisionsModal, l
                 </TableRow>
               </TableHead>
               <TableBody>
-                {label.tvs.map((tv) => (
-                  <TableRow key={tv?.id}>
-                    <TableCell>{tv?.name}</TableCell>                    
+                {label.tvs?.map((tv) => (
+                  <TableRow key={tv.id}>
+                    <TableCell>{tv.name}</TableCell>                    
                   </TableRow>
                 ))}
               </TableBody>

@@ -78,7 +78,7 @@ const updateLabel: Epic = (action$) =>
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ method: 'PUT', path: `/label/${payload.id}`, requireAuthType: session?.type, body: payload }).pipe(
+      return apiSvc.request({ method: 'PUT', path: `/label/${payload.id}?relations=tvs`, requireAuthType: session?.type, body: payload }).pipe(
         mergeMap(({ response }) => {
           return of({
             type: LabelActionTypes.EDIT_SUCCESS,

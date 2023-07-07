@@ -6,10 +6,10 @@ export const labelSchema = z.object({
   description: z.string().optional(),
   tvs: z.array(z.
     object({
-      id: z.number(),
-      name: z.string(),
-    }).optional()
-  )
+      id: z.number().optional(),
+      name: z.string().optional(),
+    })
+  ).optional(),
 })
 
 export type LabelT = z.TypeOf<typeof labelSchema>

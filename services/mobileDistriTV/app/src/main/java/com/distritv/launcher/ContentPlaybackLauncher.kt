@@ -3,7 +3,7 @@
  * or launching the HomeActivity with the corresponding fragment.
  */
 
-package com.distritv.daemon
+package com.distritv.launcher
 
 import android.app.Activity
 import android.app.AlarmManager
@@ -39,12 +39,15 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
         val isContentCurrentlyPlaying: Boolean =
             (context.applicationContext as DistriTVApp).isContentCurrentlyPlaying()
 
+        val isAlertCurrentlyPlaying: Boolean =
+            (context.applicationContext as DistriTVApp).isAlertCurrentlyPlaying()
+
         if (content == null || !contentIsValid(content)) {
             return
         }
 
-        if (isContentCurrentlyPlaying) {
-            Log.w(TAG, "Cannot be played because other content is currently playing")
+        if (isContentCurrentlyPlaying || isAlertCurrentlyPlaying) {
+            Log.w(TAG, "Cannot be played because other content or alert is currently playing")
             if (isAlarm != null && isAlarm) {
                 cancelAlarm(context, content)
             }

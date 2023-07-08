@@ -69,7 +69,7 @@
         </receiver>
 
         <receiver
-            android:name=".daemon.ContentPlaybackLauncher"
+            android:name=".launcher.ContentPlaybackLauncher"
             android:enabled="true"
             android:exported="true" />
 

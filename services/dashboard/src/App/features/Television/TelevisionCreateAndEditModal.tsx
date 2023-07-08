@@ -61,7 +61,7 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
   }, [dispatch])
 
   const onSubmit: SubmitHandler<FormStateT> = (data) => {
-    const parsedData = data.labels?.length ? { ...data, m2mRelations: { labels: data.labels } } : data
+    const parsedData = data.labels ? { ...data, m2mRelations: { labels: data.labels } } : data
     console.log({ parsedData })
     if (!television) dispatch(createTelevision(parsedData))
     else dispatch(updateTelevision(parsedData))

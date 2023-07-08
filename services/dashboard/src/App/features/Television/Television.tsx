@@ -24,6 +24,9 @@ import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 
 import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
 import TelevisionDeleteModal from './TelevisionDeleteModal'
+import { useTranslation } from 'react-i18next'
+import { FormatListBulleted } from '@material-ui/icons'
+import TelevisionModalListLabels from './TelevisionModalListLabels'
 
 const useStyles = makeStyles({
   table: {
@@ -35,22 +38,20 @@ export default function TelevisionList() {
   const classes = useStyles()
   const dispatch = useDispatch()
 
-  React.useEffect(() => {
-    dispatch(listTelevisionsJoin())
-  }, [dispatch])
-
   const isLoading = useSelector(televisionsIsLoadingSelector)
   const televisions = useSelector(televisionsSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
   const [televisionToEdit, setTelevisionToEdit] = React.useState<TelevisionT | null>(null)
   const [televisionToDelete, setTelevisionToDelete] = React.useState<TelevisionT | null>(null)
+  const [listLabels, setListLabels] = React.useState<TelevisionT | null>(null)
   const [titleModal, setModalTitle] = React.useState('Titulo')
   const searchQueryString = useSearchQueryString()
+  const { t } = useTranslation()
 
   React.useEffect(() => {
     dispatch(
       listTelevisionsJoin({
-        query: `search=${searchQueryString}`,
+        query: searchQueryString ? `search=${searchQueryString}` : '',
       }),
     )
   }, [dispatch, searchQueryString])
@@ -58,22 +59,21 @@ export default function TelevisionList() {
   function handleCloseEditTelevisionModal() {
     setTelevisionToEdit(null)
     setIsModalCreate(false)
+    setListLabels(null)
   }
 
   function handleCloseDeleteTelevisionModal() {
     setTelevisionToDelete(null)
   }
 
+  function handleListLabelsModal() {
+    setListLabels(null)
+  }
+
   return isLoading ? (
     <CircularProgress />
   ) : (
     <>
-      <SearchBox
-        searches={[
-          { type: 'Input', name: 'tvCode' },
-          { type: 'Input', name: 'name' },
-        ]}
-      />
       <Grid container alignItems='center'>
         <Grid item sm={8}>
           <h2>
@@ -95,6 +95,12 @@ export default function TelevisionList() {
           </Button>
         </Grid>
       </Grid>
+      <SearchBox
+        searches={[
+          { type: 'Input', name: 'tvCode', placeholder: t('TV_CODE') },
+          { type: 'Input', name: 'name', placeholder: t('NAME') },
+        ]}
+      />
       <br />
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
@@ -117,6 +123,9 @@ export default function TelevisionList() {
                 <Trans>INSTITUTION</Trans>
               </TableCell>
               <TableCell>
+                <Trans>LABELS</Trans>
+              </TableCell>
+              <TableCell>
                 <Trans>ACTION</Trans>
               </TableCell>
             </TableRow>
@@ -132,6 +141,19 @@ export default function TelevisionList() {
                 <TableCell>{television.ip}</TableCell>
                 <TableCell>{television.mac}</TableCell>
                 <TableCell>{television?.institution?.name}</TableCell>
+                <TableCell>
+                  <IconButton
+                    onClick={() => {
+                      setModalTitle(television.name)
+                      setListLabels(television)
+                    }}
+                    color='primary'
+                    aria-label='edit label'
+                    component='span'
+                  >
+                    <FormatListBulleted color='primary'/>
+                  </IconButton>
+                </TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => {
@@ -172,6 +194,13 @@ export default function TelevisionList() {
           isOpen={!!televisionToDelete}
           television={televisionToDelete!}
           handleCloseDeleteModal={handleCloseDeleteTelevisionModal}
+        />
+      )}
+      {!!listLabels && (
+        <TelevisionModalListLabels
+          isOpen={!!listLabels}
+          tv={listLabels!}
+          handleListLabelsModal={handleListLabelsModal}
         />
       )}
     </>

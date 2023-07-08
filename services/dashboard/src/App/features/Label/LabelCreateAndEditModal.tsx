@@ -21,13 +21,19 @@ type IProps = {
 }
 
 export default function LabelCreateAndEditModal({ handleCloseEditModal, label, title }: IProps) {
-  const labelInitialState: LabelT = { id:0,  name: '', description: '', ...removeEmpty(label) }
+  const labelInitialState: LabelT = { 
+    id:0,  
+    name: '', 
+    description: '', 
+    ...removeEmpty(label), 
+    tvs: label.tvs || []
+  }
 
   const methods = useForm<LabelT>({
     resolver: zodResolver(labelSchema),
     defaultValues: labelInitialState,
   })
-
+  
   const { reset, handleSubmit, control } = methods
   const dispatch = useDispatch()
   const { t } = useTranslation()
@@ -36,6 +42,7 @@ export default function LabelCreateAndEditModal({ handleCloseEditModal, label, t
     else dispatch(updateLabel(data))
     handleCloseEditModal()
   }
+  
   return (
     <>
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>

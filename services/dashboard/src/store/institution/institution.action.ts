@@ -1,8 +1,9 @@
 import { InstitutionActionTypes } from './institution.state'
 import { InstitutionT } from './institution.type'
 
-export const listInstitutions = () => ({
+export const listInstitutions = (payload?: { query?: string }) => ({
   type: InstitutionActionTypes.LIST_ALL_REQUEST,
+  payload
 })
 
 export const createInstitution = (payload: InstitutionT) => ({

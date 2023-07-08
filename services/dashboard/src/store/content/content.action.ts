@@ -1,7 +1,8 @@
 import { ContentActionTypes } from './content.state'
 import { ContentT } from './content.type'
-export const listContents = () => ({
+export const listContents = (payload?: { query?: string }) => ({
   type: ContentActionTypes.LIST_ALL_REQUEST,
+  payload
 })
 
 export const createContent = (payload: ContentT) => ({

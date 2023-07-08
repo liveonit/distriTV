@@ -1,8 +1,9 @@
 import { AgendaActionTypes } from './agenda.state'
 import { AgendaT } from './agenda.type'
 
-export const listAgendas = () => ({
+export const listAgendas = (payload?: { query?: string }) => ({
   type: AgendaActionTypes.LIST_ALL_REQUEST,
+  payload
 })
 
 export const createAgenda = (payload: AgendaT) => ({

@@ -22,6 +22,10 @@ import { Trans } from 'react-i18next/TransWithoutContext'
 
 import CreateAndEditContentModal from './CreateAndEditContentModal'
 import ContentDeleteModal from './ContentDeleteModal'
+import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
+import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
+import { useTranslation } from 'react-i18next'
+import Link from '@material-ui/core/Link'
 
 const useStyles = makeStyles({
   table: {
@@ -32,10 +36,16 @@ const useStyles = makeStyles({
 export default function ContentList() {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const searchQueryString = useSearchQueryString()
+  const { t } = useTranslation()
 
   React.useEffect(() => {
-    dispatch(listContents())
-  }, [dispatch])
+    dispatch(
+      listContents({
+        query: searchQueryString ? `search=${searchQueryString}` : '',
+      }),
+    )
+  }, [dispatch, searchQueryString])
 
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const isLoading = useSelector(contentIsLoadingSelector)
@@ -70,6 +80,13 @@ export default function ContentList() {
           </Button>
         </Grid>
       </Grid>
+      <SearchBox
+        searches={[
+          { type: 'Input', name: 'name', placeholder: t('NAME') },
+          { type: 'Select', name: 'type', placeholder: t('TYPE'), options: ['Video', 'Text', 'Image'] },
+        ]}
+      />
+      <br/>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
@@ -87,7 +104,7 @@ export default function ContentList() {
                   {content.name}
                 </TableCell>
                 <TableCell>{content.type}</TableCell>
-                <TableCell>{content.url}</TableCell>
+                <TableCell><Link href={content.url}>{content.url}</Link></TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => {

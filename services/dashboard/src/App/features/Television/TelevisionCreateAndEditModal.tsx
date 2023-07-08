@@ -42,7 +42,6 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
     labels: television?.labels?.map((label: LabelT) => label.id!) || [],
   }
 
-  console.log({ televisionInitialState })
   const methods = useForm<FormStateT>({
     resolver: zodResolver(televisionSchema),
     defaultValues: televisionInitialState,
@@ -62,7 +61,6 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
 
   const onSubmit: SubmitHandler<FormStateT> = (data) => {
     const parsedData = data.labels ? { ...data, m2mRelations: { labels: data.labels } } : data
-    console.log({ parsedData })
     if (!television) dispatch(createTelevision(parsedData))
     else dispatch(updateTelevision(parsedData))
     handleCloseEditModal()

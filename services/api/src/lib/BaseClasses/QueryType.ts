@@ -21,7 +21,6 @@ export const querySchema = z.object({
       if (typeof v === 'string') {
         const searches = v.split(';');
         const query: any = {};
-        console.log(searches)
         searches.forEach((search) => {
           const [column, value] = search.split(':');
           if (value !== '') {
@@ -34,7 +33,7 @@ export const querySchema = z.object({
                 return Like(`%${value}%`);
               }
             }
-            
+
             if (son) {
               const nested: any = {};
               nested[son] = parseValue();
@@ -42,7 +41,7 @@ export const querySchema = z.object({
             } else {
               query[column] = parseValue();
             }
-          }          
+          }
         });
 
         console.log(query)

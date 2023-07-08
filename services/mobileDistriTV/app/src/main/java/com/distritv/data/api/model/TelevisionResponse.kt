@@ -7,5 +7,6 @@ data class TelevisionResponse(
     val ip: String,
     val mac: String,
     val tvCode: String,
-    val schedules: List<ScheduleResponse>
+    val schedules: List<ScheduleResponse>,
+    val alert: AlertResponse?
 )

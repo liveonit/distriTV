@@ -10,6 +10,7 @@ const val TV_CODE = "tvCode"
 const val LOCALE = "locale"
 const val USE_EXTERNAL_STORAGE = "use_external_storage"
 
+const val IS_ALERT = "isAlert"
 const val CONTENT_PARAM = "contentParam"
 const val CONTENT_BUNDLE_PARAM = "contentBundleParam"
 

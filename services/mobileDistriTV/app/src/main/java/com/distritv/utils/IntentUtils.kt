@@ -5,7 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.distritv.daemon.ContentPlaybackLauncher
+import com.distritv.launcher.ContentPlaybackLauncher
 import com.distritv.data.model.Content
 import java.util.*
 

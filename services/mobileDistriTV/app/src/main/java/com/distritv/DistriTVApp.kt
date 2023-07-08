@@ -28,6 +28,7 @@ class DistriTVApp: Application() {
     }
 
     private var currentActivity: Activity? = null
+    private var isAlertCurrentlyPlaying = false
     private var isContentCurrentlyPlaying = false
     private var currentlyPlayingContentId: Long? = null
 
@@ -37,6 +38,14 @@ class DistriTVApp: Application() {
 
     fun setCurrentActivity(currentActivity: Activity?) {
         this.currentActivity = currentActivity
+    }
+
+    fun isAlertCurrentlyPlaying(): Boolean {
+        return this.isAlertCurrentlyPlaying
+    }
+
+    fun setIfAnyAlertIsCurrentlyPlaying(isPlaying: Boolean) {
+        this.isAlertCurrentlyPlaying = isPlaying
     }
 
     fun isContentCurrentlyPlaying(): Boolean {

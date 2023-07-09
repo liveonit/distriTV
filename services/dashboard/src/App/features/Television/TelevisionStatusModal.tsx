@@ -5,9 +5,10 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import Typography from '@material-ui/core/Typography'
 import { Trans } from 'react-i18next'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, makeStyles } from '@material-ui/core'
-import Paper from '@material-ui/core/Paper'
+import { Box, Paper, styled } from '@material-ui/core'
 import { TelevisionT } from 'src/store/television/television.type'
+import { Grid } from '@mui/material'
+import MemoryIcon from '@mui/icons-material/Memory';
 
 type IProps = {
   isOpen: boolean
@@ -15,14 +16,17 @@ type IProps = {
   tv: TelevisionT
 }
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 150,
-  },
-})
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.primary,
+}));
+
+
 
 export default function TelevisionModalListLabels({ isOpen, handleCloseStatusTelevisionModal, tv}: IProps) {
-  const classes = useStyles()
+  
 
   return (
     
@@ -33,24 +37,28 @@ export default function TelevisionModalListLabels({ isOpen, handleCloseStatusTel
             <Trans>STATUS</Trans> - {tv.name} 
           </Typography>
           <br />
-          
-          <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label='simple table'>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>            
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {tv.labels?.map((label) => (
-                  <TableRow key={label.id}>
-                    <TableCell>{label.name}</TableCell>                    
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-       
+          <Box sx={{ width: '100%' }}>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            <Grid item xs={6}>
+              <Item> <MemoryIcon></MemoryIcon>1 memoria </Item>
+            </Grid>
+            <Grid item xs={6}>
+              <Item>2</Item>
+            </Grid>
+            <Grid item xs={6}>
+              <Item>3</Item>
+            </Grid>
+            <Grid item xs={6}>
+              <Item>4</Item>
+            </Grid>
+            <Grid item xs={6}>
+              <Item>5</Item>
+            </Grid>
+            <Grid item xs={6}>
+              <Item>6</Item>
+            </Grid>
+        </Grid>
+       </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseStatusTelevisionModal} color='primary'>

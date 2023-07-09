@@ -13,8 +13,8 @@ import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
 import com.distritv.data.model.DeviceInfoCard
-import com.distritv.utils.StorageHelper.externalMemoryAvailable
-import com.distritv.utils.StorageHelper.externalStoragePermissionGranted
+import com.distritv.data.helper.StorageHelper.externalMemoryAvailable
+import com.distritv.data.helper.StorageHelper.externalStoragePermissionGranted
 import com.distritv.utils.getCurrentTime
 import com.distritv.utils.isServiceRunning
 import com.distritv.utils.roundTo

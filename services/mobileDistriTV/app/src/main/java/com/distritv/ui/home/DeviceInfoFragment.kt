@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,13 +16,13 @@ import com.distritv.BuildConfig
 import com.distritv.databinding.FragmentDeviceInfoBinding
 import com.distritv.ui.home.HomeViewModel.Companion.DEVICE_INFO
 import com.distritv.utils.*
-import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.DIALOG_ACCEPT
-import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.DIALOG_CANCEL
-import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.DIALOG_MESSAGE
-import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.DIALOG_TITLE
-import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.REGISTER_BUTTON
-import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.SWITCH_EXTERNAL_STORAGE
-import com.distritv.utils.LocaleHelper.DeviceInfoFragmentTextIndex.TITLE
+import com.distritv.utils.DeviceInfoFragmentTextIndex.DIALOG_ACCEPT
+import com.distritv.utils.DeviceInfoFragmentTextIndex.DIALOG_CANCEL
+import com.distritv.utils.DeviceInfoFragmentTextIndex.DIALOG_MESSAGE
+import com.distritv.utils.DeviceInfoFragmentTextIndex.DIALOG_TITLE
+import com.distritv.utils.DeviceInfoFragmentTextIndex.REGISTER_BUTTON
+import com.distritv.utils.DeviceInfoFragmentTextIndex.SWITCH_EXTERNAL_STORAGE
+import com.distritv.utils.DeviceInfoFragmentTextIndex.TITLE
 
 
 class DeviceInfoFragment : Fragment() {
@@ -84,7 +83,7 @@ class DeviceInfoFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw ClassCastException("Must implement HomeFragment.OnFragmentInteractionListener")
+            throw ClassCastException("Must implement DeviceInfoFragment.OnFragmentInteractionListener")
         }
     }
 

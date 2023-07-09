@@ -1,6 +1,9 @@
 package com.distritv.ui.home
 
 
+import android.app.AlertDialog
+import android.content.Context
+import android.content.DialogInterface
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -17,10 +20,17 @@ import com.distritv.databinding.FragmentHomeBinding
 import com.distritv.ui.FullscreenManager
 import com.distritv.ui.home.HomeViewModel.Companion.HOME
 import com.distritv.utils.*
-import com.distritv.utils.LocaleHelper.HomeFragmentTextIndex.APP_VERSION
-import com.distritv.utils.LocaleHelper.HomeFragmentTextIndex.CONNECTION_STATUS
-import com.distritv.utils.LocaleHelper.HomeFragmentTextIndex.LANGUAGE
-import com.distritv.utils.LocaleHelper.HomeFragmentTextIndex.TV_CODE
+import com.distritv.utils.HomeFragmentTextIndex.APP_VERSION
+import com.distritv.utils.HomeFragmentTextIndex.CONNECTION_STATUS
+import com.distritv.utils.HomeFragmentTextIndex.DIALOG_ACCEPT_HOME
+import com.distritv.utils.HomeFragmentTextIndex.DIALOG_CANCEL_HOME
+import com.distritv.utils.HomeFragmentTextIndex.DIALOG_MESSAGE_HOME_TO_EXTERNAL
+import com.distritv.utils.HomeFragmentTextIndex.DIALOG_MESSAGE_HOME_TO_INTERNAL
+import com.distritv.utils.HomeFragmentTextIndex.DIALOG_TITLE_HOME_TO_EXTERNAL
+import com.distritv.utils.HomeFragmentTextIndex.DIALOG_TITLE_HOME_TO_INTERNAL
+import com.distritv.utils.HomeFragmentTextIndex.LANGUAGE
+import com.distritv.utils.HomeFragmentTextIndex.SWITCH_EXTERNAL_STORAGE_HOME
+import com.distritv.utils.HomeFragmentTextIndex.TV_CODE
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -30,6 +40,8 @@ class HomeFragment: Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    private var listener: OnFragmentInteractionListener? = null
+
     private val viewModel by viewModel<HomeViewModel>()
 
     var infoBtnVisible = false
@@ -37,6 +49,12 @@ class HomeFragment: Fragment() {
     private val handler = Handler(Looper.getMainLooper())
 
     private lateinit var languages: Array<String>
+
+    private lateinit var externalStorageDialog: AlertDialog
+    private var dialogTitle = ""
+    private var dialogMessage = ""
+    private var dialogAccept = ""
+    private var dialogCancel = ""
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -66,12 +84,26 @@ class HomeFragment: Fragment() {
 
         viewModel.setLocale()
 
+        switchButtonListener()
+
         setupInformationButton()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentInteractionListener) {
+            listener = context
+        } else {
+            throw ClassCastException("Must implement HomeFragment.OnFragmentInteractionListener")
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacksAndMessages(null)
+        if (::externalStorageDialog.isInitialized && externalStorageDialog.isShowing) {
+            externalStorageDialog.cancel()
+        }
     }
 
     private fun loadImage() {
@@ -85,6 +117,7 @@ class HomeFragment: Fragment() {
             addStatus(deviceInfoCard.connectionStatus)
             languageSpinner()
             setSpinnerSelection()
+            setSwitchExternalStorageVisibility()
         }
     }
 
@@ -151,6 +184,7 @@ class HomeFragment: Fragment() {
             binding.tvCodeKey.text = textList[TV_CODE]
             binding.connectionStatusKey.text = textList[CONNECTION_STATUS]
             binding.languageKey.text = textList[LANGUAGE]
+            binding.switchExternalStorage.text = textList[SWITCH_EXTERNAL_STORAGE_HOME]
         }
     }
 
@@ -209,6 +243,67 @@ class HomeFragment: Fragment() {
                 binding.languageSpinner.setSelection(AUTOMATIC_POS)
             }
         }
+    }
+
+    private fun setSwitchExternalStorageVisibility() {
+        if (viewModel.isExternalStorageEnabled()) {
+            binding.switchExternalStorage.isChecked = viewModel.useExternalStorage()
+            binding.switchExternalStorage.visibility = View.VISIBLE
+        } else {
+            binding.switchExternalStorage.visibility = View.GONE
+        }
+    }
+
+    private fun switchButtonListener() {
+        binding.switchExternalStorage.setOnClickListener {
+            val dialogTextList = viewModel.getDialogSwitchHomeText()
+            dialogAccept = dialogTextList[DIALOG_ACCEPT_HOME]
+            dialogCancel = dialogTextList[DIALOG_CANCEL_HOME]
+            if (binding.switchExternalStorage.isChecked) {
+                dialogTitle = dialogTextList[DIALOG_TITLE_HOME_TO_EXTERNAL]
+                dialogMessage = dialogTextList[DIALOG_MESSAGE_HOME_TO_EXTERNAL]
+            } else {
+                dialogTitle = dialogTextList[DIALOG_TITLE_HOME_TO_INTERNAL]
+                dialogMessage = dialogTextList[DIALOG_MESSAGE_HOME_TO_INTERNAL]
+            }
+
+            if (binding.switchExternalStorage.isChecked) {
+                showDialog(dialogConfirmExternalFun)
+            } else {
+                showDialog(dialogConfirmInternalFun)
+            }
+        }
+    }
+
+    private fun showDialog(dialogConfirmFun: (dialog: DialogInterface, _: Int) -> Unit) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(dialogTitle)
+        builder.setMessage(dialogMessage)
+        builder.setPositiveButton(dialogAccept, dialogConfirmFun)
+        builder.setNegativeButton(dialogCancel, dialogCancelFun)
+        externalStorageDialog = builder.create()
+        externalStorageDialog.setCanceledOnTouchOutside(false)
+        externalStorageDialog.show()
+    }
+
+
+    private val dialogConfirmExternalFun = { dialog: DialogInterface, _: Int ->
+        listener?.onChangeStorage(true)
+        dialog.dismiss()
+    }
+
+    private val dialogConfirmInternalFun = { dialog: DialogInterface, _: Int ->
+        listener?.onChangeStorage(false)
+        dialog.dismiss()
+    }
+
+    private val dialogCancelFun = { dialog: DialogInterface, _: Int ->
+        binding.switchExternalStorage.isChecked = viewModel.useExternalStorage()
+        dialog.cancel()
+    }
+
+    interface OnFragmentInteractionListener {
+        fun onChangeStorage(useExternalStorage: Boolean)
     }
 
     companion object {

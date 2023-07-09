@@ -17,6 +17,7 @@ import com.distritv.databinding.FragmentVideoBinding
 import com.distritv.ui.FullscreenManager
 import com.distritv.ui.player.CustomVideoView.PlayPauseListener
 import com.distritv.utils.*
+import com.distritv.data.helper.StorageHelper.getDirectory
 import java.io.File
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
@@ -103,7 +104,7 @@ class VideoFragment : Fragment() {
     }
 
     private fun startVideo() {
-        val file = File(content?.localPath ?: "")
+        val file = File(content?.fileName ?: "")
 
         if (!file.exists()) {
             Log.e(TAG, "An error occurred while trying to play. Check storage. Back to home...")
@@ -112,7 +113,7 @@ class VideoFragment : Fragment() {
             onAfterCompletion(TAG, content?.id)
         }
 
-        val path = File(content?.localPath ?: "").toURI().toString()
+        val path = File(context?.getDirectory() ?: "", content?.fileName ?: "").toURI().toString()
         binding.videoContainer.setVideoPath(path)
 
         val mediaC = MediaController(context)

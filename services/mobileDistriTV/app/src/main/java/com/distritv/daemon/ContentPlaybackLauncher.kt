@@ -19,6 +19,7 @@ import com.distritv.data.model.Content
 import com.distritv.ui.home.HomeActivity
 import com.distritv.ui.player.ContentPlayerActivity
 import com.distritv.utils.*
+import com.distritv.data.helper.StorageHelper.getDirectory
 
 
 class ContentPlaybackLauncher : BroadcastReceiver() {
@@ -53,8 +54,8 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
             return
         }
 
-        if (!content.fileExists()) {
-            Log.e(TAG, "Content file not found. Content id: ${content.id}, path: ${content.localPath}")
+        if (!content.fileExists(context.getDirectory())) {
+            Log.e(TAG, "Content file not found. Content id: ${content.id}, path: ${content.fileName}")
             Toast.makeText(
                 context, context.getString(R.string.msg_unavailable_content),
                 Toast.LENGTH_LONG
@@ -92,7 +93,7 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
         if (content == null) return false
         if (content.type.isBlank()) return false
         if (content.isVideo() || content.isImage()) {
-            return !content.localPath.isNullOrBlank()
+            return !content.fileName.isNullOrBlank()
         } else if (content.isText()) {
             return !content.text.isNullOrBlank()
         }

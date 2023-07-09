@@ -60,7 +60,7 @@ class ImageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fullscreenManager?.enterFullscreen()
-        viewModel.fetchImage(content?.localPath ?: "")
+        viewModel.fetchImage(content?.fileName ?: "")
     }
 
     override fun onResume() {

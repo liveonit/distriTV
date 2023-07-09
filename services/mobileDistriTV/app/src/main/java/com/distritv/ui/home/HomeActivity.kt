@@ -2,6 +2,8 @@ package com.distritv.ui.home
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -16,17 +18,23 @@ import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
 import com.distritv.databinding.ActivityHomeBinding
+import com.distritv.ui.home.HomeViewModel.Companion.DEVICE_INFO
+import com.distritv.ui.home.HomeViewModel.Companion.HOME
 import com.distritv.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteractionListener {
+class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteractionListener,
+    HomeFragment.OnFragmentInteractionListener {
 
     val viewModel by viewModel<HomeViewModel>()
 
     private lateinit var binding: ActivityHomeBinding
 
     private lateinit var myApp: DistriTVApp
+
+    private var referrer = -1
+    private lateinit var externalStorageDialog: AlertDialog
 
     @SuppressLint("AppCompatMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +51,7 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         myApp = this.applicationContext as DistriTVApp
 
         tvCodeValidationObserver()
+        referrerRequestPermissionObserver()
         addFragmentObserver()
 
         checkIfDeviceIsRegistered()
@@ -67,6 +76,9 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
 
     override fun onDestroy() {
         super.onDestroy()
+        if (::externalStorageDialog.isInitialized && externalStorageDialog.isShowing) {
+            externalStorageDialog.cancel()
+        }
         clearReferences()
     }
 
@@ -110,17 +122,31 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         viewModel.registerTvCode(code, useExternalStorage)
     }
 
+    override fun onChangeStorage(useExternalStorage: Boolean) {
+        viewModel.changeUseExternalStorage(useExternalStorage)
+    }
+
     private fun tvCodeValidationObserver() {
         viewModel.isValid.observe(this) { isValid ->
             if (isValid) {
-                if (viewModel.useExternalStorage()) {
-                    requestPermissionExternalStorage()
+                if (viewModel.externalStorageSelected.value == true) {
+                    requestWriteExternalStoragePermission()
                 } else {
                     addHomeFragment()
                 }
             }
         }
     }
+
+    private fun referrerRequestPermissionObserver() {
+        viewModel.referrerRequestPerm.observe(this) {ref ->
+            referrer = ref
+            if (ref == HOME){
+                requestWriteExternalStoragePermission()
+            }
+        }
+    }
+
 
     private fun addHomeFragment() {
         supportFragmentManager.addFragment(
@@ -151,7 +177,7 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         }
     }
 
-    private fun requestPermissionExternalStorage() {
+    private fun requestWriteExternalStoragePermission() {
         if (ContextCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -161,6 +187,8 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
                 this,
                 arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), PERMISSIONS_REQUEST
             )
+        } else {
+            viewModel.afterWriteExternalStoragePermissionGranted()
         }
     }
 
@@ -171,8 +199,55 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST) {
-            addHomeFragment()
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted
+                viewModel.afterWriteExternalStoragePermissionGranted()
+                if (referrer == DEVICE_INFO) {
+                    addHomeFragment()
+                }
+            } else {
+                // Permission denied
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    viewModel.afterWriteExternalStoragePermissionGranted()
+                    if (referrer == DEVICE_INFO) {
+                        addHomeFragment()
+                    }
+                } else {
+                    viewModel.setExternalStorage(false)
+                    val dialogText = viewModel.getDialogTextPermissionDenied()
+                    if (referrer == DEVICE_INFO) {
+                        showDialog(
+                            dialogText.first,
+                            dialogText.second,
+                            dialogText.third,
+                            dialogConfirmFun
+                        )
+                    } else {
+                        showDialog(dialogText.first, dialogText.second, dialogText.third, null)
+                    }
+                }
+            }
         }
+    }
+
+    private fun showDialog(
+        title: String,
+        msg: String,
+        posBtn: String,
+        dialogConfirmFun: ((dialog: DialogInterface, _: Int) -> Unit)?
+    ) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+        builder.setMessage(msg)
+        builder.setPositiveButton(posBtn, dialogConfirmFun)
+        externalStorageDialog = builder.create()
+        externalStorageDialog.setCanceledOnTouchOutside(false)
+        externalStorageDialog.show()
+    }
+
+    private val dialogConfirmFun = { dialog: DialogInterface, _: Int ->
+        addHomeFragment()
+        dialog.dismiss()
     }
 
     companion object {

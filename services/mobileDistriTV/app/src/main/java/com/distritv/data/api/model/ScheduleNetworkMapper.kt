@@ -5,7 +5,6 @@ import com.distritv.data.model.Content
 import com.distritv.data.model.Schedule
 import com.distritv.utils.DATE_FORMAT
 import com.distritv.utils.localDateTimeToMillis
-import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
@@ -25,7 +24,7 @@ object ScheduleNetworkMapper: EntityMapper<ScheduleResponse, Schedule> {
             Content(
                 id = entity.content?.id ?: -1L,
                 name = entity.content?.name ?: "",
-                localPath = "",
+                fileName = "",
                 url = entity.content?.url ?: "",
                 type = entity.content?.type ?: "",
                 text = entity.content?.text ?: "",

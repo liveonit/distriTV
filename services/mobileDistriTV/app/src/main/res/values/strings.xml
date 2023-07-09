@@ -16,7 +16,7 @@
     <string name="msg_tv_code_invalid">The code entered is invalid</string>
     <string name="msg_tv_code_error">An error has occurred</string>
     <string name="msg_tv_code_connection_error">A connection error has occurred</string>
-    <string name="msg_unavailable_content">ERROR: Content not found</string>
+    <string name="msg_unavailable_content">Playback error: Content not found</string>
     <string name="msg_error_external_storage">ERROR: External storage may not be found or permission not granted</string>
     <string name="info_card_version">Version:</string>
     <string name="info_card_tv_code">TV code:</string>

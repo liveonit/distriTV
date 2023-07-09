@@ -21,12 +21,13 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
-
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
 import TelevisionDeleteModal from './TelevisionDeleteModal'
 import { useTranslation } from 'react-i18next'
 import { FormatListBulleted } from '@material-ui/icons'
 import TelevisionModalListLabels from './TelevisionModalListLabels'
+import TelevisionStatusModal from './TelevisionStatusModal'
 
 const useStyles = makeStyles({
   table: {
@@ -43,6 +44,7 @@ export default function TelevisionList() {
   const [isModalCreate, setIsModalCreate] = React.useState(false)
   const [televisionToEdit, setTelevisionToEdit] = React.useState<TelevisionT | null>(null)
   const [televisionToDelete, setTelevisionToDelete] = React.useState<TelevisionT | null>(null)
+  const [televisionToStatus, setTelevisionToStatus] = React.useState<TelevisionT | null>(null)
   const [listLabels, setListLabels] = React.useState<TelevisionT | null>(null)
   const [titleModal, setModalTitle] = React.useState('Titulo')
   const searchQueryString = useSearchQueryString()
@@ -58,12 +60,17 @@ export default function TelevisionList() {
 
   function handleCloseEditTelevisionModal() {
     setTelevisionToEdit(null)
+    setTelevisionToStatus(null)
     setIsModalCreate(false)
-    setListLabels(null)
   }
 
   function handleCloseDeleteTelevisionModal() {
     setTelevisionToDelete(null)
+  }
+
+  function handleCloseStatusTelevisionModal() {
+    setTelevisionToStatus(null)
+    
   }
 
   function handleListLabelsModal() {
@@ -126,6 +133,9 @@ export default function TelevisionList() {
                 <Trans>LABELS</Trans>
               </TableCell>
               <TableCell>
+                <Trans>STATUS</Trans>
+              </TableCell>
+              <TableCell>
                 <Trans>ACTION</Trans>
               </TableCell>
             </TableRow>
@@ -153,6 +163,20 @@ export default function TelevisionList() {
                   >
                     <FormatListBulleted color='primary'/>
                   </IconButton>
+                </TableCell>
+                <TableCell>
+                <IconButton
+                    onClick={() => {
+                      setModalTitle('Estado')
+                      setTelevisionToStatus(television)
+                    }}
+                    color='primary'
+                    aria-label='STATUS television'
+                    component='span'
+                  >
+                    <CheckCircleIcon />
+                  </IconButton>
+
                 </TableCell>
                 <TableCell>
                   <IconButton
@@ -201,6 +225,13 @@ export default function TelevisionList() {
           isOpen={!!listLabels}
           tv={listLabels!}
           handleListLabelsModal={handleListLabelsModal}
+        />
+      )}
+       {!!televisionToStatus && (
+        <TelevisionStatusModal
+          isOpen={!!televisionToStatus}
+          tv={televisionToStatus!}
+          handleCloseStatusTelevisionModal={handleCloseStatusTelevisionModal}
         />
       )}
     </>

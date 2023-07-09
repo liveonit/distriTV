@@ -7,12 +7,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.distritv.BuildConfig
 import com.distritv.R
 import com.distritv.data.model.DeviceInfoCard
 import com.distritv.data.repositories.ScheduleRepository
 import com.distritv.data.service.DeviceInfoService
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
+import com.distritv.data.helper.StorageHelper.externalStorageDirIsEmpty
+import com.distritv.data.helper.StorageHelper.internalStorageDirIsEmpty
+import com.distritv.data.helper.StorageHelper.moveFiles
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -41,7 +45,7 @@ class HomeViewModel(
     val deviceInfo: LiveData<DeviceInfoCard>
         get() = _deviceInfo
 
-    private val _loading = MutableLiveData<Boolean>(false)
+    private val _loading = MutableLiveData(false)
     val loading: LiveData<Boolean> get() = _loading
 
     private val _locale = MutableLiveData<String>()
@@ -52,11 +56,21 @@ class HomeViewModel(
     val deviceInfoFragmentTexts: LiveData<List<String>>
         get() = _deviceInfoFragmentTexts
 
+    private val _referrerRequestPerm = MutableLiveData<Int>()
+    val referrerRequestPerm: LiveData<Int>
+        get() = _referrerRequestPerm
+
+    private val _externalStorageSelected = MutableLiveData(false)
+    val externalStorageSelected: LiveData<Boolean>
+        get() = _externalStorageSelected
+
     private val _homeFragmentTexts = MutableLiveData<List<String>>()
     val homeFragmentTexts: LiveData<List<String>>
         get() = _homeFragmentTexts
 
     private var error: Int = -1
+
+    private val externalStorageEnabled: Boolean = BuildConfig.EXTERNAL_STORAGE_ENABLED
 
     fun registerTvCode(code: String, useExternalStorage: Boolean) {
         if (code.length < 6) {
@@ -71,7 +85,8 @@ class HomeViewModel(
                 scheduleRepository.validateTvCode(code).run {
                     if (this) {
                         sharedPreferences.addTvCode(code)
-                        setExternalStorage(useExternalStorage)
+                        _referrerRequestPerm.postValue(DEVICE_INFO)
+                        _externalStorageSelected.value = useExternalStorage
                         _isValid.postValue(true)
                     } else {
                         _errorMessage.postValue(context.getString(R.string.msg_tv_code_invalid))
@@ -125,6 +140,26 @@ class HomeViewModel(
         sharedPreferences.setExternalStorage(useExternalStorage)
     }
 
+    fun changeUseExternalStorage(useExternalStorage: Boolean) {
+        if (useExternalStorage) {
+            _referrerRequestPerm.postValue(HOME)
+        } else {
+            if (context.externalStorageDirIsEmpty()) {
+                sharedPreferences.setExternalStorage(false)
+            } else {
+                context.moveFiles(false)
+            }
+        }
+    }
+
+    fun afterWriteExternalStoragePermissionGranted() {
+        if (context.internalStorageDirIsEmpty()) {
+            sharedPreferences.setExternalStorage(true)
+        } else {
+            context.moveFiles(true)
+        }
+    }
+
     fun useExternalStorage(): Boolean {
         return sharedPreferences.useExternalStorage()
     }
@@ -175,10 +210,10 @@ class HomeViewModel(
             context.getString(R.string.device_info_title),
             context.getString(R.string.device_info_register_button),
             context.getString(R.string.device_info_switch_external),
-            context.getString(R.string.dialog_title),
-            context.getString(R.string.dialog_message),
+            context.getString(R.string.dialog_title_to_external),
+            context.getString(R.string.dialog_message_to_external),
             context.getString(R.string.dialog_accept),
-            context.getString(R.string.dialog_cancel),
+            context.getString(R.string.dialog_cancel)
         )
     }
 
@@ -187,7 +222,19 @@ class HomeViewModel(
             context.getString(R.string.info_card_version),
             context.getString(R.string.info_card_tv_code),
             context.getString(R.string.info_card_connection_status),
-            context.getString(R.string.language)
+            context.getString(R.string.language),
+            context.getString(R.string.info_card_switch_external),
+        )
+    }
+
+    fun getDialogSwitchHomeText(): List<String> {
+        return listOf(
+            context.getString(R.string.dialog_title_to_external),
+            context.getString(R.string.dialog_title_to_internal),
+            context.getString(R.string.dialog_message_home_to_external),
+            context.getString(R.string.dialog_message_home_to_internal),
+            context.getString(R.string.dialog_accept),
+            context.getString(R.string.dialog_cancel)
         )
     }
 
@@ -195,8 +242,20 @@ class HomeViewModel(
         return context.getString(error)
     }
 
+    fun getDialogTextPermissionDenied(): Triple<String, String, String> {
+        return Triple(
+            context.getString(R.string.dialog_title_permission_denied),
+            context.getString(R.string.dialog_message_permission_denied),
+            context.getString(R.string.dialog_accept)
+        )
+    }
+
     fun getLanguages(): Array<String> {
         return context.resources.getStringArray(R.array.languages)
+    }
+
+    fun isExternalStorageEnabled(): Boolean {
+        return externalStorageEnabled
     }
 
     companion object {

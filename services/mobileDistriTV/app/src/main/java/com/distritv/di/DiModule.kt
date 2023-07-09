@@ -10,7 +10,7 @@ import com.distritv.ui.home.HomeViewModel
 import com.distritv.data.service.AlarmService
 import com.distritv.data.service.ContentDBService
 import com.distritv.data.service.ScheduleDBService
-import com.distritv.data.service.DBHelper
+import com.distritv.data.helper.DBHelper
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.data.repositories.ContentRepository
 import com.distritv.data.repositories.IContentRepository

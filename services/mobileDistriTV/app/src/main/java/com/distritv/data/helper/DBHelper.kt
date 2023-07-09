@@ -1,4 +1,4 @@
-package com.distritv.data.service
+package com.distritv.data.helper
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -9,7 +9,7 @@ private const val SQL_CREATE_CONTENT_ENTRIES =
     "CREATE TABLE ${DBContract.ContentEntry.TABLE_NAME} (" +
             "${DBContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER} LONG UNIQUE," +
             "${DBContract.ContentEntry.COLUMN_CONTENT_NAME} TEXT," +
-            "${DBContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH} TEXT," +
+            "${DBContract.ContentEntry.COLUMN_CONTENT_FILE_NAME} TEXT," +
             "${DBContract.ContentEntry.COLUMN_CONTENT_URL} TEXT," +
             "${DBContract.ContentEntry.COLUMN_CONTENT_TYPE} TEXT," +
             "${DBContract.ContentEntry.COLUMN_CONTENT_TEXT} TEXT," +

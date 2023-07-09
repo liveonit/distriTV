@@ -1,8 +1,9 @@
 // material icon
-import { Dashboard, Shop, Apartment, People, Label, Tv, Schedule } from '@material-ui/icons'
+import { Dashboard, Shop, Apartment, People, Label, Tv, Schedule, Announcement } from '@material-ui/icons'
 // import AssessmentIcon from '@material-ui/icons/Assessment';
 // configs
 import { PATH_NAME, DRAWER_MENU_LABEL } from '@app/configs'
+
 
 export const navBarCommon = [
   {
@@ -53,6 +54,13 @@ export const navBarCommon = [
         icon: Schedule,
         href: PATH_NAME.AGENDA,
         label: DRAWER_MENU_LABEL.AGENDAS,
+      },
+      {
+        title: 'ALERTS',
+        IconColor: 'primary',
+        icon: Announcement,
+        href: PATH_NAME.ALERT,
+        label: DRAWER_MENU_LABEL.ALERTAS,
       },
     ],
   },

@@ -51,3 +51,7 @@ code {
 .w-full {
   width: 100%;
 }
+
+.pepe {
+  z-index: 9999;
+}

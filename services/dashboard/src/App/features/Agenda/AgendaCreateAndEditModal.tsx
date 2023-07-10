@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -16,11 +16,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { listContents } from 'src/store/content/content.action'
 import { listTelevisions } from 'src/store/television/television.action'
 import { televisionsSelector } from 'src/store/television/television.selector'
-import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
+// import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { listLabels } from 'src/store/label/label.action'
 import { createAgenda, updateAgenda } from 'src/store/agenda/agenda.action'
 import { labelsSelector } from 'src/store/label/label.selector'
 import { Trans, useTranslation } from 'react-i18next'
+import { Cron } from 'react-js-cron'
+import 'react-js-cron/dist/styles.css'
+import { makeStyles } from '@material-ui/core/styles'
+import { Box } from '@material-ui/core'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -64,6 +68,16 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
     handleCloseEditModal()
   }
 
+  const [value, setValue] = useState('30 5 * * 1,6')
+  const useStyles = makeStyles({
+    '.pepe': {
+      'z-index': 9999,
+      'color': '#b470ff',
+      'display': 'flex',
+      'fullwidth': true
+    }
+  })
+  const classes = useStyles()
   return (
     <>
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
@@ -115,12 +129,16 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
                   selectOptions={labels.map((lab) => ({ label: lab.name, value: lab.id! }))}
                 />
               </Grid>
-            )}
+            )}              
           </Grid>{' '}
           <br />
           <FormInputDate name='startDate' control={control} label={t('START_DATE')} />
           <FormInputDate name='endDate' control={control} label={t('END_DATE')} />
-          <FormInputText name='cron' control={control} fullWidth label={t('CRONTAB')} variant='outlined' />
+          <Box>
+            <Cron value={value} setValue={setValue} className={classes['.pepe']}/>
+          </Box>
+          
+          {/* <FormInputText name='cron' control={control} fullWidth label={t('CRONTAB')} variant='outlined' /> */}
         </DialogContent>
         <DialogActions>
           <Button

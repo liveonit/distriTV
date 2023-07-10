@@ -20,6 +20,7 @@ import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
 import dayjs from 'dayjs'
+import './Agenda.css'
 
 import AgendaCreateAndEditModal from './AgendaCreateAndEditModal'
 import AgendaDeleteModal from './AgendaDeleteModal'
@@ -37,6 +38,9 @@ const useStyles = makeStyles({
   table: {
     minWidth: 650,
   },
+  '.pepe': {
+    'z-index': 9999
+  }
 })
 
 export default function AgendaList() {

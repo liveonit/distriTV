@@ -87,7 +87,7 @@ class AlertLauncher : BroadcastReceiver() {
         if (content == null) return false
         if (content.type.isBlank()) return false
         if (content.isVideo() || content.isImage()) {
-            return !content.localPath.isNullOrBlank()
+            return !content.fileName.isNullOrBlank()
         } else if (content.isText()) {
             return !content.text.isNullOrBlank()
         }

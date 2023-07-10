@@ -21,6 +21,8 @@ import java.nio.channels.FileChannel
 
 object StorageHelper: KoinComponent {
 
+    const val SDK_VERSION_FOR_MEDIA_STORE = Build.VERSION_CODES.R
+
     private const val TAG = "[StorageHelper]"
     private const val LOG_REMOVE_OK = "Removal successful"
     private const val LOG_REMOVE_KO = "Failed to delete"
@@ -38,7 +40,7 @@ object StorageHelper: KoinComponent {
         if (useExternalStorageSelected) {
             moveFilesToExternalStorage()
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT >= SDK_VERSION_FOR_MEDIA_STORE) {
                 moveFilesToInternalStorageWithMediaStore()
             } else {
                 moveFilesToInternalStorage()
@@ -46,7 +48,7 @@ object StorageHelper: KoinComponent {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    @RequiresApi(SDK_VERSION_FOR_MEDIA_STORE)
     fun Context.moveFilesToInternalStorageWithMediaStore() {
         val customDirectoryPath = getCustomExternalStorageDirectory()
 
@@ -83,9 +85,9 @@ object StorageHelper: KoinComponent {
 
                     result = transferFile(sourceFile, targetFile)
                     if (result) {
-                        Log.i(TAG, "$LOG_COPY_OK: ${sourceFile.path}")
+                        Log.i(TAG, "$LOG_COPY_OK: ${sourceFile.path} to ${targetFile.path}")
                     } else {
-                        Log.e(TAG, "$LOG_COPY_KO: ${sourceFile.path}")
+                        Log.e(TAG, "$LOG_COPY_KO: ${sourceFile.path} to ${targetFile.path}")
                     }
                 } while (result && cursor.moveToNext());
             }
@@ -130,9 +132,9 @@ object StorageHelper: KoinComponent {
 
                 result = transferFile(sourceFile, targetFile)
                 if (result) {
-                    Log.i(TAG, "$LOG_COPY_OK: ${sourceFile.path} to ${targetDirectory.path}")
+                    Log.i(TAG, "$LOG_COPY_OK: ${sourceFile.path} to ${targetFile.path}")
                 } else {
-                    Log.e(TAG, "$LOG_COPY_KO: ${sourceFile.path} to ${targetDirectory.path}")
+                    Log.e(TAG, "$LOG_COPY_KO: ${sourceFile.path} to ${targetFile.path}")
                 }
                 index++
             } while (result && index < sourceFiles.size)
@@ -189,7 +191,7 @@ object StorageHelper: KoinComponent {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    @RequiresApi(SDK_VERSION_FOR_MEDIA_STORE)
     fun Context.deleteFilesOnExtStorageWithMediaStore(fileNameActiveContentList: List<String>?) {
         val customDirectoryPath = getCustomExternalStorageDirectory()
 
@@ -246,17 +248,11 @@ object StorageHelper: KoinComponent {
         val rootDir = Environment.getExternalStorageDirectory().absolutePath
         val customDirectoryName = this.getCustomExternalStorageDirectory()
         val customDirectory = File(rootDir, customDirectoryName)
-
-        if (!createOrClearTargetDirectory(customDirectory)) {
-            // Directory creation failed.
-            throw Exception("[createFileOnExternalStorage] Directory creation failed.")
-        }
-
         val file = File(customDirectory, fileName)
         return Triple(FileOutputStream(file), file.path, file.name)
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    @RequiresApi(SDK_VERSION_FOR_MEDIA_STORE)
     fun Context.createFileOnExtStorageWithMediaStore(fileName: String, contentType: String): Triple<OutputStream?, String?, String?> {
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
@@ -319,8 +315,16 @@ object StorageHelper: KoinComponent {
         return this.filesDir.absolutePath
     }
 
-    fun Context.getDirectory(): String {
+    fun Context.getCurrentDirectory(): String {
         return if (sharedPreferences.useExternalStorage()) {
+            Environment.getExternalStorageDirectory().absolutePath + File.separator + this.getCustomExternalStorageDirectory()
+        } else {
+            this.getInternalStorageDirectory()
+        }
+    }
+
+    private fun Context.getDirectory(useExternalStorageSelected: Boolean): String {
+        return if (useExternalStorageSelected) {
             Environment.getExternalStorageDirectory().absolutePath + File.separator + this.getCustomExternalStorageDirectory()
         } else {
             this.getInternalStorageDirectory()
@@ -332,14 +336,14 @@ object StorageHelper: KoinComponent {
         return storages.size > 1 && storages[0] != null && storages[1] != null
     }
 
-    fun Context.externalStoragePermissionGranted(): Boolean {
-        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+    fun Context.externalStoragePermissionGranted(): Boolean? {
+        return if (Build.VERSION.SDK_INT < SDK_VERSION_FOR_MEDIA_STORE) {
             ContextCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
         } else {
-            true
+            null
         }
     }
 
@@ -356,7 +360,7 @@ object StorageHelper: KoinComponent {
         return null
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    @RequiresApi(SDK_VERSION_FOR_MEDIA_STORE)
     @SuppressLint("Range")
     fun Context.getFilePath(uri: Uri?): String? {
         val contentResolver = contentResolver
@@ -388,7 +392,7 @@ object StorageHelper: KoinComponent {
     }
 
     fun Context.externalStorageDirIsEmpty(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        return if (Build.VERSION.SDK_INT >= SDK_VERSION_FOR_MEDIA_STORE) {
             directoryWithMediaStoreIsEmpty()
         } else {
             directoryIsEmpty(true)
@@ -427,6 +431,10 @@ object StorageHelper: KoinComponent {
      * If folder does not exist it is created,
      * if folder already exists and it is not empty it is cleaned
      */
+    fun Context.createOrClearTargetDirectory(useExternalStorageSelected: Boolean): Boolean {
+        return createOrClearTargetDirectory(File(getDirectory(useExternalStorageSelected)))
+    }
+
     private fun Context.createOrClearTargetDirectory(targetDirectory: File): Boolean {
         if (!targetDirectory.exists()) {
             if (!targetDirectory.mkdir()) {
@@ -436,7 +444,7 @@ object StorageHelper: KoinComponent {
             if (targetDirectory.absolutePath.equals(getInternalStorageDirectory())) {
                 deleteFiles(targetDirectory, null)
             } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                if (Build.VERSION.SDK_INT >= SDK_VERSION_FOR_MEDIA_STORE) {
                     deleteFilesOnExtStorageWithMediaStore(null)
                 } else {
                     deleteFiles(targetDirectory, null)

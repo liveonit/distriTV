@@ -17,7 +17,7 @@ import com.distritv.databinding.FragmentVideoBinding
 import com.distritv.ui.FullscreenManager
 import com.distritv.ui.player.CustomVideoView.PlayPauseListener
 import com.distritv.utils.*
-import com.distritv.data.helper.StorageHelper.getDirectory
+import com.distritv.data.helper.StorageHelper.getCurrentDirectory
 import java.io.File
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
@@ -113,7 +113,7 @@ class VideoFragment : Fragment() {
             onAfterCompletion(TAG, content?.id)
         }
 
-        val path = File(context?.getDirectory() ?: "", content?.fileName ?: "").toURI().toString()
+        val path = File(context?.getCurrentDirectory() ?: "", content?.fileName ?: "").toURI().toString()
         binding.videoContainer.setVideoPath(path)
 
         val mediaC = MediaController(context)

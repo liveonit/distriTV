@@ -21,7 +21,8 @@ data class DeviceInfo(
     val currentDate: String,
     val useExternalStorage: Boolean,
     val isExternalStorageConnected: Boolean,
-    val externalStoragePermissionGranted: Boolean,
+    val externalStoragePermissionGranted: Boolean?,
+    val displayOverOtherAppsPermissionGranted: Boolean?,
     val sdkVersion: Int
 ) : Parcelable {
 }

@@ -19,7 +19,7 @@ import com.distritv.data.model.Content
 import com.distritv.ui.home.HomeActivity
 import com.distritv.ui.player.ContentPlayerActivity
 import com.distritv.utils.*
-import com.distritv.data.helper.StorageHelper.getDirectory
+import com.distritv.data.helper.StorageHelper.getCurrentDirectory
 
 
 class ContentPlaybackLauncher : BroadcastReceiver() {
@@ -54,8 +54,8 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
             return
         }
 
-        if (!content.fileExists(context.getDirectory())) {
-            Log.e(TAG, "Content file not found. Content id: ${content.id}, path: ${content.fileName}")
+        if (!content.fileExists(context.getCurrentDirectory())) {
+            Log.e(TAG, "Content file not found. Content id: ${content.id}, name: ${content.fileName}")
             Toast.makeText(
                 context, context.getString(R.string.msg_unavailable_content),
                 Toast.LENGTH_LONG

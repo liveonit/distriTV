@@ -1,32 +1,37 @@
 package com.distritv.ui.player
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.distritv.data.helper.StorageHelper.getCurrentDirectory
 import java.io.File
 
-class ImageViewModel : ViewModel() {
+class ImageViewModel(private val context: Context) : ViewModel() {
 
-    private val _image = MutableLiveData<Bitmap>()
-    val image: LiveData<Bitmap>
+    private val _image = MutableLiveData<Bitmap?>()
+    val image: LiveData<Bitmap?>
         get() = _image
 
-    fun fetchImage(localPath: String) {
+    fun fetchImage(fileName: String) {
         try {
-            if (!localPath.isNullOrEmpty()) {
-                val imgFile = File(localPath)
+            if (fileName.isNotEmpty()) {
+                val imgFile = File(context.getCurrentDirectory(), fileName)
                 if (imgFile.exists()) {
                     val imgBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
                     _image.postValue(imgBitmap)
+                } else {
+                    _image.postValue(null)
                 }
             } else {
-                RuntimeException()
+                _image.postValue(null)
             }
         } catch (e: Exception) {
             Log.v(TAG, "Could not get image.")
+            _image.postValue(null)
         }
     }
 

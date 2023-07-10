@@ -11,11 +11,15 @@ package com.distritv.daemon
 
 import android.app.Service
 import android.content.Intent
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import com.distritv.BuildConfig
+import com.distritv.R
+import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
 import com.distritv.data.model.Content
 import com.distritv.data.repositories.ContentRepository
 import com.distritv.data.repositories.ScheduleRepository
@@ -44,6 +48,8 @@ class RequestDaemon: Service() {
     private val handler = Handler(Looper.myLooper()!!)
     private lateinit var runnable: Runnable
 
+    private lateinit var errorMessageHandler: Handler
+
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
@@ -64,6 +70,8 @@ class RequestDaemon: Service() {
                 handler.postDelayed(this, TimeUnit.SECONDS.toMillis(periodTime))
             }
         }
+
+        errorMessageHandler = Handler(Looper.getMainLooper())
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -100,8 +108,29 @@ class RequestDaemon: Service() {
                     return@launch
                 }
 
+                if (deviceInfo.useExternalStorage && (!deviceInfo.isExternalStorageConnected
+                            || ((Build.VERSION.SDK_INT < SDK_VERSION_FOR_MEDIA_STORE)
+                            && ((deviceInfo.externalStoragePermissionGranted != null) && !deviceInfo.externalStoragePermissionGranted)))
+                ) {
+
+                    Log.e(TAG, "External storage may not be found or permission not granted.")
+                    Log.e(TAG, "External storage is connected?: ${deviceInfo.isExternalStorageConnected}")
+                    Log.e(TAG, "External storage permission granted?: ${deviceInfo.externalStoragePermissionGranted}")
+
+                    errorMessageHandler.post {
+                        Toast.makeText(
+                            applicationContext,
+                            getString(R.string.msg_error_external_storage),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                    return@launch
+                }
+
                 val scheduleList = scheduleService.getAllSchedules()
 
+                // Fetch schedules with content from the server
                 val responseScheduleList = scheduleRepository.fetchScheduleList(deviceInfo)
 
                 // Check if any schedule was removed to delete

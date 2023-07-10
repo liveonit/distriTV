@@ -7,12 +7,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.distritv.BuildConfig
 import com.distritv.R
+import com.distritv.data.helper.StorageHelper.createOrClearTargetDirectory
 import com.distritv.data.model.DeviceInfoCard
 import com.distritv.data.repositories.ScheduleRepository
 import com.distritv.data.service.DeviceInfoService
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
+import com.distritv.data.helper.StorageHelper.externalStorageDirIsEmpty
+import com.distritv.data.helper.StorageHelper.internalStorageDirIsEmpty
+import com.distritv.data.helper.StorageHelper.moveFiles
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -41,40 +46,34 @@ class HomeViewModel(
     val deviceInfo: LiveData<DeviceInfoCard>
         get() = _deviceInfo
 
-    private val _loading = MutableLiveData<Boolean>(false)
+    private val _loading = MutableLiveData(false)
     val loading: LiveData<Boolean> get() = _loading
 
     private val _locale = MutableLiveData<String>()
     val locale: LiveData<String>
         get() = _locale
 
-    private val _textTitle = MutableLiveData<String>()
-    val textTitle: LiveData<String>
-        get() = _textTitle
+    private val _deviceInfoFragmentTexts = MutableLiveData<List<String>>()
+    val deviceInfoFragmentTexts: LiveData<List<String>>
+        get() = _deviceInfoFragmentTexts
 
-    private val _textButton = MutableLiveData<String>()
-    val textButton: LiveData<String>
-        get() = _textButton
+    private val _referrerRequestPerm = MutableLiveData<Int>()
+    val referrerRequestPerm: LiveData<Int>
+        get() = _referrerRequestPerm
 
-    private val _textInfoCardVersion = MutableLiveData<String>()
-    val textInfoCardVersion: LiveData<String>
-        get() = _textInfoCardVersion
+    private val _externalStorageSelected = MutableLiveData(false)
+    val externalStorageSelected: LiveData<Boolean>
+        get() = _externalStorageSelected
 
-    private val _textInfoCardTvCode = MutableLiveData<String>()
-    val textInfoCardTvCode: LiveData<String>
-        get() = _textInfoCardTvCode
-
-    private val _textInfoCardConnStatus = MutableLiveData<String>()
-    val textInfoCardConnStatus: LiveData<String>
-        get() = _textInfoCardConnStatus
-
-    private val _textInfoCardLang = MutableLiveData<String>()
-    val textInfoCardLang: LiveData<String>
-        get() = _textInfoCardLang
+    private val _homeFragmentTexts = MutableLiveData<List<String>>()
+    val homeFragmentTexts: LiveData<List<String>>
+        get() = _homeFragmentTexts
 
     private var error: Int = -1
 
-    fun registerTvCode(code: String) {
+    private val externalStorageEnabled: Boolean = BuildConfig.EXTERNAL_STORAGE_ENABLED
+
+    fun registerTvCode(code: String, useExternalStorage: Boolean) {
         if (code.length < 6) {
             _errorMessage.postValue(context.getString(R.string.msg_tv_code_invalid))
             _isValid.postValue(false)
@@ -87,6 +86,8 @@ class HomeViewModel(
                 scheduleRepository.validateTvCode(code).run {
                     if (this) {
                         sharedPreferences.addTvCode(code)
+                        _referrerRequestPerm.postValue(DEVICE_INFO)
+                        _externalStorageSelected.value = useExternalStorage
                         _isValid.postValue(true)
                     } else {
                         _errorMessage.postValue(context.getString(R.string.msg_tv_code_invalid))
@@ -136,6 +137,39 @@ class HomeViewModel(
         }
     }
 
+    fun setExternalStorage(useExternalStorage: Boolean) {
+        sharedPreferences.setExternalStorage(useExternalStorage)
+    }
+
+    fun changeUseExternalStorage(useExternalStorage: Boolean) {
+        if (useExternalStorage) {
+            _referrerRequestPerm.postValue(HOME)
+        } else {
+            if (context.externalStorageDirIsEmpty()) {
+                sharedPreferences.setExternalStorage(false)
+            } else {
+                context.moveFiles(false)
+            }
+        }
+    }
+
+    fun afterWriteExternalStoragePermissionGranted() {
+        sharedPreferences.setExternalStorage(true)
+        context.createOrClearTargetDirectory(true)
+    }
+
+    fun afterWriteExternalStoragePermissionGrantedAndMoveFiles() {
+        if (context.internalStorageDirIsEmpty()) {
+            sharedPreferences.setExternalStorage(true)
+        } else {
+            context.moveFiles(true)
+        }
+    }
+
+    fun useExternalStorage(): Boolean {
+        return sharedPreferences.useExternalStorage()
+    }
+
     fun setLocale() {
         _locale.postValue(getCurrentLocale())
     }
@@ -160,9 +194,9 @@ class HomeViewModel(
             }
         }
         if (referrer == DEVICE_INFO) {
-            updateUI()
+            updateDeviceInfoFragmentUI()
         } else {
-            updateInfoCardUI()
+            updateHomeFragmentUI()
         }
     }
 
@@ -177,24 +211,57 @@ class HomeViewModel(
         sharedPreferences.addCustomLocale("${locale.language}_${locale.country}")
     }
 
-    private fun updateUI() {
-        _textTitle.postValue(context.getString(R.string.device_info_title))
-        _textButton.postValue(context.getString(R.string.device_info_register_button))
+    private fun updateDeviceInfoFragmentUI() {
+        _deviceInfoFragmentTexts.value = listOf(
+            context.getString(R.string.device_info_title),
+            context.getString(R.string.device_info_register_button),
+            context.getString(R.string.device_info_switch_external),
+            context.getString(R.string.dialog_title_to_external),
+            context.getString(R.string.dialog_message_to_external),
+            context.getString(R.string.dialog_accept),
+            context.getString(R.string.dialog_cancel)
+        )
     }
 
-    private fun updateInfoCardUI() {
-        _textInfoCardVersion.value = context.getString(R.string.info_card_version)
-        _textInfoCardTvCode.value = context.getString(R.string.info_card_tv_code)
-        _textInfoCardConnStatus.value = context.getString(R.string.info_card_connection_status)
-        _textInfoCardLang.value = context.getString(R.string.language)
+    private fun updateHomeFragmentUI() {
+        _homeFragmentTexts.value = listOf(
+            context.getString(R.string.info_card_version),
+            context.getString(R.string.info_card_tv_code),
+            context.getString(R.string.info_card_connection_status),
+            context.getString(R.string.language),
+            context.getString(R.string.info_card_switch_external),
+        )
+    }
+
+    fun getDialogSwitchHomeText(): List<String> {
+        return listOf(
+            context.getString(R.string.dialog_title_to_external),
+            context.getString(R.string.dialog_title_to_internal),
+            context.getString(R.string.dialog_message_home_to_external),
+            context.getString(R.string.dialog_message_home_to_internal),
+            context.getString(R.string.dialog_accept),
+            context.getString(R.string.dialog_cancel)
+        )
     }
 
     fun getErrorMessage(): String {
         return context.getString(error)
     }
 
+    fun getDialogTextPermissionDenied(): Triple<String, String, String> {
+        return Triple(
+            context.getString(R.string.dialog_title_permission_denied),
+            context.getString(R.string.dialog_message_permission_denied),
+            context.getString(R.string.dialog_accept)
+        )
+    }
+
     fun getLanguages(): Array<String> {
         return context.resources.getStringArray(R.array.languages)
+    }
+
+    fun isExternalStorageEnabled(): Boolean {
+        return externalStorageEnabled
     }
 
     companion object {

@@ -18,6 +18,11 @@ data class DeviceInfo(
     val appIsVisible: Boolean,
     val isAnyContentPlaying: Boolean,
     val currentlyPlayingContentId: Long,
-    val currentDate: String
+    val currentDate: String,
+    val useExternalStorage: Boolean,
+    val isExternalStorageConnected: Boolean,
+    val externalStoragePermissionGranted: Boolean?,
+    val displayOverOtherAppsPermissionGranted: Boolean?,
+    val sdkVersion: Int
 ) : Parcelable {
 }

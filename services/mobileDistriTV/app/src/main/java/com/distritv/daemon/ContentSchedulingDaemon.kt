@@ -154,7 +154,7 @@ class ContentSchedulingDaemon : Service() {
 
     private fun contentIsValid(content: Content): Boolean {
         if (content.isVideo() || content.isImage()) {
-            return !content.localPath.isNullOrBlank()
+            return !content.fileName.isNullOrBlank()
         } else if (content.isText()) {
             return !content.text.isNullOrBlank()
         }

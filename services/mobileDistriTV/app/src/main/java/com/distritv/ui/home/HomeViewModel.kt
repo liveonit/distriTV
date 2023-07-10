@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.distritv.BuildConfig
 import com.distritv.R
+import com.distritv.data.helper.StorageHelper.createOrClearTargetDirectory
 import com.distritv.data.model.DeviceInfoCard
 import com.distritv.data.repositories.ScheduleRepository
 import com.distritv.data.service.DeviceInfoService
@@ -153,6 +154,11 @@ class HomeViewModel(
     }
 
     fun afterWriteExternalStoragePermissionGranted() {
+        sharedPreferences.setExternalStorage(true)
+        context.createOrClearTargetDirectory(true)
+    }
+
+    fun afterWriteExternalStoragePermissionGrantedAndMoveFiles() {
         if (context.internalStorageDirIsEmpty()) {
             sharedPreferences.setExternalStorage(true)
         } else {

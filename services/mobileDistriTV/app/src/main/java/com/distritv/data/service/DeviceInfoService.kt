@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.pm.PackageManager
 import android.os.*
+import android.provider.Settings
 import android.util.Log
 import com.distritv.data.model.DeviceInfo
 import com.distritv.DistriTVApp
@@ -58,6 +59,7 @@ class DeviceInfoService(
             useExternalStorage(),
             externalMemoryAvailable(),
             externalStoragePermissionGranted(),
+            displayOverOtherAppsPermissionGranted(),
             getSDKVersion()
         )
     }
@@ -82,8 +84,16 @@ class DeviceInfoService(
         return context.externalMemoryAvailable()
     }
 
-    private fun externalStoragePermissionGranted(): Boolean {
+    private fun externalStoragePermissionGranted(): Boolean? {
         return context.externalStoragePermissionGranted()
+    }
+
+    private fun displayOverOtherAppsPermissionGranted(): Boolean? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Settings.canDrawOverlays(context)
+        } else {
+            null
+        }
     }
 
     /**

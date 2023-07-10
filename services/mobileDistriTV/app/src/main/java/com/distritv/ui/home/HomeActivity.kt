@@ -1,5 +1,6 @@
 package com.distritv.ui.home
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
@@ -17,6 +18,7 @@ import com.distritv.R
 import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
+import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.ui.home.HomeViewModel.Companion.DEVICE_INFO
 import com.distritv.ui.home.HomeViewModel.Companion.HOME
@@ -178,17 +180,23 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
     }
 
     private fun requestWriteExternalStoragePermission() {
-        if (ContextCompat.checkSelfPermission(
+        if (Build.VERSION.SDK_INT >= SDK_VERSION_FOR_MEDIA_STORE || ContextCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
+            if (referrer == DEVICE_INFO) {
+                viewModel.afterWriteExternalStoragePermissionGranted()
+                addHomeFragment()
+            } else {
+                viewModel.afterWriteExternalStoragePermissionGrantedAndMoveFiles()
+            }
+        } else {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), PERMISSIONS_REQUEST
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                PERMISSIONS_REQUEST
             )
-        } else {
-            viewModel.afterWriteExternalStoragePermissionGranted()
         }
     }
 
@@ -201,30 +209,25 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         if (requestCode == PERMISSIONS_REQUEST) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted
-                viewModel.afterWriteExternalStoragePermissionGranted()
                 if (referrer == DEVICE_INFO) {
+                    viewModel.afterWriteExternalStoragePermissionGranted()
                     addHomeFragment()
+                } else {
+                    viewModel.afterWriteExternalStoragePermissionGrantedAndMoveFiles()
                 }
             } else {
                 // Permission denied
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    viewModel.afterWriteExternalStoragePermissionGranted()
-                    if (referrer == DEVICE_INFO) {
-                        addHomeFragment()
-                    }
+                viewModel.setExternalStorage(false)
+                val dialogText = viewModel.getDialogTextPermissionDenied()
+                if (referrer == DEVICE_INFO) {
+                    showDialog(
+                        dialogText.first,
+                        dialogText.second,
+                        dialogText.third,
+                        dialogConfirmFun
+                    )
                 } else {
-                    viewModel.setExternalStorage(false)
-                    val dialogText = viewModel.getDialogTextPermissionDenied()
-                    if (referrer == DEVICE_INFO) {
-                        showDialog(
-                            dialogText.first,
-                            dialogText.second,
-                            dialogText.third,
-                            dialogConfirmFun
-                        )
-                    } else {
-                        showDialog(dialogText.first, dialogText.second, dialogText.third, null)
-                    }
+                    showDialog(dialogText.first, dialogText.second, dialogText.third, null)
                 }
             }
         }

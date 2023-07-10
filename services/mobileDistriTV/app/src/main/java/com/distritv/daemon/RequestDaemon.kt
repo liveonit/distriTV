@@ -11,6 +11,7 @@ package com.distritv.daemon
 
 import android.app.Service
 import android.content.Intent
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -18,6 +19,7 @@ import android.util.Log
 import android.widget.Toast
 import com.distritv.BuildConfig
 import com.distritv.R
+import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
 import com.distritv.data.model.Content
 import com.distritv.data.repositories.ContentRepository
 import com.distritv.data.repositories.ScheduleRepository
@@ -106,7 +108,11 @@ class RequestDaemon: Service() {
                     return@launch
                 }
 
-                if (deviceInfo.useExternalStorage && (!deviceInfo.isExternalStorageConnected || !deviceInfo.externalStoragePermissionGranted)) {
+                if (deviceInfo.useExternalStorage && (!deviceInfo.isExternalStorageConnected
+                            || ((Build.VERSION.SDK_INT < SDK_VERSION_FOR_MEDIA_STORE)
+                            && ((deviceInfo.externalStoragePermissionGranted != null) && !deviceInfo.externalStoragePermissionGranted)))
+                ) {
+
                     Log.e(TAG, "External storage may not be found or permission not granted.")
                     Log.e(TAG, "External storage is connected?: ${deviceInfo.isExternalStorageConnected}")
                     Log.e(TAG, "External storage permission granted?: ${deviceInfo.externalStoragePermissionGranted}")

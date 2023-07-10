@@ -3,6 +3,7 @@ package com.distritv.data.service
 import android.content.Context
 import android.os.Build
 import android.util.Log
+import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
 import com.distritv.data.model.Content
 import com.distritv.data.helper.StorageHelper.createFileOnExtStorageWithMediaStore
 import com.distritv.data.helper.StorageHelper.createFileOnExternalStorage
@@ -96,8 +97,8 @@ class ContentService(
 
             outputStreamAndPath = if (sharedPreferences.useExternalStorage()) {
                 // Write to external storage
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    // For Android 10 or higher
+                if (Build.VERSION.SDK_INT >= SDK_VERSION_FOR_MEDIA_STORE) {
+                    // For Android 11 or higher
                     context.createFileOnExtStorageWithMediaStore(fileName, content.type)
                 } else {
                     context.createFileOnExternalStorage(fileName)
@@ -152,7 +153,7 @@ class ContentService(
 
     fun deleteExpiredContentFiles() {
         if (sharedPreferences.useExternalStorage()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT >= SDK_VERSION_FOR_MEDIA_STORE) {
                 context.deleteFilesOnExtStorageWithMediaStore(getFileNameActiveContents())
             } else {
                 deleteFiles(File(context.getExternalStorageDirectory()), getFileNameActiveContents())

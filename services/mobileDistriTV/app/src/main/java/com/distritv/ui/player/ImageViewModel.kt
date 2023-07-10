@@ -7,7 +7,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.distritv.data.helper.StorageHelper.getDirectory
+import com.distritv.data.helper.StorageHelper.getCurrentDirectory
 import java.io.File
 
 class ImageViewModel(private val context: Context) : ViewModel() {
@@ -19,7 +19,7 @@ class ImageViewModel(private val context: Context) : ViewModel() {
     fun fetchImage(fileName: String) {
         try {
             if (fileName.isNotEmpty()) {
-                val imgFile = File(context.getDirectory(), fileName)
+                val imgFile = File(context.getCurrentDirectory(), fileName)
                 if (imgFile.exists()) {
                     val imgBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
                     _image.postValue(imgBitmap)

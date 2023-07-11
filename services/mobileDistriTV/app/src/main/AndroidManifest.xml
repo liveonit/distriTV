@@ -42,6 +42,16 @@
         </activity>
 
         <activity
+            android:name=".ui.player.AlertPlayerActivity"
+            android:enabled="true"
+            android:exported="true"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
             android:name=".ui.player.ContentPlayerActivity"
             android:enabled="true"
             android:exported="true"
@@ -71,6 +81,11 @@
 
         <receiver
             android:name=".launcher.ContentPlaybackLauncher"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".launcher.AlertLauncher"
             android:enabled="true"
             android:exported="true" />
 

@@ -6,7 +6,6 @@
 package com.distritv.launcher
 
 import android.app.Activity
-import android.app.AlarmManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -15,7 +14,7 @@ import android.util.Log
 import com.distritv.DistriTVApp
 import com.distritv.data.model.Content
 import com.distritv.ui.home.HomeActivity
-import com.distritv.ui.player.ContentPlayerActivity
+import com.distritv.ui.player.AlertPlayerActivity
 import com.distritv.utils.*
 
 
@@ -69,7 +68,7 @@ class AlertLauncher : BroadcastReceiver() {
             context.startActivity(homeIntent)
         }
 
-        val scheduledIntent = Intent(context, ContentPlayerActivity::class.java)
+        val scheduledIntent = Intent(context, AlertPlayerActivity::class.java)
         scheduledIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         scheduledIntent.putExtra(CONTENT_PARAM, content)
         scheduledIntent.putExtra(IS_ALERT, true)

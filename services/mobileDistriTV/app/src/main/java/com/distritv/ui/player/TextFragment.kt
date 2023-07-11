@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.distritv.data.model.Alert
 import com.distritv.data.model.Content
 import com.distritv.databinding.FragmentTextBinding
 import com.distritv.ui.FullscreenManager
@@ -89,6 +90,7 @@ class TextFragment : Fragment() {
                 putParcelable(CONTENT_PARAM, content)
             }
         }
+
     }
 
 }

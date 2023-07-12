@@ -1,17 +1,17 @@
 import React from 'react'
 import { FormControl, InputLabel, MenuItem, Select, SelectProps } from '@material-ui/core'
 
-type CronHoursPropsT = {
+type CronDaysPropsT = {
   value: number[]
   onChange: any
 } & SelectProps
 
-export const CronHours: React.FC<CronHoursPropsT> = ({ value, onChange, ...otherProps }) => {
+export const CronDays: React.FC<CronDaysPropsT> = ({ value, onChange, ...otherProps }) => {
   return (
     <FormControl fullWidth variant='outlined'>
-      <InputLabel>Hours</InputLabel>
-        <Select multiple {...otherProps} labelId="demo-simple-select-label" onChange={onChange} value={value} label={'Hours'}>
-          {[...Array(24).keys()].map(n => {
+      <InputLabel>Days</InputLabel>
+        <Select multiple {...otherProps} labelId="demo-simple-select-label" onChange={onChange} value={value} label={'Days'}>
+          {[...Array(32).keys()].slice(1).map(n => {
             return (
               <MenuItem key={n} value={n}>
                 {n}

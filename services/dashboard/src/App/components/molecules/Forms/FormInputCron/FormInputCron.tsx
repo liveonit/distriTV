@@ -11,6 +11,8 @@ import TypographyBase from '../../../atoms/TypographyBase'
 import { CronPeriod } from './fields/CronPeriod'
 import { CronMinutes } from './fields/CronMinutes'
 import { CronHours } from './fields/CronHours'
+import { CronWeekDays } from './fields/CronWeekDays'
+import { CronDays } from './fields/CronDays'
 
 const useStyles = makeStyles((theme: Theme) => ({
   borderColor: {
@@ -34,8 +36,10 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
   const classes = useStyles()
   // const { field } = useController({ name, control })
   const [period, setPeriod] = useState<any>('month')
-  const [hours, setHours] = useState<any>(0)
-  const [minutes, setMinutes] = useState<any>(0)
+  const [days, setDays] = useState<any>([1])
+  const [weekDays, setWeekDays] = useState<any>(['MONDAY'])
+  const [hours, setHours] = useState<any>([0])
+  const [minutes, setMinutes] = useState<any>([0])
 
   useEffect(
     () => {
@@ -48,7 +52,18 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
   const switcheando = () => {
     switch (period) {
       case 'month':
-        return <p>MES</p>
+        return <>
+          <CronDays value={days} onChange={(newValue: { target: { value: any } }) => setDays(newValue.target.value)}></CronDays>
+          <CronWeekDays value={weekDays} onChange={(newValue: { target: { value: any } }) => setWeekDays(newValue.target.value)}></CronWeekDays>
+          <CronHours value={hours} onChange={(newValue: { target: { value: any } }) => setHours(newValue.target.value)}></CronHours>
+          <CronMinutes value={minutes} onChange={(newValue: { target: { value: any } }) => setMinutes(newValue.target.value)}></CronMinutes>
+        </>
+      case 'week':
+        return <>
+          <CronWeekDays value={weekDays} onChange={(newValue: { target: { value: any } }) => setWeekDays(newValue.target.value)}></CronWeekDays>
+          <CronHours value={hours} onChange={(newValue: { target: { value: any } }) => setHours(newValue.target.value)}></CronHours>
+          <CronMinutes value={minutes} onChange={(newValue: { target: { value: any } }) => setMinutes(newValue.target.value)}></CronMinutes>
+        </>
       case 'day':
         return <>
           <CronHours value={hours} onChange={(newValue: { target: { value: any } }) => setHours(newValue.target.value)}></CronHours>
@@ -77,7 +92,7 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
               <TypographyBase>{label}</TypographyBase>
               <CronPeriod value={period!!} onChange={(newValue: { target: { value: any } }) => setPeriod(newValue.target.value)}></CronPeriod>
               {switcheando()}
-              <p>{period} - {hours} -{minutes}</p>
+              <p>{period} - {days.toString()} - {weekDays.toString()} - {hours.toString()} - {minutes.toString()}</p>
             </Box>
           )}
         />

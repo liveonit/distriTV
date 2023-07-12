@@ -16,11 +16,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { listContents } from 'src/store/content/content.action'
 import { listTelevisions } from 'src/store/television/television.action'
 import { televisionsSelector } from 'src/store/television/television.selector'
-import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { listLabels } from 'src/store/label/label.action'
 import { createAgenda, updateAgenda } from 'src/store/agenda/agenda.action'
 import { labelsSelector } from 'src/store/label/label.selector'
 import { Trans, useTranslation } from 'react-i18next'
+import { FormInputCron } from 'src/App/components/molecules/Forms/FormInputCron/FormInputCron'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -120,7 +120,8 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
           <br />
           <FormInputDate name='startDate' control={control} label={t('START_DATE')} />
           <FormInputDate name='endDate' control={control} label={t('END_DATE')} />
-          <FormInputText name='cron' control={control} fullWidth label={t('CRONTAB')} variant='outlined' />
+          {/* <FormInputText name='cron' control={control} fullWidth label={t('CRONTAB')} variant='outlined' /> */}
+          <FormInputCron name='cron' control={control} label={t('CRONTAB')}></FormInputCron>
         </DialogContent>
         <DialogActions>
           <Button

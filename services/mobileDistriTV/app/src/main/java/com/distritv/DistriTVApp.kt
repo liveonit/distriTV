@@ -31,6 +31,8 @@ class DistriTVApp: Application() {
     private var isAlertCurrentlyPlaying = false
     private var isContentCurrentlyPlaying = false
     private var currentlyPlayingContentId: Long? = null
+    private var currentlyPlayingAlertId: Long? = null
+    private var alertDurationLeft: Long? = null
 
     fun getCurrentActivity(): Activity? {
         return currentActivity
@@ -62,6 +64,22 @@ class DistriTVApp: Application() {
 
     fun setCurrentlyPlayingContentId(contentId: Long?) {
         this.currentlyPlayingContentId = contentId
+    }
+
+    fun getCurrentlyPlayingAlertId(): Long? {
+        return this.currentlyPlayingAlertId
+    }
+
+    fun setCurrentlyPlayingAlertId(alertId: Long?) {
+        this.currentlyPlayingAlertId = alertId
+    }
+
+    fun getAlertDurationLeft(): Long? {
+        return this.alertDurationLeft
+    }
+
+    fun setAlertDurationLeft(alertDurationLeft: Long?) {
+        this.alertDurationLeft = alertDurationLeft
     }
 
 }

@@ -1,4 +1,4 @@
-package com.distritv.ui.player
+package com.distritv.ui.player.content
 
 import android.os.Bundle
 import android.os.Handler
@@ -7,23 +7,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.distritv.R
 import com.distritv.data.model.Content
-import com.distritv.databinding.FragmentImageBinding
+import com.distritv.databinding.FragmentTextBinding
 import com.distritv.ui.FullscreenManager
 import com.distritv.utils.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
+class TextFragment : Fragment() {
 
-class ImageFragment : Fragment() {
-
-    private var _binding: FragmentImageBinding? = null
+    private var _binding: FragmentTextBinding? = null
     private val binding get() = _binding!!
-
-    private val viewModel by viewModel<ImageViewModel>()
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -32,7 +26,7 @@ class ImageFragment : Fragment() {
     private val fullscreenManager by lazy {
         activity?.let {
             FullscreenManager(it.window) {
-                (binding.imageContainer)
+                (binding.textContainer)
             }
         }
     }
@@ -42,17 +36,15 @@ class ImageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentImageBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentTextBinding.inflate(layoutInflater, container, false)
 
         arguments?.let {
             content = it.getParcelable(CONTENT_PARAM)
             if (content == null) {
                 Log.e(TAG, "An error occurred while trying to play, back to home...")
-                onAfterCompletion(TAG)
+                onAfterCompletionContent(TAG)
             }
         }
-
-        loadImageObserver()
 
         return binding.root
     }
@@ -60,7 +52,7 @@ class ImageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fullscreenManager?.enterFullscreen()
-        viewModel.fetchImage(content?.fileName ?: "")
+        showText()
     }
 
     override fun onResume() {
@@ -73,21 +65,12 @@ class ImageFragment : Fragment() {
         removeAllCallbacksAndMessagesFromHandler()
     }
 
-    private fun loadImageObserver() {
-        viewModel.image.observe(viewLifecycleOwner) {
-            if (it != null) {
-                binding.imageContainer.setImageBitmap(it)
-                Log.i(TAG, "Playback started. Content id: ${content?.id}")
-                handler.postDelayed({
-                    onAfterCompletion(TAG, content?.id)
-                }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
-            } else {
-                Log.e(TAG, "An error occurred while trying to play. Check storage. Back to home...")
-                Toast.makeText(activity, getString(R.string.msg_unavailable_content),
-                    Toast.LENGTH_LONG).show()
-                onAfterCompletion(TAG, content?.id)
-            }
-        }
+    private fun showText() {
+        binding.textContainer.text = content?.text ?: ""
+        Log.i(TAG, "Playback started. Content id: ${content?.id}")
+        handler.postDelayed({
+            onAfterCompletionContent(TAG, content?.id)
+        }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
     }
 
     /**
@@ -98,14 +81,15 @@ class ImageFragment : Fragment() {
     }
 
     companion object {
-        const val TAG = "[ImageFragment]"
+        const val TAG = "[TextFragment]"
 
         @JvmStatic
-        fun newInstance(content: Content) = ImageFragment().apply {
+        fun newInstance(content: Content) = TextFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(CONTENT_PARAM, content)
             }
         }
+
     }
 
 }

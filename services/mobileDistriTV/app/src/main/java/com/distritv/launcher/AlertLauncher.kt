@@ -1,5 +1,5 @@
 /**
- * This component is responsible for reproducing the contents, by replacing fragments
+ * This component is responsible for reproducing the alert, by replacing fragments
  * or launching the HomeActivity with the corresponding fragment.
  */
 
@@ -12,9 +12,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.distritv.DistriTVApp
+import com.distritv.data.model.Alert
 import com.distritv.data.model.Content
 import com.distritv.ui.home.HomeActivity
-import com.distritv.ui.player.AlertPlayerActivity
+import com.distritv.ui.player.alert.AlertPlayerActivity
 import com.distritv.utils.*
 
 
@@ -22,12 +23,12 @@ class AlertLauncher : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        var content: Content? = null
+        var alert: Alert? = null
 
         intent.setExtrasClassLoader(Content::class.java.classLoader)
-        val bundle = intent.extras?.getParcelable<Bundle>(CONTENT_BUNDLE_PARAM)
+        val bundle = intent.extras?.getParcelable<Bundle>(ALERT_BUNDLE_PARAM)
         if (bundle != null) {
-            content = bundle.getParcelable(CONTENT_PARAM)
+            alert = bundle.getParcelable(ALERT_PARAM)
 
         }
 
@@ -40,7 +41,7 @@ class AlertLauncher : BroadcastReceiver() {
         val isAlertCurrentlyPlaying: Boolean =
             (context.applicationContext as DistriTVApp).isAlertCurrentlyPlaying()
 
-        if (content == null || !contentIsValid(content)) {
+        if (alert == null || !alertIsValid(alert)) {
             return
         }
 
@@ -62,17 +63,17 @@ class AlertLauncher : BroadcastReceiver() {
         if (currentActivity == null) {
             val homeIntent = Intent(context, HomeActivity::class.java)
             homeIntent.addFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK or
-                        Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                Intent.FLAG_ACTIVITY_NEW_TASK
+                        or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                        or Intent.FLAG_ACTIVITY_CLEAR_TOP
             )
             context.startActivity(homeIntent)
         }
 
-        val scheduledIntent = Intent(context, AlertPlayerActivity::class.java)
-        scheduledIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        scheduledIntent.putExtra(CONTENT_PARAM, content)
-        scheduledIntent.putExtra(IS_ALERT, true)
-        context.startActivity(scheduledIntent)
+        val alertIntent = Intent(context, AlertPlayerActivity::class.java)
+        alertIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        alertIntent.putExtra(ALERT_PARAM, alert)
+        context.startActivity(alertIntent)
 
 
 
@@ -82,13 +83,13 @@ class AlertLauncher : BroadcastReceiver() {
 
     }
 
-    private fun contentIsValid(content: Content?): Boolean {
-        if (content == null) return false
-        if (content.type.isBlank()) return false
-        if (content.isVideo() || content.isImage()) {
-            return !content.fileName.isNullOrBlank()
-        } else if (content.isText()) {
-            return !content.text.isNullOrBlank()
+    private fun alertIsValid(alert: Alert?): Boolean {
+        if (alert == null) return false
+        if (alert.type.isBlank()) return false
+        if (alert.isImage()) {
+            return alert.url.isNotBlank()
+        } else if (alert.isText()) {
+            return alert.text.isNotBlank()
         }
         return false
     }

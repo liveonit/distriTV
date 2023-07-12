@@ -11,13 +11,13 @@ import com.distritv.BuildConfig
 import com.distritv.R
 import com.distritv.data.helper.StorageHelper.createOrClearTargetDirectory
 import com.distritv.data.model.DeviceInfoCard
-import com.distritv.data.repositories.ScheduleRepository
 import com.distritv.data.service.DeviceInfoService
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
 import com.distritv.data.helper.StorageHelper.externalStorageDirIsEmpty
 import com.distritv.data.helper.StorageHelper.internalStorageDirIsEmpty
 import com.distritv.data.helper.StorageHelper.moveFiles
+import com.distritv.data.repositories.TelevisionRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -27,7 +27,7 @@ class HomeViewModel(
     private val context: Context,
     private val deviceInfoService: DeviceInfoService,
     private val sharedPreferences: SharedPreferencesService,
-    private val scheduleRepository: ScheduleRepository
+    private val televisionRepository: TelevisionRepository
 ) : ViewModel() {
 
     private val _isValid = MutableLiveData<Boolean>()
@@ -83,7 +83,7 @@ class HomeViewModel(
         viewModelScope.launch {
             _loading.value = true
             try {
-                scheduleRepository.validateTvCode(code).run {
+                televisionRepository.validateTvCode(code).run {
                     if (this) {
                         sharedPreferences.addTvCode(code)
                         _referrerRequestPerm.postValue(DEVICE_INFO)
@@ -129,7 +129,7 @@ class HomeViewModel(
         _deviceInfo.postValue(info)
         viewModelScope.launch {
             sharedPreferences.getTvCode()?.let {
-                scheduleRepository.validateConnection(it).run {
+                televisionRepository.validateConnection(it).run {
                     info.connectionStatus = this
                     _deviceInfo.postValue(info)
                 }

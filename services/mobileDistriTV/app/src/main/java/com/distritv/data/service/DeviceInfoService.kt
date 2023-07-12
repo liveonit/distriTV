@@ -44,6 +44,7 @@ class DeviceInfoService(
         return DeviceInfo(
             getTvCode(),
             getCurrentVersionApp(),
+            getSDKVersion(),
             availableMem,
             totalMem,
             memUnit,
@@ -60,7 +61,8 @@ class DeviceInfoService(
             externalMemoryAvailable(),
             externalStoragePermissionGranted(),
             displayOverOtherAppsPermissionGranted(),
-            getSDKVersion()
+            getCurrentlyPlayingAlertId(),
+            getAlertDurationLeft()
         )
     }
 
@@ -210,6 +212,18 @@ class DeviceInfoService(
 
     private fun getSDKVersion(): Int {
         return Build.VERSION.SDK_INT
+    }
+
+    private fun getCurrentlyPlayingAlertId(): Long? {
+        return myApp?.getCurrentlyPlayingAlertId()
+    }
+
+    private fun getAlertDurationLeft(): Long? {
+        val durationLeft = myApp?.getAlertDurationLeft()
+        if(durationLeft != null && durationLeft == 0L) {
+            myApp?.setAlertDurationLeft(null)
+        }
+        return myApp?.getAlertDurationLeft()
     }
 
     companion object {

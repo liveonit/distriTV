@@ -1,40 +1,48 @@
-package com.distritv.ui.player
+package com.distritv.ui.player.content
 
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.distritv.DistriTVApp
 import com.distritv.R
-import com.distritv.data.model.Alert
 import com.distritv.data.model.Content
-import com.distritv.databinding.ActivityAlertPlayerBinding
-import com.distritv.databinding.ActivityContentPlayerBinding
+import com.distritv.databinding.ActivityPlayerBinding
 import com.distritv.ui.*
 import com.distritv.ui.home.HomeActivity
 import com.distritv.utils.*
 
 
-class AlertPlayerActivity : AppCompatActivity() {
+class ContentPlayerActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityAlertPlayerBinding
+    private lateinit var binding: ActivityPlayerBinding
 
     private var myApp: DistriTVApp? = null
 
-    private var alert: Alert? = null
+    private var content: Content? = null
 
 
     @SuppressLint("AppCompatMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAlertPlayerBinding.inflate(layoutInflater)
+        binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // So that this activity is not removed by the screen saver
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         myApp = this.applicationContext as DistriTVApp?
 
-        alert = intent.extras?.getParcelable(ALERT_PARAM)
+        content = intent.extras?.getParcelable(CONTENT_PARAM)
+        if (content == null) {
+            Log.e(TAG, "An error occurred while trying to play, back to home...")
+            val intent = Intent(this, HomeActivity::class.java)
+            this.startActivity(intent)
+            this.finish()
+        }
 
         addFragment()
 
@@ -46,8 +54,7 @@ class AlertPlayerActivity : AppCompatActivity() {
         // Set the current activity
         myApp?.setCurrentActivity(this)
         // Set the identifier of the currently playing content:
-
-        //myApp?.setCurrentlyPlayingContentId(content?.id)
+        myApp?.setCurrentlyPlayingContentId(content?.id)
     }
 
     override fun onStop() {
@@ -64,9 +71,9 @@ class AlertPlayerActivity : AppCompatActivity() {
         super.onDestroy()
         clearReferences()
         // Notice that the content playback has finished:
-        myApp?.setIfAnyAlertIsCurrentlyPlaying(false)
+        myApp?.setIfAnyContentIsCurrentlyPlaying(false)
         // Clear the identifier of the content that was playing:
-        //myApp?.setCurrentlyPlayingContentId(null)
+        myApp?.setCurrentlyPlayingContentId(null)
     }
 
     private fun clearReferences() {
@@ -75,27 +82,34 @@ class AlertPlayerActivity : AppCompatActivity() {
     }
 
     private fun addFragment() {
-        if (alert?.isImage() == true) {
+        if (content?.isImage() == true) {
             supportFragmentManager.addFragment(
                 R.id.player_fragment_container,
-                ImageFragment.newInstance(alert!!),
+                ImageFragment.newInstance(content!!),
                 false,
                 ImageFragment.TAG
             )
-        } else if (alert?.isText() == true) {
+        } else if (content?.isVideo() == true) {
             supportFragmentManager.addFragment(
                 R.id.player_fragment_container,
-                TextFragment.newInstance(alert!!),
+                VideoFragment.newInstance(content!!),
+                false,
+                VideoFragment.TAG
+            )
+        } else if (content?.isText() == true) {
+            supportFragmentManager.addFragment(
+                R.id.player_fragment_container,
+                TextFragment.newInstance(content!!),
                 false,
                 TextFragment.TAG
             )
         } else {
-            Log.e(TAG, "Unsupported alert type: ${alert?.type ?: ""}")
+            Log.e(TAG, "Unsupported content type: ${content?.type ?: ""}")
         }
     }
 
     companion object {
-        const val TAG = "[AlertPlayerActivity]"
+        const val TAG = "[ContentPlayerActivity]"
     }
 
 }

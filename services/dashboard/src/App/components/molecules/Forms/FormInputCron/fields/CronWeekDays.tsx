@@ -11,7 +11,7 @@ export const CronWeekDays: React.FC<CronWeekDaysPropsT> = ({ value, onChange, ..
     <FormControl fullWidth variant='outlined'>
       <InputLabel>WeekDays</InputLabel>
         <Select multiple {...otherProps} labelId="demo-simple-select-label" onChange={onChange} value={value} label={'WeekDays'}>
-          {['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].map(n => {
+          {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(n => {
             return (
               <MenuItem key={n} value={n}>
                 {n}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Control, Controller/*, useController */} from 'react-hook-form'
+import { Control, Controller, useController} from 'react-hook-form'
 import { Box, FormControl } from '@mui/material'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -34,20 +34,24 @@ type FormInputCronPropsT = {
 
 export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, label }) => {
   const classes = useStyles()
-  // const { field } = useController({ name, control })
-  const [period, setPeriod] = useState<any>('month')
-  const [days, setDays] = useState<any>([1])
-  const [weekDays, setWeekDays] = useState<any>(['MONDAY'])
-  const [hours, setHours] = useState<any>([0])
-  const [minutes, setMinutes] = useState<any>([0])
+  const { field } = useController({ name, control })
 
-  useEffect(
-    () => {
-      // ACA LLAMAR A LAS FUNCIONES QUE SETEAN LOS DROPDOWN, O SEA, LLAMAR EL SET PERIOD ETC
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
+  const parsedCron = cronToValues(field.value)
+
+  const [period, setPeriod] = useState<any>('month')
+  const [days, setDays] = useState<any>(parsedCron.days)
+  const [weekDays, setWeekDays] = useState<any>(parsedCron.weekDays)
+  const [hours, setHours] = useState<any>(parsedCron.hours)
+  const [minutes, setMinutes] = useState<any>(parsedCron.minutes)
+
+  // const [cronExp, setCronExp] = useState<string>(field.value)
+
+
+  useEffect(() => {
+    const cronExp = valuesToCron(minutes, hours, weekDays, days)
+    console.log(cronExp)
+    field.onChange(cronExp)
+  }, [period, minutes, hours, weekDays, days])
 
   const switcheando = () => {
     switch (period) {
@@ -99,4 +103,30 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
       </LocalizationProvider>
     </FormControl>
   )
+}
+
+
+const valuesToCron = (minutes: number[], hours: number[], weekDays: string[], days: number[]) => {
+  let cronExp = `* ${minutes.sort().toString()} ${hours.sort().toString()} ${days.sort().toString()} * ${weekDays.toString()}`
+  return cronExp
+}
+
+const cronToValues = (cronExp: string) => {
+  if (cronExp) {
+    const splitted = cronExp.split(' ')
+
+    return {
+      minutes: splitted[1].split(',').map(elem => parseInt(elem)) || [0],
+      hours: splitted[2].split(',').map(elem => parseInt(elem)) || [0],
+      weekDays: splitted[5].split(',') || ['MON'],
+      days: splitted[3].split(',').map(elem => parseInt(elem)) || [1],
+    }
+  } else {
+    return {
+      minutes:  [0],
+      hours: [0],
+      weekDays: ['MON'],
+      days: [1],
+    }
+  }
 }

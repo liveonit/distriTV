@@ -107,7 +107,7 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
 
 
 const valuesToCron = (minutes: number[], hours: number[], weekDays: string[], days: number[]) => {
-  let cronExp = `* ${minutes.sort().toString()} ${hours.sort().toString()} ${days.sort().toString()} * ${weekDays.toString()}`
+  let cronExp = `0 ${minutes.sort().toString()} ${hours.sort().toString()} ${days.sort().toString()} * ?`
   return cronExp
 }
 

@@ -17,7 +17,7 @@ import com.distritv.DistriTVApp
 import com.distritv.R
 import com.distritv.data.model.Content
 import com.distritv.ui.home.HomeActivity
-import com.distritv.ui.player.ContentPlayerActivity
+import com.distritv.ui.player.content.ContentPlayerActivity
 import com.distritv.utils.*
 import com.distritv.data.helper.StorageHelper.getCurrentDirectory
 
@@ -69,8 +69,9 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
         if (currentActivity == null) {
             val homeIntent = Intent(context, HomeActivity::class.java)
             homeIntent.addFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK or
-                        Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                Intent.FLAG_ACTIVITY_NEW_TASK
+                        or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                        or Intent.FLAG_ACTIVITY_CLEAR_TOP
             )
             context.startActivity(homeIntent)
         }

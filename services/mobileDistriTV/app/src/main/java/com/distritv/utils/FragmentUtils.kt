@@ -43,11 +43,15 @@ fun FragmentManager.removeFragment(fragment: Fragment) {
     }
 }
 
-fun Fragment.onAfterCompletion(tag: String) {
-    this.onAfterCompletion(tag, null)
+fun Fragment.onAfterCompletionContent(tag: String) {
+    this.onAfterCompletionContent(tag, null)
 }
 
-fun Fragment.onAfterCompletion(tag: String, contentId: Long?) {
+fun Fragment.onAfterCompletionAlert(tag: String) {
+    this.onAfterCompletionAlert(tag, null)
+}
+
+fun Fragment.onAfterCompletionContent(tag: String, contentId: Long?) {
     val application: DistriTVApp? =
         (context?.applicationContext as DistriTVApp?)
 
@@ -55,6 +59,23 @@ fun Fragment.onAfterCompletion(tag: String, contentId: Long?) {
     application?.setIfAnyContentIsCurrentlyPlaying(false)
     // Clear the identifier of the content that was playing:
     application?.setCurrentlyPlayingContentId(null)
+
+    onAfterCompletion(tag, contentId, application)
+}
+
+fun Fragment.onAfterCompletionAlert(tag: String, contentId: Long?) {
+    val application: DistriTVApp? =
+        (context?.applicationContext as DistriTVApp?)
+
+    // Notice that the content has finished playing:
+    application?.setIfAnyAlertIsCurrentlyPlaying(false)
+    // Clear the identifier of the content that was playing:
+    application?.setCurrentlyPlayingAlertId(null)
+
+    onAfterCompletion(tag, contentId, application)
+}
+
+private fun Fragment.onAfterCompletion(tag: String, contentId: Long?, application: DistriTVApp?) {
 
     val currentActivity: Activity? = application?.getCurrentActivity()
     if (currentActivity != null && currentActivity !is HomeActivity) {
@@ -77,4 +98,23 @@ fun Fragment.backHomeOnResume() {
         context?.startActivity(intent)
         activity?.finish()
     }
+}
+
+fun Fragment.backHomeOnResumeAlert() {
+    // If the view is created: back home after end of the duration
+    val isPlaying =
+        (context?.applicationContext as DistriTVApp?)?.isAlertCurrentlyPlaying() ?: false
+
+    if (!isPlaying) {
+        val intent = Intent(context, HomeActivity::class.java)
+        context?.startActivity(intent)
+        activity?.finish()
+    }
+}
+
+fun Fragment.setAlertDurationLeft(durationLeft: Long) {
+    val application: DistriTVApp? =
+        (context?.applicationContext as DistriTVApp?)
+
+    application?.setAlertDurationLeft(durationLeft)
 }

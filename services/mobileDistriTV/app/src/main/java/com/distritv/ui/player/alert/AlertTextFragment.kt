@@ -1,28 +1,26 @@
-package com.distritv.ui.player
+package com.distritv.ui.player.alert
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.distritv.data.model.Alert
-import com.distritv.data.model.Content
 import com.distritv.databinding.FragmentTextBinding
 import com.distritv.ui.FullscreenManager
 import com.distritv.utils.*
 import java.util.concurrent.TimeUnit
 
-class TextFragment : Fragment() {
+class AlertTextFragment : Fragment() {
 
     private var _binding: FragmentTextBinding? = null
     private val binding get() = _binding!!
 
-    private val handler = Handler(Looper.getMainLooper())
+    private lateinit var timer: CountDownTimer
 
-    private var content: Content? = null
+    private var alert: Alert? = null
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -40,10 +38,10 @@ class TextFragment : Fragment() {
         _binding = FragmentTextBinding.inflate(layoutInflater, container, false)
 
         arguments?.let {
-            content = it.getParcelable(CONTENT_PARAM)
-            if (content == null) {
+            alert = it.getParcelable(ALERT_PARAM)
+            if (alert == null) {
                 Log.e(TAG, "An error occurred while trying to play, back to home...")
-                onAfterCompletion(TAG)
+                onAfterCompletionAlert(TAG)
             }
         }
 
@@ -58,36 +56,51 @@ class TextFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        backHomeOnResume()
+        backHomeOnResumeAlert()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        timer.cancel()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        removeAllCallbacksAndMessagesFromHandler()
+        timer.cancel()
     }
 
     private fun showText() {
-        binding.textContainer.text = content?.text ?: ""
-        Log.i(TAG, "Playback started. Content id: ${content?.id}")
-        handler.postDelayed({
-            onAfterCompletion(TAG, content?.id)
-        }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
-    }
+        binding.textContainer.text = alert?.text ?: ""
 
-    /**
-     * Remove all pending posts of callbacks and sent messages.
-     */
-    private fun removeAllCallbacksAndMessagesFromHandler() {
-        handler.removeCallbacksAndMessages(null)
+        Log.i(TAG, "Alert with id [${alert?.id}] has started!")
+
+        timer = object : CountDownTimer(
+            TimeUnit.SECONDS.toMillis(alert?.durationLeft!!),
+            TimeUnit.SECONDS.toMillis(1)
+        ) {
+            override fun onTick(millisUntilFinished: Long) {
+                // Code to run every second
+                val durationLeft = millisUntilFinished / TimeUnit.SECONDS.toMillis(1)
+                Log.v(TAG, "Timer: $durationLeft seconds remaining")
+                setAlertDurationLeft(durationLeft)
+            }
+
+            override fun onFinish() {
+                // Code to run after the timer finishes
+                Log.i(TAG, "Alert with id [${alert?.id}] has finished!")
+                onAfterCompletionAlert(TAG, alert?.id)
+            }
+        }.start()
+
     }
 
     companion object {
-        const val TAG = "[TextFragment]"
+        const val TAG = "[AlertTextFragment]"
 
         @JvmStatic
-        fun newInstance(content: Content) = TextFragment().apply {
+        fun newInstance(alert: Alert) = AlertTextFragment().apply {
             arguments = Bundle().apply {
-                putParcelable(CONTENT_PARAM, content)
+                putParcelable(ALERT_PARAM, alert)
             }
         }
 

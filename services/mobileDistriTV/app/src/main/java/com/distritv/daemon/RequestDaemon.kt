@@ -22,7 +22,7 @@ import com.distritv.R
 import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
 import com.distritv.data.model.Content
 import com.distritv.data.repositories.ContentRepository
-import com.distritv.data.repositories.ScheduleRepository
+import com.distritv.data.repositories.TelevisionRepository
 import com.distritv.data.service.ContentService
 import com.distritv.data.service.DeviceInfoService
 import com.distritv.data.service.ScheduleService
@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit
 class RequestDaemon: Service() {
 
     private val contentRepository: ContentRepository by inject()
-    private val scheduleRepository: ScheduleRepository by inject()
+    private val televisionRepository: TelevisionRepository by inject()
     private val contentService: ContentService by inject()
     private val scheduleService: ScheduleService by inject()
 
@@ -131,14 +131,15 @@ class RequestDaemon: Service() {
                 val scheduleList = scheduleService.getAllSchedules()
 
                 // Fetch schedules with content from the server
-                val responseScheduleList = scheduleRepository.fetchScheduleList(deviceInfo)
+                val responseTelevision =
+                    televisionRepository.fetchTelevision(deviceInfo) ?: return@launch
 
                 // Check if any schedule was removed to delete
                 scheduleList.forEach { schedule ->
-                    scheduleService.checkAndDeletedSchedule(schedule, responseScheduleList)
+                    scheduleService.checkAndDeletedSchedule(schedule, responseTelevision.schedules)
                 }
 
-                for (schedule in responseScheduleList) {
+                for (schedule in responseTelevision.schedules) {
 
                     if (!schedule.startDownloadRestriction()) {
                         continue

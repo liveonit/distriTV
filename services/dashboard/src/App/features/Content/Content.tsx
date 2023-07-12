@@ -47,14 +47,15 @@ export default function ContentList() {
     )
   }, [dispatch, searchQueryString])
 
-  const [isModalOpen, setIsModalOpen] = React.useState(false)
+  const [isModalCreate, setIsModalCreate] = React.useState(false)
   const isLoading = useSelector(contentIsLoadingSelector)
   const contents = useSelector(contentSelector)
   const [contentToEdit, setContentToEdit] = React.useState<ContentT | null>(null)
   const [contentToDelete, setContentToDelete] = React.useState<ContentT | null>(null)
 
   function handleCloseEditContentModal() {
-    setIsModalOpen(false)
+    setContentToEdit(null)
+    setIsModalCreate(false)
   }
   function handleCloseDeleteContentModal() {
     setContentToDelete(null)
@@ -74,7 +75,7 @@ export default function ContentList() {
             color='primary'
             size='small'
             startIcon={<AddIcon />}
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => setIsModalCreate(true)}
           >
             <Trans>NEW</Trans>
           </Button>
@@ -132,14 +133,12 @@ export default function ContentList() {
           </TableBody>
         </Table>
       </TableContainer>
-      {!!contentToEdit ||
-        (isModalOpen && (
+      {(!!contentToEdit ||isModalCreate ) && (
           <CreateAndEditContentModal
-            isOpen={isModalOpen}
             handleCloseContentModal={handleCloseEditContentModal}
             content={contentToEdit!}
           />
-        ))}
+        )}
       {!!contentToDelete && (
         <ContentDeleteModal
           isOpen={!!contentToDelete}

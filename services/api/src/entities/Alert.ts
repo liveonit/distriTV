@@ -19,6 +19,9 @@ export class Alert extends BaseEntity {
   labelId?: number;
 
   @Column()
+  destinationType!: string
+
+  @Column()
   televisionId?: number;
 
   @Column()

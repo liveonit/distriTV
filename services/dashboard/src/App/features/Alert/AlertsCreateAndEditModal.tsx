@@ -20,6 +20,7 @@ import { listLabels } from 'src/store/label/label.action'
 import { createAlert, updateAlert } from 'src/store/alert/alert.action'
 import { labelsSelector } from 'src/store/label/label.selector'
 import { Trans, useTranslation } from 'react-i18next'
+import { FormInputNumber } from 'src/App/components/molecules/Forms/FormInputNumber'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -44,7 +45,7 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
     resolver: zodResolver(alertSchema),
     defaultValues: alertInitialState,
   })
-  const { reset, handleSubmit, watch, control } = methods
+  const { reset, handleSubmit, watch, control, register } = methods
   const associationTypes = ['LABEL', 'TELEVISION']
 
   const { t } = useTranslation()
@@ -69,7 +70,7 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            {t(title)} {t('SCHEDULE')}
+            {t(title)} {t('ALERT')}
           </Typography>
           <br />
           <Grid container spacing={2}>
@@ -79,14 +80,18 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
                 label={t('TEXT')}
                 name='text'
                 control={control}
+                variant='outlined'
               />
             </Grid>
             <Grid item xs={12}>
-              <FormInputText
+              <FormInputNumber
+                register={register}
+                type='number'
                 fullWidth
                 label={t('DURATION')}
                 name='duration'
                 control={control}
+                variant='outlined'
               />
             </Grid>
             <Grid item xs={12}>

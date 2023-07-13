@@ -7,7 +7,7 @@ export const alertSchema = z
   destinationType: z.string(),
   duration: z.number(),
   labelId: z.number().optional(),
-  startDate: z.string().transform((a) => new Date(a)),
+  startDate: z.date(),
   text: z.string(),
   television: z.object({      
     name: z.string(),

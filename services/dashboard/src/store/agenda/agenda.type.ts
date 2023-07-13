@@ -13,7 +13,6 @@ export const agendaSchema = z
     content: z.object({      
       id: z.number(),
       name: z.string(),
-      description: z.string(),
     }).optional(),
     television: z.object({      
       name: z.string(),

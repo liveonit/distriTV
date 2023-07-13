@@ -31,6 +31,7 @@ type FormInputDatePropsT = {
 export const FormInputDate: React.FC<FormInputDatePropsT> = ({ name, control, label }) => {
   const classes = useStyles()
   const { field } = useController({ name, control })
+
   const [date, setDate] = React.useState<Dayjs>(dayjs(field.value))
   const [time, setTime] = React.useState<Dayjs>(dayjs(field.value))
 

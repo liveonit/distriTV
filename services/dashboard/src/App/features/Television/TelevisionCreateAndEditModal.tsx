@@ -110,12 +110,14 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
             <Grid container>
               <Grid item></Grid>
               <Grid item alignItems='stretch' style={{ display: 'flex' }}>
-                <FormInputText name='tvCode' control={control} fullWidth label={t('TV_CODE')} variant='outlined' />
-                <Button
-                  startIcon={<RefreshIcon />}
-                  color='primary'
-                  onClick={() => setValue('tvCode', Math.random().toString(36).slice(2, 8))}
-                />
+                <FormInputText disabled name='tvCode' control={control} fullWidth label={t('TV_CODE')} variant='outlined' />
+                {(!television) && (
+                  <Button
+                    startIcon={<RefreshIcon />}
+                    color='primary'
+                    onClick={() => setValue('tvCode', Math.random().toString(36).slice(2, 8))}
+                  />
+                )}
               </Grid>
             </Grid>{' '}
           </>
@@ -145,3 +147,5 @@ export default function TelevisionCreateAndEditModal({ handleCloseEditModal, tel
     </>
   )
 }
+
+

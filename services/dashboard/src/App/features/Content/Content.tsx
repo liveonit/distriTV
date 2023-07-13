@@ -26,6 +26,9 @@ import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 import { useTranslation } from 'react-i18next'
 import Link from '@material-ui/core/Link'
+import { OndemandVideo } from '@material-ui/icons'
+import ImageIcon from '@mui/icons-material/Image';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 
 const useStyles = makeStyles({
   table: {
@@ -47,14 +50,15 @@ export default function ContentList() {
     )
   }, [dispatch, searchQueryString])
 
-  const [isModalOpen, setIsModalOpen] = React.useState(false)
+  const [isModalCreate, setIsModalCreate] = React.useState(false)
   const isLoading = useSelector(contentIsLoadingSelector)
   const contents = useSelector(contentSelector)
   const [contentToEdit, setContentToEdit] = React.useState<ContentT | null>(null)
   const [contentToDelete, setContentToDelete] = React.useState<ContentT | null>(null)
 
   function handleCloseEditContentModal() {
-    setIsModalOpen(false)
+    setContentToEdit(null)
+    setIsModalCreate(false)
   }
   function handleCloseDeleteContentModal() {
     setContentToDelete(null)
@@ -74,7 +78,7 @@ export default function ContentList() {
             color='primary'
             size='small'
             startIcon={<AddIcon />}
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => setIsModalCreate(true)}
           >
             <Trans>NEW</Trans>
           </Button>
@@ -103,12 +107,18 @@ export default function ContentList() {
                 <TableCell component='th' scope='row'>
                   {content.name}
                 </TableCell>
-                <TableCell>{content.type}</TableCell>
+                <TableCell>
+                  {content.type.toLowerCase().includes('video') && (<OndemandVideo></OndemandVideo>)}
+                  {content.type.toLowerCase().includes('image') && (<ImageIcon></ImageIcon>)}
+                  {content.type.toLowerCase().includes('text') && (<TextSnippetIcon></TextSnippetIcon>)}
+                </TableCell>
                 <TableCell><Link href={content.url}>{content.url}</Link></TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => {
+                      console.log(content)
                       setContentToEdit(content)
+                      
                     }}
                     color='primary'
                     aria-label='edit content'
@@ -132,14 +142,12 @@ export default function ContentList() {
           </TableBody>
         </Table>
       </TableContainer>
-      {!!contentToEdit ||
-        (isModalOpen && (
+      {(!!contentToEdit ||isModalCreate ) && (
           <CreateAndEditContentModal
-            isOpen={isModalOpen}
             handleCloseContentModal={handleCloseEditContentModal}
             content={contentToEdit!}
           />
-        ))}
+        )}
       {!!contentToDelete && (
         <ContentDeleteModal
           isOpen={!!contentToDelete}

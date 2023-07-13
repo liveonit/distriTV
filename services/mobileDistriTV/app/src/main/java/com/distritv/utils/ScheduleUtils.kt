@@ -42,3 +42,6 @@ fun Schedule.startDownloadRestriction(): Boolean {
     return this.startDate <= (localDateTimeToMillis(LocalDateTime.now())?.plus(TimeUnit.DAYS.toMillis(daysStartDownloadRestriction)) ?: 0L)
 }
 
+fun Schedule.validEndDate(): Boolean {
+    return this.endDate >= (localDateTimeToMillis(LocalDateTime.now()) ?: 0L)
+}

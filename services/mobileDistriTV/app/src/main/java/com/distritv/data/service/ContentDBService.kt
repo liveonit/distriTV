@@ -87,7 +87,8 @@ class ContentDBService(private val dbHelper: DBHelper) {
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_URL)),
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_TYPE)),
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_TEXT)),
-                        getLong(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_DURATION))
+                        getLong(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_DURATION)),
+                        SCHEDULE_NULL
                     )
                 )
             }
@@ -128,7 +129,8 @@ class ContentDBService(private val dbHelper: DBHelper) {
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_URL)),
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_TYPE)),
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_TEXT)),
-                        getLong(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_DURATION))
+                        getLong(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_DURATION)),
+                        SCHEDULE_NULL
                     )
                 )
             }
@@ -183,6 +185,7 @@ class ContentDBService(private val dbHelper: DBHelper) {
 
     companion object {
         const val TAG = "[ContentDBService]"
+        private val SCHEDULE_NULL = null
     }
 
 }

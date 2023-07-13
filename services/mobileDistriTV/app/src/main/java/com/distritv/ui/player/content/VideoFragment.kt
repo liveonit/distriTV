@@ -18,6 +18,7 @@ import com.distritv.ui.FullscreenManager
 import com.distritv.ui.player.content.CustomVideoView.PlayPauseListener
 import com.distritv.utils.*
 import com.distritv.data.helper.StorageHelper.getCurrentDirectory
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
@@ -26,6 +27,8 @@ class VideoFragment : Fragment() {
 
     private var _binding: FragmentVideoBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel by viewModel<ContentPlayerViewModel>()
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -143,6 +146,8 @@ class VideoFragment : Fragment() {
         })
 
         binding.videoContainer.start()
+
+        content?.let { viewModel.playOnceContentAlreadyStarted(it) }
 
         Log.i(TAG, "Playback started. Content id: ${content?.id}")
     }

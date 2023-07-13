@@ -21,7 +21,8 @@ private const val SQL_CREATE_SCHEDULE_ENTRIES =
             "${DBContract.ScheduleEntry.COLUMN_SCHEDULE_CONTENT_ID} LONG," +
             "${DBContract.ScheduleEntry.COLUMN_SCHEDULE_START_DATE} LONG," +
             "${DBContract.ScheduleEntry.COLUMN_SCHEDULE_END_DATE} LONG," +
-            "${DBContract.ScheduleEntry.COLUMN_SCHEDULE_CRON} TEXT)"
+            "${DBContract.ScheduleEntry.COLUMN_SCHEDULE_CRON} TEXT," +
+            "${DBContract.ScheduleEntry.COLUMN_SCHEDULE_PLAY_ONCE} INTEGER DEFAULT 0)"
 
 private const val SQL_DELETE_CONTENT_ENTRIES = "DROP TABLE IF EXISTS ${DBContract.ContentEntry.TABLE_NAME}"
 private const val SQL_DELETE_SCHEDULE_ENTRIES = "DROP TABLE IF EXISTS ${DBContract.ScheduleEntry.TABLE_NAME}"

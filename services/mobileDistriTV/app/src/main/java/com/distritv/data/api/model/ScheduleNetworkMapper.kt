@@ -21,6 +21,7 @@ object ScheduleNetworkMapper: EntityMapper<ScheduleResponse, Schedule> {
             startDate = localDateTimeToMillis(entity.startDate, ZoneOffset.ofHours(+3)) ?: 0L,
             endDate = localDateTimeToMillis(entity.endDate, ZoneOffset.ofHours(+3)) ?: 0L,
             cron = entity.cron ?: "",
+            playOnce = playOnce(entity),
             Content(
                 id = entity.content?.id ?: -1L,
                 name = entity.content?.name ?: "",
@@ -28,7 +29,8 @@ object ScheduleNetworkMapper: EntityMapper<ScheduleResponse, Schedule> {
                 url = entity.content?.url ?: "",
                 type = entity.content?.type ?: "",
                 text = entity.content?.text ?: "",
-                durationInSeconds = entity.content?.duration ?: 0L
+                durationInSeconds = entity.content?.duration ?: 0L,
+                null
             )
         )
     }
@@ -39,6 +41,10 @@ object ScheduleNetworkMapper: EntityMapper<ScheduleResponse, Schedule> {
 
     fun fromFetchScheduleListResponse(networkResponse: List<ScheduleResponse>): List<Schedule> {
         return networkResponse.map { mapFromEntity(it) }
+    }
+
+    private fun playOnce(entity: ScheduleResponse): Boolean {
+        return (entity.cron.isNullOrBlank() || entity.cron == "* * * * * ?") && (entity.startDate == entity.endDate)
     }
 
     /**

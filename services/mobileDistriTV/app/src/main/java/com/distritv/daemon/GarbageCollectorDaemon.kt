@@ -91,7 +91,7 @@ class GarbageCollectorDaemon: Service() {
         try {
             contentService.deleteExpiredContentFiles()
         } catch (e: Exception) {
-            Log.e(TAG, "${e.javaClass} -> ${e.message}")
+            Log.e(TAG, "[removeContentFile] -> ${e.javaClass}: ${e.message}")
         }
     }
 

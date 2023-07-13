@@ -12,12 +12,15 @@ import com.distritv.data.model.Content
 import com.distritv.databinding.FragmentTextBinding
 import com.distritv.ui.FullscreenManager
 import com.distritv.utils.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 class TextFragment : Fragment() {
 
     private var _binding: FragmentTextBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel by viewModel<ContentPlayerViewModel>()
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -67,6 +70,7 @@ class TextFragment : Fragment() {
 
     private fun showText() {
         binding.textContainer.text = content?.text ?: ""
+        content?.let { viewModel.playOnceContentAlreadyStarted(it) }
         Log.i(TAG, "Playback started. Content id: ${content?.id}")
         handler.postDelayed({
             onAfterCompletionContent(TAG, content?.id)

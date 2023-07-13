@@ -21,5 +21,6 @@ object DBContract {
         const val COLUMN_SCHEDULE_START_DATE = "start_date_in_millis"
         const val COLUMN_SCHEDULE_END_DATE = "end_date_in_millis"
         const val COLUMN_SCHEDULE_CRON = "cron"
+        const val COLUMN_SCHEDULE_PLAY_ONCE = "play_once"
     }
 }

@@ -4,6 +4,7 @@ export const updateAlertBody = z.object({
   id: z.number().optional(),
   televisionId: z.number().optional(),
   duration: z.number().optional(),
+  destinationType: z.string().optional(),
   labelId: z.number().optional(),
   startDate: z.string().transform((a) => new Date(a)).optional(),
   text: z.string().optional(),

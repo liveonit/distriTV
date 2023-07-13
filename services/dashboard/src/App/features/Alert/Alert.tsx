@@ -107,6 +107,12 @@ export default function AlertList() {
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
+            <TableCell>
+                <Trans>TEXT</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>DURATION</Trans>
+              </TableCell>
               <TableCell>
                 <Trans>TELEVISION</Trans>
               </TableCell>
@@ -124,6 +130,12 @@ export default function AlertList() {
           <TableBody>
             {alerts.map((alert) => (
               <TableRow key={alert.id}>
+                <TableCell component='th' scope='row'>
+                  {alert.text}
+                </TableCell>
+                <TableCell component='th' scope='row'>
+                  {alert.duration}
+                </TableCell>
                 <TableCell component='th' scope='row'>
                   {alert.televisionId || '-'}
                 </TableCell>

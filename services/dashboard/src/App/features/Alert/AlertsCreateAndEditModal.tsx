@@ -11,7 +11,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
 import { FormInputDate } from 'src/App/components/molecules/Forms/FormInputDate'
 import { removeEmpty } from 'src/utils/removeEmpty'
-import { contentSelector } from 'src/store/content/content.selector'
 import { useDispatch, useSelector } from 'react-redux'
 import { listContents } from 'src/store/content/content.action'
 import { listTelevisions } from 'src/store/television/television.action'
@@ -33,11 +32,12 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
     televisionId: undefined,
     labelId: undefined,
     startDate: new Date(),
-    endDate: new Date(),
+    text: undefined,
     destinationType: 'TELEVISION',
+    duration: undefined,
     ...removeEmpty(alert),
   }
-  const contents = useSelector(contentSelector)
+  
   const televisions = useSelector(televisionsSelector)
   const labels = useSelector(labelsSelector)
   const methods = useForm<AlertT>({
@@ -74,12 +74,19 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
           <br />
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <FormInputDropdown
+              <FormInputText
                 fullWidth
-                label={t('CONTENT')}
-                name='contentId'
+                label={t('TEXT')}
+                name='text'
                 control={control}
-                selectOptions={contents.map((con) => ({ label: con.name, value: con.id! }))}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormInputText
+                fullWidth
+                label={t('DURATION')}
+                name='duration'
+                control={control}
               />
             </Grid>
             <Grid item xs={12}>
@@ -119,8 +126,6 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
           </Grid>{' '}
           <br />
           <FormInputDate name='startDate' control={control} label={t('START_DATE')} />
-          <FormInputDate name='endDate' control={control} label={t('END_DATE')} />
-          <FormInputText name='cron' control={control} fullWidth label={t('CRONTAB')} variant='outlined' />
         </DialogContent>
         <DialogActions>
           <Button

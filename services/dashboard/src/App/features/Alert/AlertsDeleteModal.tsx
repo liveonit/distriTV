@@ -15,7 +15,6 @@ type IProps = {
   alert: AlertT
 }
 
-let nombreAlert = 0
 
 export default function AlertDeleteModal({ isOpen, handleCloseDeleteModal, alert }: IProps) {
   const dispatch = useDispatch()
@@ -25,13 +24,7 @@ export default function AlertDeleteModal({ isOpen, handleCloseDeleteModal, alert
     handleCloseDeleteModal()
   }
 
-  // TODO: fix the next function
-  function alertFieldsValues() {
-    if (alert) {
-      nombreAlert = alert.contentId
-    }
-  }
-  alertFieldsValues()
+
 
   return (
     <>
@@ -39,7 +32,7 @@ export default function AlertDeleteModal({ isOpen, handleCloseDeleteModal, alert
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
             <Trans>DELETE_WARNING</Trans>
-            <Trans>SCHEDULE</Trans> {nombreAlert}?
+            <Trans>ALERT</Trans> 
           </Typography>
         </DialogContent>
         <DialogActions>

@@ -37,6 +37,7 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
   const { field } = useController({ name, control })
 
   const parsedCron = cronToValues(field.value)
+  console.log(parsedCron, 'parseamo')
 
   const [period, setPeriod] = useState<any>('month')
   const [days, setDays] = useState<any>(parsedCron.days)
@@ -44,12 +45,9 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
   const [hours, setHours] = useState<any>(parsedCron.hours)
   const [minutes, setMinutes] = useState<any>(parsedCron.minutes)
 
-  // const [cronExp, setCronExp] = useState<string>(field.value)
-
-
   useEffect(() => {
     const cronExp = valuesToCron(minutes, hours, weekDays, days)
-    console.log(cronExp)
+    console.log(cronExp, 'mostrame', typeof(cronExp))
     field.onChange(cronExp)
   }, [period, minutes, hours, weekDays, days])
 
@@ -57,8 +55,20 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
     switch (period) {
       case 'month':
         return <>
-          <CronDays value={days} onChange={(newValue: { target: { value: any } }) => setDays(newValue.target.value)}></CronDays>
-          <CronWeekDays value={weekDays} onChange={(newValue: { target: { value: any } }) => setWeekDays(newValue.target.value)}></CronWeekDays>
+          <CronDays 
+            value={days} 
+            onChange={(newValue: { target: { value: any } }) => {
+              setDays(newValue.target.value)
+              setWeekDays([])
+            }}
+          />                          
+          <CronWeekDays 
+            value={weekDays} 
+            onChange={(newValue: { target: { value: any } }) => {
+              setWeekDays(newValue.target.value)
+              setDays([])
+            }}
+          />
           <CronHours value={hours} onChange={(newValue: { target: { value: any } }) => setHours(newValue.target.value)}></CronHours>
           <CronMinutes value={minutes} onChange={(newValue: { target: { value: any } }) => setMinutes(newValue.target.value)}></CronMinutes>
         </>
@@ -106,27 +116,28 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
 }
 
 
-const valuesToCron = (minutes: number[], hours: number[], weekDays: string[], days: number[]) => {
-  let cronExp = `0 ${minutes.sort().toString()} ${hours.sort().toString()} ${days.sort().toString()} * ?`
+const valuesToCron = (minutes: number[], hours: number[], weekDays: string[], days: number[]) => {  
+  console.log('se metio aca adentro!!!!!', minutes, hours, weekDays, days)
+  let cronExp = `0 ${minutes.length === 0 ? '*' : minutes.sort().toString()} ${hours.length === 0 ? '*' : hours.sort().toString()} ${days.length === 0 ? weekDays.length > 0 ? '?' : '*' : days.sort().toString()} * ${weekDays.length === 0 ? days.length > 0 ? '?' : '*' : weekDays.sort().toString()}`
   return cronExp
 }
 
 const cronToValues = (cronExp: string) => {
+  console.log(cronExp, 'pepepep')
   if (cronExp) {
-    const splitted = cronExp.split(' ')
-
+    const splitted = cronExp.split(' ')    
     return {
-      minutes: splitted[1].split(',').map(elem => parseInt(elem)) || [0],
-      hours: splitted[2].split(',').map(elem => parseInt(elem)) || [0],
-      weekDays: splitted[5].split(',') || ['MON'],
-      days: splitted[3].split(',').map(elem => parseInt(elem)) || [1],
+      minutes: splitted[1] === '*' || splitted[1] === '?' ? [] : splitted[1].split(','),
+      hours: splitted[2] === '*' || splitted[2] === '?' ? [] : splitted[2].split(','),
+      weekDays: splitted[5] === '*' || splitted[5] === '?' ? [] : splitted[5].split(','),
+      days: splitted[3] === '*' || splitted[3] === '?' ? [] : splitted[3].split(','),
     }
   } else {
     return {
-      minutes:  [0],
-      hours: [0],
-      weekDays: ['MON'],
-      days: [1],
+      minutes:  [],
+      hours: [],
+      weekDays: [],
+      days: [],
     }
   }
 }

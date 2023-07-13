@@ -11,6 +11,7 @@ import content from './content/content.reducer'
 import label from './label/label.reducer'
 import television from './television/television.reducer'
 import agenda from './agenda/agendas.reducer'
+import alert from './alert/alerts.reducer'
 export const rootReducer = combineReducers({
   auth,
   app,
@@ -22,7 +23,8 @@ export const rootReducer = combineReducers({
   content,
   label,
   agenda,
-  television
+  television,
+  alert
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

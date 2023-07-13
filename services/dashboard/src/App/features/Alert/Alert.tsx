@@ -11,7 +11,7 @@ import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
 import { useDispatch, useSelector } from 'react-redux'
-import { alertsIsLoadingSelector, alertsSelector } from 'src/store/alert/alerts.selector'
+import { alertsIsLoadingSelector, alertsSelector } from 'src/store/alert/alert.selector'
 import { CircularProgress } from 'node_modules/@mui/material'
 import Button from '@material-ui/core/Button'
 import { listAlerts } from 'src/store/alert/alert.action'
@@ -30,8 +30,6 @@ import { labelsSelector } from 'src/store/label/label.selector'
 import { listLabels } from 'src/store/label/label.action'
 import { televisionsSelector } from 'src/store/television/television.selector'
 import { listTelevisions } from 'src/store/television/television.action'
-import { listContents } from 'src/store/content/content.action'
-import { contentSelector } from 'src/store/content/content.selector'
 
 const useStyles = makeStyles({
   table: {
@@ -46,7 +44,6 @@ export default function AlertList() {
   const { t } = useTranslation()
 
   React.useEffect(() => {
-    dispatch(listContents())
     dispatch(listLabels())
     dispatch(listTelevisions())
     dispatch(
@@ -60,7 +57,6 @@ export default function AlertList() {
   const alerts = useSelector(alertsSelector)
   const labels = useSelector(labelsSelector)
   const televisions = useSelector(televisionsSelector)
-  const contents = useSelector(contentSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
   const [alertToEdit, setAlertToEdit] = React.useState<AlertT | null>(null)
   const [alertToDelete, setAlertToDelete] = React.useState<AlertT | null>(null)
@@ -74,7 +70,7 @@ export default function AlertList() {
   function handleCloseDeleteAlertModal() {
     setAlertToDelete(null)
   }
-
+  console.log('mi hermano')
   return isLoading ? (
     <CircularProgress />
   ) : (
@@ -82,7 +78,7 @@ export default function AlertList() {
       <Grid container alignItems='center'>
         <Grid item sm={8}>
           <h2>
-            <Trans>SCHEDULE</Trans>
+            <Trans>ALERT</Trans>
           </h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
@@ -102,7 +98,6 @@ export default function AlertList() {
       </Grid>
       <SearchBox
             searches={[
-              { type: 'Multi', name: 'content.name', placeholder: t('CONTENT'), options: contents.map(content => content.name) },
               { type: 'Multi', name: 'television.name', placeholder: t('TELEVISION'), options: televisions.map(tele => tele.name) },
               { type: 'Multi', name: 'label.name', placeholder: t('LABEL'), options: labels.map(label => label.name) },
             ]}
@@ -112,9 +107,6 @@ export default function AlertList() {
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
-            <TableCell>
-                <Trans>CONTENT</Trans>
-              </TableCell>
               <TableCell>
                 <Trans>TELEVISION</Trans>
               </TableCell>
@@ -125,25 +117,20 @@ export default function AlertList() {
                 <Trans>START_DATE</Trans>
               </TableCell>
               <TableCell>
-                <Trans>END_DATE</Trans>
-              </TableCell>
-              <TableCell>
                 <Trans>ACTION</Trans>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {alerts.map((alert) => (
-              <TableRow key={alert.contentId}>
-                <TableCell>{alert.content?.name}</TableCell>
+              <TableRow key={alert.id}>
                 <TableCell component='th' scope='row'>
-                  {alert.television?.name || '-'}
+                  {alert.televisionId || '-'}
                 </TableCell>
                 <TableCell component='th' scope='row'>
-                  {alert.label?.name || '-'}
+                  {alert.labelId || '-'}
                 </TableCell>
                 <TableCell>{dayjs(alert.startDate.toLocaleString()).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
-                <TableCell>{dayjs(alert.endDate.toLocaleString()).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => {

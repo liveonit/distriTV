@@ -8,6 +8,7 @@ import { contentsEpics } from './content/content.epic'
 import {televisionsEpics} from './television/television.epic'
 import {labelsEpics} from './label/label.epic'
 import { agendasEpics } from './agenda/agenda.epic'
+import { alertsEpics } from './alert/alert.epic'
 
 
-export const rootEpic = combineEpics(...authEpics, ...appEpics, ...usersEpics, ...institutionsEpics, ...contentsEpics, ...televisionsEpics, ...labelsEpics, ...agendasEpics)
+export const rootEpic = combineEpics(...authEpics, ...appEpics, ...usersEpics, ...institutionsEpics, ...contentsEpics, ...televisionsEpics, ...labelsEpics, ...agendasEpics, ...alertsEpics)

@@ -18,6 +18,8 @@
   "DELETE_WARNING": "¿Está seguro que desea eliminar ",
 
   "STATUS":     "Estado",
+  "DATE":       "Día",
+  "TIME":       "Hora",
 
   "ACTION":     "Acción",
   "NEW":        "Nuevo",

@@ -18,6 +18,8 @@
   "DELETE_WARNING": "Are you sure you want to delete the ",
 
   "STATUS":     "Status",
+  "DATE":       "Date",
+  "TIME":       "Time",
 
   "ACTION":     "Action",
   "NEW":        "New",

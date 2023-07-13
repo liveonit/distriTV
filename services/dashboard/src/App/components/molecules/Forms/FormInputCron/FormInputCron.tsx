@@ -38,7 +38,6 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
   const { field } = useController({ name, control })
 
   const parsedCron = cronToValues(field.value)
-  console.log(parsedCron, 'parseamo')
 
   const [months, setMonths] = useState<any>(parsedCron.months)
   const [days, setDays] = useState<any>(parsedCron.days)
@@ -48,7 +47,6 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
 
   useEffect(() => {
     const cronExp = valuesToCron(minutes, hours, days, months, weekDays)
-    console.log(cronExp, 'mostrame', typeof(cronExp))
     field.onChange(cronExp)
   }, [minutes, hours, days, months, weekDays])
 
@@ -97,13 +95,11 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
 
 
 const valuesToCron = (minutes: number[], hours: number[], days: number[], months: string[], weekDays: string[]) => {  
-  console.log('se metio aca adentro!!!!!', minutes, hours, weekDays, days)
-  let cronExp = `0 ${minutes.length === 0 ? '*' : minutes.sort().toString()} ${hours.length === 0 ? '*' : hours.sort().toString()} ${days.length === 0 ? weekDays.length > 0 ? '?' : '*' : days.sort().toString()} ${months.length === 0 ? '*' : months.toString()} ${weekDays.length === 0 ? days.length > 0 ? '?' : '*' : weekDays.sort().toString()}`
+  let cronExp = `0 ${minutes.length === 0 ? '*' : minutes.sort().toString()} ${hours.length === 0 ? '*' : hours.sort().toString()} ${days.length === 0 ? weekDays.length > 0 ? '?' : '*' : days.sort().toString()} ${months.length === 0 ? '*' : months.toString()} ${weekDays.length === 0 ? days.length >= 0 ? '?' : '*' : weekDays.sort().toString()}`
   return cronExp
 }
 
 const cronToValues = (cronExp: string) => {
-  console.log(cronExp, 'pepepep')
   if (cronExp) {
     const splitted = cronExp.split(' ')    
     return {

@@ -37,6 +37,8 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
     destinationType: 'TELEVISION',
     ...removeEmpty(agenda),
   }
+  agendaInitialState.endDate.setDate(agendaInitialState.startDate.getDate() + 1)
+
   const contents = useSelector(contentSelector)
   const televisions = useSelector(televisionsSelector)
   const labels = useSelector(labelsSelector)

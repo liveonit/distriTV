@@ -59,7 +59,7 @@ services:
       - "${REDIS_MANAGER_UI:-8081}:8081"
 
   api:
-    image: ${PROJECT_NAME}-api
+    image: api
     container_name: ${PROJECT_NAME}-api
     build:
       context: ./services/api
@@ -90,7 +90,7 @@ services:
           memory: 4096M
 
   dashboard:
-    image: ${PROJECT_NAME}-dashboard
+    image: dashboard
     build:
       context: ./services/dashboard
       dockerfile: Dockerfile.development

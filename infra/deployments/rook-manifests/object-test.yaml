@@ -10,7 +10,7 @@ metadata:
   namespace: rook-ceph # namespace:cluster
 spec:
   metadataPool:
- kubectl -n rook-ceph get pod -l app=rook-ceph-rgw   replicated:
+    replicated:
       size: 1
   dataPool:
     replicated:

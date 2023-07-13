@@ -14,6 +14,7 @@ import { Notification } from './Notification';
 import { Label } from './Label';
 import { Content } from './Content';
 import { Schedule } from './Schedule';
+import { Alert } from './Alert';
 
 @Entity()
 export class Television extends BaseEntity {
@@ -49,4 +50,7 @@ export class Television extends BaseEntity {
 
   @OneToMany(() => Schedule, (schedule) => schedule.television)
   schedules?: Schedule[];
+
+  @OneToMany(() => Alert, (alert) => alert.television)
+  alerts?: Alert[];
 }

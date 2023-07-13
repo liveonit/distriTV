@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormControl, InputLabel, MenuItem, Select, SelectProps } from '@material-ui/core'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 
 type CronMonthsPropsT = {
   value: string[]
@@ -12,7 +12,7 @@ export const CronMonths: React.FC<CronMonthsPropsT> = ({ value, onChange, ...oth
 
   return (
     <FormControl fullWidth variant='outlined'>
-      <InputLabel>Months</InputLabel>
+      <InputLabel><Trans>EVERY</Trans> <Trans>MONTH</Trans></InputLabel>
         <Select multiple {...otherProps} labelId="demo-simple-select-label" onChange={onChange} value={value} label={'Months'}>
           {['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'].map(n => {
             return (

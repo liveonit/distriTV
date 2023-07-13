@@ -17,9 +17,15 @@
   "EDIT":           "Edit",
   "DELETE_WARNING": "Are you sure you want to delete the ",
 
-  "STATUS":     "Status",
-  "DATE":       "Date",
-  "TIME":       "Time",
+  "STATUS":       "Status",
+  "DATE":         "Date",
+  "TIME":         "Time",
+  "EVERY":        "Every",
+  "WEEKDAY":      "weekday",
+  "DAY_OF_MONTH": "day of the month",
+  "MONTH":        "month",
+  "MINUTE":       "minute",
+  "HOUR":         "hour",
 
   "ACTION":     "Action",
   "NEW":        "New",
@@ -43,7 +49,7 @@
   "EMAIL":      "Email",
   "DESCRIPTION":"Description",
   "TV_CODE":    "TV Code",
-  "CRONTAB":    "Crontab",
+  "CRONTAB":    "Periodicity",
   "NAME":       "Name",
 
 

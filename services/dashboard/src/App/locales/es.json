@@ -17,9 +17,15 @@
   "EDIT":           "Editar",
   "DELETE_WARNING": "¿Está seguro que desea eliminar ",
 
-  "STATUS":     "Estado",
-  "DATE":       "Día",
-  "TIME":       "Hora",
+  "STATUS":       "Estado",
+  "DATE":         "Día",
+  "TIME":         "Hora",
+  "EVERY":        "Cada",
+  "WEEKDAY":      "día de la semana",
+  "DAY_OF_MONTH": "día del mes",
+  "MONTH":        "mes",
+  "MINUTE":       "minuto",
+  "HOUR":         "hora",
 
   "ACTION":     "Acción",
   "NEW":        "Nuevo",
@@ -43,7 +49,7 @@
   "EMAIL":      "Email",
   "DESCRIPTION":"Descripción",
   "TV_CODE":    "Código TV",
-  "CRONTAB":    "Crontab",
+  "CRONTAB":    "Periodicidad",
   "NAME":       "Nombre",
 
   "SUN": "Domingo",

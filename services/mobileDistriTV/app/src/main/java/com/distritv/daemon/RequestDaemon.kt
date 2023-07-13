@@ -134,14 +134,14 @@ class RequestDaemon: Service() {
                 val responseTelevision =
                     televisionRepository.fetchTelevision(deviceInfo) ?: return@launch
 
-                // Check if any schedule was removed to delete
+                // Check if any schedule was removed on the server then delete on TV
                 scheduleList.forEach { schedule ->
                     scheduleService.checkAndDeletedSchedule(schedule, responseTelevision.schedules)
                 }
 
                 for (schedule in responseTelevision.schedules) {
 
-                    if (!schedule.startDownloadRestriction()) {
+                    if (!schedule.startDownloadRestriction() || !schedule.validEndDate()) {
                         continue
                     }
 

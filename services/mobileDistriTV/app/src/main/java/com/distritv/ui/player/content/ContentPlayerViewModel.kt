@@ -8,9 +8,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.distritv.data.helper.StorageHelper.getCurrentDirectory
+import com.distritv.data.model.Content
+import com.distritv.data.service.ScheduleService
 import java.io.File
 
-class ImageViewModel(private val context: Context) : ViewModel() {
+class ContentPlayerViewModel(
+    private val context: Context,
+    private val scheduleService: ScheduleService
+) : ViewModel() {
 
     private val _image = MutableLiveData<Bitmap?>()
     val image: LiveData<Bitmap?>
@@ -35,7 +40,13 @@ class ImageViewModel(private val context: Context) : ViewModel() {
         }
     }
 
+    fun playOnceContentAlreadyStarted(content: Content) {
+        if (content.schedule != null && content.schedule!!.playOnce) {
+            scheduleService.deletedSchedule(content.schedule!!)
+        }
+    }
+
     companion object {
-        const val TAG = "[ImageViewModel]"
+        const val TAG = "[ContentPlayerViewModel]"
     }
 }

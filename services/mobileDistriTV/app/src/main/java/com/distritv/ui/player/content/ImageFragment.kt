@@ -23,7 +23,7 @@ class ImageFragment : Fragment() {
     private var _binding: FragmentImageBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModel<ImageViewModel>()
+    private val viewModel by viewModel<ContentPlayerViewModel>()
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -74,9 +74,10 @@ class ImageFragment : Fragment() {
     }
 
     private fun loadImageObserver() {
-        viewModel.image.observe(viewLifecycleOwner) {
-            if (it != null) {
-                binding.imageContainer.setImageBitmap(it)
+        viewModel.image.observe(viewLifecycleOwner) { imageBitmap ->
+            if (imageBitmap != null) {
+                binding.imageContainer.setImageBitmap(imageBitmap)
+                content?.let { viewModel.playOnceContentAlreadyStarted(it) }
                 Log.i(TAG, "Playback started. Content id: ${content?.id}")
                 handler.postDelayed({
                     onAfterCompletionContent(TAG, content?.id)

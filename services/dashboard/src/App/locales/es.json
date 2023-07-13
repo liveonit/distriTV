@@ -17,6 +17,8 @@
   "EDIT":           "Editar",
   "DELETE_WARNING": "¿Está seguro que desea eliminar ",
 
+  "STATUS":     "Estado",
+
   "ACTION":     "Acción",
   "NEW":        "Nuevo",
   "CLOSE":      "Cerrar",
@@ -40,5 +42,26 @@
   "DESCRIPTION":"Descripción",
   "TV_CODE":    "Código TV",
   "CRONTAB":    "Crontab",
-  "NAME":       "Nombre"
+  "NAME":       "Nombre",
+
+  "SUN": "Domingo",
+  "MON": "Lunes",
+  "TUE": "Martes",
+  "WED": "Miércoles",
+  "THU": "Jueves",
+  "FRI": "Viernes",
+  "SAT": "Sábado",
+
+  "JAN": "Enero",
+  "FEB": "Febrero",
+  "MAR": "Marzo",
+  "APR": "Abril",
+  "MAY": "Mayo",
+  "JUN": "Junio",
+  "JUL": "Julio",
+  "AUG": "Agosto",
+  "SEP": "Setiembre",
+  "OCT": "Octubre",
+  "NOV": "Noviembre",
+  "DEC": "Diciembre"
 }

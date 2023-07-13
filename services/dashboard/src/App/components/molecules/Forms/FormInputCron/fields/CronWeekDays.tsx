@@ -1,5 +1,6 @@
 import React from 'react'
 import { FormControl, InputLabel, MenuItem, Select, SelectProps } from '@material-ui/core'
+import { useTranslation } from 'react-i18next'
 
 type CronWeekDaysPropsT = {
   value: string[]
@@ -7,6 +8,8 @@ type CronWeekDaysPropsT = {
 } & SelectProps
 
 export const CronWeekDays: React.FC<CronWeekDaysPropsT> = ({ value, onChange, ...otherProps }) => {
+  const { t } = useTranslation()
+  
   return (
     <FormControl fullWidth variant='outlined'>
       <InputLabel>WeekDays</InputLabel>
@@ -14,7 +17,7 @@ export const CronWeekDays: React.FC<CronWeekDaysPropsT> = ({ value, onChange, ..
           {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(n => {
             return (
               <MenuItem key={n} value={n}>
-                {n}
+                {t(n)}
               </MenuItem>
             )
           })}

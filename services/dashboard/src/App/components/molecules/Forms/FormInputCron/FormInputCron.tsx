@@ -14,6 +14,7 @@ import { CronHours } from './fields/CronHours'
 import { CronWeekDays } from './fields/CronWeekDays'
 import { CronDays } from './fields/CronDays'
 import { CronMonths } from './fields/CronMonths'
+import { Grid } from '@material-ui/core'
 
 const useStyles = makeStyles((theme: Theme) => ({
   borderColor: {
@@ -59,32 +60,49 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
           render={() => (
             <Box
               className={clsx(classes.borderColor, classes.borderRadius)}
-              style={{ padding: '1em', marginBottom: '1.5em' }}
+              style={{ padding: '1em', marginBottom: '1.0em' }}
             >
               <TypographyBase>{label}</TypographyBase>
-              <CronMonths 
-                value={months} 
-                onChange={(newValue: { target: { value: any } }) => {
-                  setMonths(newValue.target.value)
-                }}
-              />  
-              <CronDays 
-                value={days} 
-                onChange={(newValue: { target: { value: any } }) => {
-                  setDays(newValue.target.value)
-                  setWeekDays([])
-                }}
-              />                          
-              <CronWeekDays 
-                value={weekDays} 
-                onChange={(newValue: { target: { value: any } }) => {
-                  setWeekDays(newValue.target.value)
-                  setDays([])
-                }}
-              />
-              <CronHours value={hours} onChange={(newValue: { target: { value: any } }) => setHours(newValue.target.value)}></CronHours>
-              <CronMinutes value={minutes} onChange={(newValue: { target: { value: any } }) => setMinutes(newValue.target.value)}></CronMinutes>
-              <p>{days.toString()} - {weekDays.toString()} - {hours.toString()} - {minutes.toString()}</p>
+              
+               
+                                       
+              
+              
+
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <CronMonths 
+                  value={months} 
+                  onChange={(newValue: { target: { value: any } }) => {
+                    setMonths(newValue.target.value)
+                  }}
+                /> 
+                </Grid>
+                <Grid item xs={6}>
+                  <CronDays 
+                  value={days} 
+                  onChange={(newValue: { target: { value: any } }) => {
+                    setDays(newValue.target.value)
+                    setWeekDays([])
+                  }}
+                /> 
+                </Grid>
+                <Grid item xs={12}>
+                  <CronWeekDays 
+                  value={weekDays} 
+                  onChange={(newValue: { target: { value: any } }) => {
+                    setWeekDays(newValue.target.value)
+                    setDays([])
+                  }}
+                />
+                </Grid>
+                <Grid item xs={6}>
+                  <CronHours value={hours} onChange={(newValue: { target: { value: any } }) => setHours(newValue.target.value)}></CronHours>
+                </Grid>
+                <Grid item xs={6}>
+                  <CronMinutes value={minutes} onChange={(newValue: { target: { value: any } }) => setMinutes(newValue.target.value)}></CronMinutes>
+                </Grid>
+              </Grid>
             </Box>
           )}
         />

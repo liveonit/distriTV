@@ -61,6 +61,7 @@ class DeviceInfoService(
             externalMemoryAvailable(),
             externalStoragePermissionGranted(),
             displayOverOtherAppsPermissionGranted(),
+            isAnyAlertPlaying(),
             getCurrentlyPlayingAlertId(),
             getAlertDurationLeft()
         )
@@ -212,6 +213,10 @@ class DeviceInfoService(
 
     private fun getSDKVersion(): Int {
         return Build.VERSION.SDK_INT
+    }
+
+    private fun isAnyAlertPlaying(): Boolean {
+        return myApp?.isAlertCurrentlyPlaying() ?: false
     }
 
     private fun getCurrentlyPlayingAlertId(): Long? {

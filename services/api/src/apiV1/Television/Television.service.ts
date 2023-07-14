@@ -18,19 +18,19 @@ export class TelevisionSvc extends BaseService<Television> {
                 } else {
                     result.alert = result.alerts[0]
                     result.alert.durationLeft = durationLeft || result.alert.duration
-                }
-                
-                
+                }                               
+            } else {
+                result.alert = null
             }
             delete result.alerts
 
             // Handle schedules associated to label            
             return Promise.all(televisions[0].labels?.map(label => {
                 return Schedule.find({where: {labelId: label.id}})
-            })!).then(schedules => schedules.flat()).then(flattenSchedules => {
-                result.schedules = result.schedules.concat(flattenSchedules)
+            })!).then(schedules => {
+                result.schedules = result.schedules.concat(schedules.flat())
                 return result
-            })        
+            })
         })
     };
 }

@@ -19,7 +19,6 @@ import { AlertT } from 'src/store/alert/alert.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
-import dayjs from 'dayjs'
 
 import AlertCreateAndEditModal from './AlertsCreateAndEditModal'
 import AlertDeleteModal from './AlertsDeleteModal'
@@ -120,9 +119,6 @@ export default function AlertList() {
                 <Trans>LABEL</Trans>
               </TableCell>
               <TableCell>
-                <Trans>START_DATE</Trans>
-              </TableCell>
-              <TableCell>
                 <Trans>ACTION</Trans>
               </TableCell>
             </TableRow>
@@ -142,7 +138,6 @@ export default function AlertList() {
                 <TableCell component='th' scope='row'>
                   {alert.labelId || '-'}
                 </TableCell>
-                <TableCell>{dayjs(alert.startDate.toLocaleString()).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => {

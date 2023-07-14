@@ -6,7 +6,6 @@ export const updateAlertBody = z.object({
   duration: z.number().optional(),
   destinationType: z.string().optional(),
   labelId: z.number().optional(),
-  startDate: z.string().transform((a) => new Date(a)).optional(),
   text: z.string().optional(),
 });
 

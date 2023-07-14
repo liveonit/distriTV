@@ -25,9 +25,6 @@ export class Alert extends BaseEntity {
   televisionId?: number;
 
   @Column()
-  startDate!: Date;
-
-  @Column()
   text!: String;
 
   @Column()

@@ -11,11 +11,12 @@ import { Request, Response } from 'express';
 class TelevisionController extends BaseController<Television, TelevisionSvc> {
   public getByTVcode = handleErrorAsync(async (req: Request, res: Response) => {
     const tvCode: string = req.params.tvCode;
+    const durationLeft: number = req.body.durationLeft;
     if (tvCode.length !== 6) {
       throw new BadRequest('tvCode should be 6 char long');
     }
 
-    return res.status(200).json(await this.service.getByTVcode(tvCode));
+    return res.status(200).json(await this.service.getByTVcode(tvCode, durationLeft));
   });
 }
 

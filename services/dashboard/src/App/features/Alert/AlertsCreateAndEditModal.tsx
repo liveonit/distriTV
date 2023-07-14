@@ -9,7 +9,6 @@ import { alertSchema, AlertT } from 'src/store/alert/alert.type'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
-import { FormInputDate } from 'src/App/components/molecules/Forms/FormInputDate'
 import { removeEmpty } from 'src/utils/removeEmpty'
 import { useDispatch, useSelector } from 'react-redux'
 import { listContents } from 'src/store/content/content.action'
@@ -32,7 +31,6 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
   const alertInitialState: AlertT = {
     televisionId: undefined,
     labelId: undefined,
-    startDate: new Date(),
     text: undefined,
     destinationType: 'TELEVISION',
     duration: undefined,
@@ -130,7 +128,6 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
             )}
           </Grid>{' '}
           <br />
-          <FormInputDate name='startDate' control={control} label={t('START_DATE')} />
         </DialogContent>
         <DialogActions>
           <Button

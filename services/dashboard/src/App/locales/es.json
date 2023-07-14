@@ -12,6 +12,8 @@
   "LABEL":        "Etiqueta",
   "USERS":        "Usuarios",
   "SCHEDULE":     "Agenda",
+  "ALERTS":       "Alertas",
+  "ALERT":        "Alerta",
 
   "CREATE":         "Crear",
   "EDIT":           "Editar",
@@ -39,6 +41,8 @@
   "EMAIL":      "Email",
   "DESCRIPTION":"Descripción",
   "TV_CODE":    "Código TV",
+  "DURATION":   "Duración",
+  "MESSAGE_TO_SHOW":  "Mensaje a mostrar",
   "CRONTAB":    "Crontab",
   "NAME":       "Nombre"
 }

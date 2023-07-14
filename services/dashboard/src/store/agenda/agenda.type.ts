@@ -10,6 +10,16 @@ export const agendaSchema = z
     startDate: z.date(),
     endDate: z.date(),
     cron: z.string(),
+    content: z.object({      
+      id: z.number(),
+      name: z.string(),
+    }).optional(),
+    television: z.object({      
+      name: z.string(),
+    }).optional(),
+    label: z.object({      
+      name: z.string(),
+    }).optional(),
   })
   .superRefine((value, ctx) => {
     if (value.televisionId === undefined && value.destinationType === 'TELEVISION') {

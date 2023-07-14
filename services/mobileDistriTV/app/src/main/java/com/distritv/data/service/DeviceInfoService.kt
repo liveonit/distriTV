@@ -6,12 +6,16 @@ import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.pm.PackageManager
 import android.os.*
+import android.provider.Settings
 import android.util.Log
 import com.distritv.data.model.DeviceInfo
 import com.distritv.DistriTVApp
 import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
+import com.distritv.data.model.DeviceInfoCard
+import com.distritv.data.helper.StorageHelper.externalMemoryAvailable
+import com.distritv.data.helper.StorageHelper.externalStoragePermissionGranted
 import com.distritv.utils.getCurrentTime
 import com.distritv.utils.isServiceRunning
 import com.distritv.utils.roundTo
@@ -51,12 +55,45 @@ class DeviceInfoService(
             appIsVisible(),
             isAnyContentPlaying(),
             getCurrentlyPlayingContentId(),
-            getCurrentTime()
+            getCurrentTime(),
+            useExternalStorage(),
+            externalMemoryAvailable(),
+            externalStoragePermissionGranted(),
+            displayOverOtherAppsPermissionGranted(),
+            getSDKVersion()
+        )
+    }
+
+    fun getDeviceInfoCard(): DeviceInfoCard {
+        return DeviceInfoCard(
+            getTvCode(),
+            getCurrentVersionApp(),
+            null
         )
     }
 
     private fun getTvCode(): String {
         return sharedPreferences.getTvCode() ?: ""
+    }
+
+    private fun useExternalStorage(): Boolean {
+        return sharedPreferences.useExternalStorage()
+    }
+
+    private fun externalMemoryAvailable(): Boolean {
+        return context.externalMemoryAvailable()
+    }
+
+    private fun externalStoragePermissionGranted(): Boolean? {
+        return context.externalStoragePermissionGranted()
+    }
+
+    private fun displayOverOtherAppsPermissionGranted(): Boolean? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Settings.canDrawOverlays(context)
+        } else {
+            null
+        }
     }
 
     /**
@@ -169,6 +206,10 @@ class DeviceInfoService(
 
     private fun getCurrentlyPlayingContentId(): Long {
         return myApp?.getCurrentlyPlayingContentId() ?: -1L
+    }
+
+    private fun getSDKVersion(): Int {
+        return Build.VERSION.SDK_INT
     }
 
     companion object {

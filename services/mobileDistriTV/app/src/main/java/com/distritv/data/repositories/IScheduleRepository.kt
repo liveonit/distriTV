@@ -7,4 +7,5 @@ interface IScheduleRepository {
 
     suspend fun fetchScheduleList(deviceInfo: DeviceInfo): List<Schedule>
     suspend fun validateTvCode(tvCode: String): Boolean
+    suspend fun validateConnection(tvCode: String): Boolean
 }

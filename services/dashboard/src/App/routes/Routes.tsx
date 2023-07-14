@@ -23,6 +23,7 @@ const Login = lazy(() => import('../features/Login'))
 const Kanban = lazy(() => import('../features/Kanban'))
 const Television = lazy(() => import('../features/Television'))
 const Label = lazy(() => import('../features/Label'))
+const Alert = lazy(() => import('../features/Alert'))
 const Agenda = lazy(() => import('../features/Agenda'))
 
 const routesConfig: RoutesT[] = [
@@ -76,6 +77,11 @@ const routesConfig: RoutesT[] = [
       {
         path: PATH_NAME.LABEL,
         component: Label,
+        requiredRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
+      },
+      {
+        path: PATH_NAME.ALERT,
+        component: Alert,
         requiredRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
       },
       {

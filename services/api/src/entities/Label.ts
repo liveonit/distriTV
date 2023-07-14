@@ -2,6 +2,7 @@ import { Entity, BaseEntity, PrimaryGeneratedColumn, Column,ManyToMany , ManyToO
 import { Television } from './Television';
 import { Content } from './Content';
 import { Schedule } from './Schedule';
+import { Alert } from './Alert';
 
 
 @Entity()
@@ -20,4 +21,7 @@ export class Label extends BaseEntity {
 
   @ManyToMany(() => Schedule, (schedule) => schedule.label)
   schedules?: Schedule[];
+
+  @ManyToMany(() => Alert, (alert) => alert.label)
+  alerts?: Alert[];
 }

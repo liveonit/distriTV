@@ -8,13 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.MediaController
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.distritv.DistriTVApp
+import com.distritv.R
 import com.distritv.data.model.Content
 import com.distritv.databinding.FragmentVideoBinding
 import com.distritv.ui.FullscreenManager
 import com.distritv.ui.player.CustomVideoView.PlayPauseListener
 import com.distritv.utils.*
+import com.distritv.data.helper.StorageHelper.getCurrentDirectory
 import java.io.File
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
@@ -101,7 +104,16 @@ class VideoFragment : Fragment() {
     }
 
     private fun startVideo() {
-        val path = File(content?.localPath ?: "").toURI().toString()
+        val file = File(content?.fileName ?: "")
+
+        if (!file.exists()) {
+            Log.e(TAG, "An error occurred while trying to play. Check storage. Back to home...")
+            Toast.makeText(context, getString(R.string.msg_unavailable_content), Toast.LENGTH_LONG)
+                .show()
+            onAfterCompletion(TAG, content?.id)
+        }
+
+        val path = File(context?.getCurrentDirectory() ?: "", content?.fileName ?: "").toURI().toString()
         binding.videoContainer.setVideoPath(path)
 
         val mediaC = MediaController(context)

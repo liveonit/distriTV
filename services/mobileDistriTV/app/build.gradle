@@ -42,6 +42,8 @@ android {
             buildConfigField "Long", "REQUEST_TIME_PERIOD", "${props.getProperty("request_time_period_in_seconds")}L"
             buildConfigField "Long", "SCHEDULE_TIME_PERIOD", "${props.getProperty("schedule_time_period_in_seconds")}L"
             buildConfigField "Long", "GARBAGE_COLLECTOR_TIME_PERIOD", "${props.getProperty("garbage_collector_time_period_in_seconds")}L"
+            buildConfigField "Long", "START_DOWNLOAD_RESTRICTION", "${props.getProperty("start_download_restriction")}L"
+            buildConfigField "Boolean", "EXTERNAL_STORAGE_ENABLED", "${props.getProperty("external_storage_enabled")}"
         }
         release {
             minifyEnabled false
@@ -51,6 +53,8 @@ android {
             buildConfigField "Long", "REQUEST_TIME_PERIOD", "${props.getProperty("request_time_period_in_seconds")}L"
             buildConfigField "Long", "SCHEDULE_TIME_PERIOD", "${props.getProperty("schedule_time_period_in_seconds")}L"
             buildConfigField "Long", "GARBAGE_COLLECTOR_TIME_PERIOD", "${props.getProperty("garbage_collector_time_period_in_seconds")}L"
+            buildConfigField "Long", "START_DOWNLOAD_RESTRICTION", "${props.getProperty("start_download_restriction")}L"
+            buildConfigField "Boolean", "EXTERNAL_STORAGE_ENABLED", "${props.getProperty("external_storage_enabled")}"
         }
     }
 

@@ -1,6 +1,32 @@
 <resources>
     <string name="app_name">mobileDistriTV</string>
     <string name="app_preference_file_key">DistriTVApp</string>
-    <string name="device_info_title">Ingresar el código</string>
-    <string name="device_info_register_button">Registrar</string>
+    <string name="device_info_title">Enter the TV code</string>
+    <string name="device_info_register_button">Register</string>
+    <string name="device_info_switch_external">Use external storage to save the contents</string>
+    <string name="dialog_title_to_external">Save content on external storage</string>
+    <string name="dialog_title_to_internal">Save content on internal storage</string>
+    <string name="dialog_message_to_external">The downloaded contents will be stored in an external memory.\nMake sure you always have the storage connected, otherwise it may cause a malfunction.</string>
+    <string name="dialog_message_home_to_external">The downloaded contents will be stored in an external memory.\nMake sure you always have the storage connected, otherwise it may cause a malfunction.\nOnce you confirm your decision, all downloaded content will be moved.</string>
+    <string name="dialog_message_home_to_internal">The downloaded contents will be stored in the internal storage.\nOnce you confirm your decision, all the downloaded contents will be moved.</string>
+    <string name="dialog_title_permission_denied">Permission denied</string>
+    <string name="dialog_message_permission_denied">External storage will not be used because permission was denied.</string>
+    <string name="dialog_accept">Accept</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="msg_tv_code_invalid">The code entered is invalid</string>
+    <string name="msg_tv_code_error">An error has occurred</string>
+    <string name="msg_tv_code_connection_error">A connection error has occurred</string>
+    <string name="msg_unavailable_content">Playback error: Content not found</string>
+    <string name="msg_error_external_storage">ERROR: External storage may not be found or permission not granted</string>
+    <string name="info_card_version">Version:</string>
+    <string name="info_card_tv_code">TV code:</string>
+    <string name="info_card_connection_status">Connection status:</string>
+    <string name="info_card_switch_external">Use external storage</string>
+    <string name="language">Language:</string>
+    <string name="language_select">Select language</string>
+    <string-array name="languages">
+        <item>Auto</item>
+        <item>English</item>
+        <item>Español</item>
+    </string-array>
 </resources>

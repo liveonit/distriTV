@@ -16,9 +16,12 @@ const listContents: Epic = (action$) =>
     ofType(ContentActionTypes.LIST_ALL_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
-    mergeMap(() => {
+    mergeMap(({payload}) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ path: '/content', requireAuthType: session?.type }).pipe(
+      return apiSvc.request({ 
+        path: `/content${payload?.query ? `?${payload.query}` : ''}`,
+        requireAuthType: session?.type 
+      }).pipe(
         map(({ response }) => {
           return {
             type: ContentActionTypes.LIST_ALL_SUCCESS,

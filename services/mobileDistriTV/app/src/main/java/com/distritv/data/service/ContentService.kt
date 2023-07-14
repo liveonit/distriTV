@@ -1,15 +1,28 @@
 package com.distritv.data.service
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
 import com.distritv.data.model.Content
-import com.distritv.utils.CONTENTS_DIRECTORY
+import com.distritv.data.helper.StorageHelper.createFileOnExtStorageWithMediaStore
+import com.distritv.data.helper.StorageHelper.createFileOnExternalStorage
+import com.distritv.data.helper.StorageHelper.createFileOnInternalStorage
+import com.distritv.data.helper.StorageHelper.deleteFiles
+import com.distritv.data.helper.StorageHelper.deleteFilesOnExtStorageWithMediaStore
+import com.distritv.data.helper.StorageHelper.getExternalStorageDirectory
+import com.distritv.data.helper.StorageHelper.getInternalStorageDirectory
+import com.distritv.data.helper.StorageHelper.writeContent
 import okhttp3.ResponseBody
 import java.io.*
 
-class ContentService(private val contentDbService: ContentDBService,
-                     private val scheduleDBService: ScheduleDBService,
-                     private val context: Context) {
+
+class ContentService(
+    private val context: Context,
+    private val contentDbService: ContentDBService,
+    private val scheduleDBService: ScheduleDBService,
+    private val sharedPreferences: SharedPreferencesService,
+) {
 
     /**
      * Insert content into DB
@@ -44,9 +57,9 @@ class ContentService(private val contentDbService: ContentDBService,
      */
     fun downloadAndInsertContent(content: Content, response: ResponseBody): Long {
         return try {
-            val localPath = writeContentToLocalStorage(content, response)
-            if (localPath != null) {
-                content.localPath = localPath
+            val fileName = writeContentToStorage(content, response)
+            if (fileName != null) {
+                content.fileName = fileName
                 return contentDbService.insert(content)
             }
             -1L
@@ -61,9 +74,9 @@ class ContentService(private val contentDbService: ContentDBService,
      */
     fun downloadAndUpdateContent(content: Content, response: ResponseBody): Long {
         return try {
-            val localPath = writeContentToLocalStorage(content, response)
-            if (localPath != null) {
-                content.localPath = localPath
+            val fileName = writeContentToStorage(content, response)
+            if (fileName != null) {
+                content.fileName = fileName
                 val countResult = contentDbService.update(content.id, content)
                 if (countResult > 0) {
                     return content.id
@@ -76,57 +89,47 @@ class ContentService(private val contentDbService: ContentDBService,
         }
     }
 
-    private fun writeContentToLocalStorage(content: Content, body: ResponseBody): String? {
-        return try {
+    private fun writeContentToStorage(content: Content, body: ResponseBody): String? {
+        var outputStreamAndPath: Triple<OutputStream?, String?, String?> = Triple(null, null, null)
 
-            val directory = File(context.filesDir, CONTENTS_DIRECTORY)
-
+        try {
             val fileName = "${content.name}.${content.type.substringAfterLast("/")}"
 
-            val file = File(directory, fileName)
-
-            var inputStream: InputStream? = null
-            var outputStream: OutputStream? = null
-
-            try {
-                val fileReader = ByteArray(4096)
-                //val fileSize = body.contentLength()
-                var fileSizeDownloaded: Long = 0
-                inputStream = body.byteStream()
-                outputStream = FileOutputStream(file)
-                while (true) {
-                    val read: Int = inputStream.read(fileReader)
-                    if (read == -1) {
-                        break
-                    }
-                    if (outputStream != null) {
-                        outputStream.write(fileReader, 0, read)
-                    }
-                    fileSizeDownloaded += read.toLong()
-                    //Log.d(TAG, "Content download: $fileSizeDownloaded of $fileSize")
+            outputStreamAndPath = if (sharedPreferences.useExternalStorage()) {
+                // Write to external storage
+                if (Build.VERSION.SDK_INT >= SDK_VERSION_FOR_MEDIA_STORE) {
+                    // For Android 11 or higher
+                    context.createFileOnExtStorageWithMediaStore(fileName, content.type)
+                } else {
+                    context.createFileOnExternalStorage(fileName)
                 }
-                if (outputStream != null) {
-                    outputStream.flush()
-                }
-                Log.i(TAG, "Content download was successful from ${content.url} to ${file.path}")
-                file.path
-            } catch (e: IOException) {
-                Log.e(TAG, "Content download failed from ${content.url}.")
-                Log.e(TAG, "${e.javaClass} -> ${e.message}")
-                null
-            } finally {
-                inputStream?.close()
-                outputStream?.close()
+            } else {
+                // Write to internal storage
+                context.createFileOnInternalStorage(fileName)
             }
+
+            val outputStream = outputStreamAndPath.first
+            val path = outputStreamAndPath.second
+            val resultFileName = outputStreamAndPath.third
+
+            if (writeContent(outputStream, body)) {
+                Log.i(TAG, "Content download was successful from ${content.url} to $path")
+                //return path
+                return resultFileName
+            }
+
+            return null
         } catch (e: IOException) {
             Log.e(TAG, "Content download failed from ${content.url}.")
             Log.e(TAG, "${e.javaClass} -> ${e.message}")
-            null
+            return null
+        } finally {
+            outputStreamAndPath.first?.close()
         }
     }
 
-    fun getLocalPathActiveContents(): List<String> {
-        return contentDbService.findLocalPathContents()
+    private fun getFileNameActiveContents(): List<String> {
+        return contentDbService.findFileNameContents()
     }
 
     fun getAllContents(): List<Content> {
@@ -141,9 +144,22 @@ class ContentService(private val contentDbService: ContentDBService,
         val contentList = contentDbService.findAllContents()
         contentList.forEach { content ->
             if (!scheduleDBService.existsScheduleWithContentId(content.id)
-                && contentDbService.delete(content.id) > 0) {
+                && contentDbService.delete(content.id) > 0
+            ) {
                 Log.i(TAG, "Content was deleted: $content")
             }
+        }
+    }
+
+    fun deleteExpiredContentFiles() {
+        if (sharedPreferences.useExternalStorage()) {
+            if (Build.VERSION.SDK_INT >= SDK_VERSION_FOR_MEDIA_STORE) {
+                context.deleteFilesOnExtStorageWithMediaStore(getFileNameActiveContents())
+            } else {
+                deleteFiles(File(context.getExternalStorageDirectory()), getFileNameActiveContents())
+            }
+        } else {
+            deleteFiles(File(context.getInternalStorageDirectory()), getFileNameActiveContents())
         }
     }
 

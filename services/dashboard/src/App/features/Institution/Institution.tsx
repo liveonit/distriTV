@@ -19,9 +19,13 @@ import { listInstitutions } from 'src/store/institution/institution.action'
 import { InstitutionT } from 'src/store/institution/institution.type'
 import AddIcon from '@material-ui/icons/Add'
 import { Trans } from 'react-i18next/TransWithoutContext'
+import { CITIES } from 'src/utils/constants/Cities'
 
 import InstitutionCreateAndEditModal from './InstitutionCreateAndEditModal'
 import InstitutionDeleteModal from './InstitutionDeleteModal'
+import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
+import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
+import { useTranslation } from 'react-i18next'
 
 const useStyles = makeStyles({
   table: {
@@ -32,10 +36,16 @@ const useStyles = makeStyles({
 export default function InstitutionList() {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const searchQueryString = useSearchQueryString()
+  const { t } = useTranslation()
 
   React.useEffect(() => {
-    dispatch(listInstitutions())
-  }, [dispatch])
+    dispatch(
+      listInstitutions({
+        query: searchQueryString ? `search=${searchQueryString}` : '',
+      }),
+    )
+  }, [dispatch, searchQueryString])
 
   const isLoading = useSelector(institutionsIsLoadingSelector)
   const institutions = useSelector(institutionsSelector)
@@ -76,6 +86,14 @@ export default function InstitutionList() {
           </Button>
         </Grid>
       </Grid>
+      <SearchBox
+        searches={[
+          { type: 'Input', name: 'name', placeholder: t('NAME') },
+          { type: 'Multi', name: 'city', placeholder: t('CITY'), options: CITIES },
+          { type: 'Input', name: 'locality', placeholder: t('LOCALITY') },          
+        ]}
+      />
+      <br/>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>

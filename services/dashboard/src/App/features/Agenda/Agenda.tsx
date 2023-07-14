@@ -23,6 +23,15 @@ import dayjs from 'dayjs'
 
 import AgendaCreateAndEditModal from './AgendaCreateAndEditModal'
 import AgendaDeleteModal from './AgendaDeleteModal'
+import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
+import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
+import { useTranslation } from 'react-i18next'
+import { labelsSelector } from 'src/store/label/label.selector'
+import { listLabels } from 'src/store/label/label.action'
+import { televisionsSelector } from 'src/store/television/television.selector'
+import { listTelevisions } from 'src/store/television/television.action'
+import { listContents } from 'src/store/content/content.action'
+import { contentSelector } from 'src/store/content/content.selector'
 
 const useStyles = makeStyles({
   table: {
@@ -33,13 +42,25 @@ const useStyles = makeStyles({
 export default function AgendaList() {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const searchQueryString = useSearchQueryString()
+  const { t } = useTranslation()
 
   React.useEffect(() => {
-    dispatch(listAgendas())
-  }, [dispatch])
+    dispatch(listContents())
+    dispatch(listLabels())
+    dispatch(listTelevisions())
+    dispatch(
+      listAgendas({
+        query: searchQueryString ? `search=${searchQueryString}` : '',
+      }),
+    )
+  }, [dispatch, searchQueryString])
 
   const isLoading = useSelector(agendasIsLoadingSelector)
   const agendas = useSelector(agendasSelector)
+  const labels = useSelector(labelsSelector)
+  const televisions = useSelector(televisionsSelector)
+  const contents = useSelector(contentSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
   const [agendaToEdit, setAgendaToEdit] = React.useState<AgendaT | null>(null)
   const [agendaToDelete, setAgendaToDelete] = React.useState<AgendaT | null>(null)
@@ -79,15 +100,26 @@ export default function AgendaList() {
           </Button>
         </Grid>
       </Grid>
+      <SearchBox
+            searches={[
+              { type: 'Multi', name: 'content.name', placeholder: t('CONTENT'), options: contents.map(content => content.name) },
+              { type: 'Multi', name: 'television.name', placeholder: t('TELEVISION'), options: televisions.map(tele => tele.name) },
+              { type: 'Multi', name: 'label.name', placeholder: t('LABEL'), options: labels.map(label => label.name) },
+            ]}
+          />
+          <br />
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
+            <TableCell>
+                <Trans>CONTENT</Trans>
+              </TableCell>
               <TableCell>
                 <Trans>TELEVISION</Trans>
               </TableCell>
               <TableCell>
-                <Trans>CONTENT</Trans>
+                <Trans>LABEL</Trans>
               </TableCell>
               <TableCell>
                 <Trans>START_DATE</Trans>
@@ -103,10 +135,13 @@ export default function AgendaList() {
           <TableBody>
             {agendas.map((agenda) => (
               <TableRow key={agenda.contentId}>
+                <TableCell>{agenda.content?.name}</TableCell>
                 <TableCell component='th' scope='row'>
-                  {agenda.televisionId}
+                  {agenda.television?.name || '-'}
                 </TableCell>
-                <TableCell>{agenda.contentId.toString()}</TableCell>
+                <TableCell component='th' scope='row'>
+                  {agenda.label?.name || '-'}
+                </TableCell>
                 <TableCell>{dayjs(agenda.startDate.toLocaleString()).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
                 <TableCell>{dayjs(agenda.endDate.toLocaleString()).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
                 <TableCell>

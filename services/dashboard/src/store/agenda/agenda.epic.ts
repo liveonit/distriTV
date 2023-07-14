@@ -18,9 +18,12 @@ const listAgendas: Epic = (action$) =>
     ofType(AgendaActionTypes.LIST_ALL_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
-    mergeMap(() => {
+    mergeMap(({payload}) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ path: '/schedule', requireAuthType: session?.type }).pipe(
+      return apiSvc.request({
+        path: `/schedule?relations=television,content,label${payload?.query ? `&${payload.query}` : ''}`,
+        requireAuthType: session?.type 
+      }).pipe(
         map(({ response }) => {
           return {
             type: AgendaActionTypes.LIST_ALL_SUCCESS,
@@ -50,7 +53,7 @@ const createAgenda: Epic = (action$) =>
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ method: 'POST', path: '/schedule', requireAuthType: session?.type, body: payload }).pipe(
+      return apiSvc.request({ method: 'POST', path: '/schedule?relations=television,content,label', requireAuthType: session?.type, body: payload }).pipe(
         mergeMap(({ response }) => {
           return of({
             type: AgendaActionTypes.CREATE_SUCCESS,
@@ -75,7 +78,7 @@ const updateAgenda: Epic = (action$) =>
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ method: 'PUT', path: `/schedule/${payload.id}`, requireAuthType: session?.type, body: payload }).pipe(
+      return apiSvc.request({ method: 'PUT', path: `/schedule/${payload.id}?relations=television,content,label`, requireAuthType: session?.type, body: payload }).pipe(
         mergeMap(({ response }) => {
           return of({
             type: AgendaActionTypes.EDIT_SUCCESS,

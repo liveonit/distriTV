@@ -12,11 +12,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.distritv.DistriTVApp
+import com.distritv.R
 import com.distritv.data.model.Content
 import com.distritv.ui.home.HomeActivity
 import com.distritv.ui.player.ContentPlayerActivity
 import com.distritv.utils.*
+import com.distritv.data.helper.StorageHelper.getCurrentDirectory
 
 
 class ContentPlaybackLauncher : BroadcastReceiver() {
@@ -51,6 +54,15 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
             return
         }
 
+        if (!content.fileExists(context.getCurrentDirectory())) {
+            Log.e(TAG, "Content file not found. Content id: ${content.id}, name: ${content.fileName}")
+            Toast.makeText(
+                context, context.getString(R.string.msg_unavailable_content),
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+
         if (currentActivity == null) {
             val homeIntent = Intent(context, HomeActivity::class.java)
             homeIntent.addFlags(
@@ -81,7 +93,7 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
         if (content == null) return false
         if (content.type.isBlank()) return false
         if (content.isVideo() || content.isImage()) {
-            return !content.localPath.isNullOrBlank()
+            return !content.fileName.isNullOrBlank()
         } else if (content.isText()) {
             return !content.text.isNullOrBlank()
         }

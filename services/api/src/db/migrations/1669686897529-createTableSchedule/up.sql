@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `labelId` INT NULL,
   `startDate` DATETIME NOT NULL,
   `endDate` DATETIME NOT NULL,
-  `cron` VARCHAR(45) NOT NULL,
+  `cron` VARCHAR(500) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_schedule_to_television1_idx` (`televisionId` ASC),
   INDEX `fk_schedule_to_content1_idx` (`contentId` ASC),

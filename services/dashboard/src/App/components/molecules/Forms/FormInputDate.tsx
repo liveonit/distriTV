@@ -9,6 +9,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import dayjs, { Dayjs } from 'dayjs'
+import { useTranslation } from 'react-i18next'
 
 import TypographyBase from '../../atoms/TypographyBase'
 
@@ -34,6 +35,8 @@ export const FormInputDate: React.FC<FormInputDatePropsT> = ({ name, control, la
 
   const [date, setDate] = React.useState<Dayjs>(dayjs(field.value))
   const [time, setTime] = React.useState<Dayjs>(dayjs(field.value))
+  
+  const { t } = useTranslation()
 
   React.useEffect(() => {
     const dateTimeString = `${dayjs(date).format('YYYY-MM-DD')}T${dayjs(time).format('HH:mm:ss')}`
@@ -58,14 +61,14 @@ export const FormInputDate: React.FC<FormInputDatePropsT> = ({ name, control, la
               <DemoContainer components={['DesktopDatePicker', 'DesktopTimePicker']}>
                 <div style={{ width: '50%', display: 'flex', justifyContent: 'center' }}>
                   <DesktopDatePicker
-                    label='Basic date picker'
+                    label={t('DATE')}
                     onChange={(newValue) => newValue && setDate(newValue)}
                     value={date}
                   />
                 </div>
                 <div style={{ width: '50%', display: 'flex', justifyContent: 'center' }}>
                   <DesktopTimePicker
-                    label={label}
+                    label={t('TIME')}
                     value={time}
                     onChange={(newValue) => newValue && setTime(newValue)}
                   />

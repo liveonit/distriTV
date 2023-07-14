@@ -105,10 +105,10 @@ export default function LabelList() {
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>            
-              <TableCell>Description</TableCell>
-              <TableCell>Televisions</TableCell>
-              <TableCell>Action</TableCell>
+              <TableCell><Trans>NAME</Trans></TableCell>            
+              <TableCell><Trans>DESCRIPTION</Trans></TableCell>
+              <TableCell><Trans>TELEVISIONS</Trans></TableCell>
+              <TableCell><Trans>ACTION</Trans></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

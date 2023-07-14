@@ -38,6 +38,10 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
     ...removeEmpty(agenda),
   }
 
+  if (!agenda) {
+    agendaInitialState.endDate.setDate(agendaInitialState.startDate.getDate() + 1)
+  }
+
   const contents = useSelector(contentSelector)
   const televisions = useSelector(televisionsSelector)
   const labels = useSelector(labelsSelector)

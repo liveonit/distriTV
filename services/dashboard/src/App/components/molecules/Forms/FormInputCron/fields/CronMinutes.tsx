@@ -1,5 +1,6 @@
 import React from 'react'
 import { FormControl, InputLabel, MenuItem, Select, SelectProps } from '@material-ui/core'
+import { Trans } from 'react-i18next'
 
 type CronMinutesPropsT = {
   value: number[]
@@ -9,7 +10,7 @@ type CronMinutesPropsT = {
 export const CronMinutes: React.FC<CronMinutesPropsT> = ({ value, onChange, ...otherProps }) => {
   return (
     <FormControl fullWidth variant='outlined'>
-      <InputLabel>Minutes</InputLabel>
+      <InputLabel><Trans>EVERY</Trans> <Trans>MINUTE</Trans></InputLabel>
         <Select multiple {...otherProps} labelId="demo-simple-select-label" onChange={onChange} value={value} label={'Minutes'}>
           {[...Array(60).keys()].map(n => {
             return (

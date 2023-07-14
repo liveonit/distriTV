@@ -20,6 +20,7 @@ import android.widget.Toast
 import com.distritv.BuildConfig
 import com.distritv.R
 import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
+import com.distritv.data.model.Alert
 import com.distritv.data.model.Content
 import com.distritv.data.repositories.ContentRepository
 import com.distritv.data.repositories.TelevisionRepository
@@ -134,6 +135,8 @@ class RequestDaemon: Service() {
                 val responseTelevision =
                     televisionRepository.fetchTelevision(deviceInfo) ?: return@launch
 
+                launchAlertNow(responseTelevision.alert)
+
                 // Check if any schedule was removed on the server then delete on TV
                 scheduleList.forEach { schedule ->
                     scheduleService.checkAndDeletedSchedule(schedule, responseTelevision.schedules)
@@ -238,6 +241,14 @@ class RequestDaemon: Service() {
         if (resultId != -1L) {
             Log.i(TAG, "Content with id ${content.id} was $msgResult (Id in BD: $resultId)")
         }
+    }
+
+    private fun launchAlertNow(alert: Alert?) {
+        if (alert == null) {
+            return
+        }
+        val intent = createIntentAlert(applicationContext, alert)
+        sendBroadcast(intent)
     }
 
     companion object {

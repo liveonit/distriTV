@@ -41,23 +41,31 @@ class AlertLauncher : BroadcastReceiver() {
         val isAlertCurrentlyPlaying: Boolean =
             (context.applicationContext as DistriTVApp).isAlertCurrentlyPlaying()
 
+        val currentlyPlayingAlertId: Long? =
+            (context.applicationContext as DistriTVApp).getCurrentlyPlayingAlertId()
+
         if (alert == null || !alertIsValid(alert)) {
             return
         }
 
         if (isAlertCurrentlyPlaying) {
-            Log.w(TAG, "Alert is playing but new alert must override it")
-            currentActivity?.finish()
+            if (currentlyPlayingAlertId != null && currentlyPlayingAlertId != alert.id) {
+                Log.w(TAG, "Alert is playing but new alert must override it")
+                // Notice that the content has finished playing:
+                (context.applicationContext as DistriTVApp).setIfAnyAlertIsCurrentlyPlaying(false)
+                // Clear the identifier of the content that was playing:
+                (context.applicationContext as DistriTVApp).setCurrentlyPlayingAlertId(null)
+            } else {
+                return
+            }
         }
-
-        // Notice that some new alert is being played
-        (context.applicationContext as DistriTVApp).setIfAnyAlertIsCurrentlyPlaying(true)
 
         if (isContentCurrentlyPlaying) {
             Log.w(TAG, "Content is playing but new alert must override it")
-            currentActivity?.finish()
+            // Notice that the content playback has finished:
             (context.applicationContext as DistriTVApp).setIfAnyContentIsCurrentlyPlaying(false)
-
+            // Clear the identifier of the content that was playing:
+            (context.applicationContext as DistriTVApp).setCurrentlyPlayingContentId(null)
         }
 
         if (currentActivity == null) {
@@ -75,11 +83,12 @@ class AlertLauncher : BroadcastReceiver() {
         alertIntent.putExtra(ALERT_PARAM, alert)
         context.startActivity(alertIntent)
 
-
-
         if (currentActivity != null && currentActivity is HomeActivity) {
             currentActivity.finish()
         }
+
+        // Notice that some new alert is being played
+        (context.applicationContext as DistriTVApp).setIfAnyAlertIsCurrentlyPlaying(true)
 
     }
 

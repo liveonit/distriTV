@@ -104,7 +104,7 @@ class AlertImageFragment : Fragment() {
         @JvmStatic
         fun newInstance(alert: Alert) = AlertImageFragment().apply {
             arguments = Bundle().apply {
-                putParcelable(CONTENT_PARAM, alert)
+                putParcelable(ALERT_PARAM, alert)
             }
         }
     }

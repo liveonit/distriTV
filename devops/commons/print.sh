@@ -47,6 +47,10 @@ green() {
   printf "${FG_GREEN}${FS_REG}$@${RESET_ALL}"
 }
 
+blue() {
+  printf "${FG_BLUE}${FS_REG}$@${RESET_ALL}"
+}
+
 # Print text in Yellow
 yellow() {
   printf "${FG_YELLOW}${FS_REG}$@${RESET_ALL}"

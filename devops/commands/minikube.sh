@@ -57,22 +57,44 @@ case $1 in
     cd $ROOT/../../infra/deployments/rook-manifests && kubectl create -f toolbox.yaml
     cd $ROOT/../../infra/deployments/percona-manifests && kubectl apply -f bundle.yaml
     cd $ROOT/../../infra/deployments/percona-manifests && kubectl apply -f cr-minimal.yaml
-    PERCONA_DB_ROOT_PASSWORD=`kubectl get secrets minimal-cluster-secrets -ojson | jq -r .data.root | base64 -d`
+    helm repo add bitnami https://charts.bitnami.com/bitnami
+    cd $ROOT/../../infra/deployments/redis && helm install redis bitnami/redis --values values.yml
+
     for i in {0..10}; do
       echo `yellow "Witing for db connection, retry: $i"`
-      ((i++))
+
+      PERCONA_DB_ROOT_PASSWORD=`kubectl get secrets minimal-cluster-secrets -ojson | jq -r .data.root | base64 -d`
       if kubectl run -it --rm percona-client --image=percona:8.0 --restart=Never -- mysqladmin ping -hminimal-cluster-haproxy -uroot -p"$PERCONA_DB_ROOT_PASSWORD" | grep "mysqld is alive"; then
+        echo `green "DB is alive"`
+        echo `blue "Creating API database"`
         kubectl run -it --rm percona-client --image=percona:8.0 --restart=Never -- mysql -hminimal-cluster-haproxy -uroot -p"$PERCONA_DB_ROOT_PASSWORD" -e "CREATE DATABASE $DB_NAME";
+        echo `blue "Creating DB API user"`
         kubectl run -it --rm percona-client --image=percona:8.0 --restart=Never -- mysql -hminimal-cluster-haproxy -uroot -p"$PERCONA_DB_ROOT_PASSWORD" -e "CREATE USER '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWORD'";
+        echo `blue "Giving permissions to API user on API database"`
         kubectl run -it --rm percona-client --image=percona:8.0 --restart=Never -- mysql -hminimal-cluster-haproxy -uroot -p"$PERCONA_DB_ROOT_PASSWORD" -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%'";
+        echo `blue "Applying privilege changes"`
         kubectl run -it --rm percona-client --image=percona:8.0 --restart=Never -- mysql -hminimal-cluster-haproxy -uroot -p"$PERCONA_DB_ROOT_PASSWORD" -e "FLUSH PRIVILEGES";
         break
       fi
       sleep 6
     done
+    for i in {0..10}; do
+      echo `yellow "Witing for storage connection, retry: $i"`
 
-
-
+      if ! kubectl -n rook-ceph run -it --rm --env="AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" --env="AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" nwtools --image=liveonit/nwtools --restart=Never -- bash -c "aws --endpoint-url=http://rook-ceph-rgw-distritv s3 ls" | grep "Could not connect to the endpoint URL"; then
+        echo `green "DB is alive"`
+        echo `blue "Creating storage user"`
+        kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- radosgw-admin user create --uid="distritv_user" --display-name="distritv"
+        AWS_ACCESS_KEY_ID=`kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- radosgw-admin user info --uid=distritv_user | jq -r '.keys[0].access_key' | sed 's/ *$//g'`
+        AWS_SECRET_ACCESS_KEY=`kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- radosgw-admin user info --uid=distritv_user | jq -r '.keys[0].secret_key' | sed 's/ *$//g'`
+        echo `blue "Creating API bucket"`
+        kubectl -n rook-ceph run -it --rm --env="AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" --env="AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" nwtools --image=liveonit/nwtools --restart=Never -- bash -c "aws --endpoint-url=http://rook-ceph-rgw-distritv s3api create-bucket --bucket distritv"
+        echo `blue "Creating ceph-credentials secret with storage credentials"`
+        kubectl create secret generic ceph-credentials --from-literal=awsAccessKeyId=$AWS_ACCESS_KEY_ID --from-literal=awsSecretAccessKey=$AWS_SECRET_ACCESS_KEY
+        break;
+      fi
+      sleep 6
+    done
     exit 0
     ;;
   destroy)

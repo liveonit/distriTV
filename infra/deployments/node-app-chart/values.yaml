@@ -2,11 +2,11 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+replicaCount: 4
 
 image:
-  repository: nginx
-  pullPolicy: IfNotPresent
+  repository: liveonit/distritv-api
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
@@ -22,6 +22,11 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
+
+
+updateStrategy: RollingUpdate
+
+restartPolicy: Always
 
 podAnnotations: {}
 
@@ -94,11 +99,26 @@ Env: |
   - name: GOOGLE_CLIENT_ID
     value: "1009712653750-1kd18n9tkeh51b5201idvblgv520ocop.apps.googleusercontent.com"
   - name: REDIS_HOST
-    value: "cache"
+    value: "redis-master"
   - name: REDIS_PORT
     value: "6379"
   - name: REDIS_PASSWORD
-    value: "eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81"
+    valueFrom:
+      secretKeyRef:
+        key: redis
+        name: redis-password
+  - name: STORAGE_TYPE
+    value: s3
+  - name: AWS_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        key: ceph-credentials
+        name: awsAccessKeyId
+  - name: AWS_SECRET_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        key: ceph-credentials
+        name: awsSecretAccessKey
 
 livenessProbe: |
   httpGet:
@@ -133,7 +153,7 @@ resources: {}
 
 autoscaling:
   enabled: true
-  minReplicas: 1
+  minReplicas: 4
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   targetMemoryUtilizationPercentage: 80

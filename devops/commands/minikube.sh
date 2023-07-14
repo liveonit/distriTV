@@ -39,7 +39,8 @@ fi
 case $1 in
   up)
     shift
-    cd $ROOT/../../ && minikube start --disk-size=40g --extra-disks=1 --driver kvm2
+    cd $ROOT/../../ && minikube start --memory=16384 --cpus=8 --disk-size=40g --extra-disks=1 --driver kvm2
+    cd $ROOT/../../ && minikube addons enable metrics-server
     exit 0
     ;;
   down)
@@ -49,10 +50,29 @@ case $1 in
     ;;
   setup)
     shift
+    source "$ROOT/../../.env"
     cd $ROOT/../../infra/deployments/rook-manifests && kubectl apply -f crds.yaml -f common.yaml -f operator.yaml
     cd $ROOT/../../infra/deployments/rook-manifests && kubectl apply -f cluster-test.yaml
     cd $ROOT/../../infra/deployments/rook-manifests && kubectl apply -f object-test.yaml
     cd $ROOT/../../infra/deployments/rook-manifests && kubectl create -f toolbox.yaml
+    cd $ROOT/../../infra/deployments/percona-manifests && kubectl apply -f bundle.yaml
+    cd $ROOT/../../infra/deployments/percona-manifests && kubectl apply -f cr-minimal.yaml
+    PERCONA_DB_ROOT_PASSWORD=`kubectl get secrets minimal-cluster-secrets -ojson | jq -r .data.root | base64 -d`
+    for i in {0..10}; do
+      echo `yellow "Witing for db connection, retry: $i"`
+      ((i++))
+      if kubectl run -it --rm percona-client --image=percona:8.0 --restart=Never -- mysqladmin ping -hminimal-cluster-haproxy -uroot -p"$PERCONA_DB_ROOT_PASSWORD" | grep "mysqld is alive"; then
+        kubectl run -it --rm percona-client --image=percona:8.0 --restart=Never -- mysql -hminimal-cluster-haproxy -uroot -p"$PERCONA_DB_ROOT_PASSWORD" -e "CREATE DATABASE $DB_NAME";
+        kubectl run -it --rm percona-client --image=percona:8.0 --restart=Never -- mysql -hminimal-cluster-haproxy -uroot -p"$PERCONA_DB_ROOT_PASSWORD" -e "CREATE USER '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWORD'";
+        kubectl run -it --rm percona-client --image=percona:8.0 --restart=Never -- mysql -hminimal-cluster-haproxy -uroot -p"$PERCONA_DB_ROOT_PASSWORD" -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%'";
+        kubectl run -it --rm percona-client --image=percona:8.0 --restart=Never -- mysql -hminimal-cluster-haproxy -uroot -p"$PERCONA_DB_ROOT_PASSWORD" -e "FLUSH PRIVILEGES";
+        break
+      fi
+      sleep 6
+    done
+
+
+
     exit 0
     ;;
   destroy)

@@ -77,7 +77,7 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
             <Grid item xs={12}>
               <FormInputText
                 fullWidth
-                label={t('TEXT')}
+                label={t('MESSAGE_TO_SHOW')}
                 name='text'
                 control={control}
                 variant='outlined'

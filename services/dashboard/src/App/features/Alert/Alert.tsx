@@ -78,7 +78,7 @@ export default function AlertList() {
       <Grid container alignItems='center'>
         <Grid item sm={8}>
           <h2>
-            <Trans>ALERT</Trans>
+            <Trans>ALERTS</Trans>
           </h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
@@ -108,7 +108,7 @@ export default function AlertList() {
           <TableHead>
             <TableRow>
             <TableCell>
-                <Trans>TEXT</Trans>
+                <Trans>MESSAGE_TO_SHOW</Trans>
               </TableCell>
               <TableCell>
                 <Trans>DURATION</Trans>

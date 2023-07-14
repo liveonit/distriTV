@@ -12,6 +12,8 @@
   "LABEL":        "Label",
   "USERS":        "Users",
   "SCHEDULE":     "Schedule",
+  "ALERTS":       "Alerts",
+  "ALERT":        "Alert",
 
   "CREATE":         "Create",
   "EDIT":           "Edit",
@@ -51,7 +53,8 @@
   "TV_CODE":    "TV Code",
   "CRONTAB":    "Periodicity",
   "NAME":       "Name",
-
+  "DURATION":   "Duration",
+  "MESSAGE_TO_SHOW":  "Message to show",
 
   "SUN": "Sunday",
   "MON": "Monday",

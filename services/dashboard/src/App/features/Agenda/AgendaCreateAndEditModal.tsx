@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -21,6 +21,7 @@ import { createAgenda, updateAgenda } from 'src/store/agenda/agenda.action'
 import { labelsSelector } from 'src/store/label/label.selector'
 import { Trans, useTranslation } from 'react-i18next'
 import { FormInputCron } from 'src/App/components/molecules/Forms/FormInputCron/FormInputCron'
+import { Checkbox, FormControlLabel } from '@material-ui/core'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -35,12 +36,19 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
     startDate: new Date(),
     endDate: new Date(),
     destinationType: 'TELEVISION',
-    ...removeEmpty(agenda),
+    ...removeEmpty(agenda)
+  }  
+
+  
+  const checkPeriodicty = () => {
+    if(agenda) {
+      return !(agenda.startDate === agenda.endDate && agenda.cron === "0 * * * * ?")
+    } else {
+      return true
+    }
   }
 
-  if (!agenda) {
-    agendaInitialState.endDate.setDate(agendaInitialState.startDate.getDate() + 1)
-  }
+  const [periodicity, setPeriodicity] = useState<any>(checkPeriodicty())
 
   const contents = useSelector(contentSelector)
   const televisions = useSelector(televisionsSelector)
@@ -49,8 +57,15 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
     resolver: zodResolver(agendaSchema),
     defaultValues: agendaInitialState,
   })
-  const { reset, handleSubmit, watch, control } = methods
+  const { reset, handleSubmit, watch, control, setValue, getValues } = methods
   const associationTypes = ['LABEL', 'TELEVISION']
+
+  useEffect(() => {
+    if(!periodicity) {
+      setValue('endDate', new Date(getValues('startDate')))
+      setValue('cron', '0 * * * * ?')
+    }    
+  }, [periodicity, watch('startDate')])
 
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -121,12 +136,19 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
                 />
               </Grid>
             )}
-          </Grid>{' '}
+          </Grid>
           <br />
           <FormInputDate name='startDate' control={control} label={t('START_DATE')} />
-          <FormInputDate name='endDate' control={control} label={t('END_DATE')} />
-          {/* <FormInputText name='cron' control={control} fullWidth label={t('CRONTAB')} variant='outlined' /> */}
-          <FormInputCron name='cron' control={control} label={t('CRONTAB')}></FormInputCron>
+          <FormControlLabel 
+            label={t("CRONTAB")} 
+            control={<Checkbox onChange={() => {setPeriodicity(!periodicity)}} checked={periodicity}/>}
+          />
+          {periodicity && (
+            <>
+              <FormInputCron name='cron' control={control} label={t('CRONTAB')}></FormInputCron>
+              <FormInputDate name='endDate' control={control} label={t('END_DATE')} />
+            </>            
+          )}
         </DialogContent>
         <DialogActions>
           <Button

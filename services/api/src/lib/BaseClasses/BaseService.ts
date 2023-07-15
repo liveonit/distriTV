@@ -2,7 +2,7 @@ import { db, Db } from '@src/db';
 import { BaseCustomEntity } from '@lib/BaseClasses/BaseCustomEntity';
 import { NotFound } from '@lib/errors';
 import _ from 'lodash';
-import { FindManyOptions, FindOneOptions, FindOptionsWhere, ObjectID, ObjectType } from 'typeorm';
+import { FindManyOptions, FindOneOptions, FindOptionsWhere, ObjectId, ObjectType } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export class BaseService<T extends BaseCustomEntity> {
@@ -48,7 +48,7 @@ export class BaseService<T extends BaseCustomEntity> {
     });
   };
 
-  public readonly delete = async <I extends string | number | ObjectID>(id: I) => {
+  public readonly delete = async <I extends string | number | ObjectId>(id: I) => {
     const result = await this.getEntity().delete(id);
     if (result.affected === 0) throw new NotFound();
     else return id;

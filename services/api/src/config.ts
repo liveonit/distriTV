@@ -28,6 +28,12 @@ export const configSchema = z.object({
   GOOGLE_CLIENT_ID: z.string(),
   PATH_TO_UPLOAD_FILES: z.string(),
   REDIS_ENABLED: z.string().transform((v) => v === 'true'),
+  STORAGE_TYPE: z.string(),
+  STORAGE_ENDPOINT: z.string().optional(),
+  BUCKET_NAME: z.string().optional(),
+  AWS_ACCESS_KEY_ID: z.string().optional(),
+  AWS_SECRET_ACCESS_KEY: z.string().optional(),
+  AWS_REGION: z.string().optional(),
 });
 export type ConfigType = z.infer<typeof configSchema>;
 

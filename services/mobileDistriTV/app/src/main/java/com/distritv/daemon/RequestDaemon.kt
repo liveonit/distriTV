@@ -18,10 +18,12 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import com.distritv.BuildConfig
+import com.distritv.DistriTVApp
 import com.distritv.R
 import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
 import com.distritv.data.model.Alert
 import com.distritv.data.model.Content
+import com.distritv.data.model.DeviceInfo
 import com.distritv.data.repositories.ContentRepository
 import com.distritv.data.repositories.TelevisionRepository
 import com.distritv.data.service.ContentService
@@ -109,33 +111,15 @@ class RequestDaemon: Service() {
                     return@launch
                 }
 
-                if (deviceInfo.useExternalStorage && (!deviceInfo.isExternalStorageConnected
-                            || ((Build.VERSION.SDK_INT < SDK_VERSION_FOR_MEDIA_STORE)
-                            && ((deviceInfo.externalStoragePermissionGranted != null) && !deviceInfo.externalStoragePermissionGranted)))
-                ) {
-
-                    Log.e(TAG, "External storage may not be found or permission not granted.")
-                    Log.e(TAG, "External storage is connected?: ${deviceInfo.isExternalStorageConnected}")
-                    Log.e(TAG, "External storage permission granted?: ${deviceInfo.externalStoragePermissionGranted}")
-
-                    errorMessageHandler.post {
-                        Toast.makeText(
-                            applicationContext,
-                            getString(R.string.msg_error_external_storage),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-
-                    return@launch
-                }
-
                 val scheduleList = scheduleService.getAllSchedules()
 
                 // Fetch schedules with content from the server
                 val responseTelevision =
                     televisionRepository.fetchTelevision(deviceInfo) ?: return@launch
 
-                launchAlertNow(responseTelevision.alert)
+                if (checkExternalStorage(deviceInfo)) return@launch
+
+                checkAlert(deviceInfo, responseTelevision.alert)
 
                 // Check if any schedule was removed on the server then delete on TV
                 scheduleList.forEach { schedule ->
@@ -182,6 +166,68 @@ class RequestDaemon: Service() {
                 Log.e(TAG, "$e")
             }
         }
+    }
+
+    private fun checkAlert(deviceInfo: DeviceInfo, alert: Alert?) {
+        if (alert == null) {
+            // Clear alert duration left
+            if (deviceInfo.alertDurationLeft != null) {
+                setNullDurationLeft()
+                // Cancel current alert
+                launchAlert(getAlertBlank())
+            }
+            return
+        }
+        if ((deviceInfo.alertDurationLeft == null)
+            || (getCurrentlyPlayingAlertId() != null && getCurrentlyPlayingAlertId() != alert.id)
+            || (!isAlertCurrentlyPlaying() && getCurrentlyPlayingAlertId() != null)) {
+            launchAlert(alert)
+        } else if (deviceInfo.alertDurationLeft == 0L) {
+            // Clear alert duration left
+            setNullDurationLeft()
+        }
+    }
+
+    private fun launchAlert(alert: Alert) {
+        val intent = createIntentAlert(applicationContext, alert)
+        sendBroadcast(intent)
+    }
+
+    private fun getCurrentlyPlayingAlertId(): Long? {
+        return (applicationContext.applicationContext as DistriTVApp?)?.getCurrentlyPlayingAlertId()
+    }
+
+    private fun isAlertCurrentlyPlaying(): Boolean {
+        return (applicationContext.applicationContext as DistriTVApp?)?.isAlertCurrentlyPlaying() ?: false
+    }
+
+    private fun setNullDurationLeft() {
+        (applicationContext.applicationContext as DistriTVApp?)?.setAlertDurationLeft(null)
+    }
+
+    private fun checkExternalStorage(deviceInfo: DeviceInfo): Boolean {
+        if (deviceInfo.useExternalStorage && (!deviceInfo.isExternalStorageConnected
+                    || ((Build.VERSION.SDK_INT < SDK_VERSION_FOR_MEDIA_STORE)
+                    && ((deviceInfo.externalStoragePermissionGranted != null) && !deviceInfo.externalStoragePermissionGranted)))
+        ) {
+            Log.e(TAG, "External storage may not be found or permission not granted.")
+            Log.e(TAG, "External storage is connected?: ${deviceInfo.isExternalStorageConnected}")
+            Log.e(
+                TAG,
+                "External storage permission granted?: ${deviceInfo.externalStoragePermissionGranted}"
+            )
+
+            errorMessageHandler.post {
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.msg_error_external_storage),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            return true
+        }
+        return false
     }
 
     private suspend fun contentProcessing(content: Content) {
@@ -241,14 +287,6 @@ class RequestDaemon: Service() {
         if (resultId != -1L) {
             Log.i(TAG, "Content with id ${content.id} was $msgResult (Id in BD: $resultId)")
         }
-    }
-
-    private fun launchAlertNow(alert: Alert?) {
-        if (alert == null) {
-            return
-        }
-        val intent = createIntentAlert(applicationContext, alert)
-        sendBroadcast(intent)
     }
 
     companion object {

@@ -32,9 +32,12 @@ class AlertPlayerActivity : AppCompatActivity() {
         // So that this activity is not removed by the screen saver
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
+        println("playerAct 35")
+
         myApp = this.applicationContext as DistriTVApp?
 
         alert = intent.extras?.getParcelable(ALERT_PARAM)
+        println("playerAct 40")
 
         addFragment()
 
@@ -43,6 +46,8 @@ class AlertPlayerActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        println("alertActi onResume")
+        myApp?.setIfAnyAlertIsCurrentlyPlaying(true)
         // Set the current activity
         myApp?.setCurrentActivity(this)
         // Set the identifier of the currently playing content:
@@ -51,21 +56,33 @@ class AlertPlayerActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        clearReferences()
+        println("alertActi onStop")
+        if (myApp?.skip() == false) {
+            clearReferences()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        clearReferences()
+        println("alertActi onPause")
+        if (myApp?.skip() == false) {
+            clearReferences()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        clearReferences()
-        // Notice that the content playback has finished:
-        myApp?.setIfAnyAlertIsCurrentlyPlaying(false)
-        // Clear the identifier of the content that was playing:
-        myApp?.setCurrentlyPlayingAlertId(null)
+        println("alertActi onDestroy")
+        if (myApp?.skip() == false) {
+            println("alertActi sfdfd")
+            // Notice that the content playback has finished:
+            myApp?.setIfAnyAlertIsCurrentlyPlaying(false)
+            // Clear the identifier of the content that was playing:
+            myApp?.setCurrentlyPlayingAlertId(null)
+            clearReferences()
+            myApp?.setSkip(null)
+        }
+
     }
 
     private fun clearReferences() {
@@ -74,23 +91,12 @@ class AlertPlayerActivity : AppCompatActivity() {
     }
 
     private fun addFragment() {
-        if (alert?.isImage() == true) {
-            supportFragmentManager.addFragment(
-                R.id.player_fragment_container,
-                AlertImageFragment.newInstance(alert!!),
-                false,
-                AlertImageFragment.TAG
-            )
-        } else if (alert?.isText() == true) {
-            supportFragmentManager.addFragment(
-                R.id.player_fragment_container,
-                AlertTextFragment.newInstance(alert!!),
-                false,
-                AlertTextFragment.TAG
-            )
-        } else {
-            Log.e(TAG, "Unsupported alert type: ${alert?.type ?: ""}")
-        }
+        supportFragmentManager.addFragment(
+            R.id.player_fragment_container,
+            AlertTextFragment.newInstance(alert!!),
+            false,
+            AlertTextFragment.TAG
+        )
     }
 
     companion object {

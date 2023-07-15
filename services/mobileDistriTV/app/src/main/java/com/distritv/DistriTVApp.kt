@@ -34,6 +34,8 @@ class DistriTVApp: Application() {
     private var currentlyPlayingAlertId: Long? = null
     private var alertDurationLeft: Long? = null
 
+    private var skip: Boolean? = null
+
     fun getCurrentActivity(): Activity? {
         return currentActivity
     }
@@ -80,6 +82,14 @@ class DistriTVApp: Application() {
 
     fun setAlertDurationLeft(alertDurationLeft: Long?) {
         this.alertDurationLeft = alertDurationLeft
+    }
+
+    fun setSkip(skip: Boolean?) {
+        this.skip = skip
+    }
+
+    fun skip(): Boolean {
+        return this.skip ?: false
     }
 
 }

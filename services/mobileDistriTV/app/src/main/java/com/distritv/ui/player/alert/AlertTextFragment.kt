@@ -36,7 +36,7 @@ class AlertTextFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentTextBinding.inflate(layoutInflater, container, false)
-
+        println("fragm onCreateView")
         arguments?.let {
             alert = it.getParcelable(ALERT_PARAM)
             if (alert == null) {
@@ -51,22 +51,28 @@ class AlertTextFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fullscreenManager?.enterFullscreen()
+        println("fragm viewcreated")
         showText()
     }
 
     override fun onResume() {
         super.onResume()
-        backHomeOnResumeAlert()
+        println("fragm onResume")
+       // backHomeOnResumeAlert()
     }
 
     override fun onPause() {
         super.onPause()
+        println("textFrag onPause")
+        this.cancelPlay()
         timer.cancel()
+      //  activity?.finish()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        timer.cancel()
+        println("textFrag onDestroy")
+       // timer.cancel()
     }
 
     private fun showText() {

@@ -8,8 +8,6 @@ object AlertNetworkMapper: EntityMapper<AlertResponse, Alert> {
     override fun mapFromEntity(entity: AlertResponse): Alert {
         return Alert(
             id = entity.id ?: -1L,
-            url = entity.url ?: "",
-            type = entity.type ?: "",
             text = entity.text ?: "",
             durationLeft = entity.durationLeft ?: 0L
         )

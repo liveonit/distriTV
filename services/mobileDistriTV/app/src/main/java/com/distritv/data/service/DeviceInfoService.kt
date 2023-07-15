@@ -224,10 +224,6 @@ class DeviceInfoService(
     }
 
     private fun getAlertDurationLeft(): Long? {
-        val durationLeft = myApp?.getAlertDurationLeft()
-        if(durationLeft != null && durationLeft == 0L) {
-            myApp?.setAlertDurationLeft(null)
-        }
         return myApp?.getAlertDurationLeft()
     }
 

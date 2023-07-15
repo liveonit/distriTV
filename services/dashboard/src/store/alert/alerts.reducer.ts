@@ -1,5 +1,5 @@
 import { AlertActionTypes, AlertsState } from './alert.state'
-import { insertNewAddedEntity, refreshUpdatedEntity, removeDeletedEntity } from '../helpers'
+import { refreshUpdatedEntity, removeDeletedEntity } from '../helpers'
 
 const initialState: AlertsState = {
   items: [],
@@ -36,9 +36,10 @@ const reducer = (state = initialState, { type, payload }: any) => {
         isLoading: false
       }
     case AlertActionTypes.CREATE_SUCCESS:
+      let items = state.items.concat(payload)
       return {
         ...state,
-        items: insertNewAddedEntity(state.items, payload),
+        items,
         isLoading: false
       }
     case AlertActionTypes.EDIT_REQUEST:

@@ -9,7 +9,6 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
-import EditIcon from '@material-ui/icons/Edit'
 import { useDispatch, useSelector } from 'react-redux'
 import { alertsIsLoadingSelector, alertsSelector } from 'src/store/alert/alert.selector'
 import { CircularProgress } from 'node_modules/@mui/material'
@@ -19,7 +18,6 @@ import { AlertT } from 'src/store/alert/alert.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
-import dayjs from 'dayjs'
 
 import AlertCreateAndEditModal from './AlertsCreateAndEditModal'
 import AlertDeleteModal from './AlertsDeleteModal'
@@ -70,7 +68,7 @@ export default function AlertList() {
   function handleCloseDeleteAlertModal() {
     setAlertToDelete(null)
   }
-  console.log('mi hermano')
+  
   return isLoading ? (
     <CircularProgress />
   ) : (
@@ -120,9 +118,6 @@ export default function AlertList() {
                 <Trans>LABEL</Trans>
               </TableCell>
               <TableCell>
-                <Trans>START_DATE</Trans>
-              </TableCell>
-              <TableCell>
                 <Trans>ACTION</Trans>
               </TableCell>
             </TableRow>
@@ -137,24 +132,12 @@ export default function AlertList() {
                   {alert.duration}
                 </TableCell>
                 <TableCell component='th' scope='row'>
-                  {alert.televisionId || '-'}
+                  {alert.television?.name || '-'}
                 </TableCell>
                 <TableCell component='th' scope='row'>
-                  {alert.labelId || '-'}
+                  {alert.label?.name || '-'}
                 </TableCell>
-                <TableCell>{dayjs(alert.startDate.toLocaleString()).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
                 <TableCell>
-                  <IconButton
-                    onClick={() => {
-                      setModalTitle('EDIT')
-                      setAlertToEdit(alert)
-                    }}
-                    color='primary'
-                    aria-label='edit alert'
-                    component='span'
-                  >
-                    <EditIcon />
-                  </IconButton>
                   <IconButton
                     onClick={() => {
                       setAlertToDelete(alert)

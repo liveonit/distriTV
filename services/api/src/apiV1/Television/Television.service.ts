@@ -1,7 +1,5 @@
 import { Television } from '@src/entities/Television';
 import { BaseService } from '@lib/BaseClasses/BaseService';
-import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
-import { length } from 'class-validator';
 import { Alert } from '@src/entities/Alert';
 import { Schedule } from '@src/entities/Schedule';
 
@@ -16,8 +14,8 @@ export class TelevisionSvc extends BaseService<Television> {
                     Alert.delete({id: result.alert.id})
                     result.alert = null
                 } else {
-                    // result.alert = result.alerts[0]
-                    result.alert.durationLeft = durationLeft || result.alert.duration
+                    result.alert.durationLeft = durationLeft || result.alert.durationLeft || result.alert.duration
+                    Alert.update({id: result.alert.id}, {durationLeft })
                 }                               
             }
 

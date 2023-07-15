@@ -4,7 +4,8 @@ import { Label } from '@src/entities/Label';
 
 export class AlertSvc extends BaseService<Alert> {
     public createAlerts = async (body: any) => {
-        if (body.destinationType === 'TELEVISION') {            
+        body.durationLeft = body.duration
+        if (body.destinationType === 'TELEVISION') {                     
             return this.create(Alert.create(body), {relations: ['television']}).then(newAlert => [newAlert])
         } else {
             return Label.findOne({where: {'id': body.labelId}, relations: ['tvs']}).then(label => {

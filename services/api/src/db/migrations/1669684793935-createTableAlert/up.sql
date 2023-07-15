@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS `alert` (
   `destinationType` VARCHAR(10),
   `text` TEXT NULL,
   `duration` INT NULL,
+  `durationLeft` INT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_alert_to_label1_idx` (`labelId` ASC),
   CONSTRAINT `fk_alert_to_label1`

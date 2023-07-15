@@ -28,6 +28,9 @@ export class Alert extends BaseEntity {
   @Column()
   duration!: number;
 
+  @Column()
+  durationLeft?: number;
+
   @ManyToOne(() => Label, (label) => label.alerts)
   @JoinColumn({ name: 'labelId' })
   label!: Label;

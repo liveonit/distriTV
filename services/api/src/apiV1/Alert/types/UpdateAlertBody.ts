@@ -9,6 +9,7 @@ export const updateAlertBody = z.object({
   destinationType: z.string().optional(),
   labelId: z.number().optional(),
   text: z.string().optional(),
+  durationLeft: z.number().optional(),
 });
 
 export type UpdateAlertBodyType = z.infer<typeof updateAlertBody>;

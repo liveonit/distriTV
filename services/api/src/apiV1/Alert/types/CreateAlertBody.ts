@@ -8,6 +8,7 @@ export const createAlertBody = z.object({
   duration: z.number(),
   labelId: z.number().optional(),
   text: z.string(),
+  durationLeft: z.number().optional(),
 });
 
 export type CreateTelevisionBodyType = z.infer<typeof createAlertBody>;

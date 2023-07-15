@@ -8,11 +8,12 @@ export const alertSchema = z
   labelId: z.number().optional(),
   text: z.string(),
   television: z.object({      
-    id: z.number(),
+    id: z.number().optional(),
     name: z.string().optional(),
   }).optional(),
-  label: z.object({      
-    name: z.string(),
+  label: z.object({
+    id: z.number().optional(),      
+    name: z.string().optional(),
   }).optional(),
 })
 .superRefine((value, ctx) => {

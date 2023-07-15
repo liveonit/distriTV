@@ -135,7 +135,7 @@ export default function AlertList() {
                   {alert.television?.name || '-'}
                 </TableCell>
                 <TableCell component='th' scope='row'>
-                  {alert.labelId || '-'}
+                  {alert.label?.name || '-'}
                 </TableCell>
                 <TableCell>
                   <IconButton

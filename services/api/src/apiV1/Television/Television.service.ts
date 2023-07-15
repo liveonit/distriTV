@@ -21,7 +21,7 @@ export class TelevisionSvc extends BaseService<Television> {
 
             // Handle schedules associated to label            
             return Promise.all(televisions[0].labels?.map(label => {
-                return Schedule.find({where: {labelId: label.id}})
+                return Schedule.find({relations: ['content'], where: {labelId: label.id}})
             })!).then(schedules => {
                 result.schedules = result.schedules.concat(schedules.flat())
                 return result

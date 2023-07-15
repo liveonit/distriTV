@@ -15,7 +15,7 @@ class ContentController extends BaseController<Content, ContentSvc> {
     const { files, body } = req;
     let result: any = {};
     if (files && Object.keys(files).length === 1) {
-      if (config.STORAGE_TYPE === 'local') result = await this.service.uploadFiles(files);
+      if (config.STORAGE_TYPE === 'local') result = await this.service.uploadFile(files);
       if (config.STORAGE_TYPE === 's3') result = await this.service.s3UploadFile(files, body.type);
       return res.json(result);
     } else throw new BadRequest('One file must be provided');

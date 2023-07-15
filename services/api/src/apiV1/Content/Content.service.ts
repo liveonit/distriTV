@@ -23,31 +23,18 @@ export class ContentSvc extends BaseService<Content> {
     return typeof file === 'object' && (file as UploadedFile).name !== undefined;
   }
 
-  public async uploadFiles(files: fileUpload.FileArray) {
+  public async uploadFile(files: fileUpload.FileArray) {
     // Uploaded path
-    const uploadedFiles = this.isSingleFile(files.file) ? [files.file] : files.file;
-    const result = await Promise.allSettled(
-      uploadedFiles.map(async (uploadedFile) => {
-        const uploadPath = path.resolve(config.PATH_TO_UPLOAD_FILES, uploadedFile.name);
-        await uploadedFile.mv(uploadPath);
-        return uploadPath;
-      }),
-    );
-
-    return result.map((res) => {
-      if (res.status === 'fulfilled')
-        return {
-          status: 'uploaded',
-          filePath: `${config.API_PREFIX}/v1/content/download${res.value.replace(
-            config.PATH_TO_UPLOAD_FILES,
-            '',
-          )}`,
-        };
-      return {
-        status: 'failed',
-        reason: res.reason,
-      };
-    });
+    const uploadedFile = this.isSingleFile(files.file) ? files.file : files.file[0];
+    const uploadPath = path.resolve(config.PATH_TO_UPLOAD_FILES, uploadedFile.name);
+    await uploadedFile.mv(uploadPath);
+    return {
+      status: 'uploaded',
+      filePath: `${config.API_PREFIX}/v1/content/download${uploadPath.replace(
+        config.PATH_TO_UPLOAD_FILES,
+        '',
+      )}`,
+    };
   }
 
   public async s3UploadFile(files: fileUpload.FileArray, contentType: string) {

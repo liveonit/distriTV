@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS `television` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL,
   `institutionId` INT,
+  `alertId` INT NULL,
   `ip` VARCHAR(45) NULL,
   `mac` VARCHAR(45) NULL,
   `tvCode` VARCHAR(60) NOT NULL,
@@ -11,4 +12,9 @@ CREATE TABLE IF NOT EXISTS `television` (
     FOREIGN KEY (`institutionId`)
     REFERENCES `institution` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_television_alert`
+    FOREIGN KEY (`alertId`)
+    REFERENCES `alert` (`id`)
+    ON DELETE SET NULL
+    ON UPDATE SET NULL);

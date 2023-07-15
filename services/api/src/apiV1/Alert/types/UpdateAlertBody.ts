@@ -2,7 +2,9 @@ import { z } from 'zod';
 
 export const updateAlertBody = z.object({
   id: z.number().optional(),
-  televisionId: z.number().optional(),
+  television: z.object({
+    id: z.number()
+  }),
   duration: z.number().optional(),
   destinationType: z.string().optional(),
   labelId: z.number().optional(),

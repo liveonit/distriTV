@@ -53,7 +53,7 @@ const createAlert: Epic = (action$) =>
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ method: 'POST', path: '/alert', requireAuthType: session?.type, body: payload }).pipe(
+      return apiSvc.request({ method: 'POST', path: '/alert?relations=television,label', requireAuthType: session?.type, body: payload }).pipe(
         mergeMap(({ response }) => {
           return of({
             type: AlertActionTypes.CREATE_SUCCESS,
@@ -78,7 +78,7 @@ const updateAlert: Epic = (action$) =>
     concatMap((act) => refreshToken$.pipe(map(() => act))),
     mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ method: 'PUT', path: `/alert/${payload.id}`, requireAuthType: session?.type, body: payload }).pipe(
+      return apiSvc.request({ method: 'PUT', path: `/alert/${payload.id}?relations=television`, requireAuthType: session?.type, body: payload }).pipe(
         mergeMap(({ response }) => {
           return of({
             type: AlertActionTypes.EDIT_SUCCESS,

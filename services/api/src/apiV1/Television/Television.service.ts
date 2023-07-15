@@ -7,22 +7,19 @@ import { Schedule } from '@src/entities/Schedule';
 
 export class TelevisionSvc extends BaseService<Television> {
     public getByTVcode = async (tvCode: string, durationLeft: number) => {
-        return Television.find({relations: ['schedules', 'schedules.content', 'alerts', 'labels'], where: {tvCode}}).then(televisions => {
+        return Television.find({relations: ['schedules', 'schedules.content', 'alert', 'labels'], where: {tvCode}}).then(televisions => {
             let result = JSON.parse(JSON.stringify(televisions[0]))
             
             // Handle alerts
-            if (result.alerts.length > 0) {                
+            if (result.alert !== null) {                
                 if(durationLeft === 0){
-                    Alert.delete({id: result.alerts[0].id})
+                    Alert.delete({id: result.alert.id})
                     result.alert = null
                 } else {
-                    result.alert = result.alerts[0]
+                    // result.alert = result.alerts[0]
                     result.alert.durationLeft = durationLeft || result.alert.duration
                 }                               
-            } else {
-                result.alert = null
             }
-            delete result.alerts
 
             // Handle schedules associated to label            
             return Promise.all(televisions[0].labels?.map(label => {

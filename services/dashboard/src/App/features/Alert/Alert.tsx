@@ -9,7 +9,6 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
-import EditIcon from '@material-ui/icons/Edit'
 import { useDispatch, useSelector } from 'react-redux'
 import { alertsIsLoadingSelector, alertsSelector } from 'src/store/alert/alert.selector'
 import { CircularProgress } from 'node_modules/@mui/material'
@@ -69,7 +68,7 @@ export default function AlertList() {
   function handleCloseDeleteAlertModal() {
     setAlertToDelete(null)
   }
-  console.log('mi hermano')
+  
   return isLoading ? (
     <CircularProgress />
   ) : (
@@ -133,23 +132,12 @@ export default function AlertList() {
                   {alert.duration}
                 </TableCell>
                 <TableCell component='th' scope='row'>
-                  {alert.televisionId || '-'}
+                  {alert.television?.name || '-'}
                 </TableCell>
                 <TableCell component='th' scope='row'>
                   {alert.labelId || '-'}
                 </TableCell>
                 <TableCell>
-                  <IconButton
-                    onClick={() => {
-                      setModalTitle('EDIT')
-                      setAlertToEdit(alert)
-                    }}
-                    color='primary'
-                    aria-label='edit alert'
-                    component='span'
-                  >
-                    <EditIcon />
-                  </IconButton>
                   <IconButton
                     onClick={() => {
                       setAlertToDelete(alert)

@@ -59,21 +59,28 @@ class ContentPlayerActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        clearReferences()
+        if (myApp?.skipClearing() == false) {
+            clearReferences()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        clearReferences()
+        if (myApp?.skipClearing() == false) {
+            clearReferences()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        clearReferences()
-        // Notice that the content playback has finished:
-        myApp?.setIfAnyContentIsCurrentlyPlaying(false)
-        // Clear the identifier of the content that was playing:
-        myApp?.setCurrentlyPlayingContentId(null)
+        if (myApp?.skipClearing() == false) {
+            // Notice that the content playback has finished:
+            myApp?.setIfAnyContentIsCurrentlyPlaying(false)
+            // Clear the identifier of the content that was playing:
+            myApp?.setCurrentlyPlayingContentId(null)
+            clearReferences()
+            myApp?.setSkipClearing(null)
+        }
     }
 
     private fun clearReferences() {

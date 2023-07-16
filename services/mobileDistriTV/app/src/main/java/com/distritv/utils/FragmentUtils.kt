@@ -100,18 +100,6 @@ fun Fragment.backHomeOnResume() {
     }
 }
 
-fun Fragment.backHomeOnResumeAlert() {
-    // If the view is created: back home after end of the duration
-    val isPlaying =
-        (context?.applicationContext as DistriTVApp?)?.isAlertCurrentlyPlaying() ?: false
-
-    if (!isPlaying) {
-        val intent = Intent(context, HomeActivity::class.java)
-        context?.startActivity(intent)
-        activity?.finish()
-    }
-}
-
 fun Fragment.setAlertDurationLeft(durationLeft: Long) {
     val application: DistriTVApp? =
         (context?.applicationContext as DistriTVApp?)
@@ -120,7 +108,6 @@ fun Fragment.setAlertDurationLeft(durationLeft: Long) {
 }
 
 fun Fragment.cancelPlay() {
-    // Notice that the content has finished playing:
-    println("djdjdjjd")
+    // Notice that the alert has finished playing:
     (context?.applicationContext as DistriTVApp?)?.setIfAnyAlertIsCurrentlyPlaying(false)
 }

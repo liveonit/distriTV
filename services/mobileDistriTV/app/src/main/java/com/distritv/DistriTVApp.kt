@@ -34,7 +34,7 @@ class DistriTVApp: Application() {
     private var currentlyPlayingAlertId: Long? = null
     private var alertDurationLeft: Long? = null
 
-    private var skip: Boolean? = null
+    private var skipClearing: Boolean? = null
 
     fun getCurrentActivity(): Activity? {
         return currentActivity
@@ -84,12 +84,17 @@ class DistriTVApp: Application() {
         this.alertDurationLeft = alertDurationLeft
     }
 
-    fun setSkip(skip: Boolean?) {
-        this.skip = skip
+    fun setSkipClearing(skip: Boolean?) {
+        this.skipClearing = skip
     }
 
-    fun skip(): Boolean {
-        return this.skip ?: false
+    fun skipClearing(): Boolean {
+        return this.skipClearing ?: false
+    }
+
+    fun alertWasPausedOrDestroyed(): Boolean {
+        return !this.isAlertCurrentlyPlaying && this.currentlyPlayingAlertId != null
+                && this.alertDurationLeft != null && this.alertDurationLeft!! > 0L
     }
 
 }

@@ -2,14 +2,14 @@ name: linter_backend
 
 on:
   pull_request:
-    branches: ['main']
+    branches: ['main', 'development']
 
 jobs:
   linter_backend:
     name: linter backend
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout
       uses: actions/checkout@v1

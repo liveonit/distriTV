@@ -26,7 +26,7 @@ export default function LabelCreateAndEditModal({ handleCloseEditModal, label, t
     name: '', 
     description: '', 
     ...removeEmpty(label), 
-    tvs: label.tvs || []
+    tvs: label?.tvs || []
   }
 
   const methods = useForm<LabelT>({

@@ -30,8 +30,10 @@ export class BaseController<T extends BaseCustomEntity, S extends BaseService<T>
 
   public create = handleErrorAsync(async (req: Request, res: Response) => {
     const body = this.createSchema?.parse(req.body) || req.body;
+    console.log(body)
     const { relations } = this.querySchema?.parse(req.query) || {};
     let result = await this.service.create(body as T, { relations });
+    console.log(result)
     if (this.responseSchema) result = this.responseSchema.parse(result) as T;
     return res.status(200).json(result);
   });

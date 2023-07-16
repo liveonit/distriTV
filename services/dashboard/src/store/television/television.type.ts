@@ -23,6 +23,9 @@ export const televisionSchema = z.object({
     .optional(),
   tvCode: z.string().nonempty(),
   labels: z.array(z.any()).optional(),
+  alert: z.object({
+    id: z.number().optional()    
+  }).optional(),
   institution: z
     .object({
       id: z.number(),

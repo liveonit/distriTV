@@ -128,7 +128,7 @@ class RequestDaemon: Service() {
 
                 for (schedule in responseTelevision.schedules) {
 
-                    if (!schedule.startDownloadRestriction() || !schedule.validEndDate()) {
+                    if (!scheduleService.meetAnticipationDays(schedule.startDate) || !schedule.validEndDate()) {
                         continue
                     }
 

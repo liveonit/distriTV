@@ -130,13 +130,38 @@
 
                 <View
                     android:id="@+id/divider"
-                    android:layout_width="250dp"
+                    android:layout_width="300dp"
                     android:layout_height="1dp"
                     android:layout_marginVertical="10dp"
                     android:layout_weight="1"
                     android:layout_gravity="center_horizontal"
                     android:background="?android:attr/listDivider"
                     android:backgroundTint="@color/black" />
+
+                <LinearLayout
+                    android:id="@+id/anticipation_days_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/anticipation_days_key"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/info_card_anticipation_days"
+                        android:textColor="@color/black" />
+
+                    <Spinner
+                        android:id="@+id/anticipationDaysSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/black"
+                        android:checkMark="?android:attr/listChoiceIndicatorSingle"
+                        android:ellipsize="marquee"
+                        android:prompt="@string/info_card_anticipation_spinner_title"
+                        android:spinnerMode="dialog" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/language_container"

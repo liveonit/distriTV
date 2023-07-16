@@ -4,18 +4,19 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
 
+/*
+ * Shared preferences keys
+ */
 const val TV_CODE = "tvCode"
 const val LOCALE = "locale"
 const val USE_EXTERNAL_STORAGE = "use_external_storage"
-
-const val ALERT_PARAM = "alertParam"
-const val CONTENT_PARAM = "contentParam"
-const val ALERT_BUNDLE_PARAM = "alertBundleParam"
-const val CONTENT_BUNDLE_PARAM = "contentBundleParam"
-
-const val IS_ALARM_PARAM = "isAnAlarm"
+const val ANTICIPATION_DAYS = "anticipation_days"
 
 const val HTTP_NOT_FOUND = 404
+
+const val ANTICIPATION_DAYS_DEFAULT = 7
+const val ANTICIPATION_DAYS_SEPARATOR = ";"
+const val ANTICIPATION_DAYS_WHITESPACE= " "
 
 @Suppress("DEPRECATION") // Deprecated for third party Services.
 fun isServiceRunning(context: Context, serviceClass: Class<*>): Boolean {

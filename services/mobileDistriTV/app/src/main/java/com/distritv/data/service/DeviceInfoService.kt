@@ -63,7 +63,8 @@ class DeviceInfoService(
             displayOverOtherAppsPermissionGranted(),
             isAnyAlertPlaying(),
             getCurrentlyPlayingAlertId(),
-            getAlertDurationLeft()
+            getAlertDurationLeft(),
+            getAnticipationDays()
         )
     }
 
@@ -77,6 +78,10 @@ class DeviceInfoService(
 
     private fun getTvCode(): String {
         return sharedPreferences.getTvCode() ?: ""
+    }
+
+    private fun getAnticipationDays(): Int {
+        return sharedPreferences.getAnticipationDays()
     }
 
     private fun useExternalStorage(): Boolean {

@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,9 @@ import com.distritv.utils.HomeFragmentTextIndex.DIALOG_TITLE_HOME_TO_INTERNAL
 import com.distritv.utils.HomeFragmentTextIndex.LANGUAGE
 import com.distritv.utils.HomeFragmentTextIndex.SWITCH_EXTERNAL_STORAGE_HOME
 import com.distritv.utils.HomeFragmentTextIndex.TV_CODE
+import com.distritv.utils.HomeFragmentTextIndex.ANTICIPATION_DAYS
+import com.distritv.utils.HomeFragmentTextIndex.ANTICIPATION_DAYS_SELECT_TITLE
+import com.distritv.utils.HomeFragmentTextIndex.LANGUAGE_SELECT_TITLE
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -49,6 +53,11 @@ class HomeFragment: Fragment() {
     private val handler = Handler(Looper.getMainLooper())
 
     private lateinit var languages: Array<String>
+    private lateinit var anticipationDaysOptions: Array<String>
+    private lateinit var languageSpinnerAdapter: ArrayAdapter<String>
+    private lateinit var anticipationDaysSpinnerAdapter: ArrayAdapter<String>
+
+    private var anticipationDaysConfigEnabled = false
 
     private lateinit var externalStorageDialog: AlertDialog
     private var dialogTitle = ""
@@ -80,7 +89,8 @@ class HomeFragment: Fragment() {
         loadImage()
         deviceInfoObserver()
         textsObserver()
-        setSpinnerSelection()
+        setLanguageSpinnerSelection()
+        setAnticipationDaysSpinnerSelection()
 
         viewModel.setLocale()
 
@@ -116,7 +126,9 @@ class HomeFragment: Fragment() {
             binding.tvCodeValue.text = deviceInfoCard.tvCode
             addStatus(deviceInfoCard.connectionStatus)
             languageSpinner()
-            setSpinnerSelection()
+            anticipationDaysSpinner()
+            setLanguageSpinnerSelection()
+            setAnticipationDaysSpinnerSelection()
             setSwitchExternalStorageVisibility()
         }
     }
@@ -184,24 +196,42 @@ class HomeFragment: Fragment() {
             binding.tvCodeKey.text = textList[TV_CODE]
             binding.connectionStatusKey.text = textList[CONNECTION_STATUS]
             binding.languageKey.text = textList[LANGUAGE]
+            binding.languageSpinner.prompt = textList[LANGUAGE_SELECT_TITLE]
             binding.switchExternalStorage.text = textList[SWITCH_EXTERNAL_STORAGE_HOME]
+            binding.anticipationDaysKey.text = textList[ANTICIPATION_DAYS]
+            binding.anticipationDaysSpinner.prompt = textList[ANTICIPATION_DAYS_SELECT_TITLE]
         }
     }
 
     private fun languageSpinner() {
         languages = viewModel.getLanguages()
-        val spinnerAdapter = languageSpinnerAdapter()
-        binding.languageSpinner.adapter = spinnerAdapter
-        languageSpinnerListener(spinnerAdapter)
+        languageSpinnerAdapter = createSpinnerAdapter(languages)
+        binding.languageSpinner.adapter = languageSpinnerAdapter
+        languageSpinnerListener()
     }
 
-    private fun languageSpinnerAdapter(): ArrayAdapter<String> {
-        val spinnerAdapter = ArrayAdapter(context!!, R.layout.spinner_item, languages)
+    private fun anticipationDaysSpinner() {
+        if (viewModel.getAnticipationDaysOptions() == null) {
+            binding.anticipationDaysContainer.visibility = View.GONE
+            anticipationDaysConfigEnabled = false
+        } else {
+            binding.anticipationDaysContainer.visibility = View.VISIBLE
+            anticipationDaysConfigEnabled = true
+
+            anticipationDaysOptions = viewModel.getAnticipationDaysOptions()!!
+            anticipationDaysSpinnerAdapter = createSpinnerAdapter(anticipationDaysOptions)
+            binding.anticipationDaysSpinner.adapter = anticipationDaysSpinnerAdapter
+            anticipationDaysSpinnerListener()
+        }
+    }
+
+    private fun createSpinnerAdapter(options: Array<String>): ArrayAdapter<String> {
+        val spinnerAdapter = ArrayAdapter(context!!, R.layout.spinner_item, options)
         spinnerAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice)
         return spinnerAdapter
     }
 
-    private fun languageSpinnerListener(spinnerAdapter: ArrayAdapter<String>) {
+    private fun languageSpinnerListener() {
         binding.languageSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -217,21 +247,53 @@ class HomeFragment: Fragment() {
                     val selectedLanguage = parent!!.getItemIdAtPosition(position)
                     viewModel.changeLocale(HOME, selectedLanguage)
 
-                    updateLanguageItems(spinnerAdapter)
+                    updateSpinnerItems()
                 }
             }
     }
 
-    private fun updateLanguageItems(spinnerAdapter: ArrayAdapter<String>) {
+    private fun anticipationDaysSpinnerListener() {
+        binding.anticipationDaysSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    try {
+                        val selectedItem = parent!!.getItemIdAtPosition(position)
+                        val days = anticipationDaysOptions[selectedItem.toInt()].split(ANTICIPATION_DAYS_WHITESPACE)[0]
+                        viewModel.setCurrentAnticipationDays(days.toInt())
+                    } catch (e: Exception) {
+                        Log.e(TAG, "[anticipationDaysSpinnerListener] -> ${e.javaClass}: ${e.message}")
+                    }
+                }
+            }
+    }
+
+    private fun updateSpinnerItems() {
         var auxPosition = 0
         viewModel.getLanguages().forEach { lang ->
             languages[auxPosition] = lang
             auxPosition++
         }
-        spinnerAdapter.notifyDataSetChanged()
+        languageSpinnerAdapter.notifyDataSetChanged()
+
+        if (anticipationDaysConfigEnabled) {
+            auxPosition = 0
+            viewModel.getAnticipationDaysOptions()?.forEach { option ->
+                anticipationDaysOptions[auxPosition] = option
+                auxPosition++
+            }
+            anticipationDaysSpinnerAdapter.notifyDataSetChanged()
+        }
     }
 
-    private fun setSpinnerSelection() {
+    private fun setLanguageSpinnerSelection() {
         when (viewModel.getCurrentLocale()) {
             EN_LANG -> {
                 binding.languageSpinner.setSelection(ENGLISH_POS)
@@ -242,6 +304,16 @@ class HomeFragment: Fragment() {
             else -> {
                 binding.languageSpinner.setSelection(AUTOMATIC_POS)
             }
+        }
+    }
+
+    private fun setAnticipationDaysSpinnerSelection() {
+        val options = viewModel.getAnticipationDaysOptions()
+        if (options != null) {
+            val current = viewModel.getCurrentAnticipationDays()
+            val itemSelected = options.map { it.split(ANTICIPATION_DAYS_WHITESPACE)[0] }
+                .indexOf(current.toString())
+            binding.anticipationDaysSpinner.setSelection(itemSelected)
         }
     }
 

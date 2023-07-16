@@ -11,6 +11,15 @@ import com.distritv.data.model.Content
 import com.distritv.launcher.AlertLauncher
 import java.util.*
 
+/*
+ * Intent params
+ */
+const val ALERT_PARAM = "alertParam"
+const val CONTENT_PARAM = "contentParam"
+const val ALERT_BUNDLE_PARAM = "alertBundleParam"
+const val CONTENT_BUNDLE_PARAM = "contentBundleParam"
+
+const val IS_ALARM_PARAM = "isAnAlarm"
 
 @SuppressLint("UnspecifiedImmutableFlag")
 fun createPendingIntent(context: Context, content: Content, requestCode: Int): PendingIntent {

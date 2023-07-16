@@ -23,6 +23,9 @@
     <string name="info_card_tv_code">Código de TV:</string>
     <string name="info_card_connection_status">Estado de conexión:</string>
     <string name="info_card_switch_external">Usar almacenamiento externo</string>
+    <string name="info_card_anticipation_days">Anticipación para descargas:</string>
+    <string name="info_card_anticipation_spinner_title">Descargar agendas y contenidos con una anticipación de hasta:</string>
+    <string name="days">días</string>
     <string name="language">Idioma:</string>
     <string name="language_select">Seleccionar idioma</string>
     <string-array name="languages">

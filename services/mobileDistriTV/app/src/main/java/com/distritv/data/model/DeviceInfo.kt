@@ -26,6 +26,7 @@ data class DeviceInfo(
     val displayOverOtherAppsPermissionGranted: Boolean?,
     val isAnyAlertPlaying: Boolean,
     val currentlyPlayingAlertId: Long?,
-    val alertDurationLeft: Long?
+    val alertDurationLeft: Long?,
+    val anticipationDays: Int
 ) : Parcelable {
 }

@@ -72,6 +72,7 @@ class HomeViewModel(
     private var error: Int = -1
 
     private val externalStorageEnabled: Boolean = BuildConfig.EXTERNAL_STORAGE_ENABLED
+    private val anticipationDaysOptions: String = BuildConfig.ANTICIPATION_DAYS_OPTIONS
 
     fun registerTvCode(code: String, useExternalStorage: Boolean) {
         if (code.length < 6) {
@@ -229,7 +230,10 @@ class HomeViewModel(
             context.getString(R.string.info_card_tv_code),
             context.getString(R.string.info_card_connection_status),
             context.getString(R.string.language),
+            context.getString(R.string.language_select),
             context.getString(R.string.info_card_switch_external),
+            context.getString(R.string.info_card_anticipation_days),
+            context.getString(R.string.info_card_anticipation_spinner_title)
         )
     }
 
@@ -262,6 +266,26 @@ class HomeViewModel(
 
     fun isExternalStorageEnabled(): Boolean {
         return externalStorageEnabled
+    }
+
+    fun getAnticipationDaysOptions(): Array<String>? {
+        try {
+            val options = anticipationDaysOptions.split(ANTICIPATION_DAYS_SEPARATOR)
+            if (options.isEmpty() || !options.all { it.trim().toIntOrNull() != null }) {
+                return null
+            }
+            return options.map { it.trim() + ANTICIPATION_DAYS_WHITESPACE + context.getString(R.string.days) }.toTypedArray()
+        } catch (e: Exception) {
+            return null
+        }
+    }
+
+    fun getCurrentAnticipationDays(): Int {
+        return sharedPreferences.getAnticipationDays()
+    }
+
+    fun setCurrentAnticipationDays(days: Int) {
+        sharedPreferences.setAnticipationDays(days)
     }
 
     companion object {

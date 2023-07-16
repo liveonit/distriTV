@@ -172,9 +172,11 @@ class RequestDaemon: Service() {
         if (alert == null) {
             // Clear alert duration left
             if (deviceInfo.alertDurationLeft != null) {
-                setNullDurationLeft()
                 // Cancel current alert
-                launchAlert(getAlertBlank())
+                if (deviceInfo.alertDurationLeft > 0) {
+                    launchAlert(getAlertBlank())
+                }
+                setNullDurationLeft()
             }
             return
         }
@@ -212,10 +214,7 @@ class RequestDaemon: Service() {
         ) {
             Log.e(TAG, "External storage may not be found or permission not granted.")
             Log.e(TAG, "External storage is connected?: ${deviceInfo.isExternalStorageConnected}")
-            Log.e(
-                TAG,
-                "External storage permission granted?: ${deviceInfo.externalStoragePermissionGranted}"
-            )
+            Log.e(TAG, "External storage permission granted?: ${deviceInfo.externalStoragePermissionGranted}")
 
             errorMessageHandler.post {
                 Toast.makeText(

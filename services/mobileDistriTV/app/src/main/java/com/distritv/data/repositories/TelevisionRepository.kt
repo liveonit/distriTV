@@ -10,12 +10,9 @@ import com.distritv.data.model.Television
 class TelevisionRepository(private val apiService: ApiService) : ITelevisionRepository {
     override suspend fun fetchTelevision(deviceInfo: DeviceInfo): Television? {
         val televisionListResponse = apiService.fetchTelevisionSchedule(deviceInfo.tvCode, deviceInfo)
-        if (televisionListResponse.isEmpty()) {
-            return null
-        }
 
-        val schedules = ScheduleNetworkMapper.fromFetchScheduleListResponse(televisionListResponse[0].schedules)
-        val alertResponse = televisionListResponse[0].alert
+        val schedules = ScheduleNetworkMapper.fromFetchScheduleListResponse(televisionListResponse.schedules)
+        val alertResponse = televisionListResponse.alert
         var alert: Alert? = null
         if(alertResponse != null) {
             alert = AlertNetworkMapper.fromFetchAlertResponse(alertResponse)
@@ -25,11 +22,7 @@ class TelevisionRepository(private val apiService: ApiService) : ITelevisionRepo
     }
 
     override suspend fun validateTvCode(tvCode: String): Boolean {
-        val televisionListResponse = apiService.fetchTelevisionSchedule(tvCode)
-        if (televisionListResponse.isNotEmpty()) {
-            return true
-        }
-        return false
+        return apiService.fetchTelevisionSchedule(tvCode).tvCode == tvCode
     }
 
     override suspend fun validateConnection(tvCode: String): Boolean {

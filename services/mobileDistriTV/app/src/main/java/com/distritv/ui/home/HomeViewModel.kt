@@ -101,13 +101,13 @@ class HomeViewModel(
                 _isValid.postValue(false)
                 error = R.string.msg_tv_code_connection_error
             } catch (e: HttpException) {
-                if (e.message?.contains("HTTP 5") != false) {
+                error = if (e.code() == HTTP_NOT_FOUND) {
+                    _errorMessage.postValue(context.getString(R.string.msg_tv_code_invalid))
+                    R.string.msg_tv_code_invalid
+                } else {
                     Log.e(TAG, "${e.javaClass}: ${e.message}")
                     _errorMessage.postValue(context.getString(R.string.msg_tv_code_error))
-                    error = R.string.msg_tv_code_error
-                } else {
-                    _errorMessage.postValue(context.getString(R.string.msg_tv_code_invalid))
-                    error = R.string.msg_tv_code_invalid
+                    R.string.msg_tv_code_error
                 }
                 _isValid.postValue(false)
             } catch (e: Exception) {

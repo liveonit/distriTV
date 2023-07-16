@@ -13,11 +13,11 @@ interface ApiService {
      */
     @Headers("Content-Type: application/json")
     @POST("television/{tvCode}/schedules")
-    suspend fun fetchTelevisionSchedule(@Path("tvCode") tvCode: String): List<TelevisionResponse>
+    suspend fun fetchTelevisionSchedule(@Path("tvCode") tvCode: String): TelevisionResponse
 
     @Headers("Content-Type: application/json")
     @POST("television/{tvCode}/schedules")
-    suspend fun fetchTelevisionSchedule(@Path("tvCode") tvCode: String, @Body infoDevice: DeviceInfo): List<TelevisionResponse>
+    suspend fun fetchTelevisionSchedule(@Path("tvCode") tvCode: String, @Body infoDevice: DeviceInfo): TelevisionResponse
 
     @GET("content/download/{content}")
     suspend fun fetchContent(@Path("content") content: String): ResponseBody

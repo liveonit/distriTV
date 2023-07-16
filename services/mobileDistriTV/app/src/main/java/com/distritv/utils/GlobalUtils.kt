@@ -15,6 +15,8 @@ const val CONTENT_BUNDLE_PARAM = "contentBundleParam"
 
 const val IS_ALARM_PARAM = "isAnAlarm"
 
+const val HTTP_NOT_FOUND = 404
+
 @Suppress("DEPRECATION") // Deprecated for third party Services.
 fun isServiceRunning(context: Context, serviceClass: Class<*>): Boolean {
     val manager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager

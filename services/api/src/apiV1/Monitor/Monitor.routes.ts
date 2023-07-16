@@ -1,0 +1,7 @@
+import { alertController } from './Monitor.controller';
+import { BaseRoute } from '@lib/BaseClasses/BaseRoute';
+
+const routes = new BaseRoute(alertController);
+routes.setRoutes({});
+
+export default routes.router;

@@ -5,26 +5,32 @@ import { Schedule } from '@src/entities/Schedule';
 
 export class TelevisionSvc extends BaseService<Television> {
     public getByTVcode = async (tvCode: string, durationLeft: number) => {
-        return Television.find({relations: ['schedules', 'schedules.content', 'alert', 'labels'], where: {tvCode}}).then(televisions => {
-            let result = JSON.parse(JSON.stringify(televisions[0]))
+        return Television.findOne({relations: ['schedules', 'schedules.content', 'alert', 'labels'], where: {tvCode}}).then(async television => {
+            if(!television)
+                throw new Error('TV code not found')
             
             // Handle alerts
-            if (result.alert !== null) {                
+            if (television.alert !== null) {             
                 if(durationLeft === 0){
-                    Alert.delete({id: result.alert.id})
-                    result.alert = null
+                    await Alert.delete({id: television.alert!.id})
+                    television.alert = null
                 } else {
-                    result.alert.durationLeft = durationLeft || result.alert.durationLeft || result.alert.duration
-                    Alert.update({id: result.alert.id}, {durationLeft })
+                    if (!television.alert?.started) {
+                        television.alert!.durationLeft = television.alert!.duration
+                    }
+                    else {
+                        television.alert!.durationLeft = durationLeft || television.alert!.durationLeft
+                    }
+                    await Alert.update({id: television.alert!.id}, {durationLeft: television.alert!.durationLeft, started: true })
                 }                               
             }
 
             // Handle schedules associated to label            
-            return Promise.all(televisions[0].labels?.map(label => {
+            return Promise.all(television.labels?.map(label => {
                 return Schedule.find({relations: ['content'], where: {labelId: label.id}})
             })!).then(schedules => {
-                result.schedules = result.schedules.concat(schedules.flat())
-                return result
+                television.schedules = television.schedules!.concat(schedules.flat())
+                return television
             })
         })
     };

@@ -54,5 +54,5 @@ export class Television extends BaseEntity {
 
   @OneToOne(() => Alert, (alert) => alert.television)
   @JoinColumn()
-  alert?: Alert;
+  alert?: Alert | null;
 }

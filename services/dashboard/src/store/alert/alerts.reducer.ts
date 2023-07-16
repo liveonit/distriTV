@@ -36,10 +36,9 @@ const reducer = (state = initialState, { type, payload }: any) => {
         isLoading: false
       }
     case AlertActionTypes.CREATE_SUCCESS:
-      let items = state.items.concat(payload)
       return {
         ...state,
-        items,
+        items: payload,
         isLoading: false
       }
     case AlertActionTypes.EDIT_REQUEST:

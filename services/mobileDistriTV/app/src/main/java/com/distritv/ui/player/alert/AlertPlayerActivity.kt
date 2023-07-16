@@ -3,7 +3,6 @@ package com.distritv.ui.player.alert
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.distritv.DistriTVApp
@@ -22,7 +21,6 @@ class AlertPlayerActivity : AppCompatActivity() {
 
     private var alert: Alert? = null
 
-
     @SuppressLint("AppCompatMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,12 +30,9 @@ class AlertPlayerActivity : AppCompatActivity() {
         // So that this activity is not removed by the screen saver
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        println("playerAct 35")
-
         myApp = this.applicationContext as DistriTVApp?
 
         alert = intent.extras?.getParcelable(ALERT_PARAM)
-        println("playerAct 40")
 
         addFragment()
 
@@ -46,43 +41,37 @@ class AlertPlayerActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        println("alertActi onResume")
         myApp?.setIfAnyAlertIsCurrentlyPlaying(true)
         // Set the current activity
         myApp?.setCurrentActivity(this)
-        // Set the identifier of the currently playing content:
+        // Set the identifier of the currently playing alert:
         myApp?.setCurrentlyPlayingAlertId(alert?.id)
     }
 
     override fun onStop() {
         super.onStop()
-        println("alertActi onStop")
-        if (myApp?.skip() == false) {
+        if (myApp?.skipClearing() == false) {
             clearReferences()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        println("alertActi onPause")
-        if (myApp?.skip() == false) {
+        if (myApp?.skipClearing() == false) {
             clearReferences()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        println("alertActi onDestroy")
-        if (myApp?.skip() == false) {
-            println("alertActi sfdfd")
-            // Notice that the content playback has finished:
+        if (myApp?.skipClearing() == false) {
+            // Notice that the alert playback has finished:
             myApp?.setIfAnyAlertIsCurrentlyPlaying(false)
-            // Clear the identifier of the content that was playing:
+            // Clear the identifier of the alert that was playing:
             myApp?.setCurrentlyPlayingAlertId(null)
             clearReferences()
-            myApp?.setSkip(null)
+            myApp?.setSkipClearing(null)
         }
-
     }
 
     private fun clearReferences() {

@@ -36,7 +36,6 @@ class AlertTextFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentTextBinding.inflate(layoutInflater, container, false)
-        println("fragm onCreateView")
         arguments?.let {
             alert = it.getParcelable(ALERT_PARAM)
             if (alert == null) {
@@ -51,28 +50,22 @@ class AlertTextFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fullscreenManager?.enterFullscreen()
-        println("fragm viewcreated")
-        showText()
     }
 
     override fun onResume() {
         super.onResume()
-        println("fragm onResume")
-       // backHomeOnResumeAlert()
+        showText()
     }
 
     override fun onPause() {
         super.onPause()
-        println("textFrag onPause")
         this.cancelPlay()
         timer.cancel()
-      //  activity?.finish()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        println("textFrag onDestroy")
-       // timer.cancel()
+        timer.cancel()
     }
 
     private fun showText() {
@@ -87,8 +80,9 @@ class AlertTextFragment : Fragment() {
             override fun onTick(millisUntilFinished: Long) {
                 // Code to run every second
                 val durationLeft = millisUntilFinished / TimeUnit.SECONDS.toMillis(1)
-                Log.v(TAG, "Timer: $durationLeft seconds remaining")
+                Log.d(TAG, "Timer: $durationLeft seconds remaining")
                 setAlertDurationLeft(durationLeft)
+                alert?.durationLeft = durationLeft
             }
 
             override fun onFinish() {

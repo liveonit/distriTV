@@ -5,7 +5,7 @@ import { TelevisionSvc, televisionSvc } from './Television.service';
 import { createTelevisionBody } from './types/CreateTelevisionBody';
 import { updateTelevisionBodySchema } from './types/UpdateTelevisionBody';
 import { handleErrorAsync } from '@src/middlewares/errorCatcher';
-import { BadRequest } from '@lib/errors';
+import { BadRequest, NotFound } from '@lib/errors';
 import { Request, Response } from 'express';
 
 class TelevisionController extends BaseController<Television, TelevisionSvc> {
@@ -16,7 +16,14 @@ class TelevisionController extends BaseController<Television, TelevisionSvc> {
       throw new BadRequest('tvCode should be 6 char long');
     }
 
-    return res.status(200).json(await this.service.getByTVcode(tvCode, durationLeft));
+    try {
+      const response = await this.service.getByTVcode(tvCode, durationLeft)
+      return res.status(200).json(response);
+    } catch (e) {
+      throw new NotFound(String(e));
+    }
+    
+    
   });
 }
 

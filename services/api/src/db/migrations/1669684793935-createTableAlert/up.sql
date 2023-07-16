@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS `alert` (
   `text` TEXT NULL,
   `duration` INT NULL,
   `durationLeft` INT NULL,
+  `started` BOOLEAN,
   PRIMARY KEY (`id`),
   INDEX `fk_alert_to_label1_idx` (`labelId` ASC),
   CONSTRAINT `fk_alert_to_label1`

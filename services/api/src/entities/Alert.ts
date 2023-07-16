@@ -31,11 +31,14 @@ export class Alert extends BaseEntity {
   @Column()
   durationLeft?: number;
 
+  @Column()
+  started!: boolean;
+
   @ManyToOne(() => Label, (label) => label.alerts)
   @JoinColumn({ name: 'labelId' })
   label!: Label;
 
   @OneToOne(() => Television, (tv) => tv.alert)
-  television?: Television
+  television?: Television | null
 }
 

@@ -13,9 +13,9 @@ import {
 import { Institution } from './Institution';
 import { Notification } from './Notification';
 import { Label } from './Label';
-import { Content } from './Content';
 import { Schedule } from './Schedule';
 import { Alert } from './Alert';
+import { Monitor } from './Monitor';
 
 @Entity()
 export class Television extends BaseEntity {
@@ -55,4 +55,8 @@ export class Television extends BaseEntity {
   @OneToOne(() => Alert, (alert) => alert.television)
   @JoinColumn()
   alert?: Alert | null;
+
+  @OneToOne(() => Monitor, (monitor) => monitor.television)
+  @JoinColumn()
+  monitor?: Monitor;
 }

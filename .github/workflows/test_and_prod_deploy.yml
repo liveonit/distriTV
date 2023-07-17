@@ -17,13 +17,24 @@ jobs:
     - name: Create .env
       run: cp .env.example .env
 
-    - name: Build and push
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build backend api
       uses: docker/build-push-action@v4
       with:
         push: false
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/distritv-api:latest,${{ secrets.DOCKERHUB_USERNAME }}/distritv-api:${{ github.sha }}
-        file: Dockerfile.development
+        file: Dockerfile.production
       working-directory: services/api
+
+    - name: Build frontend
+      uses: docker/build-push-action@v4
+      with:
+        push: false
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/distritv-dashboard:latest,${{ secrets.DOCKERHUB_USERNAME }}/distritv-dashboard:${{ github.sha }}
+        file: Dockerfile.production
+      working-directory: services/dashboard
 
     - name: Start containers
       run: docker-compose up -d -f "docker-compose.prod.yml"
@@ -48,12 +59,6 @@ jobs:
       if: always()
       run: docker-compose -f "docker-compose.prod.yml" down
 
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
-
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
@@ -62,10 +67,30 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Build and push
+
+    - name: Push backend
       uses: docker/build-push-action@v4
       with:
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/distritv-api:latest,${{ secrets.DOCKERHUB_USERNAME }}/distritv-api:${{ github.sha }}
-        file: Dockerfile.development
+        file: Dockerfile.production
       working-directory: services/api
+
+    - name: Push frontend
+      uses: docker/build-push-action@v4
+      with:
+        push: true
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/distritv-dashboard:latest,${{ secrets.DOCKERHUB_USERNAME }}/distritv-dashboard:${{ github.sha }}
+        file: Dockerfile.production
+      working-directory: services/dashboard
+
+
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SERVER_SSH_HOST }}
+        username: ${{ secrets.SERVER_SSH_USERNAME }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: ${{ secrets.SERVER_SSH_PORT }}
+        script: |
+          cd $`{{ SERVER_PROJECT_DIR }} && docker-compose up -f docker-compose.prod.yml up -d --build --force-recreate

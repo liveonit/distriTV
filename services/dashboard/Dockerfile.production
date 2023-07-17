@@ -3,8 +3,10 @@ FROM node:18-alpine as build-stage
 # RUN apk add g++ make py3-pip
 
 WORKDIR /app
-COPY . .
+COPY package*.json ./
+COPY yarn.lock ./
 RUN yarn
+COPY . .
 RUN yarn build
 
 FROM nginx:latest

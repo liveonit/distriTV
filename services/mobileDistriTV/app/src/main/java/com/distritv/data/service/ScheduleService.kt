@@ -2,16 +2,24 @@ package com.distritv.data.service
 
 import android.util.Log
 import com.distritv.data.model.Schedule
+import com.distritv.utils.localDateTimeToMillis
+import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
 
 class ScheduleService(private val scheduleDBService: ScheduleDBService,
-                      private val contentDbService: ContentDBService) {
+                      private val contentDbService: ContentDBService,
+                      private val sharedPreferencesService: SharedPreferencesService) {
 
     fun checkAndDeletedSchedule(schedule: Schedule, responseScheduleList: List<Schedule>) {
         val result = responseScheduleList.firstOrNull { it.id == schedule.id }
         if (result == null) {
-            if (scheduleDBService.delete(schedule.id) > 0) {
-                Log.i(TAG, "Schedule was deleted: $schedule")
-            }
+            deletedSchedule(schedule)
+        }
+    }
+
+    fun deletedSchedule(schedule: Schedule) {
+        if (scheduleDBService.delete(schedule.id) > 0) {
+            Log.i(TAG, "Schedule was deleted: $schedule")
         }
     }
 
@@ -77,6 +85,14 @@ class ScheduleService(private val scheduleDBService: ScheduleDBService,
 
     fun existsScheduleWithContentId(id: Long): Boolean {
         return scheduleDBService.existsScheduleWithContentId(id)
+    }
+
+    /**
+     * @return true if the start date is less than anticipation days away
+     */
+    fun meetAnticipationDays(startDate: Long): Boolean {
+        val anticipationDays = sharedPreferencesService.getAnticipationDays().toLong()
+        return startDate <= (localDateTimeToMillis(LocalDateTime.now())?.plus(TimeUnit.DAYS.toMillis(anticipationDays)) ?: 0L)
     }
 
     companion object {

@@ -1,3 +1,3 @@
-INSERT INTO `institution` (`name`)
+INSERT INTO `institution` (`name`,`city`,`locality`)
 VALUES
-  ('Ceibal');
+  ('Ceibal','Montevideo','Montevideo');

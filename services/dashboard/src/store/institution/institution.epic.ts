@@ -18,9 +18,12 @@ const listInstitutions: Epic = (action$) =>
     ofType(InstitutionActionTypes.LIST_ALL_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
-    mergeMap(() => {
+    mergeMap(({payload}) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ path: '/institution', requireAuthType: session?.type }).pipe(
+      return apiSvc.request({
+        path: `/institution${payload?.query ? `?${payload.query}` : ''}`,
+        requireAuthType: session?.type 
+      }).pipe(
         map(({ response }) => {
           return {
             type: InstitutionActionTypes.LIST_ALL_SUCCESS,

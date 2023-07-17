@@ -1,0 +1,36 @@
+---
+- name: Check if admin_file file exists
+  ansible.builtin.stat:
+    path: /etc/kubernetes/admin.conf
+  register: init_master_admin_file_stat
+
+- name: Initialize the cluster
+  become: true
+  ansible.builtin.shell: |
+    rm -f /etc/containerd/config.toml
+    systemctl restart containerd.service
+    kubeadm init --pod-network-cidr "10.244.0.0/16" --apiserver-advertise-address={{ inventory_hostname }}
+  when: not init_master_admin_file_stat.stat.exists
+  register: init_master_output
+  changed_when: init_master_output.rc == 0
+
+- name: Create .kube directory
+  become: true
+  ansible.builtin.file:
+    path: $HOME/.kube
+    state: directory
+    mode: "0755"
+
+- name: Copy admin.conf to user's kube config
+  become: true
+  ansible.builtin.copy:
+    src: /etc/kubernetes/admin.conf
+    dest: $HOME/.kube/config
+    remote_src: true
+    mode: "0755"
+
+- name: Install Pod network
+  become: true
+  ansible.builtin.command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  register: init_master_output
+  changed_when: init_master_output.rc == 0

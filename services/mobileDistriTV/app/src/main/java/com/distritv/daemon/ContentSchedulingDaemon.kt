@@ -17,6 +17,7 @@ import android.util.Log
 import com.distritv.BuildConfig
 import com.distritv.data.model.CalendarModel
 import com.distritv.data.model.Content
+import com.distritv.data.model.Schedule
 import com.distritv.data.service.AlarmService
 import com.distritv.data.service.ScheduleService
 import com.distritv.utils.*
@@ -50,7 +51,13 @@ class ContentSchedulingDaemon : Service() {
 
         runnable = object : Runnable {
             override fun run() {
-                launcherContent()
+
+                try {
+                    launcherContent()
+                } catch (e: Exception) {
+                    Log.e(TAG, "[launcherContent] -> ${e.javaClass}: ${e.message}")
+                    Log.e(TAG, "${e.stackTrace.toList()}")
+                }
 
                 // Schedule the next execution in periodTime milliseconds:
                 handler.postDelayed(this, TimeUnit.SECONDS.toMillis(periodTimeInSecond))
@@ -87,13 +94,21 @@ class ContentSchedulingDaemon : Service() {
         val intervalEndTimeInMillis =
             currentTimeInMillis.plus(TimeUnit.SECONDS.toMillis(periodTimeInSecond))
 
-        val currentSchedules = scheduleService.getCurrentSchedulesWithContents(currentTimeInMillis, intervalEndTimeInMillis)
+        // Ordered by the schedules that are reproduced only once
+        val currentSchedules = scheduleService.getCurrentSchedulesWithContents(
+            currentTimeInMillis,
+            intervalEndTimeInMillis
+        ).sortedBy { !it.playOnce }
 
         for (schedule in currentSchedules) {
 
-            val nextExecutionTime = schedule.cron?.let { it ->
-                millisToDate(currentTimeInMillis)?.let { it1 ->
-                    calculateNextExecutionTime(it, it1)
+            if (schedule.playOnce) {
+                schedule.cron = "* * * * * ?"
+            }
+
+            val nextExecutionTime = schedule.cron?.let { cron ->
+                millisToDate(currentTimeInMillis)?.let { currentTime ->
+                    calculateNextExecutionTime(cron, currentTime)
                 }
             }
 
@@ -104,21 +119,21 @@ class ContentSchedulingDaemon : Service() {
                     // If the next execution minus the current time (waiting time) is greater than one minute,
                     // an alarm is programmed, otherwise it is played instantly
                     if (nextExecutionTimeInMillis.minus(currentTimeInMillis) > TimeUnit.MINUTES.toMillis(1)) {
-                        schedule.content?.let { setAlarm(it, nextExecutionTime) }
+                        setAlarm(schedule, nextExecutionTime)
                     } else {
-                        schedule.content?.let { launchContentNow(it) }
+                        launchContentNow(schedule)
                     }
                 }
             }
         }
     }
 
-    private fun calculateNextExecutionTime(cronExpression: String, startDate: Date): Date {
+    private fun calculateNextExecutionTime(cronExpression: String, currentTime: Date): Date {
         val cron = CronExpression(cronExpression)
-        return cron.getNextValidTimeAfter(startDate)
+        return cron.getNextValidTimeAfter(currentTime)
     }
 
-    private fun setAlarm(content: Content, executionTime: Date) {
+    private fun setAlarm(schedule: Schedule, executionTime: Date) {
         val calendar = GregorianCalendar();
         calendar.time = executionTime
 
@@ -131,10 +146,14 @@ class ContentSchedulingDaemon : Service() {
             calendar.get(Calendar.SECOND)
         )
 
-        if (!contentIsValid(content)) {
+        val content = schedule.content
+        if (content == null || !contentIsValid(content)) {
             Log.e(TAG, ERROR_LOCAL_PATH_OR_TEXT_NULL_OR_BLANK)
             return
         }
+
+        schedule.content = null
+        content.schedule = schedule
 
         alarmService.createAllowWhileIdleAlarm(
             calendarModel,
@@ -143,18 +162,23 @@ class ContentSchedulingDaemon : Service() {
         )
     }
 
-    private fun launchContentNow(content: Content) {
-        if (!contentIsValid(content)) {
+    private fun launchContentNow(schedule: Schedule) {
+        val content = schedule.content
+        if (content == null || !contentIsValid(content)) {
             Log.e(TAG, ERROR_LOCAL_PATH_OR_TEXT_NULL_OR_BLANK)
             return
         }
+
+        schedule.content = null
+        content.schedule = schedule
+
         val intent = createIntent(applicationContext, content, false)
         sendBroadcast(intent)
     }
 
     private fun contentIsValid(content: Content): Boolean {
         if (content.isVideo() || content.isImage()) {
-            return !content.localPath.isNullOrBlank()
+            return !content.fileName.isNullOrBlank()
         } else if (content.isText()) {
             return !content.text.isNullOrBlank()
         }

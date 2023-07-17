@@ -50,7 +50,7 @@ const listTelevisionsJoin: Epic = (action$) =>
 
       return apiSvc
         .request({
-          path: `/television?relations=institution,labels${payload?.query ? `&${payload.query}` : ''}`,
+          path: `/television?relations=institution,labels,alert${payload?.query ? `&${payload.query}` : ''}`,
           requireAuthType: session?.type,
         })
         .pipe(

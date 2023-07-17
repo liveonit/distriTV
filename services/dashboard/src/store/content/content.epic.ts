@@ -16,22 +16,27 @@ const listContents: Epic = (action$) =>
     ofType(ContentActionTypes.LIST_ALL_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
-    mergeMap(() => {
+    mergeMap(({ payload }) => {
       const { session } = storage.get<SessionT>('session') || {}
-      return apiSvc.request({ path: '/content', requireAuthType: session?.type }).pipe(
-        map(({ response }) => {
-          return {
-            type: ContentActionTypes.LIST_ALL_SUCCESS,
-            payload: response,
-          }
-        }),
-        catchError((err) =>
-          of({
-            type: ContentActionTypes.LIST_ALL_FAILURE,
-            payload: err,
+      return apiSvc
+        .request({
+          path: `/content${payload?.query ? `?${payload.query}` : ''}`,
+          requireAuthType: session?.type,
+        })
+        .pipe(
+          map(({ response }) => {
+            return {
+              type: ContentActionTypes.LIST_ALL_SUCCESS,
+              payload: response,
+            }
           }),
-        ),
-      )
+          catchError((err) =>
+            of({
+              type: ContentActionTypes.LIST_ALL_FAILURE,
+              payload: err,
+            }),
+          ),
+        )
     }),
   )
 
@@ -57,18 +62,18 @@ const uploadContent: Epic = (action$) => {
       const { file } = payload
       const formData = new FormData()
       formData.append('file', file, file.name)
-      formData.append('type', file.type)
+      formData.append('type', payload.type)
       formData.append('name', payload.name)
 
       return apiSvc
         .request({
           method: 'POST',
+          timeout: 1000 * 60 * 60,
           path: '/content/upload',
           requireAuthType: session?.type,
           extraConfig: {
             progressSubscriber: progressSubscriber$,
             cache: false,
-            contentType: false,
             processData: false,
             type: 'POST',
           },
@@ -83,11 +88,15 @@ const uploadContent: Epic = (action$) => {
               },
               {
                 type: ContentActionTypes.CREATE_REQUEST,
-                payload: { ...payload, url: `${window.location.protocol}//${window.location.host}${(response as any)[0].filePath}` },
+                payload: {
+                  ...payload,
+                  url: `${window.location.protocol}//${window.location.host}${(response as any).filePath}`,
+                },
               },
             )
           }),
           catchError((err) => {
+            console.log({ err })
             return of({
               type: ContentActionTypes.UPLOAD_FILE_FAILURE,
               payload: err,
@@ -107,6 +116,7 @@ const createContent: Epic = (action$) =>
       const { session } = storage.get<SessionT>('session') || {}
       return apiSvc.request({ method: 'POST', path: '/content', requireAuthType: session?.type, body: payload }).pipe(
         mergeMap(({ response }) => {
+          console.log(response)
           return of(
             {
               type: ContentActionTypes.CREATE_SUCCESS,
@@ -125,7 +135,7 @@ const createContent: Epic = (action$) =>
     }),
   )
 
-  const deleteContent: Epic = (action$) =>
+const deleteContent: Epic = (action$) =>
   action$.pipe(
     ofType(ContentActionTypes.DELETE_REQUEST),
     debounceTime(0),

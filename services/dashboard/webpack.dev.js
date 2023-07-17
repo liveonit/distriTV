@@ -1,12 +1,13 @@
-const { merge } = require('webpack-merge');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { merge } = require('webpack-merge')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-const baseConfig = require('./webpack.main.js');
+const baseConfig = require('./webpack.main.js')
 
 module.exports = merge(baseConfig, {
   mode: 'development',
-  devtool: "source-map",
+  devtool: 'source-map',
   devServer: {
+    allowedHosts: 'all',
     compress: true,
     open: true,
     hot: true,
@@ -16,6 +17,6 @@ module.exports = merge(baseConfig, {
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
-    })
-  ]
+    }),
+  ],
 })

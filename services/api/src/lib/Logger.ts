@@ -3,6 +3,18 @@ import { config } from '@src/config';
 
 export const logger = {
   debug: (data: any): void => {
+    const obj: any = {};
+    Error.captureStackTrace(obj);
+    console.log(
+      chalk.blue(
+        `⬇️ ⬇️ ⬇️  Debug called from: ${
+          obj.stack
+            .split('\n')
+            .slice(2, 3)[0]
+            .match(/\(([^)]+)\)/)[1]
+        } ⬇️ ⬇️ ⬇️ `,
+      ),
+    );
     if (config.ENVIRONMENT !== 'production')
       typeof data === 'object'
         ? console.debug(chalk.hex('ffa500')(`🐛 [Debug]: ${JSON.stringify(data, null, 2)}`))

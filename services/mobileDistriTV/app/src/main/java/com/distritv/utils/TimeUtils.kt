@@ -14,10 +14,10 @@ const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 /**
  * Conversion from LocalDateTime to milliseconds
  */
-fun localDateTimeToMillis(localDateTime: LocalDateTime?): Long? {
+fun localDateTimeToMillis(localDateTime: LocalDateTime?, offset: ZoneOffset = ZoneOffset.UTC): Long? {
     if (localDateTime != null) {
         return localDateTime.atZone(
-            ZoneOffset.UTC
+            offset
         )?.toInstant()?.toEpochMilli()
     }
     return null
@@ -61,6 +61,11 @@ fun millisToDate(milliseconds: Long): Date? {
 fun dateToMillis(date: Date): Long? {
     val localDateTime = dateToLocalDateTime(date)
     return localDateTimeToMillis(localDateTime)
+}
+
+fun getCurrentTime(): String {
+    val formatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
+    return LocalDateTime.now().format(formatter)
 }
 
 class LocalDateTimeDeserializer : JsonDeserializer<LocalDateTime> {

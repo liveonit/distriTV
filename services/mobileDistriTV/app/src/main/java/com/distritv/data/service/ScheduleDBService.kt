@@ -2,6 +2,7 @@ package com.distritv.data.service
 
 import android.content.ContentValues
 import com.distritv.data.DBContract
+import com.distritv.data.helper.DBHelper
 import com.distritv.data.model.Schedule
 import com.distritv.utils.*
 import java.time.LocalDateTime
@@ -17,6 +18,7 @@ class ScheduleDBService(private val dbHelper: DBHelper) {
             put(DBContract.ScheduleEntry.COLUMN_SCHEDULE_START_DATE, schedule.startDate)
             put(DBContract.ScheduleEntry.COLUMN_SCHEDULE_END_DATE, schedule.endDate)
             put(DBContract.ScheduleEntry.COLUMN_SCHEDULE_CRON, schedule.cron)
+            put(DBContract.ScheduleEntry.COLUMN_SCHEDULE_PLAY_ONCE, schedule.playOnce)
         }
 
         // Insert the new row, returning the primary key value of the new row
@@ -32,6 +34,7 @@ class ScheduleDBService(private val dbHelper: DBHelper) {
             put(DBContract.ScheduleEntry.COLUMN_SCHEDULE_START_DATE, schedule.startDate)
             put(DBContract.ScheduleEntry.COLUMN_SCHEDULE_END_DATE, schedule.endDate)
             put(DBContract.ScheduleEntry.COLUMN_SCHEDULE_CRON, schedule.cron)
+            put(DBContract.ScheduleEntry.COLUMN_SCHEDULE_PLAY_ONCE, schedule.playOnce)
         }
 
         // Which row to update, based on the title
@@ -82,7 +85,8 @@ class ScheduleDBService(private val dbHelper: DBHelper) {
                         getLong(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_START_DATE)),
                         getLong(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_END_DATE)),
                         getString(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_CRON)),
-                        null
+                        getInt(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_PLAY_ONCE)) == TRUE,
+                        CONTENT_NULL
                     )
                 )
             }
@@ -123,7 +127,8 @@ class ScheduleDBService(private val dbHelper: DBHelper) {
                         getLong(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_START_DATE)),
                         getLong(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_END_DATE)),
                         getString(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_CRON)),
-                        null
+                        getInt(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_PLAY_ONCE)) == TRUE,
+                        CONTENT_NULL
                     )
                 )
             }
@@ -140,10 +145,12 @@ class ScheduleDBService(private val dbHelper: DBHelper) {
         val projection = getAllBaseDateColumns()
 
         val selection = "${DBContract.ScheduleEntry.COLUMN_SCHEDULE_START_DATE} <= ?" +
-                " AND ${DBContract.ScheduleEntry.COLUMN_SCHEDULE_END_DATE} > ?"
+                " AND ( ${DBContract.ScheduleEntry.COLUMN_SCHEDULE_END_DATE} > ?" +
+                " OR ${DBContract.ScheduleEntry.COLUMN_SCHEDULE_PLAY_ONCE} = ? )"
         val selectionArgs = arrayOf(
             currentMillisecond.toString(),
-            intervalEndTimeInMillis.toString()
+            intervalEndTimeInMillis.toString(),
+            TRUE.toString()
         )
 
         // How you want the results sorted in the resulting Cursor
@@ -169,7 +176,8 @@ class ScheduleDBService(private val dbHelper: DBHelper) {
                         getLong(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_START_DATE)),
                         getLong(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_END_DATE)),
                         getString(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_CRON)),
-                        null
+                        getInt(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_PLAY_ONCE)) == TRUE,
+                        CONTENT_NULL
                     )
                 )
             }
@@ -183,8 +191,12 @@ class ScheduleDBService(private val dbHelper: DBHelper) {
 
         val projection = getAllBaseDateColumns()
 
-        val selection = "${DBContract.ScheduleEntry.COLUMN_SCHEDULE_END_DATE} < ?"
-        val selectionArgs = arrayOf(localDateTimeToMillis(LocalDateTime.now()).toString())
+        val selection = "${DBContract.ScheduleEntry.COLUMN_SCHEDULE_END_DATE} < ?" +
+                " AND ${DBContract.ScheduleEntry.COLUMN_SCHEDULE_PLAY_ONCE} = ?"
+        val selectionArgs = arrayOf(
+            localDateTimeToMillis(LocalDateTime.now()).toString(),
+            FALSE.toString()
+        )
 
         val cursor = dbHelper.readableDatabase.query(
             DBContract.ScheduleEntry.TABLE_NAME,   // The table to query
@@ -206,7 +218,8 @@ class ScheduleDBService(private val dbHelper: DBHelper) {
                         getLong(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_START_DATE)),
                         getLong(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_END_DATE)),
                         getString(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_CRON)),
-                        null
+                        getInt(getColumnIndexOrThrow(DBContract.ScheduleEntry.COLUMN_SCHEDULE_PLAY_ONCE)) == TRUE,
+                        CONTENT_NULL
                     )
                 )
             }
@@ -249,12 +262,16 @@ class ScheduleDBService(private val dbHelper: DBHelper) {
             DBContract.ScheduleEntry.COLUMN_SCHEDULE_CONTENT_ID,
             DBContract.ScheduleEntry.COLUMN_SCHEDULE_START_DATE,
             DBContract.ScheduleEntry.COLUMN_SCHEDULE_END_DATE,
-            DBContract.ScheduleEntry.COLUMN_SCHEDULE_CRON
+            DBContract.ScheduleEntry.COLUMN_SCHEDULE_CRON,
+            DBContract.ScheduleEntry.COLUMN_SCHEDULE_PLAY_ONCE
         )
     }
 
     companion object {
         const val TAG = "[ScheduleDBService]"
+        private val CONTENT_NULL = null
+        private const val TRUE = 1
+        private const val FALSE = 0
     }
 
 }

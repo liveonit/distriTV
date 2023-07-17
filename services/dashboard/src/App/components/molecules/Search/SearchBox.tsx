@@ -1,13 +1,19 @@
 import { Box } from '@mui/material'
 import React from 'react'
 import { useSearchParams } from 'react-router-dom'
+import Button from '@material-ui/core/Button'
+import { Trans } from 'react-i18next'
+import Search from '@material-ui/icons/Search'
 
 import { SearchInput } from './SearchInput'
+import SearchDropdown from './SearchDropdown'
+import SearchDropdownMulti from './SearchDropdownMulti'
 
 interface SearchBoxT {
   searches: {
-    type: 'Input' | 'Select'
+    type: 'Input' | 'Select' | 'Multi'
     name: string
+    placeholder: string
     options?: string[]
   }[]
 }
@@ -36,11 +42,30 @@ export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
           .join(';'),
       })
     })
-  const searchBar = searches.map((search: { type: any; name: string }) => {
+
+  const searchBar = searches.map((search: { type: any; name: string; placeholder: string, options?: string[] }) => {
     switch (search.type) {
       case 'Input': {
         return (
-          <SearchInput value={state[search.name]} onChange={(value) => setState({ ...state, [search.name]: value })} />
+          <SearchInput value={state[search.name]} placeholder={search.placeholder} onChange={(value) => setState({ ...state, [search.name]: value })} />
+        )
+      }
+      case 'Select': {        
+        return (
+          <SearchDropdown options={search.options || []} placeholder={search.placeholder} value={state[search.name] || ''} onChange={(value) => setState({ ...state, [search.name]: value })} />
+        )
+      }
+      case 'Multi': {        
+        return (
+          <SearchDropdownMulti 
+            options={search.options || []} 
+            placeholder={search.placeholder} 
+            value={(typeof state[search.name]) === 'undefined' ? 
+              [] 
+              : Array.isArray(state[search.name]) ?
+                state[search.name] 
+                : state[search.name].split(',')} 
+            onChange={(value) => setState({ ...state, [search.name]: value })} />
         )
       }
       default: {
@@ -50,9 +75,17 @@ export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
   })
 
   return (
-    <Box>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2}}>
       {searchBar}
-      <button onClick={setSearch}>Search</button>
+      <Button
+        variant='contained'
+        color='primary'
+        size='small'
+        startIcon={<Search />}
+        onClick={setSearch}            
+      >
+        <Trans>SEARCH</Trans>
+      </Button>
     </Box>
   )
 }

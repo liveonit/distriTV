@@ -6,7 +6,7 @@ import compression from 'compression';
 import { errorCatcher } from '@middlewares/errorCatcher';
 import { loggerMiddleware } from '@middlewares/logger.middleware';
 import router from './apiV1';
-
+import audit from 'express-requests-logger';
 import { config } from './config';
 import { NotFound } from '@lib/errors';
 import fileUpload from 'express-fileupload';
@@ -21,12 +21,40 @@ export class App {
   }
 
   private setMiddlewares = (): void => {
-    this.app.use(fileUpload({
-      useTempFiles: true,
-      tempFileDir: '/tmp/',
-    }),)
-    this.app.use(express.json());
     this.app.use(urlencoded({ extended: true }));
+    this.app.use(express.json());
+    this.app.use(
+      audit({
+        logger: logger, // Existing bunyan logger
+        excludeURLs: ['health', 'metrics'], // Exclude paths which enclude 'health' & 'metrics'
+        request: {
+          maskBody: ['password'], // Mask 'password' field in incoming requests
+          excludeHeaders: ['authorization'], // Exclude 'authorization' header from requests
+          excludeBody: ['creditCard'], // Exclude 'creditCard' field from requests body
+          maskHeaders: ['header1'], // Mask 'header1' header in incoming requests
+          maxBodyLength: 50, // limit length to 50 chars + '...'
+        },
+        response: {
+          maskBody: ['session_token'], // Mask 'session_token' field in response body
+          excludeHeaders: ['*'], // Exclude all headers from responses,
+          excludeBody: ['*'], // Exclude all body from responses
+          maskHeaders: [], // Mask 'header1' header in incoming requests
+          maxBodyLength: 50, // limit length to 50 chars + '...'
+        },
+      }),
+    );
+
+    this.app.use(
+      fileUpload({
+        ...(config.STORAGE_TYPE === 'local' && {
+          tempFileDir: '/tmp/',
+          useTempFiles: true,
+        }),
+        uploadTimeout: 0, //disabled
+        debug: true,
+        limits: { fileSize: 100 * 1024 * 1024 },
+      }),
+    );
     this.app.use(helmet());
     this.app.use(compression());
     this.app.use(loggerMiddleware);
@@ -45,7 +73,11 @@ export class App {
     const dbMigrations = (await db.getConnection().showMigrations())
       ? 'There are pending migrations'
       : "There aren't pending migrations";
-    const redisStatus = (await redisClient.ping()) === 'PONG' ? 'Connected' : 'Disconnected';
+    const redisStatus = config.REDIS_ENABLED
+      ? (await redisClient.ping()) === 'PONG'
+        ? 'Connected'
+        : 'Disconnected'
+      : 'disabled';
     return res.status(200).json({
       dbStatus,
       dbMigrations,

@@ -24,13 +24,12 @@ import { Trans, useTranslation } from 'react-i18next'
 import { FormInputNumber } from 'src/App/components/molecules/Forms/FormInputNumber'
 
 type IProps = {
-  isOpen: boolean
   handleCloseContentModal: () => void
   content: Partial<ContentT>
 }
 const contentType = ['Video', 'Image', 'Text']
 
-export default function CreateAndEditContentModal({ isOpen, handleCloseContentModal, content }: IProps) {
+export default function CreateAndEditContentModal({ handleCloseContentModal, content }: IProps) {
   const [file, setFile] = React.useState<File | null>(null)
   const [fileError, setFileError] = React.useState('')
   const contentInitialState: ContentT = {
@@ -60,11 +59,12 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
 
   const onSubmit: SubmitHandler<ContentT> = (data) => {
     if ((data.type === 'Image' || data.type === 'Video') && file) {
-      const renamedFile = new File([file], data.name)
+      const renamedFile = new File([file], `${data.name}.${file.name.split('.').pop()}`)
       dispatch(
         uploadContent({
-          name: data.name,
+          name: renamedFile.name,
           type: file.type,
+          duration: data.type === 'Image' ? data.duration : undefined,
           file: renamedFile,
         }),
       )
@@ -80,7 +80,7 @@ export default function CreateAndEditContentModal({ isOpen, handleCloseContentMo
 
   return (
     <>
-      <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
+      <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
             {content ? 'Edit' : 'Create'} content

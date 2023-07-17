@@ -43,8 +43,8 @@ export class BaseController<T extends BaseCustomEntity, S extends BaseService<T>
   });
 
   public update = handleErrorAsync(async (req: Request, res: Response) => {
-    let id: string | number = req.params.id?.toString();
-    if (!id) throw new BadRequest('Id is required');
+    if (!req.params.id) throw new BadRequest('Id is required');
+    let id: string | number = req.params.id.toString();
     if (!isNaN(+id)) id = +id;
     const body = this.createSchema?.parse(req.body) || req.body;
     const { relations } = this.querySchema?.parse(req.query) || {};
@@ -54,8 +54,8 @@ export class BaseController<T extends BaseCustomEntity, S extends BaseService<T>
   });
 
   public getById = handleErrorAsync(async (req: Request, res: Response) => {
-    let id: string | number = req.params.id?.toString();
-    if (!id) throw new BadRequest('Id is required');
+    if (!req.params.id) throw new BadRequest('Id is required');
+    let id: string | number = req.params.id.toString();
     if (!isNaN(+id)) id = +id;
     const { relations } = this.querySchema?.parse(req.query) || {};
     const result = await this.service.get({ where: { id } as FindOptionsWhere<T>, relations });
@@ -63,8 +63,8 @@ export class BaseController<T extends BaseCustomEntity, S extends BaseService<T>
   });
 
   public delete = handleErrorAsync(async (req: Request, res: Response) => {
-    let id: string | number = req.params.id?.toString();
-    if (!id) throw new BadRequest('Id is required');
+    if (!req.params.id) throw new BadRequest('Id is required');
+    let id: string | number = req.params.id.toString();
     if (!isNaN(+id)) id = +id;
     await this.service.delete(id);
     return res.status(200).json({ id });

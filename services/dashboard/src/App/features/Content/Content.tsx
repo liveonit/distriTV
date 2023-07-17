@@ -19,9 +19,16 @@ import { contentIsLoadingSelector, contentSelector } from 'src/store/content/con
 import AddIcon from '@material-ui/icons/Add'
 import { ContentT } from 'src/store/content/content.type'
 import { Trans } from 'react-i18next/TransWithoutContext'
+import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
+import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
+import { useTranslation } from 'react-i18next'
+import Link from '@material-ui/core/Link'
+import { OndemandVideo } from '@material-ui/icons'
+import ImageIcon from '@mui/icons-material/Image';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 
-import CreateAndEditContentModal from './CreateAndEditContentModal'
 import ContentDeleteModal from './ContentDeleteModal'
+import CreateAndEditContentModal from './CreateAndEditContentModal'
 
 const useStyles = makeStyles({
   table: {
@@ -32,19 +39,26 @@ const useStyles = makeStyles({
 export default function ContentList() {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const searchQueryString = useSearchQueryString()
+  const { t } = useTranslation()
 
   React.useEffect(() => {
-    dispatch(listContents())
-  }, [dispatch])
+    dispatch(
+      listContents({
+        query: searchQueryString ? `search=${searchQueryString}` : '',
+      }),
+    )
+  }, [dispatch, searchQueryString])
 
-  const [isModalOpen, setIsModalOpen] = React.useState(false)
+  const [isModalCreate, setIsModalCreate] = React.useState(false)
   const isLoading = useSelector(contentIsLoadingSelector)
   const contents = useSelector(contentSelector)
   const [contentToEdit, setContentToEdit] = React.useState<ContentT | null>(null)
   const [contentToDelete, setContentToDelete] = React.useState<ContentT | null>(null)
 
   function handleCloseEditContentModal() {
-    setIsModalOpen(false)
+    setContentToEdit(null)
+    setIsModalCreate(false)
   }
   function handleCloseDeleteContentModal() {
     setContentToDelete(null)
@@ -64,12 +78,19 @@ export default function ContentList() {
             color='primary'
             size='small'
             startIcon={<AddIcon />}
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => setIsModalCreate(true)}
           >
             <Trans>NEW</Trans>
           </Button>
         </Grid>
       </Grid>
+      <SearchBox
+        searches={[
+          { type: 'Input', name: 'name', placeholder: t('NAME') },
+          { type: 'Select', name: 'type', placeholder: t('TYPE'), options: ['Video', 'Text', 'Image'] },
+        ]}
+      />
+      <br/>
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
@@ -86,12 +107,18 @@ export default function ContentList() {
                 <TableCell component='th' scope='row'>
                   {content.name}
                 </TableCell>
-                <TableCell>{content.type}</TableCell>
-                <TableCell>{content.url}</TableCell>
+                <TableCell>
+                  {content.type.toLowerCase().includes('video') && (<OndemandVideo></OndemandVideo>)}
+                  {content.type.toLowerCase().includes('image') && (<ImageIcon></ImageIcon>)}
+                  {content.type.toLowerCase().includes('text') && (<TextSnippetIcon></TextSnippetIcon>)}
+                </TableCell>
+                <TableCell><Link href={content.url}>{content.url}</Link></TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => {
+                      console.log(content)
                       setContentToEdit(content)
+                      
                     }}
                     color='primary'
                     aria-label='edit content'
@@ -115,14 +142,12 @@ export default function ContentList() {
           </TableBody>
         </Table>
       </TableContainer>
-      {!!contentToEdit ||
-        (isModalOpen && (
+      {(!!contentToEdit ||isModalCreate ) && (
           <CreateAndEditContentModal
-            isOpen={isModalOpen}
             handleCloseContentModal={handleCloseEditContentModal}
             content={contentToEdit!}
           />
-        ))}
+        )}
       {!!contentToDelete && (
         <ContentDeleteModal
           isOpen={!!contentToDelete}

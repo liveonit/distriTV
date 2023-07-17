@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="com.google.android.assistant.READ_HOTWORD_STATE" />
@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 
     <uses-feature android:name="android.software.leanback" />
@@ -24,12 +25,16 @@
         android:logo="@mipmap/banner"
         android:supportsRtl="true"
         android:theme="@style/Theme.MobileDistriTV"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true">
 
         <activity
             android:name=".ui.home.HomeActivity"
             android:enabled="true"
             android:exported="true"
+            android:showOnLockScreen="true"
+            android:turnScreenOn="true"
+            android:excludeFromRecents="true"
             android:theme="@style/Theme.Material3.Dark.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,7 +46,17 @@
         </activity>
 
         <activity
-            android:name=".ui.player.ContentPlayerActivity"
+            android:name=".ui.player.alert.AlertPlayerActivity"
+            android:enabled="true"
+            android:exported="true"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
+            android:name=".ui.player.content.ContentPlayerActivity"
             android:enabled="true"
             android:exported="true"
             android:theme="@style/Theme.Material3.Dark.NoActionBar">
@@ -51,7 +66,7 @@
         </activity>
 
         <receiver
-            android:name=".bootup.BootUpReceiver"
+            android:name=".afterBoot.StarterReceiver"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
@@ -69,18 +84,14 @@
         </receiver>
 
         <receiver
-            android:name=".daemon.ContentPlaybackLauncher"
+            android:name=".launcher.ContentPlaybackLauncher"
             android:enabled="true"
             android:exported="true" />
 
-        <service
-            android:name=".bootup.BootUpService"
+        <receiver
+            android:name=".launcher.AlertLauncher"
             android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.softniels.autostartonboot.ForegroundService" />
-            </intent-filter>
-        </service>
+            android:exported="true" />
 
         <service
             android:name=".daemon.RequestDaemon"

@@ -3,6 +3,7 @@ package com.distritv.utils
 import android.net.Uri
 import android.util.Log
 import com.distritv.data.model.Content
+import java.io.File
 
 
 private const val MSG_IS_INVALID_ERROR = "The content %s is not valid => %s"
@@ -75,4 +76,12 @@ fun Content.existsContentName(tag: String, contentList: List<Content>): Boolean 
         return true
     }
     return false
+}
+
+fun Content.fileExists(directory: String): Boolean {
+    return if (this.isImage() || this.isVideo()) {
+        File(directory, this.fileName).exists()
+    } else {
+        true
+    }
 }

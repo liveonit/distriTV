@@ -1,26 +1,42 @@
+import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core'
 import React from 'react'
-import { MenuItem, Select, SelectProps } from '@material-ui/core'
+interface SearchDropdownProps {
+  options: string[]
+  value: string
+  onChange: (event: string) => void
+  placeholder: string
+}
 
-type FormInputDropdownPropsT = {
-  label: string
-  setValue?: any
-  selectOptions: { value: string | number; label: string }[]
-} & SelectProps
-
-export const SearchDropdown: React.FC<FormInputDropdownPropsT> = ({ label, selectOptions, ...otherProps }) => {
-  const generateSingleOptions = () => {
-    return selectOptions.map((option) => {
-      return (
-        <MenuItem key={option.value} value={option.value}>
-          {option.label}
-        </MenuItem>
-      )
-    })
+export const SearchDropdown: React.FC<SearchDropdownProps> = ({ options, value, onChange, placeholder }) => {
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const selectedValues = event.target.value as string
+    onChange(selectedValues)
   }
 
   return (
-    <Select {...otherProps} labelId='demo-simple-select-label' label={label}>
-      {generateSingleOptions()}
-    </Select>
+    <FormControl variant='outlined'>
+      <InputLabel id='search-single-dropdown-label' variant='outlined'>
+        {placeholder}
+      </InputLabel>
+      <Select
+        variant='outlined'
+        value={value || ''}
+        labelId='search-single-dropdown-label'
+        onChange={handleChange}
+        renderValue={value !== '' ? undefined : () => 'pepin'}
+        style={{ minWidth: 200 }}
+      >
+        {options.map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        ))}
+        <MenuItem value=''>
+          <em>None</em>
+        </MenuItem>
+      </Select>
+    </FormControl>
   )
 }
+
+export default SearchDropdown

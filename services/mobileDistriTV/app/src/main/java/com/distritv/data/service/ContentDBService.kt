@@ -2,6 +2,7 @@ package com.distritv.data.service
 
 import android.content.ContentValues
 import com.distritv.data.DBContract
+import com.distritv.data.helper.DBHelper
 import com.distritv.data.model.Content
 
 
@@ -12,7 +13,7 @@ class ContentDBService(private val dbHelper: DBHelper) {
         val values = ContentValues().apply {
             put(DBContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER, content.id)
             put(DBContract.ContentEntry.COLUMN_CONTENT_NAME, content.name)
-            put(DBContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH, content.localPath)
+            put(DBContract.ContentEntry.COLUMN_CONTENT_FILE_NAME, content.fileName)
             put(DBContract.ContentEntry.COLUMN_CONTENT_URL, content.url)
             put(DBContract.ContentEntry.COLUMN_CONTENT_TYPE, content.type)
             put(DBContract.ContentEntry.COLUMN_CONTENT_TEXT, content.text)
@@ -29,7 +30,7 @@ class ContentDBService(private val dbHelper: DBHelper) {
         val values = ContentValues().apply {
             put(DBContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER, content.id)
             put(DBContract.ContentEntry.COLUMN_CONTENT_NAME, content.name)
-            put(DBContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH, content.localPath)
+            put(DBContract.ContentEntry.COLUMN_CONTENT_FILE_NAME, content.fileName)
             put(DBContract.ContentEntry.COLUMN_CONTENT_URL, content.url)
             put(DBContract.ContentEntry.COLUMN_CONTENT_TYPE, content.type)
             put(DBContract.ContentEntry.COLUMN_CONTENT_TEXT, content.text)
@@ -82,11 +83,12 @@ class ContentDBService(private val dbHelper: DBHelper) {
                     Content(
                         getLong(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER)),
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_NAME)),
-                        getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH)),
+                        getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_FILE_NAME)),
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_URL)),
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_TYPE)),
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_TEXT)),
-                        getLong(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_DURATION))
+                        getLong(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_DURATION)),
+                        SCHEDULE_NULL
                     )
                 )
             }
@@ -123,11 +125,12 @@ class ContentDBService(private val dbHelper: DBHelper) {
                     Content(
                         getLong(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER)),
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_NAME)),
-                        getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH)),
+                        getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_FILE_NAME)),
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_URL)),
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_TYPE)),
                         getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_TEXT)),
-                        getLong(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_DURATION))
+                        getLong(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_DURATION)),
+                        SCHEDULE_NULL
                     )
                 )
             }
@@ -141,10 +144,10 @@ class ContentDBService(private val dbHelper: DBHelper) {
         }
     }
 
-    fun findLocalPathContents(): List<String> {
+    fun findFileNameContents(): List<String> {
 
         val projection = arrayOf(
-            DBContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH
+            DBContract.ContentEntry.COLUMN_CONTENT_FILE_NAME
         )
 
         val cursor = dbHelper.readableDatabase.query(
@@ -160,7 +163,7 @@ class ContentDBService(private val dbHelper: DBHelper) {
         val items = mutableListOf<String>()
         with(cursor) {
             while (moveToNext()) {
-                items.add(getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH)))
+                items.add(getString(getColumnIndexOrThrow(DBContract.ContentEntry.COLUMN_CONTENT_FILE_NAME)))
             }
         }
         cursor.close()
@@ -172,7 +175,7 @@ class ContentDBService(private val dbHelper: DBHelper) {
         return arrayOf(
             DBContract.ContentEntry.COLUMN_CONTENT_ID_FROM_SERVER,
             DBContract.ContentEntry.COLUMN_CONTENT_NAME,
-            DBContract.ContentEntry.COLUMN_CONTENT_LOCAL_PATH,
+            DBContract.ContentEntry.COLUMN_CONTENT_FILE_NAME,
             DBContract.ContentEntry.COLUMN_CONTENT_URL,
             DBContract.ContentEntry.COLUMN_CONTENT_TYPE,
             DBContract.ContentEntry.COLUMN_CONTENT_TEXT,
@@ -182,6 +185,7 @@ class ContentDBService(private val dbHelper: DBHelper) {
 
     companion object {
         const val TAG = "[ContentDBService]"
+        private val SCHEDULE_NULL = null
     }
 
 }

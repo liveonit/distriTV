@@ -20,9 +20,6 @@ import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
 import dayjs from 'dayjs'
-
-import AgendaCreateAndEditModal from './AgendaCreateAndEditModal'
-import AgendaDeleteModal from './AgendaDeleteModal'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 import { useTranslation } from 'react-i18next'
@@ -32,6 +29,9 @@ import { televisionsSelector } from 'src/store/television/television.selector'
 import { listTelevisions } from 'src/store/television/television.action'
 import { listContents } from 'src/store/content/content.action'
 import { contentSelector } from 'src/store/content/content.selector'
+
+import AgendaDeleteModal from './AgendaDeleteModal'
+import AgendaCreateAndEditModal from './AgendaCreateAndEditModal'
 
 const useStyles = makeStyles({
   table: {

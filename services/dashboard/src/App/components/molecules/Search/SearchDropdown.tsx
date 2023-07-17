@@ -18,10 +18,10 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ options, value, 
       <InputLabel variant='outlined'>{placeholder}</InputLabel>    
       <Select 
         variant='outlined'
-        value={value || ""} 
+        value={value || ''} 
         onChange={handleChange}
         renderValue={
-          value !== "" ? undefined : () => 'pepin'
+          value !== '' ? undefined : () => 'pepin'
         }
         style={{minWidth: 200}}>      
         {options.map((option) => (

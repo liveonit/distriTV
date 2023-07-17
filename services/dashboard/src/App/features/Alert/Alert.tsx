@@ -20,9 +20,6 @@ import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
 import dayjs from 'dayjs'
-
-import AlertCreateAndEditModal from './AlertsCreateAndEditModal'
-import AlertDeleteModal from './AlertsDeleteModal'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 import { useTranslation } from 'react-i18next'
@@ -30,6 +27,9 @@ import { labelsSelector } from 'src/store/label/label.selector'
 import { listLabels } from 'src/store/label/label.action'
 import { televisionsSelector } from 'src/store/television/television.selector'
 import { listTelevisions } from 'src/store/television/television.action'
+
+import AlertDeleteModal from './AlertsDeleteModal'
+import AlertCreateAndEditModal from './AlertsCreateAndEditModal'
 
 const useStyles = makeStyles({
   table: {

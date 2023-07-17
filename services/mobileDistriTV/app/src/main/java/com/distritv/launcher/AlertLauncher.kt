@@ -60,17 +60,13 @@ class AlertLauncher : BroadcastReceiver() {
             return
         }
 
-        if (isAlertCurrentlyPlaying || alertWasPausedOrDestroyed) {
-            // The playing alert is different from the new alert
-            // or it is a paused or destroyed alert
-            if ((currentlyPlayingAlertId != null && currentlyPlayingAlertId != alert.id)
-                || (alertWasPausedOrDestroyed && currentlyPlayingAlertId == alert.id)) {
-                Log.w(TAG, "Alert is playing but new alert must override it")
-                (context.applicationContext as DistriTVApp).setSkipClearing(true)
-                currentActivity?.finish()
-            } else {
-                return
-            }
+        // Alert is new or paused or destroyed
+        if ((isAlertCurrentlyPlaying && !alert.started) || alertWasPausedOrDestroyed) {
+            Log.w(TAG, "Alert is playing but new alert must override it")
+            (context.applicationContext as DistriTVApp).setSkipClearing(true)
+            currentActivity?.finish()
+        } else if (isAlertCurrentlyPlaying) {
+            return
         }
 
         if (isContentCurrentlyPlaying) {

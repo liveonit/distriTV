@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class Alert(
     val id: Long,
     val text: String,
-    var durationLeft: Long
+    var durationLeft: Long,
+    val started: Boolean
     ) : Parcelable
 

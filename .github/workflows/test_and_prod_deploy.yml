@@ -26,7 +26,7 @@ jobs:
         push: false
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/distritv-api:latest,${{ secrets.DOCKERHUB_USERNAME }}/distritv-api:${{ github.sha }}
         file: Dockerfile.production
-      working-directory: services/api
+        context: "{{defaultContext}}:services/api"
 
     - name: Build frontend
       uses: docker/build-push-action@v4
@@ -34,7 +34,7 @@ jobs:
         push: false
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/distritv-dashboard:latest,${{ secrets.DOCKERHUB_USERNAME }}/distritv-dashboard:${{ github.sha }}
         file: Dockerfile.production
-      working-directory: services/dashboard
+        context: "{{defaultContext}}:services/dashboard"
 
     - name: Start containers
       run: docker-compose up -d -f "docker-compose.prod.yml"
@@ -74,7 +74,7 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/distritv-api:latest,${{ secrets.DOCKERHUB_USERNAME }}/distritv-api:${{ github.sha }}
         file: Dockerfile.production
-      working-directory: services/api
+        context: "{{defaultContext}}:services/api"
 
     - name: Push frontend
       uses: docker/build-push-action@v4
@@ -82,8 +82,7 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/distritv-dashboard:latest,${{ secrets.DOCKERHUB_USERNAME }}/distritv-dashboard:${{ github.sha }}
         file: Dockerfile.production
-      working-directory: services/dashboard
-
+        context: "{{defaultContext}}:services/api"
 
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.10

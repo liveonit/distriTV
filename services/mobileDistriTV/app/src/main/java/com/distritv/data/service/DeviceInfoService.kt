@@ -44,6 +44,7 @@ class DeviceInfoService(
         return DeviceInfo(
             getTvCode(),
             getCurrentVersionApp(),
+            getSDKVersion(),
             availableMem,
             totalMem,
             memUnit,
@@ -60,7 +61,10 @@ class DeviceInfoService(
             externalMemoryAvailable(),
             externalStoragePermissionGranted(),
             displayOverOtherAppsPermissionGranted(),
-            getSDKVersion()
+            isAnyAlertPlaying(),
+            getCurrentlyPlayingAlertId(),
+            getAlertDurationLeft(),
+            getAnticipationDays()
         )
     }
 
@@ -74,6 +78,10 @@ class DeviceInfoService(
 
     private fun getTvCode(): String {
         return sharedPreferences.getTvCode() ?: ""
+    }
+
+    private fun getAnticipationDays(): Int {
+        return sharedPreferences.getAnticipationDays()
     }
 
     private fun useExternalStorage(): Boolean {
@@ -210,6 +218,18 @@ class DeviceInfoService(
 
     private fun getSDKVersion(): Int {
         return Build.VERSION.SDK_INT
+    }
+
+    private fun isAnyAlertPlaying(): Boolean {
+        return myApp?.isAlertCurrentlyPlaying() ?: false
+    }
+
+    private fun getCurrentlyPlayingAlertId(): Long? {
+        return myApp?.getCurrentlyPlayingAlertId()
+    }
+
+    private fun getAlertDurationLeft(): Long? {
+        return myApp?.getAlertDurationLeft()
     }
 
     companion object {

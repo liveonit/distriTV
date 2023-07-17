@@ -18,11 +18,14 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import com.distritv.BuildConfig
+import com.distritv.DistriTVApp
 import com.distritv.R
 import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
+import com.distritv.data.model.Alert
 import com.distritv.data.model.Content
+import com.distritv.data.model.DeviceInfo
 import com.distritv.data.repositories.ContentRepository
-import com.distritv.data.repositories.ScheduleRepository
+import com.distritv.data.repositories.TelevisionRepository
 import com.distritv.data.service.ContentService
 import com.distritv.data.service.DeviceInfoService
 import com.distritv.data.service.ScheduleService
@@ -39,7 +42,7 @@ import java.util.concurrent.TimeUnit
 class RequestDaemon: Service() {
 
     private val contentRepository: ContentRepository by inject()
-    private val scheduleRepository: ScheduleRepository by inject()
+    private val televisionRepository: TelevisionRepository by inject()
     private val contentService: ContentService by inject()
     private val scheduleService: ScheduleService by inject()
 
@@ -108,39 +111,24 @@ class RequestDaemon: Service() {
                     return@launch
                 }
 
-                if (deviceInfo.useExternalStorage && (!deviceInfo.isExternalStorageConnected
-                            || ((Build.VERSION.SDK_INT < SDK_VERSION_FOR_MEDIA_STORE)
-                            && ((deviceInfo.externalStoragePermissionGranted != null) && !deviceInfo.externalStoragePermissionGranted)))
-                ) {
-
-                    Log.e(TAG, "External storage may not be found or permission not granted.")
-                    Log.e(TAG, "External storage is connected?: ${deviceInfo.isExternalStorageConnected}")
-                    Log.e(TAG, "External storage permission granted?: ${deviceInfo.externalStoragePermissionGranted}")
-
-                    errorMessageHandler.post {
-                        Toast.makeText(
-                            applicationContext,
-                            getString(R.string.msg_error_external_storage),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-
-                    return@launch
-                }
-
                 val scheduleList = scheduleService.getAllSchedules()
 
                 // Fetch schedules with content from the server
-                val responseScheduleList = scheduleRepository.fetchScheduleList(deviceInfo)
+                val responseTelevision =
+                    televisionRepository.fetchTelevision(deviceInfo) ?: return@launch
 
-                // Check if any schedule was removed to delete
+                if (checkExternalStorage(deviceInfo)) return@launch
+
+                checkAlert(deviceInfo, responseTelevision.alert)
+
+                // Check if any schedule was removed on the server then delete on TV
                 scheduleList.forEach { schedule ->
-                    scheduleService.checkAndDeletedSchedule(schedule, responseScheduleList)
+                    scheduleService.checkAndDeletedSchedule(schedule, responseTelevision.schedules)
                 }
 
-                for (schedule in responseScheduleList) {
+                for (schedule in responseTelevision.schedules) {
 
-                    if (!schedule.startDownloadRestriction()) {
+                    if (!scheduleService.meetAnticipationDays(schedule.startDate) || !schedule.validEndDate()) {
                         continue
                     }
 
@@ -178,6 +166,73 @@ class RequestDaemon: Service() {
                 Log.e(TAG, "$e")
             }
         }
+    }
+
+    private fun checkAlert(deviceInfo: DeviceInfo, alert: Alert?) {
+        if (alert == null) {
+            // Clear alert duration left
+            if (deviceInfo.alertDurationLeft != null) {
+                // Cancel current alert
+                if (deviceInfo.alertDurationLeft > 0) {
+                    launchAlert(getAlertBlank())
+                }
+                setNullDurationLeft()
+                setNullCurrentlyPlayingAlertId()
+            }
+            return
+        }
+        if ((deviceInfo.alertDurationLeft == null)
+            || (getCurrentlyPlayingAlertId() != null && getCurrentlyPlayingAlertId() != alert.id)
+            || (!isAlertCurrentlyPlaying() && getCurrentlyPlayingAlertId() != null)) {
+            launchAlert(alert)
+        } else if (deviceInfo.alertDurationLeft == 0L) {
+            // Clear alert duration left and alert id
+            setNullDurationLeft()
+            setNullCurrentlyPlayingAlertId()
+        }
+    }
+
+    private fun launchAlert(alert: Alert) {
+        val intent = createIntentAlert(applicationContext, alert)
+        sendBroadcast(intent)
+    }
+
+    private fun getCurrentlyPlayingAlertId(): Long? {
+        return (applicationContext.applicationContext as DistriTVApp?)?.getCurrentlyPlayingAlertId()
+    }
+
+    private fun setNullCurrentlyPlayingAlertId() {
+        (applicationContext.applicationContext as DistriTVApp?)?.setCurrentlyPlayingAlertId(null)
+    }
+
+    private fun isAlertCurrentlyPlaying(): Boolean {
+        return (applicationContext.applicationContext as DistriTVApp?)?.isAlertCurrentlyPlaying() ?: false
+    }
+
+    private fun setNullDurationLeft() {
+        (applicationContext.applicationContext as DistriTVApp?)?.setAlertDurationLeft(null)
+    }
+
+    private fun checkExternalStorage(deviceInfo: DeviceInfo): Boolean {
+        if (deviceInfo.useExternalStorage && (!deviceInfo.isExternalStorageConnected
+                    || ((Build.VERSION.SDK_INT < SDK_VERSION_FOR_MEDIA_STORE)
+                    && ((deviceInfo.externalStoragePermissionGranted != null) && !deviceInfo.externalStoragePermissionGranted)))
+        ) {
+            Log.e(TAG, "External storage may not be found or permission not granted.")
+            Log.e(TAG, "External storage is connected?: ${deviceInfo.isExternalStorageConnected}")
+            Log.e(TAG, "External storage permission granted?: ${deviceInfo.externalStoragePermissionGranted}")
+
+            errorMessageHandler.post {
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.msg_error_external_storage),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
+            return true
+        }
+        return false
     }
 
     private suspend fun contentProcessing(content: Content) {

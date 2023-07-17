@@ -3,21 +3,21 @@ import * as z from 'zod'
 export const alertSchema = z
 .object({
   id: z.number().optional(),
-  televisionId: z.number().optional(),
   destinationType: z.string(),
   duration: z.number(),
   labelId: z.number().optional(),
-  startDate: z.date(),
   text: z.string(),
   television: z.object({      
-    name: z.string(),
+    id: z.number().optional(),
+    name: z.string().optional(),
   }).optional(),
-  label: z.object({      
-    name: z.string(),
+  label: z.object({
+    id: z.number().optional(),      
+    name: z.string().optional(),
   }).optional(),
 })
 .superRefine((value, ctx) => {
-  if (value.televisionId === undefined && value.destinationType === 'TELEVISION') {
+  if (value.television?.id === undefined && value.destinationType === 'TELEVISION') {
     ctx.addIssue({
       message: 'Television must be specified',
       code: z.ZodIssueCode.custom,

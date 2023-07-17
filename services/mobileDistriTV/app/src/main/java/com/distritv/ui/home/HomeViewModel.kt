@@ -11,13 +11,13 @@ import com.distritv.BuildConfig
 import com.distritv.R
 import com.distritv.data.helper.StorageHelper.createOrClearTargetDirectory
 import com.distritv.data.model.DeviceInfoCard
-import com.distritv.data.repositories.ScheduleRepository
 import com.distritv.data.service.DeviceInfoService
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
 import com.distritv.data.helper.StorageHelper.externalStorageDirIsEmpty
 import com.distritv.data.helper.StorageHelper.internalStorageDirIsEmpty
 import com.distritv.data.helper.StorageHelper.moveFiles
+import com.distritv.data.repositories.TelevisionRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -27,7 +27,7 @@ class HomeViewModel(
     private val context: Context,
     private val deviceInfoService: DeviceInfoService,
     private val sharedPreferences: SharedPreferencesService,
-    private val scheduleRepository: ScheduleRepository
+    private val televisionRepository: TelevisionRepository
 ) : ViewModel() {
 
     private val _isValid = MutableLiveData<Boolean>()
@@ -72,6 +72,7 @@ class HomeViewModel(
     private var error: Int = -1
 
     private val externalStorageEnabled: Boolean = BuildConfig.EXTERNAL_STORAGE_ENABLED
+    private val anticipationDaysOptions: String = BuildConfig.ANTICIPATION_DAYS_OPTIONS
 
     fun registerTvCode(code: String, useExternalStorage: Boolean) {
         if (code.length < 6) {
@@ -83,7 +84,7 @@ class HomeViewModel(
         viewModelScope.launch {
             _loading.value = true
             try {
-                scheduleRepository.validateTvCode(code).run {
+                televisionRepository.validateTvCode(code).run {
                     if (this) {
                         sharedPreferences.addTvCode(code)
                         _referrerRequestPerm.postValue(DEVICE_INFO)
@@ -101,13 +102,13 @@ class HomeViewModel(
                 _isValid.postValue(false)
                 error = R.string.msg_tv_code_connection_error
             } catch (e: HttpException) {
-                if (e.message?.contains("HTTP 5") != false) {
+                error = if (e.code() == HTTP_NOT_FOUND) {
+                    _errorMessage.postValue(context.getString(R.string.msg_tv_code_invalid))
+                    R.string.msg_tv_code_invalid
+                } else {
                     Log.e(TAG, "${e.javaClass}: ${e.message}")
                     _errorMessage.postValue(context.getString(R.string.msg_tv_code_error))
-                    error = R.string.msg_tv_code_error
-                } else {
-                    _errorMessage.postValue(context.getString(R.string.msg_tv_code_invalid))
-                    error = R.string.msg_tv_code_invalid
+                    R.string.msg_tv_code_error
                 }
                 _isValid.postValue(false)
             } catch (e: Exception) {
@@ -129,7 +130,7 @@ class HomeViewModel(
         _deviceInfo.postValue(info)
         viewModelScope.launch {
             sharedPreferences.getTvCode()?.let {
-                scheduleRepository.validateConnection(it).run {
+                televisionRepository.validateConnection(it).run {
                     info.connectionStatus = this
                     _deviceInfo.postValue(info)
                 }
@@ -229,7 +230,10 @@ class HomeViewModel(
             context.getString(R.string.info_card_tv_code),
             context.getString(R.string.info_card_connection_status),
             context.getString(R.string.language),
+            context.getString(R.string.language_select),
             context.getString(R.string.info_card_switch_external),
+            context.getString(R.string.info_card_anticipation_days),
+            context.getString(R.string.info_card_anticipation_spinner_title)
         )
     }
 
@@ -262,6 +266,26 @@ class HomeViewModel(
 
     fun isExternalStorageEnabled(): Boolean {
         return externalStorageEnabled
+    }
+
+    fun getAnticipationDaysOptions(): Array<String>? {
+        try {
+            val options = anticipationDaysOptions.split(ANTICIPATION_DAYS_SEPARATOR)
+            if (options.isEmpty() || !options.all { it.trim().toIntOrNull() != null }) {
+                return null
+            }
+            return options.map { it.trim() + ANTICIPATION_DAYS_WHITESPACE + context.getString(R.string.days) }.toTypedArray()
+        } catch (e: Exception) {
+            return null
+        }
+    }
+
+    fun getCurrentAnticipationDays(): Int {
+        return sharedPreferences.getAnticipationDays()
+    }
+
+    fun setCurrentAnticipationDays(days: Int) {
+        sharedPreferences.setAnticipationDays(days)
     }
 
     companion object {

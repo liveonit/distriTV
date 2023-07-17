@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class DeviceInfo(
     val tvCode: String,
     val currentVersionApp: String,
+    val sdkVersion: Int,
     val availableMem: Double,
     val totalMem: Double,
     val memUnit: String,
@@ -23,6 +24,9 @@ data class DeviceInfo(
     val isExternalStorageConnected: Boolean,
     val externalStoragePermissionGranted: Boolean?,
     val displayOverOtherAppsPermissionGranted: Boolean?,
-    val sdkVersion: Int
+    val isAnyAlertPlaying: Boolean,
+    val currentlyPlayingAlertId: Long?,
+    val alertDurationLeft: Long?,
+    val anticipationDays: Int
 ) : Parcelable {
 }

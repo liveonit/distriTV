@@ -1,4 +1,4 @@
-package com.distritv.ui.player
+package com.distritv.ui.player.content
 
 import android.os.Bundle
 import android.os.Handler
@@ -23,7 +23,7 @@ class ImageFragment : Fragment() {
     private var _binding: FragmentImageBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModel<ImageViewModel>()
+    private val viewModel by viewModel<ContentPlayerViewModel>()
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -48,7 +48,7 @@ class ImageFragment : Fragment() {
             content = it.getParcelable(CONTENT_PARAM)
             if (content == null) {
                 Log.e(TAG, "An error occurred while trying to play, back to home...")
-                onAfterCompletion(TAG)
+                onAfterCompletionContent(TAG)
             }
         }
 
@@ -74,18 +74,19 @@ class ImageFragment : Fragment() {
     }
 
     private fun loadImageObserver() {
-        viewModel.image.observe(viewLifecycleOwner) {
-            if (it != null) {
-                binding.imageContainer.setImageBitmap(it)
+        viewModel.image.observe(viewLifecycleOwner) { imageBitmap ->
+            if (imageBitmap != null) {
+                binding.imageContainer.setImageBitmap(imageBitmap)
+                content?.let { viewModel.playOnceContentAlreadyStarted(it) }
                 Log.i(TAG, "Playback started. Content id: ${content?.id}")
                 handler.postDelayed({
-                    onAfterCompletion(TAG, content?.id)
+                    onAfterCompletionContent(TAG, content?.id)
                 }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
             } else {
                 Log.e(TAG, "An error occurred while trying to play. Check storage. Back to home...")
                 Toast.makeText(activity, getString(R.string.msg_unavailable_content),
                     Toast.LENGTH_LONG).show()
-                onAfterCompletion(TAG, content?.id)
+                onAfterCompletionContent(TAG, content?.id)
             }
         }
     }

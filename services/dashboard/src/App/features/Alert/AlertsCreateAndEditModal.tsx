@@ -9,11 +9,9 @@ import { alertSchema, AlertT } from 'src/store/alert/alert.type'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
-import { FormInputDate } from 'src/App/components/molecules/Forms/FormInputDate'
 import { removeEmpty } from 'src/utils/removeEmpty'
 import { useDispatch, useSelector } from 'react-redux'
-import { listContents } from 'src/store/content/content.action'
-import { listTelevisions } from 'src/store/television/television.action'
+import { listTelevisionsJoin } from 'src/store/television/television.action'
 import { televisionsSelector } from 'src/store/television/television.selector'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { listLabels } from 'src/store/label/label.action'
@@ -32,7 +30,6 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
   const alertInitialState: AlertT = {
     televisionId: undefined,
     labelId: undefined,
-    startDate: new Date(),
     text: undefined,
     destinationType: 'TELEVISION',
     duration: undefined,
@@ -51,8 +48,7 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
   const { t } = useTranslation()
   const dispatch = useDispatch()
   React.useEffect(() => {
-    dispatch(listContents())
-    dispatch(listTelevisions())
+    dispatch(listTelevisionsJoin())
     dispatch(listLabels())
   }, [dispatch])
 
@@ -106,14 +102,14 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
                 }))}
               />
             </Grid>
-            {watch('destinationType') === 'TELEVISION' && (
+            {watch('destinationType') === 'TELEVISION' && (              
               <Grid item xs={12}>
                 <FormInputDropdown
                   fullWidth
                   label={t('TELEVISION')}
-                  name='televisionId'
+                  name='television.id'
                   control={control}
-                  selectOptions={televisions.map((tel) => ({ label: tel.name, value: tel.id! }))}
+                  selectOptions={televisions.filter(tv => tv?.alert===null).map((tel) => ({ label: tel.name, value: tel.id! }))}
                 />
               </Grid>
             )}
@@ -130,7 +126,6 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
             )}
           </Grid>{' '}
           <br />
-          <FormInputDate name='startDate' control={control} label={t('START_DATE')} />
         </DialogContent>
         <DialogActions>
           <Button

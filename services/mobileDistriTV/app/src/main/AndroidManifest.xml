@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 
     <uses-feature android:name="android.software.leanback" />
@@ -31,6 +32,9 @@
             android:name=".ui.home.HomeActivity"
             android:enabled="true"
             android:exported="true"
+            android:showOnLockScreen="true"
+            android:turnScreenOn="true"
+            android:excludeFromRecents="true"
             android:theme="@style/Theme.Material3.Dark.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,7 +46,17 @@
         </activity>
 
         <activity
-            android:name=".ui.player.ContentPlayerActivity"
+            android:name=".ui.player.alert.AlertPlayerActivity"
+            android:enabled="true"
+            android:exported="true"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
+            android:name=".ui.player.content.ContentPlayerActivity"
             android:enabled="true"
             android:exported="true"
             android:theme="@style/Theme.Material3.Dark.NoActionBar">
@@ -70,7 +84,12 @@
         </receiver>
 
         <receiver
-            android:name=".daemon.ContentPlaybackLauncher"
+            android:name=".launcher.ContentPlaybackLauncher"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".launcher.AlertLauncher"
             android:enabled="true"
             android:exported="true" />
 

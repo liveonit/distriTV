@@ -4,7 +4,8 @@ import {
   JoinColumn,
   ManyToOne,
   Column,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
+  OneToOne
 } from 'typeorm';
 import { Television } from './Television';
 
@@ -22,25 +23,22 @@ export class Alert extends BaseEntity {
   destinationType!: string
 
   @Column()
-  televisionId?: number;
-
-  @Column()
-  startDate!: Date;
-
-  @Column()
   text!: String;
 
   @Column()
   duration!: number;
 
-  @ManyToOne(() => Television, (tv) => tv.alerts)
-  @JoinColumn({ name: 'televisionId' })
-  television!: Television;
+  @Column()
+  durationLeft?: number;
+
+  @Column()
+  started!: boolean;
 
   @ManyToOne(() => Label, (label) => label.alerts)
   @JoinColumn({ name: 'labelId' })
   label!: Label;
 
-
+  @OneToOne(() => Television, (tv) => tv.alert)
+  television?: Television | null
 }
 

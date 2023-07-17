@@ -43,11 +43,25 @@ fun FragmentManager.removeFragment(fragment: Fragment) {
     }
 }
 
-fun Fragment.onAfterCompletion(tag: String) {
-    this.onAfterCompletion(tag, null)
+fun Fragment.onAfterCompletionContent(tag: String) {
+    this.onAfterCompletionContent(tag, null)
 }
 
-fun Fragment.onAfterCompletion(tag: String, contentId: Long?) {
+fun Fragment.onAfterCompletionAlert(tag: String) {
+    this.onAfterCompletionAlert(tag, null)
+}
+
+fun Fragment.onAfterCompletionAlert(tag: String, alertId: Long?) {
+    val application: DistriTVApp? =
+        (context?.applicationContext as DistriTVApp?)
+
+    // Notice that the alert has finished playing:
+    application?.setIfAnyAlertIsCurrentlyPlaying(false)
+
+    onAfterCompletion(tag, alertId, application)
+}
+
+fun Fragment.onAfterCompletionContent(tag: String, contentId: Long?) {
     val application: DistriTVApp? =
         (context?.applicationContext as DistriTVApp?)
 
@@ -56,14 +70,19 @@ fun Fragment.onAfterCompletion(tag: String, contentId: Long?) {
     // Clear the identifier of the content that was playing:
     application?.setCurrentlyPlayingContentId(null)
 
+    onAfterCompletion(tag, contentId, application)
+}
+
+private fun Fragment.onAfterCompletion(tag: String, id: Long?, application: DistriTVApp?) {
+
     val currentActivity: Activity? = application?.getCurrentActivity()
     if (currentActivity != null && currentActivity !is HomeActivity) {
         val intent = Intent(context, HomeActivity::class.java)
         context?.startActivity(intent)
         activity?.finish()
-        Log.i(tag, "Playback finished, coming home... Content id: $contentId")
+        Log.i(tag, "Playback finished, coming home... Content or Alert Id: $id")
     } else {
-        Log.i(tag, "Playback finished. Content id: $contentId")
+        Log.i(tag, "Playback finished. Content or Alert Id: $id")
     }
 }
 
@@ -77,4 +96,16 @@ fun Fragment.backHomeOnResume() {
         context?.startActivity(intent)
         activity?.finish()
     }
+}
+
+fun Fragment.setAlertDurationLeft(durationLeft: Long) {
+    val application: DistriTVApp? =
+        (context?.applicationContext as DistriTVApp?)
+
+    application?.setAlertDurationLeft(durationLeft)
+}
+
+fun Fragment.cancelPlay() {
+    // Notice that the alert has finished playing:
+    (context?.applicationContext as DistriTVApp?)?.setIfAnyAlertIsCurrentlyPlaying(false)
 }

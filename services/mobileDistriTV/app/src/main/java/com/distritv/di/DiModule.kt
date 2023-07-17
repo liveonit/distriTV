@@ -5,20 +5,17 @@ import com.distritv.BuildConfig
 import com.distritv.R
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
-import com.distritv.ui.player.ImageViewModel
+import com.distritv.ui.player.content.ContentPlayerViewModel
 import com.distritv.ui.home.HomeViewModel
 import com.distritv.data.service.AlarmService
 import com.distritv.data.service.ContentDBService
 import com.distritv.data.service.ScheduleDBService
 import com.distritv.data.helper.DBHelper
 import com.distritv.data.service.SharedPreferencesService
-import com.distritv.data.repositories.ContentRepository
-import com.distritv.data.repositories.IContentRepository
 import com.distritv.data.service.ContentService
 import com.distritv.data.service.ScheduleService
 import com.distritv.data.api.ApiService
-import com.distritv.data.repositories.IScheduleRepository
-import com.distritv.data.repositories.ScheduleRepository
+import com.distritv.data.repositories.*
 import com.distritv.utils.LocalDateTimeDeserializer
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -65,12 +62,12 @@ fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiServi
 
 val repositoriesModule = module {
     singleOf(::ContentRepository) { bind<IContentRepository>() }
-    singleOf(::ScheduleRepository) { bind<IScheduleRepository>() }
+    singleOf(::TelevisionRepository) { bind<ITelevisionRepository>() }
 }
 
 
 val viewModelsModule = module {
-    viewModelOf(::ImageViewModel)
+    viewModelOf(::ContentPlayerViewModel)
     viewModelOf(::HomeViewModel)
 }
 

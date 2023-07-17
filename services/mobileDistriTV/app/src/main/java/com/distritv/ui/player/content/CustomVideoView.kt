@@ -1,4 +1,4 @@
-package com.distritv.ui.player
+package com.distritv.ui.player.content
 
 import android.content.Context
 import android.util.AttributeSet

@@ -1,4 +1,4 @@
-package com.distritv.ui.player
+package com.distritv.ui.player.content
 
 import android.os.Bundle
 import android.os.Handler
@@ -15,9 +15,10 @@ import com.distritv.R
 import com.distritv.data.model.Content
 import com.distritv.databinding.FragmentVideoBinding
 import com.distritv.ui.FullscreenManager
-import com.distritv.ui.player.CustomVideoView.PlayPauseListener
+import com.distritv.ui.player.content.CustomVideoView.PlayPauseListener
 import com.distritv.utils.*
 import com.distritv.data.helper.StorageHelper.getCurrentDirectory
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
@@ -26,6 +27,8 @@ class VideoFragment : Fragment() {
 
     private var _binding: FragmentVideoBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel by viewModel<ContentPlayerViewModel>()
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -54,7 +57,7 @@ class VideoFragment : Fragment() {
             content = it.getParcelable(CONTENT_PARAM)
             if (content == null) {
                 Log.e(TAG, "An error occurred while trying to play, back to home...")
-                onAfterCompletion(TAG)
+                onAfterCompletionContent(TAG)
             }
         }
 
@@ -110,7 +113,7 @@ class VideoFragment : Fragment() {
             Log.e(TAG, "An error occurred while trying to play. Check storage. Back to home...")
             Toast.makeText(context, getString(R.string.msg_unavailable_content), Toast.LENGTH_LONG)
                 .show()
-            onAfterCompletion(TAG, content?.id)
+            onAfterCompletionContent(TAG, content?.id)
         }
 
         val path = File(context?.getCurrentDirectory() ?: "", content?.fileName ?: "").toURI().toString()
@@ -122,7 +125,7 @@ class VideoFragment : Fragment() {
 
         binding.videoContainer.setOnCompletionListener {
             handler.postDelayed({
-                onAfterCompletion(TAG, content?.id)
+                onAfterCompletionContent(TAG, content?.id)
             }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
         }
 
@@ -144,6 +147,8 @@ class VideoFragment : Fragment() {
 
         binding.videoContainer.start()
 
+        content?.let { viewModel.playOnceContentAlreadyStarted(it) }
+
         Log.i(TAG, "Playback started. Content id: ${content?.id}")
     }
 
@@ -156,7 +161,7 @@ class VideoFragment : Fragment() {
 
         handler.postDelayed({
             Log.i(TAG, "Ending video while paused")
-            onAfterCompletion(TAG, content?.id)
+            onAfterCompletionContent(TAG, content?.id)
         }, remainingTime.toLong())
     }
 

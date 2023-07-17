@@ -2,12 +2,14 @@ import { z } from 'zod';
 
 export const updateAlertBody = z.object({
   id: z.number().optional(),
-  televisionId: z.number().optional(),
+  television: z.object({
+    id: z.number()
+  }),
   duration: z.number().optional(),
   destinationType: z.string().optional(),
   labelId: z.number().optional(),
-  startDate: z.string().transform((a) => new Date(a)).optional(),
   text: z.string().optional(),
+  durationLeft: z.number().optional(),
 });
 
 export type UpdateAlertBodyType = z.infer<typeof updateAlertBody>;

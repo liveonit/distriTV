@@ -12,4 +12,5 @@ data class Content(
     val type: String,
     val text: String,
     var durationInSeconds: Long,
+    var schedule: Schedule?
     ) : Parcelable

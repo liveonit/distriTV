@@ -1,15 +1,16 @@
-package com.distritv.ui.player
+package com.distritv.ui.player.content
 
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.distritv.DistriTVApp
 import com.distritv.R
 import com.distritv.data.model.Content
-import com.distritv.databinding.ActivityContentPlayerBinding
+import com.distritv.databinding.ActivityPlayerBinding
 import com.distritv.ui.*
 import com.distritv.ui.home.HomeActivity
 import com.distritv.utils.*
@@ -17,7 +18,7 @@ import com.distritv.utils.*
 
 class ContentPlayerActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityContentPlayerBinding
+    private lateinit var binding: ActivityPlayerBinding
 
     private var myApp: DistriTVApp? = null
 
@@ -27,8 +28,11 @@ class ContentPlayerActivity : AppCompatActivity() {
     @SuppressLint("AppCompatMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityContentPlayerBinding.inflate(layoutInflater)
+        binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // So that this activity is not removed by the screen saver
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         myApp = this.applicationContext as DistriTVApp?
 
@@ -55,21 +59,28 @@ class ContentPlayerActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        clearReferences()
+        if (myApp?.skipClearing() == false) {
+            clearReferences()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        clearReferences()
+        if (myApp?.skipClearing() == false) {
+            clearReferences()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        clearReferences()
-        // Notice that the content playback has finished:
-        myApp?.setIfAnyContentIsCurrentlyPlaying(false)
-        // Clear the identifier of the content that was playing:
-        myApp?.setCurrentlyPlayingContentId(null)
+        if (myApp?.skipClearing() == false) {
+            // Notice that the content playback has finished:
+            myApp?.setIfAnyContentIsCurrentlyPlaying(false)
+            // Clear the identifier of the content that was playing:
+            myApp?.setCurrentlyPlayingContentId(null)
+            clearReferences()
+            myApp?.setSkipClearing(null)
+        }
     }
 
     private fun clearReferences() {

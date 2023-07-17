@@ -7,7 +7,8 @@ import {
   ManyToMany,
   JoinTable,
   JoinColumn,
-  OneToMany
+  OneToMany,
+  OneToOne
 } from 'typeorm';
 import { Institution } from './Institution';
 import { Notification } from './Notification';
@@ -51,6 +52,7 @@ export class Television extends BaseEntity {
   @OneToMany(() => Schedule, (schedule) => schedule.television)
   schedules?: Schedule[];
 
-  @OneToMany(() => Alert, (alert) => alert.television)
-  alerts?: Alert[];
+  @OneToOne(() => Alert, (alert) => alert.television)
+  @JoinColumn()
+  alert?: Alert | null;
 }

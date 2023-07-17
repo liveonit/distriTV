@@ -3,7 +3,7 @@
  * or launching the HomeActivity with the corresponding fragment.
  */
 
-package com.distritv.daemon
+package com.distritv.launcher
 
 import android.app.Activity
 import android.app.AlarmManager
@@ -17,7 +17,7 @@ import com.distritv.DistriTVApp
 import com.distritv.R
 import com.distritv.data.model.Content
 import com.distritv.ui.home.HomeActivity
-import com.distritv.ui.player.ContentPlayerActivity
+import com.distritv.ui.player.content.ContentPlayerActivity
 import com.distritv.utils.*
 import com.distritv.data.helper.StorageHelper.getCurrentDirectory
 
@@ -42,12 +42,15 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
         val isContentCurrentlyPlaying: Boolean =
             (context.applicationContext as DistriTVApp).isContentCurrentlyPlaying()
 
+        val isAlertCurrentlyPlaying: Boolean =
+            (context.applicationContext as DistriTVApp).isAlertCurrentlyPlaying()
+
         if (content == null || !contentIsValid(content)) {
             return
         }
 
-        if (isContentCurrentlyPlaying) {
-            Log.w(TAG, "Cannot be played because other content is currently playing")
+        if (isContentCurrentlyPlaying || isAlertCurrentlyPlaying) {
+            Log.w(TAG, "Cannot be played because other content or alert is currently playing")
             if (isAlarm != null && isAlarm) {
                 cancelAlarm(context, content)
             }
@@ -66,8 +69,9 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
         if (currentActivity == null) {
             val homeIntent = Intent(context, HomeActivity::class.java)
             homeIntent.addFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK or
-                        Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                Intent.FLAG_ACTIVITY_NEW_TASK
+                        or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                        or Intent.FLAG_ACTIVITY_CLEAR_TOP
             )
             context.startActivity(homeIntent)
         }

@@ -1,9 +1,7 @@
 package com.distritv.data.service
 
 import android.content.SharedPreferences
-import com.distritv.utils.USE_EXTERNAL_STORAGE
-import com.distritv.utils.LOCALE
-import com.distritv.utils.TV_CODE
+import com.distritv.utils.*
 
 class SharedPreferencesService (private var sharedPreferences: SharedPreferences) {
     fun addTvCode(code: String) {
@@ -44,5 +42,15 @@ class SharedPreferencesService (private var sharedPreferences: SharedPreferences
 
     fun useExternalStorage(): Boolean {
         return sharedPreferences.getBoolean(USE_EXTERNAL_STORAGE, false)
+    }
+
+    fun setAnticipationDays(days: Int) {
+        val editor = sharedPreferences.edit()
+        editor.putInt(ANTICIPATION_DAYS, days)
+        editor.apply()
+    }
+
+    fun getAnticipationDays(): Int {
+        return sharedPreferences.getInt(ANTICIPATION_DAYS, ANTICIPATION_DAYS_DEFAULT)
     }
 }

@@ -4,12 +4,15 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.provider.Settings
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -28,6 +31,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteractionListener,
     HomeFragment.OnFragmentInteractionListener {
+
+    private lateinit var wakeLock: PowerManager.WakeLock
 
     val viewModel by viewModel<HomeViewModel>()
 
@@ -49,6 +54,10 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         requestPermissionDisplayOverOtherApps()
 
         startServices()
+
+        // So that this activity is not removed by the screen saver
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        acquireWakeLock()
 
         myApp = this.applicationContext as DistriTVApp
 
@@ -78,10 +87,21 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
 
     override fun onDestroy() {
         super.onDestroy()
+        wakeLock.release()
         if (::externalStorageDialog.isInitialized && externalStorageDialog.isShowing) {
             externalStorageDialog.cancel()
         }
         clearReferences()
+    }
+
+    private fun acquireWakeLock() {
+        // Acquire a wake lock to wake up the device
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        wakeLock = powerManager.newWakeLock(
+            PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
+            "$this.javaClass.simpleName::WakeLock"
+        )
+        wakeLock.acquire(10 * 60 * 1000L /*10 minutes*/)
     }
 
     private fun clearReferences() {

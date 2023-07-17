@@ -40,7 +40,11 @@ object HomeFragmentTextIndex {
     const val TV_CODE = 1
     const val CONNECTION_STATUS = 2
     const val LANGUAGE = 3
-    const val SWITCH_EXTERNAL_STORAGE_HOME = 4
+    const val LANGUAGE_SELECT_TITLE = 4
+    const val SWITCH_EXTERNAL_STORAGE_HOME = 5
+    const val ANTICIPATION_DAYS = 6
+    const val ANTICIPATION_DAYS_SELECT_TITLE = 7
+
     const val DIALOG_TITLE_HOME_TO_EXTERNAL = 0
     const val DIALOG_TITLE_HOME_TO_INTERNAL = 1
     const val DIALOG_MESSAGE_HOME_TO_EXTERNAL = 2

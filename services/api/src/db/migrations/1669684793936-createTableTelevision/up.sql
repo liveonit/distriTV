@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `television` (
   `name` VARCHAR(45) NULL,
   `institutionId` INT,
   `alertId` INT NULL,
+  `monitorId` INT,
   `ip` VARCHAR(45) NULL,
   `mac` VARCHAR(45) NULL,
   `tvCode` VARCHAR(60) NOT NULL,
@@ -16,5 +17,10 @@ CREATE TABLE IF NOT EXISTS `television` (
   CONSTRAINT `fk_television_alert`
     FOREIGN KEY (`alertId`)
     REFERENCES `alert` (`id`)
-    ON DELETE SET NULL
+    ON DELETE CASCADE
+    ON UPDATE SET NULL,
+  CONSTRAINT `fk_television_monitor`
+    FOREIGN KEY (`monitorId`)
+    REFERENCES `monitor` (`id`)
+    ON DELETE CASCADE
     ON UPDATE SET NULL);

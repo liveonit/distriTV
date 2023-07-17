@@ -9,7 +9,8 @@ object AlertNetworkMapper: EntityMapper<AlertResponse, Alert> {
         return Alert(
             id = entity.id ?: -1L,
             text = entity.text ?: "",
-            durationLeft = entity.durationLeft ?: 0L
+            durationLeft = entity.durationLeft ?: 0L,
+            started = entity.started ?: false
         )
     }
 

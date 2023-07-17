@@ -6,7 +6,7 @@ services:
     container_name: ${PROJECT_NAME}-proxy
     restart: unless-stopped
     volumes:
-      - ./services/proxy/nginx.dev.conf:/etc/nginx/nginx.conf:ro
+      - ./services/proxy/nginx.prod.conf:/etc/nginx/nginx.conf:ro
       - ./services/proxy/proxy.conf:/etc/nginx/proxy.conf:ro
     ports:
       - "80:80"
@@ -60,14 +60,14 @@ services:
       - "${REDIS_MANAGER_UI:-8081}:8081"
 
   api:
-    image: api
+    image: ${DOCKER_OWNER}/${PROJECT_NAME}-api
     container_name: ${PROJECT_NAME}-api
     build:
       context: ./services/api
-      dockerfile: Dockerfile.development
+      dockerfile: Dockerfile.production
     tty: true
     environment:
-      ENVIRONMENT: development
+      ENVIRONMENT: production
       FORCE_COLOR: 1
     restart: always
     depends_on:
@@ -75,7 +75,6 @@ services:
     env_file:
       - .env
     volumes:
-      - ./services/api/src:/api/src
       - uploaded_assets:${PATH_TO_UPLOAD_FILES}
     networks:
       - backend_net
@@ -91,20 +90,17 @@ services:
           memory: 4096M
 
   dashboard:
-    image: dashboard
+    image: ${DOCKER_OWNER}/${PROJECT_NAME}-dashboard
     build:
       context: ./services/dashboard
-      dockerfile: Dockerfile.development
+      dockerfile: Dockerfile.production
     env_file:
       - .env
     container_name: ${PROJECT_NAME}-dashboard
     restart: unless-stopped
     tty: true
-    volumes:
-      - ./services/dashboard/src:/dashboard/src
-      - ./services/dashboard/public:/dashboard/public
     ports:
-      - "3000:3000"
+      - "3000:80"
     networks:
       - backend_net
 

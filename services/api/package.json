@@ -11,7 +11,7 @@
     "copy-files": "copyfiles -u 1 src/**/*.sql build/",
     "build": "npm run clean && tsc && tsc-alias && npm run copy-files",
     "development": "nodemon -w src --ext ts,sql --exec ts-node -r tsconfig-paths/register src/index.ts",
-    "start": "node dist/index.js",
+    "start": "node build/index.js",
     "typeorm:migration:create": "npx ts-node src/lib/dbMigrations/createMigration.ts migration -- ",
     "typeorm:seed:create": "npx ts-node src/lib/dbMigrations/createMigration.ts seed -- ",
     "lint:fix": "eslint --fix --ignore-path .eslintignore --ext .js,.ts .",

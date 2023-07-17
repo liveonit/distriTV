@@ -42,7 +42,7 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
     resolver: zodResolver(alertSchema),
     defaultValues: alertInitialState,
   })
-  const { reset, handleSubmit, watch, control, register, formState } = methods
+  const { reset, handleSubmit, watch, control, register } = methods
   const associationTypes = ['LABEL', 'TELEVISION']
 
   const { t } = useTranslation()
@@ -64,7 +64,6 @@ export default function AlertCreateAndEditModal({ handleCloseEditModal, alert, t
   return (
     <>
       <Dialog fullWidth maxWidth='sm' open={true} aria-labelledby='max-width-dialog-title'>
-        <p>{JSON.stringify(formState.errors)}</p>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
             {t(title)} {t('ALERT')}

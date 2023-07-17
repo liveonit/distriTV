@@ -5,6 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import clsx from 'clsx'
+import { Grid } from '@material-ui/core'
 
 import TypographyBase from '../../../atoms/TypographyBase'
 // import { CronPeriodType } from './types'
@@ -14,7 +15,6 @@ import { CronHours } from './fields/CronHours'
 import { CronWeekDays } from './fields/CronWeekDays'
 import { CronDays } from './fields/CronDays'
 import { CronMonths } from './fields/CronMonths'
-import { Grid } from '@material-ui/core'
 
 const useStyles = makeStyles((theme: Theme) => ({
   borderColor: {
@@ -113,7 +113,7 @@ export const FormInputCron: React.FC<FormInputCronPropsT> = ({ name, control, la
 
 
 const valuesToCron = (minutes: number[], hours: number[], days: number[], months: string[], weekDays: string[]) => {  
-  let cronExp = `0 ${minutes.length === 0 ? '*' : minutes.sort().toString()} ${hours.length === 0 ? '*' : hours.sort().toString()} ${days.length === 0 ? weekDays.length > 0 ? '?' : '*' : days.sort().toString()} ${months.length === 0 ? '*' : months.toString()} ${weekDays.length === 0 ? days.length >= 0 ? '?' : '*' : weekDays.sort().toString()}`
+  const cronExp = `0 ${minutes.length === 0 ? '*' : minutes.sort().toString()} ${hours.length === 0 ? '*' : hours.sort().toString()} ${days.length === 0 ? weekDays.length > 0 ? '?' : '*' : days.sort().toString()} ${months.length === 0 ? '*' : months.toString()} ${weekDays.length === 0 ? days.length >= 0 ? '?' : '*' : weekDays.sort().toString()}`
   return cronExp
 }
 

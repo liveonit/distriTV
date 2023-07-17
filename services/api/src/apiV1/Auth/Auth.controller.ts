@@ -1,9 +1,5 @@
 import { handleErrorAsync } from '@src/middlewares/errorCatcher';
-import {
-  googleLoginBodySchema,
-  loginBodySchema,
-  refreshTokenBodySchema,
-} from '.';
+import { googleLoginBodySchema, loginBodySchema, refreshTokenBodySchema } from '.';
 import { Request, Response } from 'express';
 
 import _ from 'lodash';
@@ -15,7 +11,7 @@ import { User } from '@src/entities/User';
 import { updateProfileBody, UpdateProfileBodyType } from './types/UpdateProfileBody';
 import { redisClient } from '@src/redisCient';
 import { config } from '@src/config';
-import argon2 from 'argon2'
+import argon2 from 'argon2';
 
 class AuthController {
   /*
@@ -39,18 +35,19 @@ class AuthController {
     });
     if (user.password) {
       currentUser.password = await argon2.hash(user.password);
-      await redisClient.del(`${id}:*`);
+      config.REDIS_ENABLED && (await redisClient.del(`${id}:*`));
     }
     currentUser = await currentUser.save();
 
     if (sessionId)
-      redisClient.set(
-        `${currentUser.id}:${sessionId}`,
-        JSON.stringify({ ..._.omit(currentUser, ['password']), sessionId }),
-        {
-          EX: config.REFRESH_TOKEN_EXPIRES_IN * 60,
-        },
-      );
+      config.REDIS_ENABLED &&
+        redisClient.set(
+          `${currentUser.id}:${sessionId}`,
+          JSON.stringify({ ..._.omit(currentUser, ['password']), sessionId }),
+          {
+            EX: config.REFRESH_TOKEN_EXPIRES_IN * 60,
+          },
+        );
     return _.omit(currentUser, ['password']);
   }
 
@@ -74,14 +71,14 @@ class AuthController {
     return res.status(200).json(result);
   });
 
-    /*
+  /*
    * Authorize google user
    */
-    public googleLogin = handleErrorAsync(async (req: Request, res: Response) => {
-      const loginData = googleLoginBodySchema.parse(req.body);
-      const result = await googleAuthSvc.login(loginData.tokenId);
-      return res.status(200).json(result);
-    });
+  public googleLogin = handleErrorAsync(async (req: Request, res: Response) => {
+    const loginData = googleLoginBodySchema.parse(req.body);
+    const result = await googleAuthSvc.login(loginData.tokenId);
+    return res.status(200).json(result);
+  });
 
   /*
    * Finish user session

@@ -2,7 +2,7 @@ name: backend_integration_tests
 
 on:
   pull_request:
-    branches: ['main']
+    branches: ['main', 'development']
 
 jobs:
   backend_integration_tests:
@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: Create .env
       run: cp .env.example .env
@@ -39,3 +39,4 @@ jobs:
     - name: Stop containers
       if: always()
       run: docker-compose -f "docker-compose.yml" down
+

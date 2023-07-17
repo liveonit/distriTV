@@ -1,11 +1,11 @@
 import { Box } from '@mui/material'
 import React from 'react'
 import { useSearchParams } from 'react-router-dom'
-
-import { SearchInput } from './SearchInput'
 import Button from '@material-ui/core/Button'
 import { Trans } from 'react-i18next'
 import Search from '@material-ui/icons/Search'
+
+import { SearchInput } from './SearchInput'
 import SearchDropdown from './SearchDropdown'
 import SearchDropdownMulti from './SearchDropdownMulti'
 
@@ -52,7 +52,7 @@ export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
       }
       case 'Select': {        
         return (
-          <SearchDropdown options={search.options || []} placeholder={search.placeholder} value={state[search.name] || ""} onChange={(value) => setState({ ...state, [search.name]: value })} />
+          <SearchDropdown options={search.options || []} placeholder={search.placeholder} value={state[search.name] || ''} onChange={(value) => setState({ ...state, [search.name]: value })} />
         )
       }
       case 'Multi': {        

@@ -19,9 +19,6 @@ import { contentIsLoadingSelector, contentSelector } from 'src/store/content/con
 import AddIcon from '@material-ui/icons/Add'
 import { ContentT } from 'src/store/content/content.type'
 import { Trans } from 'react-i18next/TransWithoutContext'
-
-import CreateAndEditContentModal from './CreateAndEditContentModal'
-import ContentDeleteModal from './ContentDeleteModal'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 import { useTranslation } from 'react-i18next'
@@ -29,6 +26,9 @@ import Link from '@material-ui/core/Link'
 import { OndemandVideo } from '@material-ui/icons'
 import ImageIcon from '@mui/icons-material/Image';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+
+import ContentDeleteModal from './ContentDeleteModal'
+import CreateAndEditContentModal from './CreateAndEditContentModal'
 
 const useStyles = makeStyles({
   table: {

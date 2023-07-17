@@ -27,12 +27,12 @@ export const querySchema = z.object({
             const [father, son] = column.split('.');
 
             const parseValue = () => {
-              if(value.includes(',')){
+              if (value.includes(',')) {
                 return In(value.split(','));
               } else {
                 return Like(`%${value}%`);
               }
-            }
+            };
 
             if (son) {
               const nested: any = {};
@@ -44,8 +44,6 @@ export const querySchema = z.object({
           }
         });
 
-        console.log(query)
-        // return {institution: {name: 'Ceibal'}}
         if (searches.length > 0) return query;
         else return undefined;
       }

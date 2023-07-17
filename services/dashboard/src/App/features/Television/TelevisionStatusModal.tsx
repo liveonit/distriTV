@@ -38,13 +38,15 @@ export default function TelevisionModalListLabels({ isOpen, handleCloseStatusTel
             <Table className={classes.table} aria-label='simple table'>
               <TableHead>
                 <TableRow>
-                  <TableCell>Name</TableCell>            
+                  <TableCell>Name</TableCell>
+                  <TableCell>Value</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {tv.labels?.map((label) => (
-                  <TableRow key={label.id}>
-                    <TableCell>{label.name}</TableCell>                    
+                {Object.keys(tv.monitor!).map((monitorField) => (
+                  <TableRow key={monitorField}>
+                    <TableCell><Trans>{monitorField}</Trans></TableCell>
+                    <TableCell>{String(tv.monitor![monitorField])}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

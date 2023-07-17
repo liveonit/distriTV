@@ -3,13 +3,13 @@ import { z } from 'zod';
 export const createMonitorBody = z.object({
   television: z.object({
     id: z.number()
-  }),
+  }).optional(),
   allProcessesAreRunning: z.boolean().optional(),
   appIsVisible: z.boolean().optional(),
   availableMem: z.number().optional(),
   availableStorage: z.number().optional(),
   availableStorageUnit: z.string().optional(),
-  currentDate: z.string().transform((a) => new Date(a)),
+  currentDate: z.string().transform((a) => new Date(a)).optional(),
   currentVersionApp: z.string().optional(),
   currentlyPlayingContentId: z.number().optional(),
   externalStoragePermissionGranted: z.boolean().optional(),

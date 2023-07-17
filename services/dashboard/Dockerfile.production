@@ -8,4 +8,4 @@ RUN yarn
 RUN yarn build
 
 FROM nginx:latest
-COPY --from=build-stage /app/docs/ /usr/share/nginx/html
+COPY --from=build-stage /app/dist/ /usr/share/nginx/html

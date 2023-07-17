@@ -177,6 +177,7 @@ class RequestDaemon: Service() {
                     launchAlert(getAlertBlank())
                 }
                 setNullDurationLeft()
+                setNullCurrentlyPlayingAlertId()
             }
             return
         }
@@ -185,8 +186,9 @@ class RequestDaemon: Service() {
             || (!isAlertCurrentlyPlaying() && getCurrentlyPlayingAlertId() != null)) {
             launchAlert(alert)
         } else if (deviceInfo.alertDurationLeft == 0L) {
-            // Clear alert duration left
+            // Clear alert duration left and alert id
             setNullDurationLeft()
+            setNullCurrentlyPlayingAlertId()
         }
     }
 
@@ -197,6 +199,10 @@ class RequestDaemon: Service() {
 
     private fun getCurrentlyPlayingAlertId(): Long? {
         return (applicationContext.applicationContext as DistriTVApp?)?.getCurrentlyPlayingAlertId()
+    }
+
+    private fun setNullCurrentlyPlayingAlertId() {
+        (applicationContext.applicationContext as DistriTVApp?)?.setCurrentlyPlayingAlertId(null)
     }
 
     private fun isAlertCurrentlyPlaying(): Boolean {

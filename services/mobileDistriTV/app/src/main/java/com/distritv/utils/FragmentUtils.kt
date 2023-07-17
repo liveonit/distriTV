@@ -57,8 +57,6 @@ fun Fragment.onAfterCompletionAlert(tag: String, alertId: Long?) {
 
     // Notice that the alert has finished playing:
     application?.setIfAnyAlertIsCurrentlyPlaying(false)
-    // Clear the identifier of the alert that was playing:
-    application?.setCurrentlyPlayingAlertId(null)
 
     onAfterCompletion(tag, alertId, application)
 }

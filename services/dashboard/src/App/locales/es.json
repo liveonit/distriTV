@@ -75,5 +75,7 @@
   "SEP": "Setiembre",
   "OCT": "Octubre",
   "NOV": "Noviembre",
-  "DEC": "Diciembre"
+  "DEC": "Diciembre",
+
+  "allProcessesAreRunning": "Todos los procesos están corriendo"
 }

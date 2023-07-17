@@ -22,7 +22,8 @@ export const createMonitorBody = z.object({
   totalStorage: z.number().optional(),
   totalStorageUnit: z.string().optional(),
   tvCode: z.string().optional(),
-  useExternalStorage: z.boolean().optional()
+  useExternalStorage: z.boolean().optional(),
+  anticipationDays: z.number().optional(),
 });
 
 export type CreateMonitorBodyType = z.infer<typeof createMonitorBody>;

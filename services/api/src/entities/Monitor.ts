@@ -59,6 +59,8 @@ export class Monitor extends BaseEntity {
   tvCode?: String;
   @Column() 
   useExternalStorage?: boolean;
+  @Column() 
+  anticipationDays?: number;  
 
   @OneToOne(() => Television, (tv) => tv.monitor)
   television?: Television

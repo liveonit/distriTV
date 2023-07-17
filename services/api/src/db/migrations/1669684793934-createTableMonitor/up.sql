@@ -19,4 +19,5 @@ CREATE TABLE IF NOT EXISTS `monitor` (
   `totalStorageUnit` VARCHAR(5),
   `tvCode` VARCHAR(6),
   `useExternalStorage` BOOLEAN,
+  `anticipationDays` INT,
   PRIMARY KEY (`id`));

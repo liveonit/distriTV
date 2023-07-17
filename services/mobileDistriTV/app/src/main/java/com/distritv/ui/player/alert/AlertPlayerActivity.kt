@@ -67,8 +67,6 @@ class AlertPlayerActivity : AppCompatActivity() {
         if (myApp?.skipClearing() == false) {
             // Notice that the alert playback has finished:
             myApp?.setIfAnyAlertIsCurrentlyPlaying(false)
-            // Clear the identifier of the alert that was playing:
-            myApp?.setCurrentlyPlayingAlertId(null)
             clearReferences()
             myApp?.setSkipClearing(null)
         }

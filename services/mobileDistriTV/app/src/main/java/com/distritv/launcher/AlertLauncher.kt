@@ -42,9 +42,6 @@ class AlertLauncher : BroadcastReceiver() {
         val isAlertCurrentlyPlaying: Boolean =
             (context.applicationContext as DistriTVApp).isAlertCurrentlyPlaying()
 
-        val currentlyPlayingAlertId: Long? =
-            (context.applicationContext as DistriTVApp).getCurrentlyPlayingAlertId()
-
         val alertWasPausedOrDestroyed: Boolean =
             (context.applicationContext as DistriTVApp).alertWasPausedOrDestroyed()
 
@@ -81,6 +78,10 @@ class AlertLauncher : BroadcastReceiver() {
         if (currentActivity != null
             && (currentActivity is HomeActivity || currentActivity is ContentPlayerActivity)) {
             currentActivity.finish()
+        }
+
+        if (currentActivity == null) {
+            startHomeActivity(context)
         }
 
         val alertIntent = Intent(context, AlertPlayerActivity::class.java)

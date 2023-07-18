@@ -42,7 +42,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
   
   const checkPeriodicty = () => {
     if(agenda) {
-      return !(agenda.startDate === agenda.endDate && agenda.cron === "0 * * * * ?")
+      return !(agenda.startDate === agenda.endDate && agenda.cron === '0 * * * * ?')
     } else {
       return true
     }
@@ -140,7 +140,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
           <br />
           <FormInputDate name='startDate' control={control} label={t('START_DATE')} />
           <FormControlLabel 
-            label={t("CRONTAB")} 
+            label={t('CRONTAB')} 
             control={<Checkbox onChange={() => {setPeriodicity(!periodicity)}} checked={periodicity}/>}
           />
           {periodicity && (

@@ -20,12 +20,12 @@ import { InstitutionT } from 'src/store/institution/institution.type'
 import AddIcon from '@material-ui/icons/Add'
 import { Trans } from 'react-i18next/TransWithoutContext'
 import { CITIES } from 'src/utils/constants/Cities'
-
-import InstitutionCreateAndEditModal from './InstitutionCreateAndEditModal'
-import InstitutionDeleteModal from './InstitutionDeleteModal'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 import { useTranslation } from 'react-i18next'
+
+import InstitutionDeleteModal from './InstitutionDeleteModal'
+import InstitutionCreateAndEditModal from './InstitutionCreateAndEditModal'
 
 const useStyles = makeStyles({
   table: {

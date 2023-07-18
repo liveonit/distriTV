@@ -29,20 +29,21 @@ export const errorCatcher = (
             stack: err.stack,
           },
         })
-      : res.status(err.code).json({ error: { name: err.name, message: err.message } });
+      : res
+          .status(err.code)
+          .json({ error: { type: err.name, message: err.message, code: err.code } });
   if (err instanceof ZodError)
     return config.ENVIRONMENT === 'development'
-      ? res
-          .status(400)
-          .json({
-            error: {
-              name: err.name,
-              message: err.message,
-              errors: err.errors,
-              formErrors: err.formErrors,
-            },
-          })
-      : res.status(400).json({ error: { name: err.name, message: err.message } });
+      ? res.status(400).json({
+          error: {
+            name: err.name,
+            message: err.message,
+            code: 400,
+            errors: err.errors,
+            formErrors: err.formErrors,
+          },
+        })
+      : res.status(400).json({ error: { type: err.name, message: err.message, code: 400 } });
   return res.status(500).send();
 };
 

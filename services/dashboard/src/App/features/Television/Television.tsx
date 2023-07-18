@@ -22,10 +22,11 @@ import { Trans } from 'react-i18next/TransWithoutContext'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
-import TelevisionDeleteModal from './TelevisionDeleteModal'
 import { useTranslation } from 'react-i18next'
 import { FormatListBulleted } from '@material-ui/icons'
+
+import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
+import TelevisionDeleteModal from './TelevisionDeleteModal'
 import TelevisionModalListLabels from './TelevisionModalListLabels'
 import TelevisionStatusModal from './TelevisionStatusModal'
 

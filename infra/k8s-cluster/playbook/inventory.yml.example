@@ -1,0 +1,17 @@
+all:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_user: vagrant
+    ansible_ssh_private_key_file: ssh-key
+  children:
+    master:
+      hosts:
+        192.168.56.11:
+    workers:
+      hosts:
+        192.168.56.101:
+        192.168.56.102:
+        192.168.56.103:
+    storage:
+      hosts:
+        192.168.56.104:

@@ -1,0 +1,6 @@
+# The DNS needs to have the records shooting to the router public IP, and the router should be configured to forward the traffic of port 80 and 443 to this host
+
+acme_challenge_domain: example.com
+acme_challenge_proxmox_domain: proxmox.example.com
+proxmox_url: "https://127.0.0.1:8006"
+domain_admin_email: "example@yourdomain.com"

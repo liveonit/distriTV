@@ -17,7 +17,10 @@ jobs:
     - name: Create .env
       run: cp .env.example .env
 
-    - name: Start containers
+    - name: Start backend services
+      run: docker-compose -f "docker-compose.prod.yml" up -d db cache api
+
+    - name: Start frontend and proxy
       run: docker-compose -f "docker-compose.prod.yml" up -d
 
     - name: Install node

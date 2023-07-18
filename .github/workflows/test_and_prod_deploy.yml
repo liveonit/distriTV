@@ -76,4 +76,4 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: ${{ secrets.SERVER_SSH_PORT }}
         script: |
-          cd ${{ SERVER_PROJECT_DIR }} && docker-compose up -f docker-compose.prod.yml up -d --build --force-recreate
+          cd ${{ env.SERVER_PROJECT_DIR }} && docker-compose up -f docker-compose.prod.yml up -d --build --force-recreate

@@ -100,4 +100,6 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         port: ${{ secrets.SERVER_SSH_PORT }}
         script: |
-          cd  /home/liveonit/projects/distritv && docker compose -f docker-compose.prod.yml up -d --build --force-recreate
+          eval $(ssh-agent)
+          ssh-add ~/Documents/keys/githubMyMac
+          cd  /home/liveonit/projects/distritv && git pull && docker compose -f docker-compose.prod.yml up -d --build --force-recreate

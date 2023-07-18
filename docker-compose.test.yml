@@ -61,9 +61,6 @@ services:
 
   api:
     image: ${DOCKER_OWNER}/${PROJECT_NAME}-api
-    build:
-      context: ./services/api
-      dockerfile: Dockerfile.production
     tty: true
     environment:
       ENVIRONMENT: production
@@ -77,14 +74,13 @@ services:
       - uploaded_assets:${PATH_TO_UPLOAD_FILES}
     networks:
       - backend_net
+    ports:
+      - "${API_PORT}:${API_PORT}"
     deploy:
-      replicas: 4
+      replicas: 1
 
   dashboard:
     image: ${DOCKER_OWNER}/${PROJECT_NAME}-dashboard
-    build:
-      context: ./services/dashboard
-      dockerfile: Dockerfile.production
     env_file:
       - .env
     container_name: ${PROJECT_NAME}-dashboard

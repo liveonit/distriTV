@@ -1,0 +1,101 @@
+version: "3.7"
+
+services:
+  nginx:
+    image: nginx:1.15.1
+    container_name: ${PROJECT_NAME}-proxy
+    restart: unless-stopped
+    volumes:
+      - ./services/proxy/nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - ./services/proxy/proxy.conf:/etc/nginx/proxy.conf:ro
+    ports:
+      - "80:80"
+    command: [nginx-debug, "-g", "daemon off;"]
+    networks:
+      - backend_net
+  db:
+    image: mysql
+    platform: linux/x86_64
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: ${PROJECT_NAME}-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "false"
+      MYSQL_TCP_PORT: ${DB_PORT}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "0.0.0.0:${DB_PORT}:${DB_PORT}"
+    networks:
+      - backend_net
+
+  cache:
+    image: redis
+    restart: always
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    container_name: ${PROJECT_NAME}-redis
+    volumes:
+      - cache:/data
+    networks:
+      - backend_net
+
+  redis-commander:
+    image: rediscommander/redis-commander
+    platform: linux/x86_64
+    container_name: ${PROJECT_NAME}-redis_manager
+    restart: always
+    networks:
+      - backend_net
+    depends_on:
+      - cache
+    environment:
+      REDIS_HOST: cache
+      REDIS_HOSTS: local:cache:6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    ports:
+      - "${REDIS_MANAGER_UI:-8081}:8081"
+
+  api:
+    image: ${DOCKER_OWNER}/${PROJECT_NAME}-api
+    tty: true
+    environment:
+      ENVIRONMENT: production
+      FORCE_COLOR: 1
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes:
+      - uploaded_assets:${PATH_TO_UPLOAD_FILES}
+    networks:
+      - backend_net
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    deploy:
+      replicas: 1
+
+  dashboard:
+    image: ${DOCKER_OWNER}/${PROJECT_NAME}-dashboard
+    env_file:
+      - .env
+    container_name: ${PROJECT_NAME}-dashboard
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3000:80"
+    networks:
+      - backend_net
+
+volumes:
+  mysql_data:
+  cache:
+  uploaded_assets:
+
+networks:
+  backend_net:
+    driver: bridge

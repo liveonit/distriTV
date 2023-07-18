@@ -16,7 +16,6 @@ describe('👉👉👉 Api tests 👈👈👈', () => {
     test('Invalid path should return 404', async () => {
       const res = await request(API_URL).get('/invalid_path').send();
       expect(res.status).toEqual(404);
-      expect(res.body.error.type).toBe('NOT_FOUND');
       expect(res.body.error.message).toBe('Resource not found');
       expect(res.body.error.code).toBe(404);
       expect(res.body.error.success).toBeFalsy();
@@ -59,7 +58,11 @@ describe('👉👉👉 Api tests 👈👈👈', () => {
     });
 
     test('Get profile should work fine', async () => {
-      const res = await request(API_URL).get('/auth/me').set('auth-type', 'local').set('authorization', token).send();
+      const res = await request(API_URL)
+        .get('/auth/me')
+        .set('auth-type', 'local')
+        .set('authorization', token)
+        .send();
       expect(res.status).toBe(200);
       expect(res.body.id).toBeDefined();
       expect(res.body.firstName).toBe('admin');

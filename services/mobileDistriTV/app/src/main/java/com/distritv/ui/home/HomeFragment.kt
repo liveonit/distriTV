@@ -193,14 +193,15 @@ class HomeFragment: Fragment() {
         }
     }
 
-    fun addLabels() {
+    private fun addLabels() {
         val labelNameList = viewModel.getLabelNameList()
         if (labelNameList.isEmpty()) {
             binding.labelsContainer.visibility = View.GONE
         } else {
             binding.labelsContainer.visibility = View.VISIBLE
-            binding.labelsValue.text = labelNameList.toString()
-                .replace("[", "").replace("]", "")
+            // Two labels per line
+            binding.labelsValue.text =
+                labelNameList.chunked(2).joinToString("\n") { pair -> pair.joinToString(", ") }
         }
     }
 

@@ -15,6 +15,7 @@ module.exports = {
         test: /\.(png|svg|jpg|gif)$/,
         loader: 'file-loader',
         options: {
+          name: '[name].[ext]',
           outputPath: 'assets/images',
         },
       },
@@ -49,11 +50,15 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.css', '.scss'],
     modules: [].concat(PATH_SRC, 'node_modules'),
-    plugins: [new TsconfigPathsPlugin({/* options: see below */})]
+    plugins: [
+      new TsconfigPathsPlugin({
+        /* options: see below */
+      }),
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
-    })
+    }),
   ],
 }

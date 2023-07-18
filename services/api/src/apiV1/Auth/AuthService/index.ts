@@ -56,18 +56,19 @@ class AuthService {
     });
     if (user.password) {
       currentUser.password = await argon2.hash(user.password);
-      await redisClient.del(`${id}:*`);
+      config.REDIS_ENABLED && (await redisClient.del(`${id}:*`));
     }
     currentUser = await currentUser.save();
 
     if (sessionId)
-      redisClient.set(
-        `${currentUser.id}:${sessionId}`,
-        JSON.stringify({ ..._.omit(currentUser, ['password']), sessionId }),
-        {
-          EX: config.REFRESH_TOKEN_EXPIRES_IN * 60,
-        },
-      );
+      config.REDIS_ENABLED &&
+        (await redisClient.set(
+          `${currentUser.id}:${sessionId}`,
+          JSON.stringify({ ..._.omit(currentUser, ['password']), sessionId }),
+          {
+            EX: config.REFRESH_TOKEN_EXPIRES_IN * 60,
+          },
+        ));
     return _.omit(currentUser, ['password']);
   }
 
@@ -84,9 +85,10 @@ class AuthService {
     });
 
     // Create a Session
-    redisClient.set(`${user.id}:${sessionId}`, JSON.stringify({ ...user, sessionId }), {
-      EX: config.REFRESH_TOKEN_EXPIRES_IN * 60,
-    });
+    config.REDIS_ENABLED &&
+      (await redisClient.set(`${user.id}:${sessionId}`, JSON.stringify({ ...user, sessionId }), {
+        EX: config.REFRESH_TOKEN_EXPIRES_IN * 60,
+      }));
     const result = authSessionSchema.parse({ id: user.id, accessToken, refreshToken });
     // Return access token
     return result;
@@ -112,7 +114,7 @@ class AuthService {
   }
 
   public async logout(id: string, sessionId: string): Promise<void> {
-    await redisClient.del(`${id}:${sessionId}`);
+    config.REDIS_ENABLED && (await redisClient.del(`${id}:${sessionId}`));
   }
 
   public async refreshToken(refreshTokenInput: RefreshTokenBodyType): Promise<AuthSessionType> {
@@ -127,15 +129,17 @@ class AuthService {
       }
 
       // Check if the user has a valid session
-      const session = await redisClient.get(`${decoded.id}:${decoded.sessionId}`);
+      const session = config.REDIS_ENABLED
+        ? await redisClient.get(`${decoded.id}:${decoded.sessionId}`)
+        : 'Redis disabled';
       if (!session) {
         throw new BadRequest('Could not refresh access token');
       }
-      const userPayload = JSON.parse(session);
+      const userPayload = config.REDIS_ENABLED ? JSON.parse(session) : {};
 
       // Sign new access token
       const accessToken = signJwt(
-        { ...userPayload, sessionId: decoded.sessionId },
+        { ...(config.REDIS_ENABLED ? userPayload : decoded), sessionId: decoded.sessionId },
         'ACCESS_TOKEN_PRIVATE_KEY',
         {
           expiresIn: `${config.ACCESS_TOKEN_EXPIRES_IN}m`,
@@ -146,7 +150,7 @@ class AuthService {
       const result = authSessionSchema.parse({
         ...refreshTokenInput,
         accessToken,
-        id: userPayload.id,
+        id: config.REDIS_ENABLED ? userPayload.id : decoded.id,
       });
       return result;
     } catch (err: any) {
@@ -191,7 +195,9 @@ class AuthService {
         const decoded: AuthPayloadType | null = authPayloadSchema.parse(
           verifyJwt(token, 'ACCESS_TOKEN_PUBLIC_KEY'),
         );
-        const session = await redisClient.get(`${decoded.id}:${decoded.sessionId}`);
+        const session = config.REDIS_ENABLED
+          ? await redisClient.get(`${decoded.id}:${decoded.sessionId}`)
+          : JSON.stringify(decoded);
         if (!decoded || !session) throw new Forbidden();
         userPayload = JSON.parse(session) as AuthPayloadType;
       }

@@ -6,6 +6,7 @@ import { db } from './db';
 import { redisClient } from './redisCient';
 
 import { logger } from '@lib/Logger';
+import { config } from './config';
 global.logger = logger;
 
 async function main() {
@@ -25,7 +26,7 @@ async function main() {
   await db.connectDb({ retry: true, runAfterConnect: 'migrations' });
 
   // Connect Redis client cache
-  await redisClient.connect();
+  config.REDIS_ENABLED && (await redisClient.connect());
 
   const app = new App();
   app.start();

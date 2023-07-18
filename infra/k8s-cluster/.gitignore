@@ -1,0 +1,8 @@
+.vagrant/
+*.log
+*.retry
+
+ssh-key*
+inventory.yml
+
+cluster_config

@@ -30,7 +30,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         push: false
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME }}-api:latest,${{ secrets.DOCKERHUB_USERNAME }}/distritv-api:${{ github.sha }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/distritv-api:latest,${{ secrets.DOCKERHUB_USERNAME }}/distritv-api:${{ github.sha }}
         file: Dockerfile.production
         context: "{{defaultContext}}:services/api"
         cache-from: type=gha
@@ -40,7 +40,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         push: false
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.PROJECT_NAME }}-dashboard:latest,${{ secrets.DOCKERHUB_USERNAME }}/distritv-dashboard:${{ github.sha }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/distritv-dashboard:latest,${{ secrets.DOCKERHUB_USERNAME }}/distritv-dashboard:${{ github.sha }}
         file: Dockerfile.production
         context: "{{defaultContext}}:services/api"
         cache-from: type=gha

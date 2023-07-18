@@ -15,6 +15,7 @@ import android.util.Log
 import android.widget.Toast
 import com.distritv.DistriTVApp
 import com.distritv.R
+import com.distritv.data.helper.ErrorHelper.saveError
 import com.distritv.data.model.Content
 import com.distritv.ui.home.HomeActivity
 import com.distritv.ui.player.content.ContentPlayerActivity
@@ -58,7 +59,9 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
         }
 
         if (!content.fileExists(context.getCurrentDirectory())) {
-            Log.e(TAG, "Content file not found. Content id: ${content.id}, name: ${content.fileName}")
+            val msgError = "Content file not found. Content id: ${content.id}, name: ${content.fileName}"
+            saveError(javaClass.name, msgError)
+            Log.e(TAG, msgError)
             Toast.makeText(
                 context, context.getString(R.string.msg_unavailable_content),
                 Toast.LENGTH_LONG

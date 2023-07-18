@@ -16,6 +16,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import com.distritv.BuildConfig
+import com.distritv.data.helper.ErrorHelper.saveError
 import com.distritv.data.service.ContentService
 import com.distritv.data.service.ScheduleService
 import com.distritv.utils.createNotification
@@ -91,7 +92,9 @@ class GarbageCollectorDaemon: Service() {
         try {
             contentService.deleteExpiredContentFiles()
         } catch (e: Exception) {
-            Log.e(TAG, "[removeContentFile] -> ${e.javaClass}: ${e.message}")
+            val errorMsg = "[removeContentFile] -> ${e.javaClass}: ${e.message}"
+            saveError(this@GarbageCollectorDaemon.javaClass.name, errorMsg)
+            Log.e(TAG, errorMsg)
         }
     }
 

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.distritv.BuildConfig
+import com.distritv.data.helper.ErrorHelper.saveError
 import com.distritv.data.model.Alert
 import com.distritv.databinding.FragmentTextBinding
 import com.distritv.ui.FullscreenManager
@@ -41,7 +42,9 @@ class AlertTextFragment : Fragment() {
         arguments?.let {
             alert = it.getParcelable(ALERT_PARAM)
             if (alert == null) {
-                Log.e(TAG, "An error occurred while trying to play, back to home...")
+                val errorMsg = "An error occurred while trying to play the alert."
+                saveError(this@AlertTextFragment.javaClass.name, errorMsg)
+                Log.e(TAG, errorMsg)
                 onAfterCompletionAlert(TAG)
             }
         }

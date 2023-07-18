@@ -1,7 +1,9 @@
 package com.distritv.data.service
 
 import android.content.SharedPreferences
+import com.distritv.data.model.ErrorModel
 import com.distritv.utils.*
+import com.google.gson.Gson
 
 class SharedPreferencesService (private var sharedPreferences: SharedPreferences) {
     fun addTvCode(code: String) {
@@ -53,4 +55,17 @@ class SharedPreferencesService (private var sharedPreferences: SharedPreferences
     fun getAnticipationDays(): Int {
         return sharedPreferences.getInt(ANTICIPATION_DAYS, ANTICIPATION_DAYS_DEFAULT)
     }
+
+    fun saveErrors(errorList: List<ErrorModel>) {
+        val jsonErrors = Gson().toJson(errorList)
+        val editor = sharedPreferences.edit()
+        editor.putString(ERRORS, jsonErrors)
+        editor.apply()
+    }
+
+    fun getErrors(): MutableList<ErrorModel>? {
+        val jsonErrors = sharedPreferences.getString(ERRORS, null)
+        return Gson().fromJson(jsonErrors, Array<ErrorModel>::class.java)?.toMutableList()
+    }
+
 }

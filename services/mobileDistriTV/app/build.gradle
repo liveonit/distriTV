@@ -48,6 +48,7 @@ android {
             buildConfigField "String", "TEXT_CONTENT_BACKGROUND_COLOR", "\"${props.getProperty("text_content_background_color")}\""
             buildConfigField "String", "ALERT_TEXT_COLOR", "\"${props.getProperty("alert_text_color")}\""
             buildConfigField "String", "ALERT_BACKGROUND_COLOR", "\"${props.getProperty("alert_background_color")}\""
+            buildConfigField "Long", "MAX_ERROR_LIST", "${props.getProperty("max_error_list")}L"
         }
         release {
             minifyEnabled false
@@ -63,6 +64,7 @@ android {
             buildConfigField "String", "TEXT_CONTENT_BACKGROUND_COLOR", "\"${props.getProperty("text_content_background_color")}\""
             buildConfigField "String", "ALERT_TEXT_COLOR", "\"${props.getProperty("alert_text_color")}\""
             buildConfigField "String", "ALERT_BACKGROUND_COLOR", "\"${props.getProperty("alert_background_color")}\""
+            buildConfigField "Long", "MAX_ERROR_LIST", "${props.getProperty("max_error_list")}L"
         }
     }
 

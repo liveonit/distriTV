@@ -20,6 +20,7 @@ import android.widget.Toast
 import com.distritv.BuildConfig
 import com.distritv.DistriTVApp
 import com.distritv.R
+import com.distritv.data.helper.ErrorHelper.saveError
 import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
 import com.distritv.data.model.Alert
 import com.distritv.data.model.Content
@@ -163,10 +164,9 @@ class RequestDaemon: Service() {
                 }
 
             } catch (e: SocketTimeoutException) {
-                Log.e(
-                    TAG, "Could not connect to the server -> ${e.javaClass}: ${e.message}"
-                )
+                Log.e(TAG, "Could not connect to the server -> ${e.javaClass}: ${e.message}")
             } catch (e: Exception) {
+                saveError(this@RequestDaemon.javaClass.name, "$e")
                 Log.e(TAG, "$e")
             }
         }
@@ -222,7 +222,11 @@ class RequestDaemon: Service() {
                     || ((Build.VERSION.SDK_INT < SDK_VERSION_FOR_MEDIA_STORE)
                     && ((deviceInfo.externalStoragePermissionGranted != null) && !deviceInfo.externalStoragePermissionGranted)))
         ) {
-            Log.e(TAG, "External storage may not be found or permission not granted.")
+            val errorMsg = "External storage may not be found or permission not granted."
+
+            saveError(this@RequestDaemon.javaClass.name, "$errorMsg")
+
+            Log.e(TAG, errorMsg)
             Log.e(TAG, "External storage is connected?: ${deviceInfo.isExternalStorageConnected}")
             Log.e(TAG, "External storage permission granted?: ${deviceInfo.externalStoragePermissionGranted}")
 

@@ -15,6 +15,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import com.distritv.BuildConfig
+import com.distritv.data.helper.ErrorHelper.saveError
 import com.distritv.data.model.CalendarModel
 import com.distritv.data.model.Content
 import com.distritv.data.model.Schedule
@@ -55,7 +56,11 @@ class ContentSchedulingDaemon : Service() {
                 try {
                     launcherContent()
                 } catch (e: Exception) {
-                    Log.e(TAG, "[launcherContent] -> ${e.javaClass}: ${e.message}")
+                    val errorMsg = "[launcherContent] -> ${e.javaClass}: ${e.message}"
+
+                    saveError(this@ContentSchedulingDaemon.javaClass.name, "$errorMsg. ${e.stackTrace.toList()}")
+
+                    Log.e(TAG, errorMsg)
                     Log.e(TAG, "${e.stackTrace.toList()}")
                 }
 
@@ -148,6 +153,7 @@ class ContentSchedulingDaemon : Service() {
 
         val content = schedule.content
         if (content == null || !contentIsValid(content)) {
+            saveError(this@ContentSchedulingDaemon.javaClass.name, ERROR_LOCAL_PATH_OR_TEXT_NULL_OR_BLANK)
             Log.e(TAG, ERROR_LOCAL_PATH_OR_TEXT_NULL_OR_BLANK)
             return
         }
@@ -165,6 +171,7 @@ class ContentSchedulingDaemon : Service() {
     private fun launchContentNow(schedule: Schedule) {
         val content = schedule.content
         if (content == null || !contentIsValid(content)) {
+            saveError(this@ContentSchedulingDaemon.javaClass.name, ERROR_LOCAL_PATH_OR_TEXT_NULL_OR_BLANK)
             Log.e(TAG, ERROR_LOCAL_PATH_OR_TEXT_NULL_OR_BLANK)
             return
         }

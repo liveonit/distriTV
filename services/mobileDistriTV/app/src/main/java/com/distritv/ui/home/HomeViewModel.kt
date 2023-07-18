@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.distritv.BuildConfig
 import com.distritv.R
+import com.distritv.data.helper.ErrorHelper.saveError
 import com.distritv.data.helper.StorageHelper.createOrClearTargetDirectory
 import com.distritv.data.model.DeviceInfoCard
 import com.distritv.data.service.DeviceInfoService
@@ -114,7 +115,9 @@ class HomeViewModel(
                 }
                 _isValid.postValue(false)
             } catch (e: Exception) {
-                Log.e(TAG, "${e.javaClass}: ${e.message}")
+                val errorMsg = "${e.javaClass}: ${e.message}"
+                saveError(this@HomeViewModel.javaClass.name, errorMsg)
+                Log.e(TAG, errorMsg)
                 _errorMessage.postValue(context.getString(R.string.msg_tv_code_error))
                 _isValid.postValue(false)
                 error = R.string.msg_tv_code_error

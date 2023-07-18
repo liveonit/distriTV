@@ -27,6 +27,7 @@ data class DeviceInfo(
     val isAnyAlertPlaying: Boolean,
     val currentlyPlayingAlertId: Long?,
     val alertDurationLeft: Long?,
-    val anticipationDays: Int
+    val anticipationDays: Int,
+    val errorList: List<ErrorModel>
 ) : Parcelable {
 }

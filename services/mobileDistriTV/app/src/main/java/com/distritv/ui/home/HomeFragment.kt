@@ -17,6 +17,7 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.distritv.R
+import com.distritv.data.helper.ErrorHelper.saveError
 import com.distritv.databinding.FragmentHomeBinding
 import com.distritv.ui.FullscreenManager
 import com.distritv.ui.home.HomeViewModel.Companion.HOME
@@ -283,7 +284,9 @@ class HomeFragment: Fragment() {
                         val days = anticipationDaysOptions[selectedItem.toInt()].split(ANTICIPATION_DAYS_WHITESPACE)[0]
                         viewModel.setCurrentAnticipationDays(days.toInt())
                     } catch (e: Exception) {
-                        Log.e(TAG, "[anticipationDaysSpinnerListener] -> ${e.javaClass}: ${e.message}")
+                        val errorMsg = "[anticipationDaysSpinnerListener] -> ${e.javaClass}: ${e.message}"
+                        saveError(this@HomeFragment.javaClass.name, errorMsg)
+                        Log.e(TAG, errorMsg)
                     }
                 }
             }

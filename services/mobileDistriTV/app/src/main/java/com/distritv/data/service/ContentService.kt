@@ -3,6 +3,7 @@ package com.distritv.data.service
 import android.content.Context
 import android.os.Build
 import android.util.Log
+import com.distritv.data.helper.ErrorHelper.saveError
 import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
 import com.distritv.data.model.Content
 import com.distritv.data.helper.StorageHelper.createFileOnExtStorageWithMediaStore
@@ -64,7 +65,9 @@ class ContentService(
             }
             -1L
         } catch (e: Exception) {
-            Log.e(TAG, "${e.javaClass} -> ${e.message}")
+            val errorMsg = "${e.javaClass} -> ${e.message}"
+            saveError(this.javaClass.name, errorMsg)
+            Log.e(TAG, errorMsg)
             -1L
         }
     }
@@ -84,7 +87,9 @@ class ContentService(
             }
             -1L
         } catch (e: Exception) {
-            Log.e(TAG, "${e.javaClass} -> ${e.message}")
+            val errorMsg = "${e.javaClass} -> ${e.message}"
+            saveError(this.javaClass.name, errorMsg)
+            Log.e(TAG, errorMsg)
             -1L
         }
     }
@@ -120,8 +125,13 @@ class ContentService(
 
             return null
         } catch (e: IOException) {
-            Log.e(TAG, "Content download failed from ${content.url}.")
-            Log.e(TAG, "${e.javaClass} -> ${e.message}")
+            val errorMsg = "Content download failed from ${content.url}."
+            val errorMsgEx = "${e.javaClass} -> ${e.message}"
+
+            saveError(javaClass.name, "$errorMsg $errorMsgEx")
+
+            Log.e(TAG, errorMsg)
+            Log.e(TAG, errorMsgEx)
             return null
         } finally {
             outputStreamAndPath.first?.close()

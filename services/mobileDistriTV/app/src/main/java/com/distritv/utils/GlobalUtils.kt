@@ -11,6 +11,7 @@ const val TV_CODE = "tvCode"
 const val LOCALE = "locale"
 const val USE_EXTERNAL_STORAGE = "use_external_storage"
 const val ANTICIPATION_DAYS = "anticipation_days"
+const val ERRORS = "errors"
 
 const val HTTP_NOT_FOUND = 404
 

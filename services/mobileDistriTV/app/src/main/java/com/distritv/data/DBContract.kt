@@ -23,4 +23,11 @@ object DBContract {
         const val COLUMN_SCHEDULE_CRON = "cron"
         const val COLUMN_SCHEDULE_PLAY_ONCE = "play_once"
     }
+
+    object LabelEntry : BaseColumns {
+        const val TABLE_NAME = "label"
+        const val COLUMN_LABEL_ID = "label_id"
+        const val COLUMN_LABEL_NAME = "name"
+        const val COLUMN_LABEL_DESCRIPTION = "description"
+    }
 }

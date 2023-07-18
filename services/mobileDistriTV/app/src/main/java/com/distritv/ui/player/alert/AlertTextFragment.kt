@@ -1,5 +1,6 @@
 package com.distritv.ui.player.alert
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.distritv.BuildConfig
 import com.distritv.data.model.Alert
 import com.distritv.databinding.FragmentTextBinding
 import com.distritv.ui.FullscreenManager
@@ -70,6 +72,7 @@ class AlertTextFragment : Fragment() {
 
     private fun showText() {
         binding.textContainer.text = alert?.text ?: ""
+        setDecoration()
 
         Log.i(TAG, "Alert with id [${alert?.id}] has started!")
 
@@ -92,6 +95,21 @@ class AlertTextFragment : Fragment() {
             }
         }.start()
 
+    }
+
+    private fun setDecoration() {
+        val textColor: String = BuildConfig.ALERT_TEXT_COLOR
+        val backgroundColor: String = BuildConfig.ALERT_BACKGROUND_COLOR
+        if (isHexColorCode(textColor)) {
+            binding.textContainer.setTextColor(Color.parseColor(textColor))
+        } else {
+            binding.textContainer.setTextColor(Color.parseColor(TEXT_COLOR_DEFAULT))
+        }
+        if (isHexColorCode(backgroundColor)) {
+            binding.textContainer.setBackgroundColor(Color.parseColor(backgroundColor))
+        } else {
+            binding.textContainer.setBackgroundColor(Color.parseColor(TEXT_BACKGROUND_COLOR_DEFAULT))
+        }
     }
 
     companion object {

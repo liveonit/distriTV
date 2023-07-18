@@ -1,5 +1,6 @@
 package com.distritv.ui.player.content
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.distritv.BuildConfig
 import com.distritv.data.model.Content
 import com.distritv.databinding.FragmentTextBinding
 import com.distritv.ui.FullscreenManager
@@ -70,11 +72,28 @@ class TextFragment : Fragment() {
 
     private fun showText() {
         binding.textContainer.text = content?.text ?: ""
+        setDecoration()
+
         content?.let { viewModel.playOnceContentAlreadyStarted(it) }
         Log.i(TAG, "Playback started. Content id: ${content?.id}")
         handler.postDelayed({
             onAfterCompletionContent(TAG, content?.id)
         }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
+    }
+
+    private fun setDecoration() {
+        val textColor: String = BuildConfig.TEXT_CONTENT_COLOR
+        val backgroundColor: String = BuildConfig.TEXT_CONTENT_BACKGROUND_COLOR
+        if (isHexColorCode(textColor)) {
+            binding.textContainer.setTextColor(Color.parseColor(textColor))
+        } else {
+            binding.textContainer.setTextColor(Color.parseColor(TEXT_COLOR_DEFAULT))
+        }
+        if (isHexColorCode(backgroundColor)) {
+            binding.textContainer.setBackgroundColor(Color.parseColor(backgroundColor))
+        } else {
+            binding.textContainer.setBackgroundColor(Color.parseColor(TEXT_BACKGROUND_COLOR_DEFAULT))
+        }
     }
 
     /**

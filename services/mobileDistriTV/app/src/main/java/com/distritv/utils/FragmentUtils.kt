@@ -109,3 +109,8 @@ fun Fragment.cancelPlay() {
     // Notice that the alert has finished playing:
     (context?.applicationContext as DistriTVApp?)?.setIfAnyAlertIsCurrentlyPlaying(false)
 }
+
+fun Fragment.isHexColorCode(input: String): Boolean {
+    val regexPattern = "^#[A-Za-z0-9]{6}\$"
+    return regexPattern.toRegex().matches(input)
+}

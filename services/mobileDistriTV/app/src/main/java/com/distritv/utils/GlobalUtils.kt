@@ -18,6 +18,9 @@ const val ANTICIPATION_DAYS_DEFAULT = 7
 const val ANTICIPATION_DAYS_SEPARATOR = ";"
 const val ANTICIPATION_DAYS_WHITESPACE= " "
 
+const val TEXT_COLOR_DEFAULT = "#000000"
+const val TEXT_BACKGROUND_COLOR_DEFAULT = "#FFFFFF"
+
 @Suppress("DEPRECATION") // Deprecated for third party Services.
 fun isServiceRunning(context: Context, serviceClass: Class<*>): Boolean {
     val manager = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager

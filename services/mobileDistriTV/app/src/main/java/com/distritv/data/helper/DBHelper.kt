@@ -24,8 +24,15 @@ private const val SQL_CREATE_SCHEDULE_ENTRIES =
             "${DBContract.ScheduleEntry.COLUMN_SCHEDULE_CRON} TEXT," +
             "${DBContract.ScheduleEntry.COLUMN_SCHEDULE_PLAY_ONCE} INTEGER DEFAULT 0)"
 
+private const val SQL_CREATE_LABEL_ENTRIES =
+    "CREATE TABLE ${DBContract.LabelEntry.TABLE_NAME} (" +
+            "${DBContract.LabelEntry.COLUMN_LABEL_ID} LONG UNIQUE," +
+            "${DBContract.LabelEntry.COLUMN_LABEL_NAME} TEXT," +
+            "${DBContract.LabelEntry.COLUMN_LABEL_DESCRIPTION} TEXT)"
+
 private const val SQL_DELETE_CONTENT_ENTRIES = "DROP TABLE IF EXISTS ${DBContract.ContentEntry.TABLE_NAME}"
 private const val SQL_DELETE_SCHEDULE_ENTRIES = "DROP TABLE IF EXISTS ${DBContract.ScheduleEntry.TABLE_NAME}"
+private const val SQL_DELETE_LABEL_ENTRIES = "DROP TABLE IF EXISTS ${DBContract.LabelEntry.TABLE_NAME}"
 
 class DBHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -33,6 +40,7 @@ class DBHelper(context: Context) :
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_CONTENT_ENTRIES)
         db.execSQL(SQL_CREATE_SCHEDULE_ENTRIES)
+        db.execSQL(SQL_CREATE_LABEL_ENTRIES)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -40,6 +48,7 @@ class DBHelper(context: Context) :
         // to simply to discard the data and start over
         db.execSQL(SQL_DELETE_CONTENT_ENTRIES)
         db.execSQL(SQL_DELETE_SCHEDULE_ENTRIES)
+        db.execSQL(SQL_DELETE_LABEL_ENTRIES)
         onCreate(db)
     }
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">mobileDistriTV</string>
-    <string name="app_preference_file_key">DistriTVApp</string>
+    <string name="app_name">DistriTV</string>
     <string name="device_info_title">Ingresar el código</string>
     <string name="device_info_register_button">Registrar</string>
     <string name="device_info_switch_external">Utilizar almacenamiento externo para guardar los contenidos</string>
@@ -21,6 +20,7 @@
     <string name="msg_error_external_storage">ERROR: Es posible que no se encuentre el almacenamiento externo o no se haya otorgado el permiso</string>
     <string name="info_card_version">Versión:</string>
     <string name="info_card_tv_code">Código de TV:</string>
+    <string name="info_card_labels">Etiquetas:</string>
     <string name="info_card_connection_status">Estado de conexión:</string>
     <string name="info_card_switch_external">Usar almacenamiento externo</string>
     <string name="info_card_anticipation_days">Anticipación para descargas:</string>

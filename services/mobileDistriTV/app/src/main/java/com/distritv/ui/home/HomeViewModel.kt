@@ -18,6 +18,7 @@ import com.distritv.data.helper.StorageHelper.externalStorageDirIsEmpty
 import com.distritv.data.helper.StorageHelper.internalStorageDirIsEmpty
 import com.distritv.data.helper.StorageHelper.moveFiles
 import com.distritv.data.repositories.TelevisionRepository
+import com.distritv.data.service.LabelService
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.net.SocketTimeoutException
@@ -27,7 +28,8 @@ class HomeViewModel(
     private val context: Context,
     private val deviceInfoService: DeviceInfoService,
     private val sharedPreferences: SharedPreferencesService,
-    private val televisionRepository: TelevisionRepository
+    private val televisionRepository: TelevisionRepository,
+    private val labelService: LabelService
 ) : ViewModel() {
 
     private val _isValid = MutableLiveData<Boolean>()
@@ -228,6 +230,7 @@ class HomeViewModel(
         _homeFragmentTexts.value = listOf(
             context.getString(R.string.info_card_version),
             context.getString(R.string.info_card_tv_code),
+            context.getString(R.string.info_card_labels),
             context.getString(R.string.info_card_connection_status),
             context.getString(R.string.language),
             context.getString(R.string.language_select),
@@ -286,6 +289,10 @@ class HomeViewModel(
 
     fun setCurrentAnticipationDays(days: Int) {
         sharedPreferences.setAnticipationDays(days)
+    }
+
+    fun getLabelNameList(): List<String> {
+        return labelService.getLabels().map { it.name }
     }
 
     companion object {

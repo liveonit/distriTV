@@ -44,6 +44,10 @@ android {
             buildConfigField "Long", "GARBAGE_COLLECTOR_TIME_PERIOD", "${props.getProperty("garbage_collector_time_period_in_seconds")}L"
             buildConfigField "String", "ANTICIPATION_DAYS_OPTIONS", "\"${props.getProperty("anticipation_days")}\""
             buildConfigField "Boolean", "EXTERNAL_STORAGE_ENABLED", "${props.getProperty("external_storage_enabled")}"
+            buildConfigField "String", "TEXT_CONTENT_COLOR", "\"${props.getProperty("text_content_color")}\""
+            buildConfigField "String", "TEXT_CONTENT_BACKGROUND_COLOR", "\"${props.getProperty("text_content_background_color")}\""
+            buildConfigField "String", "ALERT_TEXT_COLOR", "\"${props.getProperty("alert_text_color")}\""
+            buildConfigField "String", "ALERT_BACKGROUND_COLOR", "\"${props.getProperty("alert_background_color")}\""
         }
         release {
             minifyEnabled false
@@ -55,6 +59,10 @@ android {
             buildConfigField "Long", "GARBAGE_COLLECTOR_TIME_PERIOD", "${props.getProperty("garbage_collector_time_period_in_seconds")}L"
             buildConfigField "String", "ANTICIPATION_DAYS_OPTIONS", "\"${props.getProperty("anticipation_days")}\""
             buildConfigField "Boolean", "EXTERNAL_STORAGE_ENABLED", "${props.getProperty("external_storage_enabled")}"
+            buildConfigField "String", "TEXT_CONTENT_COLOR", "\"${props.getProperty("text_content_color")}\""
+            buildConfigField "String", "TEXT_CONTENT_BACKGROUND_COLOR", "\"${props.getProperty("text_content_background_color")}\""
+            buildConfigField "String", "ALERT_TEXT_COLOR", "\"${props.getProperty("alert_text_color")}\""
+            buildConfigField "String", "ALERT_BACKGROUND_COLOR", "\"${props.getProperty("alert_background_color")}\""
         }
     }
 

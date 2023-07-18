@@ -1,4 +1,4 @@
 <resources>
 
-    <style name="Theme.MobileDistriTV" parent="@style/Theme.Leanback" />
+    <style name="Theme.DistriTV" parent="@style/Theme.Leanback" />
 </resources>

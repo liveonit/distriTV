@@ -45,6 +45,7 @@ class DeviceInfoService(
             getTvCode(),
             getCurrentVersionApp(),
             getSDKVersion(),
+            getCurrentTime(),
             availableMem,
             totalMem,
             memUnit,
@@ -56,7 +57,6 @@ class DeviceInfoService(
             appIsVisible(),
             isAnyContentPlaying(),
             getCurrentlyPlayingContentId(),
-            getCurrentTime(),
             useExternalStorage(),
             externalMemoryAvailable(),
             externalStoragePermissionGranted(),
@@ -74,6 +74,10 @@ class DeviceInfoService(
             getCurrentVersionApp(),
             null
         )
+    }
+
+    private fun getSDKVersion(): Int {
+        return Build.VERSION.SDK_INT
     }
 
     private fun getTvCode(): String {
@@ -94,6 +98,39 @@ class DeviceInfoService(
 
     private fun externalStoragePermissionGranted(): Boolean? {
         return context.externalStoragePermissionGranted()
+    }
+
+    /**
+     * @return true if the app is visible in the foreground,
+     * false otherwise.
+     */
+    private fun appIsVisible(): Boolean {
+        val currentActivity: Activity? = myApp?.getCurrentActivity()
+        return currentActivity != null
+    }
+
+    /**
+     * @return true if any content is currently playing,
+     * false otherwise.
+     */
+    private fun isAnyContentPlaying(): Boolean {
+        return myApp?.isContentCurrentlyPlaying() ?: false
+    }
+
+    private fun getCurrentlyPlayingContentId(): Long? {
+        return myApp?.getCurrentlyPlayingContentId()
+    }
+
+    private fun isAnyAlertPlaying(): Boolean {
+        return myApp?.isAlertCurrentlyPlaying() ?: false
+    }
+
+    private fun getCurrentlyPlayingAlertId(): Long? {
+        return myApp?.getCurrentlyPlayingAlertId()
+    }
+
+    private fun getAlertDurationLeft(): Long? {
+        return myApp?.getAlertDurationLeft()
     }
 
     private fun displayOverOtherAppsPermissionGranted(): Boolean? {
@@ -180,7 +217,6 @@ class DeviceInfoService(
         return arrayOf(availMemory.roundTo(2), totalMemory.roundTo(2))
     }
 
-
     /**
      * @return true if all background services are running,
      * false otherwise.
@@ -193,43 +229,6 @@ class DeviceInfoService(
 
     private fun isServiceRunning(serviceClass: Class<*>): Boolean {
         return isServiceRunning(context, serviceClass)
-    }
-
-    /**
-     * @return true if the app is visible in the foreground,
-     * false otherwise.
-     */
-    private fun appIsVisible(): Boolean {
-        val currentActivity: Activity? = myApp?.getCurrentActivity()
-        return currentActivity != null
-    }
-
-    /**
-     * @return true if any content is currently playing,
-     * false otherwise.
-     */
-    private fun isAnyContentPlaying(): Boolean {
-        return myApp?.isContentCurrentlyPlaying() ?: false
-    }
-
-    private fun getCurrentlyPlayingContentId(): Long {
-        return myApp?.getCurrentlyPlayingContentId() ?: -1L
-    }
-
-    private fun getSDKVersion(): Int {
-        return Build.VERSION.SDK_INT
-    }
-
-    private fun isAnyAlertPlaying(): Boolean {
-        return myApp?.isAlertCurrentlyPlaying() ?: false
-    }
-
-    private fun getCurrentlyPlayingAlertId(): Long? {
-        return myApp?.getCurrentlyPlayingAlertId()
-    }
-
-    private fun getAlertDurationLeft(): Long? {
-        return myApp?.getAlertDurationLeft()
     }
 
     companion object {

@@ -28,6 +28,7 @@ import com.distritv.data.repositories.ContentRepository
 import com.distritv.data.repositories.TelevisionRepository
 import com.distritv.data.service.ContentService
 import com.distritv.data.service.DeviceInfoService
+import com.distritv.data.service.LabelService
 import com.distritv.data.service.ScheduleService
 import com.distritv.utils.*
 import kotlinx.coroutines.CoroutineScope
@@ -45,6 +46,7 @@ class RequestDaemon: Service() {
     private val televisionRepository: TelevisionRepository by inject()
     private val contentService: ContentService by inject()
     private val scheduleService: ScheduleService by inject()
+    private val labelService: LabelService by inject()
 
     private val deviceInfoService:DeviceInfoService by inject()
 
@@ -120,6 +122,8 @@ class RequestDaemon: Service() {
                 if (checkExternalStorage(deviceInfo)) return@launch
 
                 checkAlert(deviceInfo, responseTelevision.alert)
+
+                labelService.saveLabels(responseTelevision.label)
 
                 // Check if any schedule was removed on the server then delete on TV
                 scheduleList.forEach { schedule ->

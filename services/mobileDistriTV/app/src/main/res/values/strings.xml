@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">mobileDistriTV</string>
-    <string name="app_preference_file_key">DistriTVApp</string>
+    <string name="app_name">DistriTV</string>
     <string name="device_info_title">Enter the TV code</string>
     <string name="device_info_register_button">Register</string>
     <string name="device_info_switch_external">Use external storage to save the contents</string>
@@ -20,6 +19,7 @@
     <string name="msg_error_external_storage">ERROR: External storage may not be found or permission not granted</string>
     <string name="info_card_version">Version:</string>
     <string name="info_card_tv_code">TV code:</string>
+    <string name="info_card_labels">Labels:</string>
     <string name="info_card_connection_status">Connection status:</string>
     <string name="info_card_switch_external">Use external storage</string>
     <string name="info_card_anticipation_days">Anticipation for downloads:</string>

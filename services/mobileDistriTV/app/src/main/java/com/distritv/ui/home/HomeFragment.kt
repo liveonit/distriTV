@@ -34,6 +34,7 @@ import com.distritv.utils.HomeFragmentTextIndex.SWITCH_EXTERNAL_STORAGE_HOME
 import com.distritv.utils.HomeFragmentTextIndex.TV_CODE
 import com.distritv.utils.HomeFragmentTextIndex.ANTICIPATION_DAYS
 import com.distritv.utils.HomeFragmentTextIndex.ANTICIPATION_DAYS_SELECT_TITLE
+import com.distritv.utils.HomeFragmentTextIndex.LABELS
 import com.distritv.utils.HomeFragmentTextIndex.LANGUAGE_SELECT_TITLE
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -124,6 +125,7 @@ class HomeFragment: Fragment() {
         viewModel.deviceInfo.observe(this) { deviceInfoCard ->
             binding.versionValue.text = deviceInfoCard.currentVersionApp
             binding.tvCodeValue.text = deviceInfoCard.tvCode
+            addLabels()
             addStatus(deviceInfoCard.connectionStatus)
             languageSpinner()
             anticipationDaysSpinner()
@@ -190,10 +192,22 @@ class HomeFragment: Fragment() {
         }
     }
 
+    fun addLabels() {
+        val labelNameList = viewModel.getLabelNameList()
+        if (labelNameList.isEmpty()) {
+            binding.labelsContainer.visibility = View.GONE
+        } else {
+            binding.labelsContainer.visibility = View.VISIBLE
+            binding.labelsValue.text = labelNameList.toString()
+                .replace("[", "").replace("]", "")
+        }
+    }
+
     private fun textsObserver() {
         viewModel.homeFragmentTexts.observe(viewLifecycleOwner) { textList ->
             binding.versionKey.text = textList[APP_VERSION]
             binding.tvCodeKey.text = textList[TV_CODE]
+            binding.labelsKey.text = textList[LABELS]
             binding.connectionStatusKey.text = textList[CONNECTION_STATUS]
             binding.languageKey.text = textList[LANGUAGE]
             binding.languageSpinner.prompt = textList[LANGUAGE_SELECT_TITLE]

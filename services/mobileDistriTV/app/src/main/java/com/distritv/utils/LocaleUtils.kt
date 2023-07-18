@@ -38,12 +38,13 @@ object DeviceInfoFragmentTextIndex {
 object HomeFragmentTextIndex {
     const val APP_VERSION = 0
     const val TV_CODE = 1
-    const val CONNECTION_STATUS = 2
-    const val LANGUAGE = 3
-    const val LANGUAGE_SELECT_TITLE = 4
-    const val SWITCH_EXTERNAL_STORAGE_HOME = 5
-    const val ANTICIPATION_DAYS = 6
-    const val ANTICIPATION_DAYS_SELECT_TITLE = 7
+    const val LABELS = 2
+    const val CONNECTION_STATUS = 3
+    const val LANGUAGE = 4
+    const val LANGUAGE_SELECT_TITLE = 5
+    const val SWITCH_EXTERNAL_STORAGE_HOME = 6
+    const val ANTICIPATION_DAYS = 7
+    const val ANTICIPATION_DAYS_SELECT_TITLE = 8
 
     const val DIALOG_TITLE_HOME_TO_EXTERNAL = 0
     const val DIALOG_TITLE_HOME_TO_INTERNAL = 1

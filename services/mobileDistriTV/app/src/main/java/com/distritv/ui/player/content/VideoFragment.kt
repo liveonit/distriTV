@@ -107,7 +107,7 @@ class VideoFragment : Fragment() {
     }
 
     private fun startVideo() {
-        val file = File(content?.fileName ?: "")
+        val file = File(context?.getCurrentDirectory() ?: "", content?.fileName ?: "")
 
         if (!file.exists()) {
             Log.e(TAG, "An error occurred while trying to play. Check storage. Back to home...")
@@ -116,12 +116,7 @@ class VideoFragment : Fragment() {
             onAfterCompletionContent(TAG, content?.id)
         }
 
-        val path = File(context?.getCurrentDirectory() ?: "", content?.fileName ?: "").toURI().toString()
-        binding.videoContainer.setVideoPath(path)
-
-        val mediaC = MediaController(context)
-        binding.videoContainer.setMediaController(mediaC)
-        mediaC.setAnchorView(binding.videoContainer)
+        binding.videoContainer.setVideoPath(file.toURI().toString())
 
         binding.videoContainer.setOnCompletionListener {
             handler.postDelayed({
@@ -150,6 +145,12 @@ class VideoFragment : Fragment() {
         content?.let { viewModel.playOnceContentAlreadyStarted(it) }
 
         Log.i(TAG, "Playback started. Content id: ${content?.id}")
+    }
+
+    private fun setMediaController() {
+        val mediaC = MediaController(context)
+        binding.videoContainer.setMediaController(mediaC)
+        mediaC.setAnchorView(binding.videoContainer)
     }
 
     private fun addPostHandlerWhenVideoIsPaused(duration: Int, currentPosition: Int) {

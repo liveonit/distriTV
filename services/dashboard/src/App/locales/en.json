@@ -76,7 +76,25 @@
   "OCT": "October",
   "NOV": "November",
   "DEC": "December",
+  
+  "allProcessesAreRunning": "all processes are running",
+  "appIsVisible" : "App Visible",
+  "availableMem": "available memory ",
+  "availableStorage" : "Available storage",
+  "availableStorageUnit": "Available  storage unit",
+  "currentDate": "Fecha actual",
+  "currentVersionApp": "App Versión",
+  "currentlyPlayingContentId": "Currently playing ContentId",
+  "externalStoragePermissionGranted": "External storage permission granted",
+  "isAnyAlertPlaying": "Is any alert playing",
+  "isAnyContentPlaying": "Is any content playing" ,
+  "isExternalStorageConnected": "Is external storage connected",
+  "memUnit": "Memory ",
+  "sdkVersion": "sdk version",
+  "totalMem": "Total memory",
+  "totalStorage": "Total storage",
+  "totalStorageUnit": "Total storage unit",
+  "tvCode": "TV code",
+  "useExternalStorage": "Use external storage"
 
-
-  "allProcessesAreRunning": "All process are running"
 }

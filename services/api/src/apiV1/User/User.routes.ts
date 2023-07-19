@@ -6,5 +6,6 @@ routes.setRoutes({
   getById: { enabled: true, path: '/:id', requiredRoles: ['admin'] },
   getMany: { enabled: true, path: '/:id', requiredRoles: ['admin'] },
   create: { enabled: true, path: '/', requiredRoles: ['admin'] },
+  update: { enabled: true, path: '/', requiredRoles: ['admin'] },
 });
 export default routes.router;

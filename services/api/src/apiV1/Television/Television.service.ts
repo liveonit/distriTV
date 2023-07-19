@@ -26,13 +26,18 @@ export class TelevisionSvc extends BaseService<Television> {
                 throw new Error('TV code not found')
             
             // Handle alerts
-            if (result.alert !== null) {                
+            if (television.alert !== null) {             
                 if(durationLeft === 0){
-                    Alert.delete({id: result.alert.id})
-                    result.alert = null
+                    await Alert.delete({id: television.alert!.id})
+                    television.alert = null
                 } else {
-                    result.alert.durationLeft = durationLeft || result.alert.durationLeft || result.alert.duration
-                    Alert.update({id: result.alert.id}, {durationLeft })
+                    if (!television.alert?.started) {
+                        television.alert!.durationLeft = television.alert!.duration
+                    }
+                    else {
+                        television.alert!.durationLeft = durationLeft || television.alert!.durationLeft
+                    }
+                    await Alert.update({id: television.alert!.id}, {durationLeft: television.alert!.durationLeft, started: true })
                 }                               
             }
 
@@ -43,13 +48,17 @@ export class TelevisionSvc extends BaseService<Television> {
             }            
             delete television.monitor
 
-            // Handle schedules associated to label            
-            return Promise.all(television.labels?.map(label => {
-                return Schedule.find({relations: ['content'], where: {labelId: label.id}})
-            })!).then(schedules => {
-                television.schedules = television.schedules!.concat(schedules.flat())
-                return television
-            })  
+            // Handle schedules associated to label   
+            if(television.labels) 
+              return Promise.all(television.labels.map(label => {
+                  return Schedule.find({relations: ['content'], where: {labelId: label.id}})
+              })!).then(schedules => {
+                  television.schedules = television.schedules!.concat(schedules.flat())
+                  return television
+              })
+            else {
+              return television
+            }
         })
     };
 }

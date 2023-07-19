@@ -17,7 +17,7 @@ import _ from 'lodash';
 import { redisClient } from '@src/redisCient';
 
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { BadRequest, Forbidden, NotFound, Unauthorized } from '@lib/errors';
+import { BadRequest, Unauthorized } from '@lib/errors';
 import { handleErrorAsync } from '@middlewares/errorCatcher';
 import { uuid } from '@lib/helpers/uuid';
 import { googleAuthSvc } from './GoogleAuthService';
@@ -191,14 +191,14 @@ class AuthService {
       const authorizationType = req.headers['auth-type'];
       if (authorizationType === 'local') {
         const token = this.getTokenFromHeader(req);
-        if (token == null) throw new Forbidden();
+        if (token == null) throw new Unauthorized();
         const decoded: AuthPayloadType | null = authPayloadSchema.parse(
           verifyJwt(token, 'ACCESS_TOKEN_PUBLIC_KEY'),
         );
         const session = config.REDIS_ENABLED
           ? await redisClient.get(`${decoded.id}:${decoded.sessionId}`)
           : JSON.stringify(decoded);
-        if (!decoded || !session) throw new Forbidden();
+        if (!decoded || !session) throw new Unauthorized();
         userPayload = JSON.parse(session) as AuthPayloadType;
       }
 

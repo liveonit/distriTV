@@ -1,6 +1,6 @@
-import { Observable } from 'rxjs'
-import { ajax, AjaxResponse } from 'rxjs/ajax'
-import { timeout as timeoutOp, retry } from 'rxjs/operators'
+import { Observable, throwError } from 'rxjs'
+import { ajax, AjaxError, AjaxResponse } from 'rxjs/ajax'
+import { timeout as timeoutOp, retry, catchError } from 'rxjs/operators'
 import { GLOBAL_CONFIGS } from 'src/App/configs'
 import { SessionT } from 'src/store/auth/auth.type'
 import { storage } from 'src/utils/general/Storage'
@@ -11,7 +11,7 @@ interface RequestProps<Body> {
   requireAuthType?: 'local' | 'google'
   body?: Body
   data?: FormData
-  headers?: Readonly<Record<string, any>>,
+  headers?: Readonly<Record<string, any>>
   retries?: number
   timeout?: number
   extraConfig?: any
@@ -52,6 +52,10 @@ const apiSvc = {
       headers,
       body,
     }).pipe(
+      catchError((err: AjaxError) => {
+        if (err.status === 401) storage.set('session', null)
+        return throwError(() => err)
+      }),
       timeoutOp(timeout),
       retry(retries),
     )

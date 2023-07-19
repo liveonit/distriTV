@@ -50,10 +50,10 @@ describe('👉👉👉 Api tests 👈👈👈', () => {
 
     test('Get profile without token should return Unauthorized', async () => {
       const res = await request(API_URL).get('/auth/me').set('auth-type', 'local').send();
-      expect(res.status).toBe(403);
-      expect(res.body.error.type).toBe('FORBIDDEN');
-      expect(res.body.error.message).toBe('Invalid Permissions');
-      expect(res.body.error.code).toBe(403);
+      expect(res.status).toBe(401);
+      expect(res.body.error.type).toBe('UNAUTHORIZED');
+      expect(res.body.error.message).toBe('Invalid Credentials');
+      expect(res.body.error.code).toBe(401);
       expect(res.body.error.success).toBeFalsy();
     });
 

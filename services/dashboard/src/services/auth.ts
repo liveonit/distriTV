@@ -6,11 +6,10 @@ import { UserT } from 'src/store/user/user.type'
 
 export const checkOrRefreshToken = async () => {
   const session = storage.get<SessionT>('session')
-  if (!session?.session?.refreshToken && !session?.session?.tokenId) {
-    throw new Error('User requires authentication')
-  }
-  if (session?.session.refreshToken && session?.session.accessToken) {
-    try {
+  try {
+    if (!session?.session?.refreshToken || !session?.session?.accessToken) {
+      throw new Error('User requires authentication')
+    } else {
       const accessExp = parseJwt<UserT>(session.session.accessToken)?.exp
       const refreshExp = parseJwt<UserT>(session.session.refreshToken)?.exp
       if (!refreshExp || !accessExp || new Date() > new Date(refreshExp * 1000))
@@ -29,10 +28,10 @@ export const checkOrRefreshToken = async () => {
           roleMappings: userPayload.roleMappings,
         })
       }
-    } catch (err) {
-      console.error(err)
-      storage.set('session', null)
     }
+  } catch (err) {
+    console.error(err)
+    storage.set('session', null)
   }
   return session
 }

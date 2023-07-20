@@ -2,11 +2,10 @@ import { Schedule } from '@src/entities/Schedule';
 import { BaseService } from '@lib/BaseClasses/BaseService';
 import { Television } from '@src/entities/Television';
 import { Content } from '@src/entities/Content';
-import { ArrayContains } from 'typeorm';
 import { Label } from '@src/entities/Label';
-import { BadRequest } from '@src/lib/errors/BadRequest';
 import { OverlapSchedule } from '@src/lib/errors/OverlapSchedule';
-var parser = require('cron-parser');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const parser = require('cron-parser');
 
 export class ScheduleSvc extends BaseService<Schedule> {
     public async createSchedule (body: any) {
@@ -17,8 +16,8 @@ export class ScheduleSvc extends BaseService<Schedule> {
                 relations: ['schedules', 'schedules.content', 'labels']})
             .then(async tv => {
                 if (!tv) throw new Error('TV not found')
-                let myStartDate = new Date(body.startDate)
-                let myEndDate = new Date(body.endDate)
+                const myStartDate = new Date(body.startDate)
+                const myEndDate = new Date(body.endDate)
 
                 await Content.findOne({where: {id: body.contentId}}).then(async content => {                    
                     let misSchedules = tv.schedules
@@ -29,11 +28,11 @@ export class ScheduleSvc extends BaseService<Schedule> {
                             misSchedules = misSchedules!.concat(schedules.flat())                            
                         })
 
-                    let myPeriods = getPeriodsFromCron(myStartDate, new Date(body.endDate), body.id, content!.duration, body.cron, myStartDate, myEndDate)
+                    const myPeriods = getPeriodsFromCron(myStartDate, new Date(body.endDate), body.id, content!.duration, body.cron, myStartDate, myEndDate)
                     console.log(myPeriods, 'MIS PERIODOS')
 
                     misSchedules?.forEach(schedule => {
-                        let busyPeriods = getPeriodsFromCron(schedule.startDate, schedule.endDate, schedule.id, schedule.content.duration, schedule.cron, myStartDate, myEndDate)
+                        const busyPeriods = getPeriodsFromCron(schedule.startDate, schedule.endDate, schedule.id, schedule.content.duration, schedule.cron, myStartDate, myEndDate)
                         busyPeriods.forEach(busyPeriod => {
                             myPeriods.forEach(myPeriod => {
                                 if (!(myPeriod.endDate < busyPeriod.startDate || myPeriod.startDate > busyPeriod.endDate)) {
@@ -51,12 +50,12 @@ export class ScheduleSvc extends BaseService<Schedule> {
                 relations: ['schedules', 'schedules.content']
             }).then(async tvs => {
                 if(tvs.length > 0) {
-                    let myStartDate = new Date(body.startDate)
-                    let myEndDate = new Date(body.endDate)
+                    const myStartDate = new Date(body.startDate)
+                    const myEndDate = new Date(body.endDate)
 
                     await Content.findOne({where: {id: body.contentId}}).then(async content => {     
 
-                        let myPeriods = getPeriodsFromCron(myStartDate, new Date(body.endDate), body.id, content!.duration, body.cron, myStartDate, myEndDate)
+                        const myPeriods = getPeriodsFromCron(myStartDate, new Date(body.endDate), body.id, content!.duration, body.cron, myStartDate, myEndDate)
                         console.log(myPeriods, 'MIS PERIODOS')
 
                         let misSchedules: Schedule[] = []
@@ -71,7 +70,7 @@ export class ScheduleSvc extends BaseService<Schedule> {
                         misSchedules = misSchedules.concat(schedulesOfLabel)
 
                         misSchedules?.forEach(schedule => {
-                            let busyPeriods = getPeriodsFromCron(schedule.startDate, schedule.endDate, schedule.id, schedule.content.duration, schedule.cron, myStartDate, myEndDate)
+                            const busyPeriods = getPeriodsFromCron(schedule.startDate, schedule.endDate, schedule.id, schedule.content.duration, schedule.cron, myStartDate, myEndDate)
                             busyPeriods.forEach(busyPeriod => {
                                 myPeriods.forEach(myPeriod => {
                                     if (!(myPeriod.endDate < busyPeriod.startDate || myPeriod.startDate > busyPeriod.endDate)) {
@@ -81,23 +80,10 @@ export class ScheduleSvc extends BaseService<Schedule> {
                             })
                         })
                     })
-
                 }
             })
-
-
-
-
-
         }
-        
 
-
-
-        // else la crea por label
-
-
-        // este return es si pasa el check
         return this.create(Schedule.create(body), {relations: ['television', 'label', 'content']})
     }
 }
@@ -118,20 +104,21 @@ function getPeriodsFromCron (startDate: Date, endDate: Date, id: number, duratio
         ]
     } else {
         // Es por cron
-        let options = {
+        const options = {
             currentDate: startDate.getTime() > myStartDate.getTime() ? startDate : myStartDate,
             endDate: myEndDate.getTime() < endDate.getTime() ? myEndDate : endDate,
             iterator: true
         };
-        let myPeriods = []
+        const myPeriods = []
         try {
-            var interval = parser.parseExpression(cron, options);
+            const interval = parser.parseExpression(cron, options);
             
+            // eslint-disable-next-line no-constant-condition
             while (true) {
                 console.log(cron, id)
               try {
-                var obj = interval.next();
-                let periodStartDate = new Date(obj.value.toString())
+                const obj = interval.next();
+                const periodStartDate = new Date(obj.value.toString())
                 myPeriods.push({
                     startDate: periodStartDate,
                     endDate: new Date(periodStartDate.getTime() + duration * 1000),

@@ -57,30 +57,14 @@ export default function CreateAndEditContentModal({ handleCloseContentModal, con
   })
   const { reset, control, watch, getValues, handleSubmit, register } = methods
 
-  const getVideoDuration = async (file: File): Promise<number> =>
-  new Promise((res, rej) => {
-    const video = document.createElement('video')
-    video.src = URL.createObjectURL(file)
-
-    video.onloadeddata = (_ev) => {
-      if (video.duration) res(video.duration)
-      else {
-        console.error('Video duration not loaded')
-        rej('Video duration not loaded')
-      }
-    }
-  })
-
-  const onSubmit: SubmitHandler<ContentT> = async (data) => {
+  const onSubmit: SubmitHandler<ContentT> = (data) => {
     if ((data.type === 'Image' || data.type === 'Video') && file) {
       const renamedFile = new File([file], `${data.name}.${file.name.split('.').pop()}`)
-      if (data.type === 'Video') data.duration = await getVideoDuration(renamedFile)
-      console.log(data.duration)
       dispatch(
         uploadContent({
           name: renamedFile.name,
           type: file.type,
-          duration: data.duration,
+          duration: data.type === 'Image' ? data.duration : undefined,
           file: renamedFile,
         }),
       )

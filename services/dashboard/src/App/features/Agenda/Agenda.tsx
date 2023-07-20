@@ -113,6 +113,9 @@ export default function AgendaList() {
           <TableHead>
             <TableRow>
             <TableCell>
+                <Trans>ID</Trans>
+              </TableCell>
+            <TableCell>
                 <Trans>CONTENT</Trans>
               </TableCell>
               <TableCell>
@@ -134,7 +137,8 @@ export default function AgendaList() {
           </TableHead>
           <TableBody>
             {agendas.map((agenda) => (
-              <TableRow key={agenda.contentId}>
+              <TableRow key={agenda.id}>
+                <TableCell>{agenda.id}</TableCell>
                 <TableCell>{agenda.content?.name}</TableCell>
                 <TableCell component='th' scope='row'>
                   {agenda.television?.name || '-'}

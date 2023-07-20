@@ -23,7 +23,7 @@ import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useTranslation } from 'react-i18next'
-import { FormatListBulleted } from '@material-ui/icons'
+import { Cancel, FormatListBulleted } from '@material-ui/icons'
 
 import TelevisionCreateAndEditModal from './TelevisionCreateAndEditModal'
 import TelevisionDeleteModal from './TelevisionDeleteModal'
@@ -43,6 +43,7 @@ export default function TelevisionList() {
   const isLoading = useSelector(televisionsIsLoadingSelector)
   const televisions = useSelector(televisionsSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
+  const [reload, setReload] = React.useState(0)
   const [televisionToEdit, setTelevisionToEdit] = React.useState<TelevisionT | null>(null)
   const [televisionToDelete, setTelevisionToDelete] = React.useState<TelevisionT | null>(null)
   const [televisionToStatus, setTelevisionToStatus] = React.useState<TelevisionT | null>(null)
@@ -52,12 +53,17 @@ export default function TelevisionList() {
   const { t } = useTranslation()
 
   React.useEffect(() => {
+    const pepe = setInterval(() => setReload(reload + 1), 2 * 60 * 1000);    
+    return () => clearInterval(pepe)
+  }, [reload]);
+
+  React.useEffect(() => {
     dispatch(
       listTelevisionsJoin({
         query: searchQueryString ? `search=${searchQueryString}` : '',
       }),
     )
-  }, [dispatch, searchQueryString])
+  }, [dispatch, searchQueryString, reload])
 
   function handleCloseEditTelevisionModal() {
     setTelevisionToEdit(null)
@@ -76,6 +82,16 @@ export default function TelevisionList() {
 
   function handleListLabelsModal() {
     setListLabels(null)
+  }
+
+  function checkTvStatus (tv: TelevisionT) {
+    if (!tv.monitor.currentDate)
+      return false
+          
+    const now = new Date();
+    const differenceInMilliseconds : number = now.getTime() - new Date(tv.monitor.currentDate.split('.')[0]).getTime();
+    const differenceInMinutes = differenceInMilliseconds / (1000 * 60);
+    return differenceInMinutes < 5;
   }
 
   return isLoading ? (
@@ -175,9 +191,8 @@ export default function TelevisionList() {
                     aria-label='STATUS television'
                     component='span'
                   >
-                    <CheckCircleIcon />
+                    {checkTvStatus(television) ? (<CheckCircleIcon />) : (<Cancel color="error"/> )}  
                   </IconButton>
-
                 </TableCell>
                 <TableCell>
                   <IconButton

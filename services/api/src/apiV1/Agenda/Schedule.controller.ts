@@ -11,11 +11,7 @@ import { BadRequest } from '@lib/errors';
 
 class ScheduleController extends BaseController<Schedule, ScheduleSvc> { 
   public override create = handleErrorAsync(async (req: Request, res: Response) => {
-    try {
       return res.status(200).json(await this.service.createSchedule(req.body));
-    } catch (e) {
-      throw new BadRequest(String(e));
-    }
   });
 }
 

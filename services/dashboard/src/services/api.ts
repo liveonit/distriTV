@@ -31,7 +31,6 @@ const apiSvc = {
     let headers: Readonly<Record<string, any>> = {
       ...props.headers,
     }
-
     if (requireAuthType === 'local')
       headers = {
         ...headers,

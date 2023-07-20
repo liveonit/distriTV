@@ -49,7 +49,7 @@ export const FormInputDropdownMulti: React.FC<FormInputDropdownMultiPropsT> = ({
               labelId='demo-multiple-name-label'
               id='demo-multiple-name'
               multiple
-              value={value}
+              value={value || []}
               onChange={onChange}
               input={<OutlinedInput label='Name' />}
               MenuProps={MenuProps}

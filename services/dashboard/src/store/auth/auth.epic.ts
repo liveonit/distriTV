@@ -8,7 +8,7 @@ import { parseJwt } from 'src/App/helpers'
 
 import { enqueueSnackbarAction } from '../app/app.action'
 import apiSvc from '../../services/api'
-import { UserT } from '../user/user.type'
+import { UserSessionT } from '../auth/auth.type'
 
 const refreshToken$ = defer(() => checkOrRefreshToken())
 
@@ -18,7 +18,7 @@ const login: Epic = (action$) =>
     mergeMap(({ payload }) => {
       return apiSvc.request({ method: 'POST', path: '/auth/login', body: payload }).pipe(
         map(({ response }) => {
-          const userPayload = parseJwt<UserT>((response as any).refreshToken)
+          const userPayload = parseJwt<UserSessionT>((response as any).refreshToken)
           if (!userPayload) throw Error('Invalid user payload')
           storage.set('session', {
             session: { ...(response as any), type: 'local' },

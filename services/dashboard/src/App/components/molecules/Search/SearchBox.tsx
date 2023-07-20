@@ -43,29 +43,44 @@ export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
       })
     })
 
-  const searchBar = searches.map((search: { type: any; name: string; placeholder: string, options?: string[] }) => {
+  const searchBar = searches.map((search: { type: any; name: string; placeholder: string; options?: string[] }) => {
     switch (search.type) {
       case 'Input': {
         return (
-          <SearchInput value={state[search.name]} placeholder={search.placeholder} onChange={(value) => setState({ ...state, [search.name]: value })} />
+          <SearchInput
+            key={search.name}
+            value={state[search.name]}
+            placeholder={search.placeholder}
+            onChange={(value) => setState({ ...state, [search.name]: value })}
+          />
         )
       }
-      case 'Select': {        
+      case 'Select': {
         return (
-          <SearchDropdown options={search.options || []} placeholder={search.placeholder} value={state[search.name] || ''} onChange={(value) => setState({ ...state, [search.name]: value })} />
+          <SearchDropdown
+            key={search.name}
+            options={search.options || []}
+            placeholder={search.placeholder}
+            value={state[search.name] || ''}
+            onChange={(value) => setState({ ...state, [search.name]: value })}
+          />
         )
       }
-      case 'Multi': {        
+      case 'Multi': {
         return (
-          <SearchDropdownMulti 
-            options={search.options || []} 
-            placeholder={search.placeholder} 
-            value={(typeof state[search.name]) === 'undefined' ? 
-              [] 
-              : Array.isArray(state[search.name]) ?
-                state[search.name] 
-                : state[search.name].split(',')} 
-            onChange={(value) => setState({ ...state, [search.name]: value })} />
+          <SearchDropdownMulti
+            key={search.name}
+            options={search.options || []}
+            placeholder={search.placeholder}
+            value={
+              typeof state[search.name] === 'undefined'
+                ? []
+                : Array.isArray(state[search.name])
+                ? state[search.name]
+                : state[search.name].split(',')
+            }
+            onChange={(value) => setState({ ...state, [search.name]: value })}
+          />
         )
       }
       default: {
@@ -75,15 +90,9 @@ export const SearchBox: React.FC<SearchBoxT> = ({ searches }) => {
   })
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2}}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
       {searchBar}
-      <Button
-        variant='contained'
-        color='primary'
-        size='small'
-        startIcon={<Search />}
-        onClick={setSearch}            
-      >
+      <Button variant='contained' color='primary' size='small' startIcon={<Search />} onClick={setSearch}>
         <Trans>SEARCH</Trans>
       </Button>
     </Box>

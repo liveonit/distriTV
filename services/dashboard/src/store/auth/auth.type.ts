@@ -1,4 +1,4 @@
-import { RoleMappingT } from '../roleMapping/roleMapping.type'
+import { RoleMappingT } from '../user/user.type'
 
 export type SessionT = {
   session: {
@@ -8,5 +8,20 @@ export type SessionT = {
     refreshToken?: string
     tokenId?: string
   }
+  roleMappings: any[]
+}
+
+export type UserSessionT = {
+  id: string
+  username: string
+  enabled: string
+  emailVerified: string
+  firstName: string
+  lastName: string
+  email: string
+  sessionId: string
   roleMappings: RoleMappingT[]
+  loginType: string
+  exp: number
+  iat: number
 }

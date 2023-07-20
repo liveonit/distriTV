@@ -1,5 +1,4 @@
 import { PATH_NAME } from './pathName'
-import { USER_ROLE } from './userRole'
 import { DRAWER_MENU_LABEL } from './drawerMenu'
 import projConfig from '../../../package.json'
 
@@ -29,11 +28,11 @@ const GLOBAL_CONFIGS = {
   REACT_APP_MAX_SNACKBAR: 3,
   REACT_APP_AUTO_HIDE_SNACKBAR: 2000,
   API_URL: '/api/v1',
-  DEBUG_STORE: false
+  DEBUG_STORE: false,
 }
 
 const GOOGLE_CONFIGS = {
-  clientId: '1009712653750-1kd18n9tkeh51b5201idvblgv520ocop.apps.googleusercontent.com'
+  clientId: '1009712653750-1kd18n9tkeh51b5201idvblgv520ocop.apps.googleusercontent.com',
 }
 
-export { PATH_NAME, USER_ROLE, DRAWER_MENU_LABEL, VERSION_PROJECT, GLOBAL_CONFIGS, GOOGLE_CONFIGS }
+export { PATH_NAME, DRAWER_MENU_LABEL, VERSION_PROJECT, GLOBAL_CONFIGS, GOOGLE_CONFIGS }

@@ -34,7 +34,6 @@ export class UserSvc extends BaseService<User> {
     const queryRunner = this.db.getConnection().createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    const queryBuilder = queryRunner.manager.createQueryBuilder();
     try {
       await queryRunner.manager.update(this.model, { id }, data);
 

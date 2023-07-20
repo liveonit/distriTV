@@ -21,7 +21,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { useTranslation } from 'react-i18next'
 import { Cancel, FormatListBulleted } from '@material-ui/icons'
 
@@ -53,9 +53,9 @@ export default function TelevisionList() {
   const { t } = useTranslation()
 
   React.useEffect(() => {
-    const pepe = setInterval(() => setReload(reload + 1), 2 * 60 * 1000);    
+    const pepe = setInterval(() => setReload(reload + 1), 2 * 60 * 1000)
     return () => clearInterval(pepe)
-  }, [reload]);
+  }, [reload])
 
   React.useEffect(() => {
     dispatch(
@@ -77,21 +77,19 @@ export default function TelevisionList() {
 
   function handleCloseStatusTelevisionModal() {
     setTelevisionToStatus(null)
-    
   }
 
   function handleListLabelsModal() {
     setListLabels(null)
   }
 
-  function checkTvStatus (tv: TelevisionT) {
-    if (!tv.monitor.currentDate)
-      return false
-          
-    const now = new Date();
-    const differenceInMilliseconds : number = now.getTime() - new Date(tv.monitor.currentDate.split('.')[0]).getTime();
-    const differenceInMinutes = differenceInMilliseconds / (1000 * 60);
-    return differenceInMinutes < 5;
+  function checkTvStatus(tv: TelevisionT) {
+    if (!tv.monitor?.currentDate) return false
+
+    const now = new Date()
+    const differenceInMilliseconds: number = now.getTime() - new Date(tv.monitor.currentDate.split('.')[0]).getTime()
+    const differenceInMinutes = differenceInMilliseconds / (1000 * 60)
+    return differenceInMinutes < 5
   }
 
   return isLoading ? (
@@ -178,11 +176,11 @@ export default function TelevisionList() {
                     aria-label='edit label'
                     component='span'
                   >
-                    <FormatListBulleted color='primary'/>
+                    <FormatListBulleted color='primary' />
                   </IconButton>
                 </TableCell>
                 <TableCell>
-                <IconButton
+                  <IconButton
                     onClick={() => {
                       setModalTitle('Estado')
                       setTelevisionToStatus(television)
@@ -191,7 +189,7 @@ export default function TelevisionList() {
                     aria-label='STATUS television'
                     component='span'
                   >
-                    {checkTvStatus(television) ? (<CheckCircleIcon />) : (<Cancel color="error"/> )}  
+                    {checkTvStatus(television) ? <CheckCircleIcon /> : <Cancel color='error' />}
                   </IconButton>
                 </TableCell>
                 <TableCell>
@@ -243,7 +241,7 @@ export default function TelevisionList() {
           handleListLabelsModal={handleListLabelsModal}
         />
       )}
-       {!!televisionToStatus && (
+      {!!televisionToStatus && (
         <TelevisionStatusModal
           isOpen={!!televisionToStatus}
           tv={televisionToStatus!}

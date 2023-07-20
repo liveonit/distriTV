@@ -11,7 +11,7 @@ export let options: Options = {
 
 const generateUsers = () => {
   const result: any = {};
-  for (let vu = 1; vu <= (options.vus || 1000); vu++) {
+  for (let vu = 1; vu <= (options.vus || 100); vu++) {
     result[vu] = {
       username: `username_${vu}`,
       password: `password_${vu}`,

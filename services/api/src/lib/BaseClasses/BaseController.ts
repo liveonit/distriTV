@@ -48,8 +48,8 @@ export class BaseController<T extends BaseCustomEntity, S extends BaseService<T>
     if (!req.params.id) throw new BadRequest('Id is required');
     let id: string | number = req.params.id.toString();
     if (!isNaN(+id)) id = +id;
-    const body = this.updateSchema?.parse(req.body) || req.body;
     const { relations } = this.querySchema?.parse(req.query) || {};
+    const body = this.updateSchema?.parse(req.body) || req.body;
     let result = await this.service.update(id, body as T, { relations });
     console.log({ result });
     if (this.responseSchema) result = this.responseSchema.parse(result) as T;

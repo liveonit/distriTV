@@ -1,13 +1,14 @@
 import React, { Fragment, lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 // configs
-import { PATH_NAME, USER_ROLE } from '@app/configs'
+import { PATH_NAME } from '@app/configs'
 // layouts
 import MainLayout from '@app/layouts/MainLayout'
 // containers
 import AuthGuard from '@app/guards/AuthGuard'
 import GuestGuard from '@app/guards/GuestGuard'
 import { RoutesT } from 'src/store/app/app.type'
+import { RolesE } from 'src/store/user/user.type'
 
 import RoleRoute from './RoleRoute'
 import Content from '../features/Content'
@@ -18,9 +19,7 @@ const DenyView = lazy(() => import('../features/DenyView'))
 const Institutions = lazy(() => import('../features/Institution/index'))
 const Users = lazy(() => import('../features/Users'))
 const Dashboard = lazy(() => import('../features/Dashboard'))
-const Playbackground = lazy(() => import('../features/Playbackground'))
 const Login = lazy(() => import('../features/Login'))
-const Kanban = lazy(() => import('../features/Kanban'))
 const Television = lazy(() => import('../features/Television'))
 const Label = lazy(() => import('../features/Label'))
 const Alert = lazy(() => import('../features/Alert'))
@@ -52,52 +51,42 @@ const routesConfig: RoutesT[] = [
       {
         path: PATH_NAME.DASHBOARD,
         component: Dashboard,
-        requiredRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
-      },
-      {
-        path: PATH_NAME.PLAY_BACKGROUND,
-        component: Playbackground,
-        requiredRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
+        requiredRoles: Object.values(RolesE),
       },
       {
         path: PATH_NAME.INSTITUTION,
         component: Institutions,
-        requiredRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
+        requiredRoles: [RolesE.Admin],
       },
       {
         path: PATH_NAME.CONTENT,
         component: Content,
-        requiredRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
+        requiredRoles: [RolesE.Admin],
       },
       {
         path: PATH_NAME.TELEVISION,
         component: Television,
-        requiredRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
+        requiredRoles: Object.values(RolesE),
       },
       {
         path: PATH_NAME.LABEL,
         component: Label,
-        requiredRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
+        requiredRoles: Object.values(RolesE),
       },
       {
         path: PATH_NAME.ALERT,
         component: Alert,
-        requiredRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
+        requiredRoles: Object.values(RolesE),
       },
       {
         path: PATH_NAME.AGENDA,
         component: Agenda,
-        requiredRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
-      },
-      {
-        path: PATH_NAME.KANBAN,
-        component: Kanban,
-        requiredRoles: [USER_ROLE.ADMIN, USER_ROLE.LEAD],
+        requiredRoles: Object.values(RolesE),
       },
       {
         path: PATH_NAME.USERS,
         component: Users,
-        requiredRoles: [USER_ROLE.ADMIN],
+        requiredRoles: [RolesE.Admin],
       },
       {
         component: () => <Navigate to={PATH_NAME.ERROR_404} replace />,

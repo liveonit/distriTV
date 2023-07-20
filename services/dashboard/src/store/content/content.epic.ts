@@ -54,10 +54,6 @@ const uploadContent: Epic = (action$) => {
     ofType(ContentActionTypes.UPLOAD_FILE_REQUEST),
     debounceTime(0),
     concatMap((act) => refreshToken$.pipe(map(() => act))),
-    catchError((err) => {
-      storage.remove('session')
-      return err
-    }),
     mergeMap(({ payload }) => {
       const { file } = payload
       const formData = new FormData()

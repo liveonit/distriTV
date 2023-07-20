@@ -23,6 +23,7 @@ import { CITIES } from 'src/utils/constants/Cities'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
 import { useTranslation } from 'react-i18next'
+import { notEditableInstitutions } from 'src/App/configs/customConfigs'
 
 import InstitutionDeleteModal from './InstitutionDeleteModal'
 import InstitutionCreateAndEditModal from './InstitutionCreateAndEditModal'
@@ -69,7 +70,9 @@ export default function InstitutionList() {
     <>
       <Grid container alignItems='center'>
         <Grid item sm={8}>
-          <h2><Trans>INSTITUTIONS</Trans></h2>
+          <h2>
+            <Trans>INSTITUTIONS</Trans>
+          </h2>
         </Grid>
         <Grid item sm={4} container justifyContent='flex-end'>
           <Button
@@ -90,18 +93,26 @@ export default function InstitutionList() {
         searches={[
           { type: 'Input', name: 'name', placeholder: t('NAME') },
           { type: 'Multi', name: 'city', placeholder: t('CITY'), options: CITIES },
-          { type: 'Input', name: 'locality', placeholder: t('LOCALITY') },          
+          { type: 'Input', name: 'locality', placeholder: t('LOCALITY') },
         ]}
       />
-      <br/>
+      <br />
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell><Trans>NAME</Trans></TableCell>
-              <TableCell><Trans>CITY</Trans></TableCell>
-              <TableCell><Trans>LOCALITY</Trans></TableCell>
-              <TableCell><Trans>ACTION</Trans></TableCell>
+              <TableCell>
+                <Trans>NAME</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>CITY</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>LOCALITY</Trans>
+              </TableCell>
+              <TableCell>
+                <Trans>ACTION</Trans>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -113,27 +124,31 @@ export default function InstitutionList() {
                 <TableCell>{institution.city}</TableCell>
                 <TableCell>{institution.locality}</TableCell>
                 <TableCell>
-                  <IconButton
-                    onClick={() => {
-                      setModalTitle('EDIT')
-                      setInstitutionToEdit(institution)
-                    }}
-                    color='primary'
-                    aria-label='edit institution'
-                    component='span'
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      setInstitutionToDelete(institution)
-                    }}
-                    color='primary'
-                    aria-label='delete institution'
-                    component='span'
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  {!notEditableInstitutions.includes(institution.name) && (
+                    <>
+                      <IconButton
+                        onClick={() => {
+                          setModalTitle('EDIT')
+                          setInstitutionToEdit(institution)
+                        }}
+                        color='primary'
+                        aria-label='edit institution'
+                        component='span'
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => {
+                          setInstitutionToDelete(institution)
+                        }}
+                        color='primary'
+                        aria-label='delete institution'
+                        component='span'
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

@@ -1,7 +1,8 @@
 import { parseJwt } from 'src/App/helpers'
+import { storage } from 'src/utils/general/Storage'
 
-import { RoleMappingT } from '../roleMapping/roleMapping.type';
-import { UserT } from '../user/user.type';
+import { RoleMappingT } from '../user/user.type'
+import { SessionT, UserSessionT } from '../auth/auth.type'
 
 export enum AuthActionTypes {
   LOGIN_REQUEST = 'AUTH/LOGIN_REQUEST',
@@ -44,5 +45,12 @@ export const mapFromGoogleToPayload = (tokenId: string, roleMappings: RoleMappin
     lastName: googlePayload.family_name,
     emailVerified: googlePayload.email_verified,
     roleMappings,
-  } as UserT
+  } as UserSessionT
+}
+
+export const getUser = () => {
+  const session = storage.get<SessionT>('session')
+  if (session?.session?.type === 'local') return parseJwt<UserSessionT>(session.session.refreshToken!)
+  if (session?.session?.type === 'google') return mapFromGoogleToPayload(session.session.tokenId!, session.roleMappings)
+  return null
 }

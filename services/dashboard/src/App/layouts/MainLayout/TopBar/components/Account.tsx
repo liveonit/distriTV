@@ -5,11 +5,10 @@ import { useTranslation } from 'react-i18next'
 import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import Divider from '@material-ui/core/Divider'
 // material icon
 import AccountCircle from '@material-ui/icons/AccountCircle'
 // configs
-import { GOOGLE_CONFIGS, USER_ROLE } from '@app/configs'
+import { GOOGLE_CONFIGS } from '@app/configs'
 // actions
 import { logout } from 'src/store/auth/auth.action'
 import { useGoogleLogout } from 'react-google-login'
@@ -19,14 +18,12 @@ import { SessionT } from 'src/store/auth/auth.type'
 function Account({ ...classes }) {
   const { t: translate } = useTranslation()
   const dispatch = useDispatch()
-  const role = USER_ROLE.ADMIN
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   const onGoogleLogoutFailure = () => {
-    console.log('logout failed')
+    console.error('Google logout failed')
   }
   const onGoogleLogoutSuccess = () => {
-    console.log('============ googleLogout ===============')
     storage.set('session', null)
   }
   const { signOut } = useGoogleLogout({
@@ -80,8 +77,6 @@ function Account({ ...classes }) {
         open={Boolean(anchorEl)}
         onClose={_handleClose}
       >
-        <div className={classes.textRole}>{role}</div>
-        <Divider />
         <MenuItem>My account</MenuItem>
         <MenuItem className={classes.menuProfile} onClick={_handleLogout}>
           {translate('LOGOUT')}

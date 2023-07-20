@@ -203,7 +203,7 @@ class AuthService {
       }
 
       if (authorizationType === 'google') {
-        const token = req.headers.authorization?.toString();
+        const token = this.getTokenFromHeader(req);
         if (!token) throw new Unauthorized('Invalid credentials');
         const user = await googleAuthSvc.verify(token);
         if (!user) throw new Unauthorized('Invalid credentials');

@@ -25,7 +25,11 @@ type IProps = {
 }
 
 export default function UserCreateAndEditModal({ handleCloseEditModal, user, title }: IProps) {
-  const userInitialState: UserT = { ...removeEmpty(user) }
+  const userInitialState: UserT = {
+    ...removeEmpty(user),
+    roleName: user?.roleMappings?.[0]?.role?.name,
+    institutionId: user?.roleMappings?.[0]?.institutionId,
+  }
 
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -70,7 +74,7 @@ export default function UserCreateAndEditModal({ handleCloseEditModal, user, tit
             <Grid item xs={12}>
               <FormInputText
                 name='username'
-                disabled={user.loginType !== 'local'}
+                disabled={user?.loginType && user.loginType !== 'local'}
                 control={control}
                 fullWidth
                 label={t('USER_NAME')}
@@ -80,7 +84,7 @@ export default function UserCreateAndEditModal({ handleCloseEditModal, user, tit
             <Grid item xs={12}>
               <FormInputPassword
                 name='password'
-                disabled={user.loginType !== 'local'}
+                disabled={user?.loginType && user.loginType !== 'local'}
                 control={control}
                 fullWidth
                 label={t('PASSWORD')}
@@ -90,7 +94,7 @@ export default function UserCreateAndEditModal({ handleCloseEditModal, user, tit
             <Grid item xs={12}>
               <FormInputText
                 name='email'
-                disabled={user.loginType !== 'local'}
+                disabled={user?.loginType && user.loginType !== 'local'}
                 control={control}
                 fullWidth
                 label={t('EMAIL')}
@@ -100,7 +104,7 @@ export default function UserCreateAndEditModal({ handleCloseEditModal, user, tit
             <Grid item xs={12}>
               <FormInputText
                 name='firstName'
-                disabled={user.loginType !== 'local'}
+                disabled={user?.loginType && user.loginType !== 'local'}
                 control={control}
                 fullWidth
                 label={t('FIRST_NAME')}
@@ -110,7 +114,7 @@ export default function UserCreateAndEditModal({ handleCloseEditModal, user, tit
             <Grid item xs={12}>
               <FormInputText
                 name='lastName'
-                disabled={user.loginType !== 'local'}
+                disabled={user?.loginType && user.loginType !== 'local'}
                 control={control}
                 fullWidth
                 label={t('LAST_NAME')}

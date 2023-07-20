@@ -2,6 +2,8 @@ import { Schedule } from '@src/entities/Schedule';
 import { BaseService } from '@lib/BaseClasses/BaseService';
 import { Television } from '@src/entities/Television';
 import { Content } from '@src/entities/Content';
+import { ArrayContains } from 'typeorm';
+import { Label } from '@src/entities/Label';
 var parser = require('cron-parser');
 
 export class ScheduleSvc extends BaseService<Schedule> {
@@ -12,7 +14,7 @@ export class ScheduleSvc extends BaseService<Schedule> {
                 where: {id: body.televisionId},
                 relations: ['schedules', 'schedules.content', 'labels']})
             .then(async tv => {
-                if (!tv) throw new Error('no hay tv hermano')
+                if (!tv) throw new Error('TV not found')
                 let myStartDate = new Date(body.startDate.split('.')[0])
                 let myEndDate = new Date(body.endDate.split('.')[0])
 
@@ -41,6 +43,50 @@ export class ScheduleSvc extends BaseService<Schedule> {
                 })
                 
             })
+        } else {
+            await Television.find({
+                where: {labels: {id: body.labelId}},
+                relations: ['schedules', 'schedules.content']
+            }).then(async tvs => {
+                if(tvs.length > 0) {
+                    let myStartDate = new Date(body.startDate.split('.')[0])
+                    let myEndDate = new Date(body.endDate.split('.')[0])
+
+                    await Content.findOne({where: {id: body.contentId}}).then(async content => {     
+
+                        let myPeriods = getPeriodsFromCron(myStartDate, new Date(body.endDate), body.id, content!.duration, body.cron, myStartDate, myEndDate)
+                        console.log(myPeriods, 'MIS PERIODOS')
+
+                        let misSchedules: Schedule[] = []
+                        tvs.forEach(tv => {
+                            misSchedules = misSchedules.concat(tv.schedules ? tv.schedules : [])
+                        })
+
+                        const schedulesOfLabel = await Label.findOne({where: {id: body.labelId}}).then(label => 
+                            label!.schedules ? label!.schedules : []
+                        )
+
+                        misSchedules = misSchedules.concat(schedulesOfLabel)
+
+                        misSchedules?.forEach(schedule => {
+                            let busyPeriods = getPeriodsFromCron(schedule.startDate, schedule.endDate, schedule.id, schedule.content.duration, schedule.cron, myStartDate, myEndDate)
+                            busyPeriods.forEach(busyPeriod => {
+                                myPeriods.forEach(myPeriod => {
+                                    if (!(myPeriod.endDate < busyPeriod.startDate || myPeriod.startDate > busyPeriod.endDate)) {
+                                        throw new Error('OVERLAPEAS!!!' + busyPeriod.scheduleId + '---' + JSON.stringify(busyPeriod) + ' -- ' + JSON.stringify(myPeriod)); // Overlapping!!!
+                                    }
+                                })
+                            })
+                        })
+                    })
+
+                }
+            })
+
+
+
+
+
         }
         
 

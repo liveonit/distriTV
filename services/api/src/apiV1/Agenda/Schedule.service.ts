@@ -16,12 +16,17 @@ export class ScheduleSvc extends BaseService<Schedule> {
                 let myStartDate = new Date(body.startDate.split('.')[0])
                 let myEndDate = new Date(body.endDate.split('.')[0])
 
-                await Content.findOne({where: {id: body.contentId}}).then(content => {
+                await Content.findOne({where: {id: body.contentId}}).then(async content => {                    
+                    let misSchedules = tv.schedules
+                    if(tv.labels)  
+                        await Promise.all(tv.labels.map(label => {
+                            return Schedule.find({relations: ['content'], where: {labelId: label.id}})
+                        })!).then(schedules => {
+                            misSchedules = misSchedules!.concat(schedules.flat())                            
+                        })
+
                     let myPeriods = getPeriodsFromCron(myStartDate, new Date(body.endDate), body.id, content!.duration, body.cron, myStartDate, myEndDate)
                     console.log(myPeriods, 'MIS PERIODOS')
-
-                    let misSchedules = tv.schedules
-
 
                     misSchedules?.forEach(schedule => {
                         let busyPeriods = getPeriodsFromCron(schedule.startDate, schedule.endDate, schedule.id, schedule.content.duration, schedule.cron, myStartDate, myEndDate)

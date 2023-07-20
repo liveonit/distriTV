@@ -94,10 +94,9 @@ export default function SignIn() {
     onFailure: onGoogleLoginFailure,
     onSuccess: onGoogleLoginSuccess,
     isSignedIn: !!user?.id,
-    cookiePolicy: 'single_host_origin',
   })
 
-  const googleIcon = <img width={'25px'} src={GoogleIcon}/>
+  const googleIcon = <img width={'25px'} src={GoogleIcon} />
 
   return (
     <Container component='main' maxWidth='xs'>
@@ -154,7 +153,14 @@ export default function SignIn() {
           <Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
             Login
           </Button>
-          <Button onClick={signIn} startIcon={googleIcon} fullWidth variant='contained' color='primary' className={classes.submit}>
+          <Button
+            onClick={signIn}
+            startIcon={googleIcon}
+            fullWidth
+            variant='contained'
+            color='primary'
+            className={classes.submit}
+          >
             Login with google
           </Button>
         </form>

@@ -32,7 +32,7 @@ const GLOBAL_CONFIGS = {
 }
 
 const GOOGLE_CONFIGS = {
-  clientId: '1009712653750-1kd18n9tkeh51b5201idvblgv520ocop.apps.googleusercontent.com',
+  clientId: '1009712653750-9m40br6dvf4qjimouukfuf57btg7u75u.apps.googleusercontent.com',
 }
 
 export { PATH_NAME, DRAWER_MENU_LABEL, VERSION_PROJECT, GLOBAL_CONFIGS, GOOGLE_CONFIGS }

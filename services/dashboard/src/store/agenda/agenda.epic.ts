@@ -60,11 +60,19 @@ const createAgenda: Epic = (action$) =>
             payload: response,
           })
         }),
-        catchError((err) =>
-          of({
-            type: AgendaActionTypes.CREATE_FAILURE,
-            payload: err,
-          }),
+        catchError((err) => {
+          if(err.response.error.type === 'OVERLAP_SCHEDULE') {
+            return of({
+              type: AgendaActionTypes.CREATE_FAILURE,
+              payload: err,
+            }, enqueueSnackbarAction({ variant: 'error', message: err.response.error.message, key: 'OVERLAP_SCHEDULE' }))            
+          } else 
+            return of({
+              type: AgendaActionTypes.CREATE_FAILURE,
+              payload: err,
+            })
+        }
+          
         ),
       )
     }),

@@ -4,6 +4,8 @@ import { Television } from '@src/entities/Television';
 import { Content } from '@src/entities/Content';
 import { ArrayContains } from 'typeorm';
 import { Label } from '@src/entities/Label';
+import { BadRequest } from '@src/lib/errors/BadRequest';
+import { OverlapSchedule } from '@src/lib/errors/OverlapSchedule';
 var parser = require('cron-parser');
 
 export class ScheduleSvc extends BaseService<Schedule> {
@@ -15,8 +17,8 @@ export class ScheduleSvc extends BaseService<Schedule> {
                 relations: ['schedules', 'schedules.content', 'labels']})
             .then(async tv => {
                 if (!tv) throw new Error('TV not found')
-                let myStartDate = new Date(body.startDate.split('.')[0])
-                let myEndDate = new Date(body.endDate.split('.')[0])
+                let myStartDate = new Date(body.startDate)
+                let myEndDate = new Date(body.endDate)
 
                 await Content.findOne({where: {id: body.contentId}}).then(async content => {                    
                     let misSchedules = tv.schedules
@@ -35,7 +37,7 @@ export class ScheduleSvc extends BaseService<Schedule> {
                         busyPeriods.forEach(busyPeriod => {
                             myPeriods.forEach(myPeriod => {
                                 if (!(myPeriod.endDate < busyPeriod.startDate || myPeriod.startDate > busyPeriod.endDate)) {
-                                    throw new Error('OVERLAPEAS!!!' + busyPeriod.scheduleId + '---' + JSON.stringify(busyPeriod) + ' -- ' + JSON.stringify(myPeriod)); // Overlapping!!!
+                                    throw new OverlapSchedule(String('Overlaps with ' + busyPeriod.scheduleId));
                                 }
                             })
                         })
@@ -49,8 +51,8 @@ export class ScheduleSvc extends BaseService<Schedule> {
                 relations: ['schedules', 'schedules.content']
             }).then(async tvs => {
                 if(tvs.length > 0) {
-                    let myStartDate = new Date(body.startDate.split('.')[0])
-                    let myEndDate = new Date(body.endDate.split('.')[0])
+                    let myStartDate = new Date(body.startDate)
+                    let myEndDate = new Date(body.endDate)
 
                     await Content.findOne({where: {id: body.contentId}}).then(async content => {     
 
@@ -73,7 +75,7 @@ export class ScheduleSvc extends BaseService<Schedule> {
                             busyPeriods.forEach(busyPeriod => {
                                 myPeriods.forEach(myPeriod => {
                                     if (!(myPeriod.endDate < busyPeriod.startDate || myPeriod.startDate > busyPeriod.endDate)) {
-                                        throw new Error('OVERLAPEAS!!!' + busyPeriod.scheduleId + '---' + JSON.stringify(busyPeriod) + ' -- ' + JSON.stringify(myPeriod)); // Overlapping!!!
+                                        throw new OverlapSchedule(String('Overlaps with ' + busyPeriod.scheduleId));
                                     }
                                 })
                             })

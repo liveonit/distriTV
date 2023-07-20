@@ -6,9 +6,11 @@ export const updateTelevisionBodySchema = z.object({
   ip: z.string().optional(),
   mac: z.string().optional(),
   tvCode: z.string().length(6).optional(),
-  m2mRelations: z.object({
-    label: z.array(z.number()).optional()
-  }).optional()
+  m2mRelations: z
+    .object({
+      labels: z.array(z.number()).optional(),
+    })
+    .optional(),
 });
 
 export type UpdateTelevisionBodyType = z.infer<typeof updateTelevisionBodySchema>;

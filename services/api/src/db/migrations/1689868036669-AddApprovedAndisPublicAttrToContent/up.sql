@@ -1,0 +1,6 @@
+ALTER TABLE content
+ADD `isPublic` BOOLEAN DEFAULT TRUE,
+ADD `isApproved` BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE institution
+ADD `requiresApproval` BOOLEAN DEFAULT FALSE;

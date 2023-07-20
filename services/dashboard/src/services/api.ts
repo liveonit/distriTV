@@ -22,7 +22,7 @@ const apiSvc = {
     const { body, method, path, requireAuthType, retries, timeout } = {
       method: 'GET',
       retries: 0,
-      timeout: 2000,
+      timeout: 5000,
       ...props,
     }
 

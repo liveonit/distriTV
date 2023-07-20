@@ -19,7 +19,7 @@ export class BaseService<T extends BaseCustomEntity> {
   };
 
   public readonly getMany = async (options?: FindManyOptions<T>) => {
-    return this.getEntity().find(options);
+    return (await this.getEntity().find(options)) as T[];
   };
 
   public readonly create = async (data: T, options?: FindOneOptions<T>) => {

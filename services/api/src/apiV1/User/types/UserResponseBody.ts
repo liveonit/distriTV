@@ -3,15 +3,15 @@ import { z } from 'zod';
 const roleSchema = z.object({
   id: z.string(),
   name: z.string(),
-  description: z.string().optional(),
+  description: z.string().nullable().optional(),
 });
 
 const roleMappingSchema = z.object({
   id: z.string(),
   userId: z.string(),
   roleId: z.string(),
-  institutionId: z.string(),
-  role: roleSchema,
+  institutionId: z.number(),
+  role: roleSchema.optional(),
 });
 
 export const userResponseBody = z.object({
@@ -23,7 +23,7 @@ export const userResponseBody = z.object({
   firstName: z.string(),
   lastName: z.string(),
   email: z.string().email(),
-  roleMappings: z.array(roleMappingSchema),
+  roleMappings: z.array(roleMappingSchema).optional(),
 });
 
 export type UserResponseBodyType = z.infer<typeof userResponseBody>;

@@ -5,16 +5,18 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import { RolesE, userSchema, UserT } from 'src/store/user/user.type'
+import { createUserSchema, CreateUserT, RolesE, updateUserSchema, UpdateUserT, UserT } from 'src/store/user/user.type'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { removeEmpty } from 'src/utils/removeEmpty'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createUser, updateUser } from 'src/store/user/user.action'
 import { Trans, useTranslation } from 'react-i18next'
 import { FormInputPassword } from 'src/App/components/molecules/Forms/FormInputPassword'
-import { FormInputDropdownMulti } from 'src/App/components/molecules/Forms/FormInputDropdownMulti'
+import { institutionsSelector } from 'src/store/institution/institutions.selector'
+import { listInstitutions } from 'src/store/institution/institution.action'
+import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
 
 type IProps = {
   handleCloseEditModal: () => void
@@ -23,21 +25,37 @@ type IProps = {
 }
 
 export default function UserCreateAndEditModal({ handleCloseEditModal, user, title }: IProps) {
-  const userInitialState: UserT = { name: '', city: '', locality: '', ...removeEmpty(user) }
+  const userInitialState: UserT = { ...removeEmpty(user) }
 
   const { t } = useTranslation()
   const dispatch = useDispatch()
-
-  const methods = useForm<UserT>({
-    resolver: zodResolver(userSchema),
+  const methods = useForm<CreateUserT | UpdateUserT>({
+    resolver: zodResolver(!user ? createUserSchema : updateUserSchema),
     defaultValues: userInitialState,
   })
 
-  const { reset, handleSubmit, control } = methods
+  const {
+    reset,
+    handleSubmit,
+    control,
+    getValues,
+    formState: { errors },
+  } = methods
+  console.log({ user, userInitialState, values: getValues(), errors })
 
-  const onSubmit: SubmitHandler<UserT> = (data) => {
-    if (!user) dispatch(createUser(data))
-    else dispatch(updateUser(data))
+  const institutions = useSelector(institutionsSelector)
+
+  React.useEffect(() => {
+    dispatch(listInstitutions())
+  }, [dispatch])
+
+  const onSubmit: SubmitHandler<CreateUserT | UpdateUserT> = (data) => {
+    const parsedData = {
+      ...data,
+      m2mRelations: [{ roleMappings: [{ roleName: data.roleName, institutionId: +data.institutionId }] }],
+    }
+    if (!user) dispatch(createUser(parsedData as CreateUserT))
+    else dispatch(updateUser(parsedData as UpdateUserT))
     handleCloseEditModal()
   }
   return (
@@ -50,24 +68,71 @@ export default function UserCreateAndEditModal({ handleCloseEditModal, user, tit
           <br />
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <FormInputText name='username' control={control} fullWidth label={t('USER_NAME')} variant='outlined' />
+              <FormInputText
+                name='username'
+                disabled={user.loginType !== 'local'}
+                control={control}
+                fullWidth
+                label={t('USER_NAME')}
+                variant='outlined'
+              />
             </Grid>
             <Grid item xs={12}>
-              <FormInputPassword name='password' control={control} fullWidth label={t('PASSWORD')} variant='outlined' />
+              <FormInputPassword
+                name='password'
+                disabled={user.loginType !== 'local'}
+                control={control}
+                fullWidth
+                label={t('PASSWORD')}
+                variant='outlined'
+              />
             </Grid>
             <Grid item xs={12}>
-              <FormInputText name='firstName' control={control} fullWidth label={t('FIRST_NAME')} variant='outlined' />
+              <FormInputText
+                name='email'
+                disabled={user.loginType !== 'local'}
+                control={control}
+                fullWidth
+                label={t('EMAIL')}
+                variant='outlined'
+              />
             </Grid>
             <Grid item xs={12}>
-              <FormInputText name='lastName' control={control} fullWidth label={t('LAST_NAME')} variant='outlined' />
+              <FormInputText
+                name='firstName'
+                disabled={user.loginType !== 'local'}
+                control={control}
+                fullWidth
+                label={t('FIRST_NAME')}
+                variant='outlined'
+              />
             </Grid>
             <Grid item xs={12}>
-              <FormInputDropdownMulti
+              <FormInputText
+                name='lastName'
+                disabled={user.loginType !== 'local'}
+                control={control}
+                fullWidth
+                label={t('LAST_NAME')}
+                variant='outlined'
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormInputDropdown
                 fullWidth
                 label={t('ROLE')}
-                name='role'
+                name='roleName'
                 control={control}
                 selectOptions={Object.entries(RolesE).map(([key, value]) => ({ label: key, value }))}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormInputDropdown
+                fullWidth
+                label={t('INSTITUTION')}
+                name='institutionId'
+                control={control}
+                selectOptions={institutions.map((inst) => ({ label: inst.name, value: inst.id! }))}
               />
             </Grid>
           </Grid>{' '}

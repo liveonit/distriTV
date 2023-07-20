@@ -4,8 +4,20 @@ import { querySchema } from '@lib/BaseClasses/QueryType';
 import { ScheduleSvc, scheduleSvc } from './Schedule.service';
 import { createScheduleBody } from './types/CreateScheduleBody';
 import { updateScheduleBody } from './types/UpdateScheduleBody';
+import { handleErrorAsync } from '@src/middlewares/errorCatcher';
+import { Request, Response } from 'express';
+import { BadRequest } from '@lib/errors';
 
-class ScheduleController extends BaseController<Schedule, ScheduleSvc> { }
+
+class ScheduleController extends BaseController<Schedule, ScheduleSvc> { 
+  public override create = handleErrorAsync(async (req: Request, res: Response) => {
+    try {
+      return res.status(200).json(await this.service.createSchedule(req.body));
+    } catch (e) {
+      throw new BadRequest(String(e));
+    }
+  });
+}
 
 export const scheduleController = new ScheduleController(
   scheduleSvc,

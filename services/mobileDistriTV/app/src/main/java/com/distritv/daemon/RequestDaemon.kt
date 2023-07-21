@@ -218,7 +218,8 @@ class RequestDaemon: Service() {
     }
 
     private fun checkExternalStorage(deviceInfo: DeviceInfo): Boolean {
-        if (deviceInfo.useExternalStorage && (!deviceInfo.isExternalStorageConnected
+        // If set to use external storage, and it is not connected or permission was not granted
+        if (deviceInfo.useExternalStorage && (deviceInfo.isExternalStorageConnected == null || !deviceInfo.isExternalStorageConnected
                     || ((Build.VERSION.SDK_INT < SDK_VERSION_FOR_MEDIA_STORE)
                     && ((deviceInfo.externalStoragePermissionGranted != null) && !deviceInfo.externalStoragePermissionGranted)))
         ) {

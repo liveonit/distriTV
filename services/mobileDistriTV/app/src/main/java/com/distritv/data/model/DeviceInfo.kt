@@ -21,7 +21,7 @@ data class DeviceInfo(
     val isAnyContentPlaying: Boolean,
     val currentlyPlayingContentId: Long?,
     val useExternalStorage: Boolean,
-    val isExternalStorageConnected: Boolean,
+    val isExternalStorageConnected: Boolean?,
     val externalStoragePermissionGranted: Boolean?,
     val displayOverOtherAppsPermissionGranted: Boolean?,
     val isAnyAlertPlaying: Boolean,

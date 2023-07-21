@@ -12,7 +12,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import android.view.View
 import android.view.WindowManager
+import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -22,6 +24,7 @@ import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
 import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
+import com.distritv.data.helper.StorageHelper.getExternalMountedStorages
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.ui.home.HomeViewModel.Companion.DEVICE_INFO
 import com.distritv.ui.home.HomeViewModel.Companion.HOME
@@ -64,6 +67,7 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         tvCodeValidationObserver()
         referrerRequestPermissionObserver()
         addFragmentObserver()
+        extStorageNotFoundObserver()
 
         checkIfDeviceIsRegistered()
 
@@ -205,12 +209,7 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            if (referrer == DEVICE_INFO) {
-                viewModel.afterWriteExternalStoragePermissionGranted()
-                addHomeFragment()
-            } else {
-                viewModel.afterWriteExternalStoragePermissionGrantedAndMoveFiles()
-            }
+            afterPermissionGranted()
         } else {
             ActivityCompat.requestPermissions(
                 this,
@@ -229,12 +228,7 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         if (requestCode == PERMISSIONS_REQUEST) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted
-                if (referrer == DEVICE_INFO) {
-                    viewModel.afterWriteExternalStoragePermissionGranted()
-                    addHomeFragment()
-                } else {
-                    viewModel.afterWriteExternalStoragePermissionGrantedAndMoveFiles()
-                }
+                afterPermissionGranted()
             } else {
                 // Permission denied
                 viewModel.setExternalStorage(false)
@@ -251,6 +245,78 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
                 }
             }
         }
+    }
+
+    private fun afterPermissionGranted() {
+        val externalStoragePathList = getExternalMountedStorages()
+
+        if (externalStoragePathList == null) {
+            showExternalStorageNotFoundDialog()
+            return
+        }
+
+        if (externalStoragePathList.size > 1) {
+            selectExternalStorageDrive(externalStoragePathList)
+        } else if (referrer == DEVICE_INFO) {
+            viewModel.afterWriteExternalStoragePermissionGranted()
+            addHomeFragment()
+        } else {
+            viewModel.afterWriteExternalStoragePermissionGrantedAndMoveFiles()
+        }
+    }
+
+
+
+    /**
+     * This function is used to choose the storage when more than one is connected
+     */
+    private fun selectExternalStorageDrive(externalStoragePathList: List<String>) {
+        if (externalStoragePathList.size < 2) {
+            return
+        }
+
+        binding.externalStorageDriveGroup.removeAllViews()
+
+        externalStoragePathList.forEachIndexed { index, storage ->
+            val radioButton = RadioButton(this)
+            radioButton.id = View.generateViewId()
+            radioButton.text = "USB ${index + 1}"
+            binding.externalStorageDriveGroup.addView(radioButton)
+        }
+
+        binding.externalStorageDriveGroup.visibility = View.VISIBLE
+
+        binding.externalStorageDriveGroup.setOnCheckedChangeListener { group, checkedId ->
+            binding.externalStorageDriveGroup.visibility = View.GONE
+
+            val selectedRadioButton = findViewById<RadioButton>(checkedId)
+            val indexList = selectedRadioButton.text.split(" ")[1].toInt() - 1
+
+            if (referrer == DEVICE_INFO) {
+                viewModel.afterWriteExternalStoragePermissionGranted(externalStoragePathList[indexList])
+                addHomeFragment()
+            } else {
+                viewModel.afterWriteExternalStoragePermissionGrantedAndMoveFiles(externalStoragePathList[indexList])
+            }
+        }
+    }
+
+    private fun extStorageNotFoundObserver() {
+        viewModel.externalStorageNotFound.observe(this) {
+            if (it) {
+                showExternalStorageNotFoundDialog()
+            }
+        }
+    }
+
+    private fun showExternalStorageNotFoundDialog() {
+        val dialogText = viewModel.getDialogTextExternalStorageNotFound()
+        showDialog(
+            dialogText.first,
+            dialogText.second,
+            dialogText.third,
+            dialogConfirmFun
+        )
     }
 
     private fun showDialog(

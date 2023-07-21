@@ -78,7 +78,10 @@ fun Content.existsContentName(tag: String, contentList: List<Content>): Boolean 
     return false
 }
 
-fun Content.fileExists(directory: String): Boolean {
+fun Content.fileExists(directory: String?): Boolean {
+    if (directory == null) {
+        return false
+    }
     return if (this.isImage() || this.isVideo()) {
         File(directory, this.fileName).exists()
     } else {

@@ -53,4 +53,14 @@ class SharedPreferencesService (private var sharedPreferences: SharedPreferences
     fun getAnticipationDays(): Int {
         return sharedPreferences.getInt(ANTICIPATION_DAYS, ANTICIPATION_DAYS_DEFAULT)
     }
+
+    fun setExternalStorageId(id: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString(EXTERNAL_STORAGE_ID, id)
+        editor.apply()
+    }
+
+    fun getExternalStorageId(): String? {
+        return sharedPreferences.getString(EXTERNAL_STORAGE_ID, null)
+    }
 }

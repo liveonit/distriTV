@@ -11,6 +11,8 @@
     <string name="dialog_message_home_to_internal">Los contenidos descargados serán almacenados en el almacenamiento interno.\nUna vez que confirme su decisión se moverán todos los contenidos descargados.</string>
     <string name="dialog_title_permission_denied">Permiso denegado</string>
     <string name="dialog_message_permission_denied">El almacenamiento externo no se utilizará porque se denegó el permiso.</string>
+    <string name="dialog_message_storage_not_found_title">Error de almacenamiento externo</string>
+    <string name="dialog_message_storage_not_found">No se detectó ningún almacenamiento externo contectado.</string>
     <string name="dialog_accept">Aceptar</string>
     <string name="dialog_cancel">Cancelar</string>
     <string name="msg_tv_code_invalid">El código ingresado no es válido</string>

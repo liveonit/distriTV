@@ -11,4 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <RadioGroup
+        android:id="@+id/externalStorageDriveGroup"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,8 @@
     <string name="dialog_message_home_to_internal">The downloaded contents will be stored in the internal storage.\nOnce you confirm your decision, all the downloaded contents will be moved.</string>
     <string name="dialog_title_permission_denied">Permission denied</string>
     <string name="dialog_message_permission_denied">External storage will not be used because permission was denied.</string>
+    <string name="dialog_message_storage_not_found_title">External storage error</string>
+    <string name="dialog_message_storage_not_found">No connected external storage detected.</string>
     <string name="dialog_accept">Accept</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="msg_tv_code_invalid">The code entered is invalid</string>

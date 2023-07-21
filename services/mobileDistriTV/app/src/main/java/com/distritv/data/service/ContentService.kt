@@ -1,15 +1,11 @@
 package com.distritv.data.service
 
 import android.content.Context
-import android.os.Build
 import android.util.Log
-import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
 import com.distritv.data.model.Content
-import com.distritv.data.helper.StorageHelper.createFileOnExtStorageWithMediaStore
 import com.distritv.data.helper.StorageHelper.createFileOnExternalStorage
 import com.distritv.data.helper.StorageHelper.createFileOnInternalStorage
 import com.distritv.data.helper.StorageHelper.deleteFiles
-import com.distritv.data.helper.StorageHelper.deleteFilesOnExtStorageWithMediaStore
 import com.distritv.data.helper.StorageHelper.getExternalStorageDirectory
 import com.distritv.data.helper.StorageHelper.getInternalStorageDirectory
 import com.distritv.data.helper.StorageHelper.writeContent
@@ -93,19 +89,12 @@ class ContentService(
         var outputStreamAndPath: Triple<OutputStream?, String?, String?> = Triple(null, null, null)
 
         try {
-            val fileName = "${content.name}.${content.type.substringAfterLast("/")}"
-
             outputStreamAndPath = if (sharedPreferences.useExternalStorage()) {
                 // Write to external storage
-                if (Build.VERSION.SDK_INT >= SDK_VERSION_FOR_MEDIA_STORE) {
-                    // For Android 11 or higher
-                    context.createFileOnExtStorageWithMediaStore(fileName, content.type)
-                } else {
-                    context.createFileOnExternalStorage(fileName)
-                }
+                context.createFileOnExternalStorage(content.name)
             } else {
                 // Write to internal storage
-                context.createFileOnInternalStorage(fileName)
+                context.createFileOnInternalStorage(content.name)
             }
 
             val outputStream = outputStreamAndPath.first
@@ -114,7 +103,6 @@ class ContentService(
 
             if (writeContent(outputStream, body)) {
                 Log.i(TAG, "Content download was successful from ${content.url} to $path")
-                //return path
                 return resultFileName
             }
 
@@ -153,10 +141,9 @@ class ContentService(
 
     fun deleteExpiredContentFiles() {
         if (sharedPreferences.useExternalStorage()) {
-            if (Build.VERSION.SDK_INT >= SDK_VERSION_FOR_MEDIA_STORE) {
-                context.deleteFilesOnExtStorageWithMediaStore(getFileNameActiveContents())
-            } else {
-                deleteFiles(File(context.getExternalStorageDirectory()), getFileNameActiveContents())
+            val externalStorageDirectory = context.getExternalStorageDirectory()
+            if (externalStorageDirectory != null) {
+                deleteFiles(File(externalStorageDirectory), getFileNameActiveContents())
             }
         } else {
             deleteFiles(File(context.getInternalStorageDirectory()), getFileNameActiveContents())

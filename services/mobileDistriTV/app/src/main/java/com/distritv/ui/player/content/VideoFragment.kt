@@ -1,27 +1,37 @@
 package com.distritv.ui.player.content
 
+import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.MediaController
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.distritv.DistriTVApp
 import com.distritv.R
+import com.distritv.data.helper.StorageHelper.getCurrentDirectory
 import com.distritv.data.model.Content
 import com.distritv.databinding.FragmentVideoBinding
 import com.distritv.ui.FullscreenManager
-import com.distritv.ui.player.content.CustomVideoView.PlayPauseListener
-import com.distritv.utils.*
-import com.distritv.data.helper.StorageHelper.getCurrentDirectory
+import com.distritv.utils.CONTENT_PARAM
+import com.distritv.utils.backHomeOnResume
+import com.distritv.utils.onAfterCompletionContent
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.extractor.ExtractorsFactory
+import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.TrackGroupArray
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
+import com.google.android.exoplayer2.trackselection.TrackSelector
+import com.google.android.exoplayer2.upstream.BandwidthMeter
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.Util
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
-import java.time.LocalDateTime
-import java.util.concurrent.TimeUnit
 
 class VideoFragment : Fragment() {
 
@@ -30,13 +40,11 @@ class VideoFragment : Fragment() {
 
     private val viewModel by viewModel<ContentPlayerViewModel>()
 
-    private val handler = Handler(Looper.getMainLooper())
-
     private var content: Content? = null
 
-    private var videoDuration: Int = 0
-    private var pausePosition: Long = 0L
-    private var pauseTime: Long = 0L
+    private var videoFinished = false
+
+    var exoPlayer: SimpleExoPlayer? = null
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -73,37 +81,14 @@ class VideoFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        removeAllCallbacksAndMessagesFromHandler()
-
-        val currentTime = localDateTimeToMillis(LocalDateTime.now()) ?: 0L
-        val resumePosition = pausePosition.plus(currentTime.minus(pauseTime))
-
-        // After fragment pause
-        if (pausePosition > 0 && pauseTime > 0 && videoDuration > 0) {
-            if (resumePosition < videoDuration) {
-                binding.videoContainer.seekTo(resumePosition.toInt())
-                binding.videoContainer.start()
-            } else {
-                backHomeOnResume()
-            }
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        val isPlaying =
-            (context?.applicationContext as DistriTVApp?)?.isContentCurrentlyPlaying() ?: false
-
-        if (isPlaying) {
-            removeAllCallbacksAndMessagesFromHandler()
-            binding.videoContainer.pause()
+        if (videoFinished) {
+            backHomeOnResume()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        removeAllCallbacksAndMessagesFromHandler()
+        exoPlayer?.release()
     }
 
     private fun startVideo() {
@@ -114,63 +99,67 @@ class VideoFragment : Fragment() {
             Toast.makeText(context, getString(R.string.msg_unavailable_content), Toast.LENGTH_LONG)
                 .show()
             onAfterCompletionContent(TAG, content?.id)
+            return
         }
 
-        binding.videoContainer.setVideoPath(file.toURI().toString())
+        try {
+            val bandwidthMeter: BandwidthMeter = DefaultBandwidthMeter()
 
-        binding.videoContainer.setOnCompletionListener {
-            handler.postDelayed({
-                onAfterCompletionContent(TAG, content?.id)
-            }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
+            val trackSelector: TrackSelector =
+                DefaultTrackSelector(AdaptiveTrackSelection.Factory(bandwidthMeter))
+
+            exoPlayer = ExoPlayerFactory.newSimpleInstance(activity!!.applicationContext, trackSelector)
+
+            val videoUri = Uri.parse(file.toURI().toString())
+
+            val dataSourceFactory = DefaultDataSourceFactory(activity!!.applicationContext, Util.getUserAgent(activity!!.applicationContext, "YourApp"))
+
+            val extractorsFactory: ExtractorsFactory = DefaultExtractorsFactory()
+
+            val mediaSource: MediaSource =
+                ExtractorMediaSource(videoUri, dataSourceFactory, extractorsFactory, null, null)
+
+            binding.videoContainer.player = exoPlayer
+
+            exoPlayer!!.prepare(mediaSource)
+
+            addPlayerListener()
+
+            exoPlayer!!.playWhenReady = true
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error : $e")
         }
-
-        binding.videoContainer.setPlayPauseListener(object : PlayPauseListener {
-            override fun onPlay() {
-                Log.i(TAG, "Play!")
-                removeAllCallbacksAndMessagesFromHandler()
-            }
-
-            override fun onPause() {
-                Log.i(TAG, "Pause!")
-                removeAllCallbacksAndMessagesFromHandler()
-                addPostHandlerWhenVideoIsPaused(
-                    binding.videoContainer.duration,
-                    binding.videoContainer.currentPosition
-                )
-            }
-        })
-
-        binding.videoContainer.start()
 
         content?.let { viewModel.playOnceContentAlreadyStarted(it) }
 
         Log.i(TAG, "Playback started. Content id: ${content?.id}")
     }
 
-    private fun setMediaController() {
-        val mediaC = MediaController(context)
-        binding.videoContainer.setMediaController(mediaC)
-        mediaC.setAnchorView(binding.videoContainer)
-    }
+    private fun addPlayerListener() {
+        exoPlayer?.addListener(object : ExoPlayer.EventListener {
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                when (playbackState) {
+                    ExoPlayer.STATE_ENDED -> {
+                        videoFinished = true
+                        onAfterCompletionContent(TAG, content?.id)
+                    }
+                    else -> {}
+                }
+            }
 
-    private fun addPostHandlerWhenVideoIsPaused(duration: Int, currentPosition: Int) {
-        videoDuration = duration
-        pausePosition = currentPosition.toLong()
-        pauseTime = localDateTimeToMillis(LocalDateTime.now()) ?: 0L
+            override fun onTracksChanged(
+                trackGroups: TrackGroupArray?,
+                trackSelections: TrackSelectionArray?
+            ) {
+            }
 
-        val remainingTime = duration - currentPosition
-
-        handler.postDelayed({
-            Log.i(TAG, "Ending video while paused")
-            onAfterCompletionContent(TAG, content?.id)
-        }, remainingTime.toLong())
-    }
-
-    /**
-     * Remove all pending posts of callbacks and sent messages.
-     */
-    private fun removeAllCallbacksAndMessagesFromHandler() {
-        handler.removeCallbacksAndMessages(null)
+            override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {}
+            override fun onLoadingChanged(isLoading: Boolean) {}
+            override fun onPlayerError(error: ExoPlaybackException?) {}
+            override fun onPositionDiscontinuity() {}
+            override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {}
+        })
     }
 
     companion object {

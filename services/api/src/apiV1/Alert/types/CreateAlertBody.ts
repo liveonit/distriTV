@@ -11,5 +11,5 @@ export const createAlertBody = z.object({
   durationLeft: z.number().optional(),
 });
 
-export type CreateTelevisionBodyType = z.infer<typeof createAlertBody>;
+export type CreateAlertBodyType = z.infer<typeof createAlertBody>;
 

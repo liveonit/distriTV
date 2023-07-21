@@ -75,5 +75,26 @@
   "SEP": "Setiembre",
   "OCT": "Octubre",
   "NOV": "Noviembre",
-  "DEC": "Diciembre"
+  "DEC": "Diciembre",
+
+  "allProcessesAreRunning": "Todos los procesos están corriendo",
+  "appIsVisible" : "App Visible",
+  "availableMem": "Memoria disponible ",
+  "availableStorage" : "Almacenamiento disponible",
+  "availableStorageUnit": "Unidad de almacenamiento",
+  "currentDate": "Fecha actual",
+  "currentVersionApp": "App Versión",
+  "currentlyPlayingContentId": "Contenido en reproducción",
+  "externalStoragePermissionGranted": "Almacenamiento externo habilitado",
+  "isAnyAlertPlaying": "Alerta reproduciendose",
+  "isAnyContentPlaying": "Contenido reproduciendose" ,
+  "isExternalStorageConnected": "Almacenamiento externo conectado",
+  "memUnit": "Unidades de memoria",
+  "sdkVersion": "Versión sdk",
+  "totalMem": "Memoria total",
+  "totalStorage": "Almacenamiento total",
+  "totalStorageUnit": "Almacenamiento total unidades",
+  "tvCode": "Código TV",
+  "useExternalStorage": "Usar almacenamiento externo"
+
 }

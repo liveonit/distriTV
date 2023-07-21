@@ -6,7 +6,7 @@ import { createAlertBody } from './types/CreateAlertBody';
 import { updateAlertBody } from './types/UpdateAlertBody';
 import { handleErrorAsync } from '@src/middlewares/errorCatcher';
 import { Request, Response } from 'express';
-import { BadRequest } from '@lib/errors';
+
 
 class AlertController extends BaseController<Alert, AlertSvc> { 
   public override create = handleErrorAsync(async (req: Request, res: Response) => {

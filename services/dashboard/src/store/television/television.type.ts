@@ -34,6 +34,7 @@ export const televisionSchema = z.object({
       locality: z.string(),
     })
     .optional(),
+  monitor: z.any()
 })
 
 export type TelevisionT = z.TypeOf<typeof televisionSchema>

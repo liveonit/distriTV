@@ -16,6 +16,7 @@ import java.util.*
  */
 const val ALERT_PARAM = "alertParam"
 const val CONTENT_PARAM = "contentParam"
+const val CONTENT_PLAY_START_DATE_PARAM = "contentPlayStartDateParam"
 const val ALERT_BUNDLE_PARAM = "alertBundleParam"
 const val CONTENT_BUNDLE_PARAM = "contentBundleParam"
 

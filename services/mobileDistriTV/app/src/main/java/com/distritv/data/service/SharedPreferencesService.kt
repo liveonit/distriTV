@@ -1,7 +1,9 @@
 package com.distritv.data.service
 
 import android.content.SharedPreferences
+import com.distritv.data.model.PausedContent
 import com.distritv.utils.*
+import com.google.gson.Gson
 
 class SharedPreferencesService (private var sharedPreferences: SharedPreferences) {
     fun addTvCode(code: String) {
@@ -63,4 +65,26 @@ class SharedPreferencesService (private var sharedPreferences: SharedPreferences
     fun getExternalStorageId(): String? {
         return sharedPreferences.getString(EXTERNAL_STORAGE_ID, null)
     }
+
+    /**
+     * For content playback helper
+     */
+    fun setContentInPausedPlayback(pausedContent: PausedContent) {
+        val jsonContent = Gson().toJson(pausedContent)
+        val editor = sharedPreferences.edit()
+        editor.putString(CONTENT_IN_PAUSED_PLAYBACK, jsonContent)
+        editor.apply()
+    }
+
+    fun removeContentInPausedPlayback() {
+        val editor = sharedPreferences.edit()
+        editor.remove(CONTENT_IN_PAUSED_PLAYBACK)
+        editor.apply()
+    }
+
+    fun getContentInPausedPlayback(): PausedContent? {
+        val jsonContent = sharedPreferences.getString(CONTENT_IN_PAUSED_PLAYBACK, null) ?: return null
+        return Gson().fromJson(jsonContent, PausedContent::class.java)
+    }
+
 }

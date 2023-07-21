@@ -2,6 +2,8 @@ package com.distritv.ui.player.content
 
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +11,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.distritv.R
+import com.distritv.data.helper.PlaybackHelper.setPausedContent
 import com.distritv.data.helper.StorageHelper.getCurrentDirectory
 import com.distritv.data.model.Content
+import com.distritv.data.model.PausedContent
 import com.distritv.databinding.FragmentVideoBinding
 import com.distritv.ui.FullscreenManager
-import com.distritv.utils.CONTENT_PARAM
-import com.distritv.utils.backHomeOnResume
-import com.distritv.utils.onAfterCompletionContent
+import com.distritv.utils.*
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
@@ -32,6 +34,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
+import java.time.LocalDateTime
 
 class VideoFragment : Fragment() {
 
@@ -40,7 +43,10 @@ class VideoFragment : Fragment() {
 
     private val viewModel by viewModel<ContentPlayerViewModel>()
 
+    private val handler = Handler(Looper.getMainLooper())
+
     private var content: Content? = null
+    private var playStartDate: Long = -1
 
     private var videoFinished = false
 
@@ -67,6 +73,7 @@ class VideoFragment : Fragment() {
                 Log.e(TAG, "An error occurred while trying to play, back to home...")
                 onAfterCompletionContent(TAG)
             }
+            playStartDate = it.getLong(CONTENT_PLAY_START_DATE_PARAM)
         }
 
         return binding.root
@@ -75,7 +82,6 @@ class VideoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fullscreenManager?.enterFullscreen()
-        startVideo()
     }
 
     override fun onResume() {
@@ -83,12 +89,29 @@ class VideoFragment : Fragment() {
 
         if (videoFinished) {
             backHomeOnResume()
+        } else {
+            removeAllCallbacksAndMessagesFromHandler()
+            startVideo()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        exoPlayer?.release()
+        if (!videoFinished) {
+            setPausedContent(
+                PausedContent(
+                    content!!,
+                    playStartDate
+                )
+            )
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         exoPlayer?.release()
+        removeAllCallbacksAndMessagesFromHandler()
     }
 
     private fun startVideo() {
@@ -102,17 +125,38 @@ class VideoFragment : Fragment() {
             return
         }
 
+        val initTime = getInitTime()
+
+        setExoPlayer(file, initTime)
+
+        Log.i(TAG, "Playback started. Content id: ${content?.id}")
+    }
+
+    private fun getInitTime(): Long {
+        val currentTime = localDateTimeToMillis(LocalDateTime.now()) ?: 0L
+        if (playStartDate <= 0) {
+            playStartDate = currentTime
+        }
+
+        return currentTime - playStartDate
+    }
+
+    private fun setExoPlayer(file: File, initTime: Long) {
         try {
             val bandwidthMeter: BandwidthMeter = DefaultBandwidthMeter()
 
             val trackSelector: TrackSelector =
                 DefaultTrackSelector(AdaptiveTrackSelection.Factory(bandwidthMeter))
 
-            exoPlayer = ExoPlayerFactory.newSimpleInstance(activity!!.applicationContext, trackSelector)
+            exoPlayer =
+                ExoPlayerFactory.newSimpleInstance(activity!!.applicationContext, trackSelector)
 
             val videoUri = Uri.parse(file.toURI().toString())
 
-            val dataSourceFactory = DefaultDataSourceFactory(activity!!.applicationContext, Util.getUserAgent(activity!!.applicationContext, "YourApp"))
+            val dataSourceFactory = DefaultDataSourceFactory(
+                activity!!.applicationContext,
+                Util.getUserAgent(activity!!.applicationContext, "DistriTV")
+            )
 
             val extractorsFactory: ExtractorsFactory = DefaultExtractorsFactory()
 
@@ -120,6 +164,10 @@ class VideoFragment : Fragment() {
                 ExtractorMediaSource(videoUri, dataSourceFactory, extractorsFactory, null, null)
 
             binding.videoContainer.player = exoPlayer
+
+            if (initTime > 0) {
+                exoPlayer!!.seekTo(initTime)
+            }
 
             exoPlayer!!.prepare(mediaSource)
 
@@ -130,10 +178,6 @@ class VideoFragment : Fragment() {
         } catch (e: Exception) {
             Log.e(TAG, "Error : $e")
         }
-
-        content?.let { viewModel.playOnceContentAlreadyStarted(it) }
-
-        Log.i(TAG, "Playback started. Content id: ${content?.id}")
     }
 
     private fun addPlayerListener() {
@@ -142,7 +186,17 @@ class VideoFragment : Fragment() {
                 when (playbackState) {
                     ExoPlayer.STATE_ENDED -> {
                         videoFinished = true
+                        content?.let { viewModel.playOnceContentAlreadyStarted(it) }
                         onAfterCompletionContent(TAG, content?.id)
+                    }
+                    ExoPlayer.STATE_READY -> {
+                        content?.durationInSeconds =
+                            java.util.concurrent.TimeUnit.MILLISECONDS.toSeconds(exoPlayer!!.duration)
+                        handler.postDelayed({
+                            content?.let { viewModel.playOnceContentAlreadyStarted(it) }
+                            onAfterCompletionContent(TAG, content?.id)
+                        }, (localDateTimeToMillis(LocalDateTime.now()) ?: 0L)
+                                    - playStartDate + exoPlayer!!.duration)
                     }
                     else -> {}
                 }
@@ -162,13 +216,21 @@ class VideoFragment : Fragment() {
         })
     }
 
+    /**
+     * Remove all pending posts of callbacks and sent messages.
+     */
+    private fun removeAllCallbacksAndMessagesFromHandler() {
+        handler.removeCallbacksAndMessages(null)
+    }
+
     companion object {
         const val TAG = "[VideoFragment]"
 
         @JvmStatic
-        fun newInstance(content: Content) = VideoFragment().apply {
+        fun newInstance(content: Content, playStartDate: Long) = VideoFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(CONTENT_PARAM, content)
+                putLong(CONTENT_PLAY_START_DATE_PARAM, playStartDate)
             }
         }
     }

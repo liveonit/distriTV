@@ -15,7 +15,7 @@ import java.nio.channels.FileChannel
 
 object StorageHelper: KoinComponent {
 
-    const val SDK_VERSION_FOR_MEDIA_STORE = Build.VERSION_CODES.R
+    const val MIN_SDK_VERSION_NOT_NEED_WRITE_EXTERNAL_STORAGE_PERMISSION = Build.VERSION_CODES.R
 
     private const val TAG = "[StorageHelper]"
     private const val LOG_REMOVE_OK = "Removal successful"
@@ -219,7 +219,7 @@ object StorageHelper: KoinComponent {
     }
 
     fun Context.externalStoragePermissionGranted(): Boolean? {
-        return if (Build.VERSION.SDK_INT < SDK_VERSION_FOR_MEDIA_STORE) {
+        return if (Build.VERSION.SDK_INT < MIN_SDK_VERSION_NOT_NEED_WRITE_EXTERNAL_STORAGE_PERMISSION) {
             ContextCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -250,7 +250,11 @@ object StorageHelper: KoinComponent {
      * if folder already exists and it is not empty it is cleaned
      */
     fun Context.createOrClearTargetDirectory(useExternalStorageSelected: Boolean): Boolean {
-        return createOrClearTargetDirectory(File(getDirectory(useExternalStorageSelected)))
+        val externalStorageDir = getDirectory(useExternalStorageSelected)
+        if (externalStorageDir != null) {
+            return createOrClearTargetDirectory(File(externalStorageDir))
+        }
+        return false
     }
 
     private fun Context.createOrClearTargetDirectory(targetDirectory: File): Boolean {

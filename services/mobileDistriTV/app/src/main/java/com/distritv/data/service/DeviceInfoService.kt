@@ -13,6 +13,7 @@ import com.distritv.DistriTVApp
 import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
+import com.distritv.data.helper.PlaybackHelper.existPausedContent
 import com.distritv.data.model.DeviceInfoCard
 import com.distritv.data.helper.StorageHelper.externalStoragePermissionGranted
 import com.distritv.data.helper.StorageHelper.isExternalStorageSavedMounted
@@ -114,7 +115,7 @@ class DeviceInfoService(
      * false otherwise.
      */
     private fun isAnyContentPlaying(): Boolean {
-        return myApp?.isContentCurrentlyPlaying() ?: false
+        return myApp?.isContentCurrentlyPlaying() ?: false || existPausedContent()
     }
 
     private fun getCurrentlyPlayingContentId(): Long? {

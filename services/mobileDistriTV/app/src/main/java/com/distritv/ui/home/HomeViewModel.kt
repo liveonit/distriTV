@@ -158,15 +158,20 @@ class HomeViewModel(
     }
 
     private fun setExternalStorageDriveId(storagePath: String?) {
-        if (storagePath == null) {
-            val externalStoragePathList = context.getExternalMountedStorages()
-            if (externalStoragePathList == null) {
-                _externalStorageNotFound.postValue(true)
-                return
+        try {
+            if (storagePath == null) {
+                val externalStoragePathList = context.getExternalMountedStorages()
+                if (externalStoragePathList == null) {
+                    _externalStorageNotFound.postValue(true)
+                    return
+                }
+                sharedPreferences.setExternalStorageId(extractExternalStorageId(externalStoragePathList.first()))
+            } else {
+                sharedPreferences.setExternalStorageId(extractExternalStorageId(storagePath))
             }
-            sharedPreferences.setExternalStorageId(extractExternalStorageId(externalStoragePathList.first()))
-        } else {
-            sharedPreferences.setExternalStorageId(extractExternalStorageId(storagePath))
+        } catch (e: Exception) {
+            _externalStorageNotFound.postValue(true)
+            Log.e(TAG, "${e.javaClass} -> ${e.message}")
         }
     }
 

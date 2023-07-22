@@ -183,11 +183,13 @@ export default function AgendaList() {
           handleCloseEditModal={handleCloseEditAgendaModal}
         />
       )}
+        {!!agendaToDelete && (
       <AgendaDeleteModal
         isOpen={!!agendaToDelete}
         agenda={agendaToDelete!}
         handleCloseDeleteModal={handleCloseDeleteAgendaModal}
       />
+        )}
     </>
   )
 }

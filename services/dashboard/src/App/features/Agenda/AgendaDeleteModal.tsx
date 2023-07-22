@@ -28,8 +28,8 @@ export default function AgendaDeleteModal({ isOpen, handleCloseDeleteModal, agen
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            <Trans>DELETE_WARNING</Trans>
-            <Trans>SCHEDULE</Trans>?
+            <Trans>DELETE_WARNING</Trans> 
+            <Trans>SCHEDULE</Trans> {agenda.id} ?
           </Typography>
         </DialogContent>
         <DialogActions>

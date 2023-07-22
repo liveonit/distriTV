@@ -29,7 +29,7 @@ export default function InstitutionDeleteModal({ isOpen, handleCloseDeleteModal,
       <Dialog fullWidth maxWidth='sm' open={isOpen} aria-labelledby='max-width-dialog-title'>
         <DialogContent>
           <Typography variant='h4' color='textPrimary'>
-            <Trans>DELETE_WARNING</Trans><Trans>TELEVISION</Trans> {television.ip} ?
+            <Trans>DELETE_WARNING</Trans><Trans>TELEVISION</Trans> {television.name} ?
           </Typography>
           <br />
         </DialogContent>

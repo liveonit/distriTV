@@ -10,11 +10,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.distritv.R
+import com.distritv.data.helper.PlaybackHelper.setPausedContent
 import com.distritv.data.model.Content
+import com.distritv.data.model.PausedContent
 import com.distritv.databinding.FragmentImageBinding
 import com.distritv.ui.FullscreenManager
 import com.distritv.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
 
 
@@ -28,6 +31,9 @@ class ImageFragment : Fragment() {
     private val handler = Handler(Looper.getMainLooper())
 
     private var content: Content? = null
+    private var playStartDate: Long = -1
+
+    private var finish = false
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -50,7 +56,10 @@ class ImageFragment : Fragment() {
                 Log.e(TAG, "An error occurred while trying to play, back to home...")
                 onAfterCompletionContent(TAG)
             }
+            playStartDate = it.getLong(CONTENT_PLAY_START_DATE_PARAM)
         }
+
+        removeAllCallbacksAndMessagesFromHandler()
 
         loadImageObserver()
 
@@ -68,6 +77,18 @@ class ImageFragment : Fragment() {
         backHomeOnResume()
     }
 
+    override fun onPause() {
+        super.onPause()
+        if (!finish) {
+            setPausedContent(
+                PausedContent(
+                    content!!,
+                    playStartDate
+                )
+            )
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         removeAllCallbacksAndMessagesFromHandler()
@@ -77,11 +98,22 @@ class ImageFragment : Fragment() {
         viewModel.image.observe(viewLifecycleOwner) { imageBitmap ->
             if (imageBitmap != null) {
                 binding.imageContainer.setImageBitmap(imageBitmap)
-                content?.let { viewModel.playOnceContentAlreadyStarted(it) }
+
                 Log.i(TAG, "Playback started. Content id: ${content?.id}")
+
+                val currentTime = localDateTimeToMillis(LocalDateTime.now()) ?: 0L
+                if (playStartDate <= 0) {
+                    playStartDate = currentTime
+                }
+
+                val durationInMillis = (playStartDate + TimeUnit.SECONDS.toMillis(content!!.durationInSeconds)) - currentTime
+
                 handler.postDelayed({
+                    finish = true
+                    content?.let { viewModel.playOnceContentAlreadyStarted(it) }
                     onAfterCompletionContent(TAG, content?.id)
-                }, TimeUnit.SECONDS.toMillis(content?.durationInSeconds ?: 0))
+                }, durationInMillis)
+
             } else {
                 Log.e(TAG, "An error occurred while trying to play. Check storage. Back to home...")
                 Toast.makeText(activity, getString(R.string.msg_unavailable_content),
@@ -102,9 +134,10 @@ class ImageFragment : Fragment() {
         const val TAG = "[ImageFragment]"
 
         @JvmStatic
-        fun newInstance(content: Content) = ImageFragment().apply {
+        fun newInstance(content: Content, playStartDate: Long) = ImageFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(CONTENT_PARAM, content)
+                putLong(CONTENT_PLAY_START_DATE_PARAM, playStartDate)
             }
         }
     }

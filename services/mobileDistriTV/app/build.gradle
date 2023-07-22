@@ -108,4 +108,8 @@ dependencies {
 
     implementation 'org.quartz-scheduler:quartz:2.3.2'
 
+    implementation 'com.google.android.exoplayer:exoplayer:r2.4.0'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:r2.4.0'
+    implementation 'com.google.android.exoplayer:exoplayer-core:r2.4.0'
+
 }

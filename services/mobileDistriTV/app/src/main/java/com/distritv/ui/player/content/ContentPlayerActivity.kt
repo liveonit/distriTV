@@ -23,6 +23,7 @@ class ContentPlayerActivity : AppCompatActivity() {
     private var myApp: DistriTVApp? = null
 
     private var content: Content? = null
+    private var playStartDate: Long? = null
 
 
     @SuppressLint("AppCompatMethod")
@@ -42,6 +43,11 @@ class ContentPlayerActivity : AppCompatActivity() {
             val intent = Intent(this, HomeActivity::class.java)
             this.startActivity(intent)
             this.finish()
+        }
+
+        playStartDate = intent.extras?.getLong(CONTENT_PLAY_START_DATE_PARAM)
+        if (playStartDate == null) {
+            playStartDate = -1L
         }
 
         addFragment()
@@ -92,21 +98,21 @@ class ContentPlayerActivity : AppCompatActivity() {
         if (content?.isImage() == true) {
             supportFragmentManager.addFragment(
                 R.id.player_fragment_container,
-                ImageFragment.newInstance(content!!),
+                ImageFragment.newInstance(content!!, playStartDate!!),
                 false,
                 ImageFragment.TAG
             )
         } else if (content?.isVideo() == true) {
             supportFragmentManager.addFragment(
                 R.id.player_fragment_container,
-                VideoFragment.newInstance(content!!),
+                VideoFragment.newInstance(content!!, playStartDate!!),
                 false,
                 VideoFragment.TAG
             )
         } else if (content?.isText() == true) {
             supportFragmentManager.addFragment(
                 R.id.player_fragment_container,
-                TextFragment.newInstance(content!!),
+                TextFragment.newInstance(content!!, playStartDate!!),
                 false,
                 TextFragment.TAG
             )

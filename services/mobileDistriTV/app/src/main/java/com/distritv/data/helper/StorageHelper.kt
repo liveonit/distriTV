@@ -1,17 +1,11 @@
 package com.distritv.data.helper
 
-import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import com.distritv.R
 import com.distritv.data.service.SharedPreferencesService
 import okhttp3.ResponseBody
 import org.koin.core.component.KoinComponent
@@ -21,7 +15,7 @@ import java.nio.channels.FileChannel
 
 object StorageHelper: KoinComponent {
 
-    const val SDK_VERSION_FOR_MEDIA_STORE = Build.VERSION_CODES.R
+    const val MIN_SDK_VERSION_NOT_NEED_WRITE_EXTERNAL_STORAGE_PERMISSION = Build.VERSION_CODES.R
 
     private const val TAG = "[StorageHelper]"
     private const val LOG_REMOVE_OK = "Removal successful"
@@ -40,62 +34,7 @@ object StorageHelper: KoinComponent {
         if (useExternalStorageSelected) {
             moveFilesToExternalStorage()
         } else {
-            if (Build.VERSION.SDK_INT >= SDK_VERSION_FOR_MEDIA_STORE) {
-                moveFilesToInternalStorageWithMediaStore()
-            } else {
-                moveFilesToInternalStorage()
-            }
-        }
-    }
-
-    @RequiresApi(SDK_VERSION_FOR_MEDIA_STORE)
-    fun Context.moveFilesToInternalStorageWithMediaStore() {
-        val customDirectoryPath = getCustomExternalStorageDirectory()
-
-        val collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-        val projection = arrayOf(MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DATA)
-        val selection = "${MediaStore.MediaColumns.DATA} like ?"
-        val selectionArgs = arrayOf("%/$customDirectoryPath/%")
-
-        val contentResolver = contentResolver
-        val cursor = contentResolver.query(
-            collection,
-            projection,
-            selection,
-            selectionArgs,
-            null
-        )
-
-        cursor?.use { cursor ->
-            val targetDirectory = File(getInternalStorageDirectory())
-
-            if (!createOrClearTargetDirectory(targetDirectory)) {
-                return@use
-            }
-
-            var result = false
-
-            if (cursor.moveToFirst()) {
-                do {
-                    val filePath =
-                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
-                    val fileName = getFileName(filePath)
-                    val sourceFile = File(filePath)
-                    val targetFile = File(targetDirectory, sourceFile.name)
-
-                    result = transferFile(sourceFile, targetFile)
-                    if (result) {
-                        Log.i(TAG, "$LOG_COPY_OK: ${sourceFile.path} to ${targetFile.path}")
-                    } else {
-                        Log.e(TAG, "$LOG_COPY_KO: ${sourceFile.path} to ${targetFile.path}")
-                    }
-                } while (result && cursor.moveToNext());
-            }
-
-            if (result) {
-                sharedPreferences.setExternalStorage(false)
-                deleteFilesOnExtStorageWithMediaStore(null)
-            }
+            moveFilesToInternalStorage()
         }
     }
 
@@ -109,6 +48,9 @@ object StorageHelper: KoinComponent {
 
     private fun Context.moveFilesToExternalStorage() {
         val sourceDirectory = File(getInternalStorageDirectory())
+        if (getExternalStorageDirectory() == null) {
+            return
+        }
         val targetDirectory = File(getExternalStorageDirectory())
         if (createOrClearTargetDirectory(targetDirectory)) {
             moveFilesToOtherStorage(sourceDirectory, targetDirectory, true)
@@ -142,6 +84,9 @@ object StorageHelper: KoinComponent {
 
         if (result) {
             sharedPreferences.setExternalStorage(useExternalStorageSelected)
+            if (useExternalStorageSelected) {
+                sharedPreferences.setExternalStorageId(extractExternalStorageId(targetDirectory.absolutePath))
+            }
             deleteFiles(sourceDirectory, null)
         }
     }
@@ -191,48 +136,6 @@ object StorageHelper: KoinComponent {
         }
     }
 
-    @RequiresApi(SDK_VERSION_FOR_MEDIA_STORE)
-    fun Context.deleteFilesOnExtStorageWithMediaStore(fileNameActiveContentList: List<String>?) {
-        val customDirectoryPath = getCustomExternalStorageDirectory()
-
-        val collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-        val projection = arrayOf(MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DATA)
-        val selection = "${MediaStore.MediaColumns.DATA} like ?"
-        val selectionArgs = arrayOf("%/$customDirectoryPath/%")
-
-        val contentResolver = contentResolver
-        val cursor = contentResolver.query(
-            collection,
-            projection,
-            selection,
-            selectionArgs,
-            null
-        )
-
-        cursor?.use { cursor ->
-            while (cursor.moveToNext()) {
-                val filePath =
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA))
-
-                if ((fileNameActiveContentList == null)
-                    || !fileNameActiveContentList.contains(getFileName(filePath))
-                ) {
-
-                    val fileId =
-                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID))
-                    val fileUri = Uri.withAppendedPath(collection, fileId.toString())
-
-                    val deletedRows = contentResolver.delete(fileUri, null, null)
-                    if (deletedRows > 0) {
-                        Log.i(TAG, "$LOG_REMOVE_OK: $filePath")
-                    } else {
-                        Log.e(TAG, "$LOG_REMOVE_KO: $filePath")
-                    }
-                }
-            }
-        }
-    }
-
 
     /*
      * Functions to CREATE a new file
@@ -245,30 +148,9 @@ object StorageHelper: KoinComponent {
     }
 
     fun Context.createFileOnExternalStorage(fileName: String): Triple<OutputStream, String, String> {
-        val rootDir = Environment.getExternalStorageDirectory().absolutePath
-        val customDirectoryName = this.getCustomExternalStorageDirectory()
-        val customDirectory = File(rootDir, customDirectoryName)
+        val customDirectory = File(getExternalStorageDirectory())
         val file = File(customDirectory, fileName)
         return Triple(FileOutputStream(file), file.path, file.name)
-    }
-
-    @RequiresApi(SDK_VERSION_FOR_MEDIA_STORE)
-    fun Context.createFileOnExtStorageWithMediaStore(fileName: String, contentType: String): Triple<OutputStream?, String?, String?> {
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-            put(MediaStore.MediaColumns.MIME_TYPE, contentType)
-            put(MediaStore.MediaColumns.RELATIVE_PATH, getCustomExternalStorageDirectory())
-        }
-
-        val contentResolver = contentResolver
-        val contentUri = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-
-        val uri = contentResolver.insert(contentUri, contentValues)
-
-        val outputStream = uri?.let { contentResolver.openOutputStream(it) }
-        val localPath = getFilePath(uri)
-
-        return Triple(outputStream, localPath, getFileName(localPath))
     }
 
     fun writeContent(outputStream: OutputStream?, body: ResponseBody): Boolean {
@@ -302,42 +184,42 @@ object StorageHelper: KoinComponent {
      * Utils functions
      */
 
-    private fun Context.getCustomExternalStorageDirectory(): String {
-        return Environment.DIRECTORY_DOWNLOADS + File.separator + this.getString(R.string.app_name)
-    }
+    fun Context.getExternalStorageDirectory(): String? {
+        try {
+            val extStorageId = sharedPreferences.getExternalStorageId()
+            if (extStorageId != null) {
+                val externalFilesDirs = ContextCompat.getExternalFilesDirs(this, null)
 
-    fun Context.getExternalStorageDirectory(): String {
-        return Environment.getExternalStorageDirectory().absolutePath + File.separator + Environment.DIRECTORY_DOWNLOADS +
-                File.separator + this.getString(R.string.app_name)
+                return externalFilesDirs.firstOrNull { extractExternalStorageId(it.path) == extStorageId }?.absolutePath
+            }
+        } catch (e: Exception) {
+            return null
+        }
+        return null
     }
 
     fun Context.getInternalStorageDirectory(): String {
         return this.filesDir.absolutePath
     }
 
-    fun Context.getCurrentDirectory(): String {
+    fun Context.getCurrentDirectory(): String? {
         return if (sharedPreferences.useExternalStorage()) {
-            Environment.getExternalStorageDirectory().absolutePath + File.separator + this.getCustomExternalStorageDirectory()
+            getExternalStorageDirectory()
         } else {
             this.getInternalStorageDirectory()
         }
     }
 
-    private fun Context.getDirectory(useExternalStorageSelected: Boolean): String {
+    private fun Context.getDirectory(useExternalStorageSelected: Boolean): String? {
         return if (useExternalStorageSelected) {
-            Environment.getExternalStorageDirectory().absolutePath + File.separator + this.getCustomExternalStorageDirectory()
+            getExternalStorageDirectory()
         } else {
             this.getInternalStorageDirectory()
         }
-    }
-
-    fun Context.externalMemoryAvailable(): Boolean {
-        val storages = ContextCompat.getExternalFilesDirs(this, null)
-        return storages.size > 1 && storages[0] != null && storages[1] != null
     }
 
     fun Context.externalStoragePermissionGranted(): Boolean? {
-        return if (Build.VERSION.SDK_INT < SDK_VERSION_FOR_MEDIA_STORE) {
+        return if (Build.VERSION.SDK_INT < MIN_SDK_VERSION_NOT_NEED_WRITE_EXTERNAL_STORAGE_PERMISSION) {
             ContextCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -347,76 +229,12 @@ object StorageHelper: KoinComponent {
         }
     }
 
-    private fun getFileName(filePath: String?): String? {
-        if (filePath == null) {
-            return null
-        }
-
-        val lastIndex = filePath.lastIndexOf("/")
-        if (lastIndex != -1 && lastIndex < filePath.length - 1) {
-            return filePath.substring(lastIndex + 1)
-        }
-
-        return null
-    }
-
-    @RequiresApi(SDK_VERSION_FOR_MEDIA_STORE)
-    @SuppressLint("Range")
-    fun Context.getFilePath(uri: Uri?): String? {
-        val contentResolver = contentResolver
-        val projection = arrayOf(MediaStore.MediaColumns.DATA)
-        val selection = "${MediaStore.MediaColumns._ID} like ?"
-        val selectionArgs =
-            arrayOf(uri?.lastPathSegment)
-
-        val cursor = contentResolver.query(
-            MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),
-            projection,
-            selection,
-            selectionArgs,
-            null
-        )
-
-        if (cursor != null && cursor.moveToFirst()) {
-            val filePath = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA))
-            cursor.close()
-            return filePath
-        } else {
-            // File not found or query failed.
-            throw Exception("[getFilePath] File not found or query failed")
-        }
-    }
-
     fun Context.internalStorageDirIsEmpty(): Boolean {
         return directoryIsEmpty(false)
     }
 
     fun Context.externalStorageDirIsEmpty(): Boolean {
-        return if (Build.VERSION.SDK_INT >= SDK_VERSION_FOR_MEDIA_STORE) {
-            directoryWithMediaStoreIsEmpty()
-        } else {
-            directoryIsEmpty(true)
-        }
-    }
-
-    private fun Context.directoryWithMediaStoreIsEmpty(): Boolean {
-        val customDirectoryPath = getCustomExternalStorageDirectory()
-
-        val collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-        val projection = arrayOf(MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DATA)
-        val selection = "${MediaStore.MediaColumns.DATA} like ?"
-        val selectionArgs = arrayOf("%/$customDirectoryPath/%")
-
-        val contentResolver = contentResolver
-        val cursor = contentResolver.query(
-            collection,
-            projection,
-            selection,
-            selectionArgs,
-            null
-        )
-
-        return (cursor == null) || (cursor.count == 0)
+        return directoryIsEmpty(true)
     }
 
     private fun Context.directoryIsEmpty(externalStorage: Boolean): Boolean {
@@ -432,7 +250,11 @@ object StorageHelper: KoinComponent {
      * if folder already exists and it is not empty it is cleaned
      */
     fun Context.createOrClearTargetDirectory(useExternalStorageSelected: Boolean): Boolean {
-        return createOrClearTargetDirectory(File(getDirectory(useExternalStorageSelected)))
+        val externalStorageDir = getDirectory(useExternalStorageSelected)
+        if (externalStorageDir != null) {
+            return createOrClearTargetDirectory(File(externalStorageDir))
+        }
+        return false
     }
 
     private fun Context.createOrClearTargetDirectory(targetDirectory: File): Boolean {
@@ -441,16 +263,64 @@ object StorageHelper: KoinComponent {
                 return false
             }
         } else {
-            if (targetDirectory.absolutePath.equals(getInternalStorageDirectory())) {
-                deleteFiles(targetDirectory, null)
-            } else {
-                if (Build.VERSION.SDK_INT >= SDK_VERSION_FOR_MEDIA_STORE) {
-                    deleteFilesOnExtStorageWithMediaStore(null)
-                } else {
-                    deleteFiles(targetDirectory, null)
-                }
-            }
+            deleteFiles(targetDirectory, null)
         }
         return true
+    }
+
+    /**
+     * Get all external storage excluding emulated storage
+     */
+    fun Context.getExternalMountedStorages(): List<String>? {
+        return try {
+            val externalFilesDirs = ContextCompat.getExternalFilesDirs(this, null)
+            externalFilesDirs.filter {
+                extractExternalStorageId(it.path) != "emulated" && isExternalStorageMounted(it)
+            }.map { it.absolutePath }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun Context.isAnyExternalStorageMounted(): Boolean {
+        val externalFilesDirs = ContextCompat.getExternalFilesDirs(this, null)
+        val res = externalFilesDirs.filter { extractExternalStorageId(it.path) != "emulated" && isExternalStorageMounted(it) }
+        return res.isNotEmpty()
+    }
+
+    fun Context.isExternalStorageSavedMounted(): Boolean? {
+        try {
+            val externalFilesDirs = ContextCompat.getExternalFilesDirs(this, null)
+
+            val extStorageId = sharedPreferences.getExternalStorageId() ?: return null
+
+            val externalStorageDir = externalFilesDirs.firstOrNull {
+                extractExternalStorageId(it.path) == extStorageId
+            }
+
+            return isExternalStorageMounted(externalStorageDir)
+        } catch (e: Exception) {
+            return false
+        }
+
+    }
+
+    private fun Context.isExternalStorageMounted(externalStorageDir: File?): Boolean {
+        return if (externalStorageDir != null) {
+            val state = Environment.getExternalStorageState(externalStorageDir)
+            state == Environment.MEDIA_MOUNTED
+        } else {
+            // External storage directory is null, indicating it's not mounted.
+            false
+        }
+    }
+
+    fun extractExternalStorageId(path: String): String {
+        val pattern = "/storage/([^/]+)/".toRegex()
+        val matchResult = pattern.find(path)
+        if (matchResult != null) {
+            return matchResult.groupValues[1]
+        }
+        return ""
     }
 }

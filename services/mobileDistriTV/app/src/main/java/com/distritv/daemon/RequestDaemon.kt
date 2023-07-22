@@ -20,7 +20,7 @@ import android.widget.Toast
 import com.distritv.BuildConfig
 import com.distritv.DistriTVApp
 import com.distritv.R
-import com.distritv.data.helper.StorageHelper.SDK_VERSION_FOR_MEDIA_STORE
+import com.distritv.data.helper.StorageHelper.MIN_SDK_VERSION_NOT_NEED_WRITE_EXTERNAL_STORAGE_PERMISSION
 import com.distritv.data.model.Alert
 import com.distritv.data.model.Content
 import com.distritv.data.model.DeviceInfo
@@ -218,8 +218,9 @@ class RequestDaemon: Service() {
     }
 
     private fun checkExternalStorage(deviceInfo: DeviceInfo): Boolean {
-        if (deviceInfo.useExternalStorage && (!deviceInfo.isExternalStorageConnected
-                    || ((Build.VERSION.SDK_INT < SDK_VERSION_FOR_MEDIA_STORE)
+        // If set to use external storage, and it is not connected or permission was not granted
+        if (deviceInfo.useExternalStorage && (deviceInfo.isExternalStorageConnected == null || !deviceInfo.isExternalStorageConnected
+                    || ((Build.VERSION.SDK_INT < MIN_SDK_VERSION_NOT_NEED_WRITE_EXTERNAL_STORAGE_PERMISSION)
                     && ((deviceInfo.externalStoragePermissionGranted != null) && !deviceInfo.externalStoragePermissionGranted)))
         ) {
             Log.e(TAG, "External storage may not be found or permission not granted.")

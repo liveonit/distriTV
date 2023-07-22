@@ -15,6 +15,8 @@ import com.distritv.data.service.DeviceInfoService
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.*
 import com.distritv.data.helper.StorageHelper.externalStorageDirIsEmpty
+import com.distritv.data.helper.StorageHelper.extractExternalStorageId
+import com.distritv.data.helper.StorageHelper.getExternalMountedStorages
 import com.distritv.data.helper.StorageHelper.internalStorageDirIsEmpty
 import com.distritv.data.helper.StorageHelper.moveFiles
 import com.distritv.data.repositories.TelevisionRepository
@@ -66,6 +68,10 @@ class HomeViewModel(
     private val _externalStorageSelected = MutableLiveData(false)
     val externalStorageSelected: LiveData<Boolean>
         get() = _externalStorageSelected
+
+    private val _externalStorageNotFound = MutableLiveData<Boolean>()
+    val externalStorageNotFound: LiveData<Boolean>
+        get() = _externalStorageNotFound
 
     private val _homeFragmentTexts = MutableLiveData<List<String>>()
     val homeFragmentTexts: LiveData<List<String>>
@@ -141,7 +147,32 @@ class HomeViewModel(
     }
 
     fun setExternalStorage(useExternalStorage: Boolean) {
+        setExternalStorage(useExternalStorage, null)
+    }
+
+    private fun setExternalStorage(useExternalStorage: Boolean, storagePath: String?) {
         sharedPreferences.setExternalStorage(useExternalStorage)
+        if (useExternalStorage) {
+            setExternalStorageDriveId(storagePath)
+        }
+    }
+
+    private fun setExternalStorageDriveId(storagePath: String?) {
+        try {
+            if (storagePath == null) {
+                val externalStoragePathList = context.getExternalMountedStorages()
+                if (externalStoragePathList == null) {
+                    _externalStorageNotFound.postValue(true)
+                    return
+                }
+                sharedPreferences.setExternalStorageId(extractExternalStorageId(externalStoragePathList.first()))
+            } else {
+                sharedPreferences.setExternalStorageId(extractExternalStorageId(storagePath))
+            }
+        } catch (e: Exception) {
+            _externalStorageNotFound.postValue(true)
+            Log.e(TAG, "${e.javaClass} -> ${e.message}")
+        }
     }
 
     fun changeUseExternalStorage(useExternalStorage: Boolean) {
@@ -157,14 +188,22 @@ class HomeViewModel(
     }
 
     fun afterWriteExternalStoragePermissionGranted() {
-        sharedPreferences.setExternalStorage(true)
+        afterWriteExternalStoragePermissionGranted(null)
+    }
+    fun afterWriteExternalStoragePermissionGranted(externalStoragePath: String?) {
+        setExternalStorage(true, externalStoragePath)
         context.createOrClearTargetDirectory(true)
     }
 
     fun afterWriteExternalStoragePermissionGrantedAndMoveFiles() {
+        afterWriteExternalStoragePermissionGrantedAndMoveFiles(null)
+    }
+
+    fun afterWriteExternalStoragePermissionGrantedAndMoveFiles(externalStoragePath: String?) {
         if (context.internalStorageDirIsEmpty()) {
-            sharedPreferences.setExternalStorage(true)
+            setExternalStorage(true, externalStoragePath)
         } else {
+            setExternalStorageDriveId(externalStoragePath)
             context.moveFiles(true)
         }
     }
@@ -259,6 +298,14 @@ class HomeViewModel(
         return Triple(
             context.getString(R.string.dialog_title_permission_denied),
             context.getString(R.string.dialog_message_permission_denied),
+            context.getString(R.string.dialog_accept)
+        )
+    }
+
+    fun getDialogTextExternalStorageNotFound(): Triple<String, String, String> {
+        return Triple(
+            context.getString(R.string.dialog_message_storage_not_found_title),
+            context.getString(R.string.dialog_message_storage_not_found),
             context.getString(R.string.dialog_accept)
         )
     }

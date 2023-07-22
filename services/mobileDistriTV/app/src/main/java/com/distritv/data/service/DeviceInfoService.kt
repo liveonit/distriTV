@@ -13,9 +13,10 @@ import com.distritv.DistriTVApp
 import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
+import com.distritv.data.helper.PlaybackHelper.existPausedContent
 import com.distritv.data.model.DeviceInfoCard
-import com.distritv.data.helper.StorageHelper.externalMemoryAvailable
 import com.distritv.data.helper.StorageHelper.externalStoragePermissionGranted
+import com.distritv.data.helper.StorageHelper.isExternalStorageSavedMounted
 import com.distritv.utils.getCurrentTime
 import com.distritv.utils.isServiceRunning
 import com.distritv.utils.roundTo
@@ -58,7 +59,7 @@ class DeviceInfoService(
             isAnyContentPlaying(),
             getCurrentlyPlayingContentId(),
             useExternalStorage(),
-            externalMemoryAvailable(),
+            externalStorageAvailable(),
             externalStoragePermissionGranted(),
             displayOverOtherAppsPermissionGranted(),
             isAnyAlertPlaying(),
@@ -92,8 +93,8 @@ class DeviceInfoService(
         return sharedPreferences.useExternalStorage()
     }
 
-    private fun externalMemoryAvailable(): Boolean {
-        return context.externalMemoryAvailable()
+    private fun externalStorageAvailable(): Boolean? {
+        return context.isExternalStorageSavedMounted()
     }
 
     private fun externalStoragePermissionGranted(): Boolean? {
@@ -114,7 +115,7 @@ class DeviceInfoService(
      * false otherwise.
      */
     private fun isAnyContentPlaying(): Boolean {
-        return myApp?.isContentCurrentlyPlaying() ?: false
+        return myApp?.isContentCurrentlyPlaying() ?: false || existPausedContent()
     }
 
     private fun getCurrentlyPlayingContentId(): Long? {

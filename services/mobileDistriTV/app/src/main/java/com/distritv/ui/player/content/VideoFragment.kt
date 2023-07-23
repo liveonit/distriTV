@@ -119,7 +119,7 @@ class VideoFragment : Fragment() {
 
         if (!file.exists()) {
             Log.e(TAG, "An error occurred while trying to play. Check storage. Back to home...")
-            Toast.makeText(context, getString(R.string.msg_unavailable_content), Toast.LENGTH_LONG)
+            Toast.makeText(context?.applicationContext, getString(R.string.msg_unavailable_content), Toast.LENGTH_LONG)
                 .show()
             onAfterCompletionContent(TAG, content?.id)
             return

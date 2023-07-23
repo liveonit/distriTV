@@ -86,7 +86,7 @@ class ContentService(
     }
 
     private fun writeContentToStorage(content: Content, body: ResponseBody): String? {
-        var outputStreamAndPath: Triple<OutputStream?, String?, String?> = Triple(null, null, null)
+        var outputStreamAndPath: Triple<OutputStream?, String?, String?>? = Triple(null, null, null)
 
         try {
             outputStreamAndPath = if (sharedPreferences.useExternalStorage()) {
@@ -95,6 +95,10 @@ class ContentService(
             } else {
                 // Write to internal storage
                 context.createFileOnInternalStorage(content.name)
+            }
+
+            if (outputStreamAndPath == null) {
+                return null
             }
 
             val outputStream = outputStreamAndPath.first
@@ -112,7 +116,7 @@ class ContentService(
             Log.e(TAG, "${e.javaClass} -> ${e.message}")
             return null
         } finally {
-            outputStreamAndPath.first?.close()
+            outputStreamAndPath?.first?.close()
         }
     }
 

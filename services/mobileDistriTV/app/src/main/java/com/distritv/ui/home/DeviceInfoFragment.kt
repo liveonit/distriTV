@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -15,7 +16,6 @@ import androidx.fragment.app.Fragment
 import com.distritv.BuildConfig
 import com.distritv.R
 import com.distritv.databinding.FragmentDeviceInfoBinding
-import com.distritv.ui.home.HomeViewModel.Companion.DEVICE_INFO
 import com.distritv.utils.*
 
 
@@ -26,10 +26,10 @@ class DeviceInfoFragment : Fragment() {
 
     private val externalStorageEnabled: Boolean = BuildConfig.EXTERNAL_STORAGE_ENABLED
 
-    private var dialogTitle = ""
-    private var dialogMessage = ""
-    private var dialogAccept = ""
-    private var dialogCancel = ""
+    private var dialogTitle: String? = null
+    private var dialogMessage: String? = null
+    private var dialogAccept: String? = null
+    private var dialogCancel: String? = null
 
     private lateinit var homeActivityViewModel: HomeViewModel
 
@@ -42,12 +42,7 @@ class DeviceInfoFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentDeviceInfoBinding.inflate(layoutInflater, container, false)
 
-        binding.tvCode.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
-            if (!hasFocus) {
-                val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-            }
-        }
+        inputTvCodeSettings()
 
         homeActivityViewModel = (requireActivity() as HomeActivity).viewModel
 
@@ -99,6 +94,21 @@ class DeviceInfoFragment : Fragment() {
         }
     }
 
+    private fun inputTvCodeSettings() {
+        // Set the focus
+        binding.tvCode.requestFocus()
+        // Disable the soft keyboard from appearing automatically
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+        // Hide the keyboard after the code is entered
+        binding.tvCode.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+            if (!hasFocus) {
+                val inputMethodManager =
+                    context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+        }
+    }
+
     private fun languageSpinner() {
         languages = homeActivityViewModel.getLanguages()
         val spinnerAdapter = languageSpinnerAdapter()
@@ -126,7 +136,7 @@ class DeviceInfoFragment : Fragment() {
                 ) {
                     // Change locale
                     val selectedLanguage = parent!!.getItemIdAtPosition(position)
-                    homeActivityViewModel.changeLocale(DEVICE_INFO, selectedLanguage)
+                    homeActivityViewModel.changeLocale(selectedLanguage)
 
                     updateErrorMessageLanguage()
                     updateLanguageItems(spinnerAdapter)
@@ -178,13 +188,9 @@ class DeviceInfoFragment : Fragment() {
             binding.registerButton.text = context?.applicationContext?.getString(R.string.device_info_register_button)
             binding.switchExternalStorage.text = context?.applicationContext?.getString(R.string.device_info_switch_external)
             dialogTitle = context?.applicationContext?.getString(R.string.dialog_title_to_external)
-                ?: getString(R.string.dialog_title_to_external)
             dialogMessage = context?.applicationContext?.getString(R.string.dialog_message_to_external)
-                ?: getString(R.string.dialog_message_to_external)
             dialogAccept = context?.applicationContext?.getString(R.string.dialog_accept)
-                ?: getString(R.string.dialog_accept)
             dialogCancel = context?.applicationContext?.getString(R.string.dialog_cancel)
-                ?: getString(R.string.dialog_cancel)
         }
     }
 

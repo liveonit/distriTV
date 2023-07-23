@@ -48,10 +48,8 @@ object StorageHelper: KoinComponent {
 
     private fun Context.moveFilesToExternalStorage() {
         val sourceDirectory = File(getInternalStorageDirectory())
-        if (getExternalStorageDirectory() == null) {
-            return
-        }
-        val targetDirectory = File(getExternalStorageDirectory())
+        val externalStorageDirectory = getExternalStorageDirectory() ?: return
+        val targetDirectory = File(externalStorageDirectory)
         if (createOrClearTargetDirectory(targetDirectory)) {
             moveFilesToOtherStorage(sourceDirectory, targetDirectory, true)
         }
@@ -147,8 +145,9 @@ object StorageHelper: KoinComponent {
         return Triple(FileOutputStream(file), file.path, fileName)
     }
 
-    fun Context.createFileOnExternalStorage(fileName: String): Triple<OutputStream, String, String> {
-        val customDirectory = File(getExternalStorageDirectory())
+    fun Context.createFileOnExternalStorage(fileName: String): Triple<OutputStream, String, String>? {
+        val externalStorageDirectory = getExternalStorageDirectory() ?: return null
+        val customDirectory = File(externalStorageDirectory)
         val file = File(customDirectory, fileName)
         return Triple(FileOutputStream(file), file.path, file.name)
     }
@@ -203,18 +202,14 @@ object StorageHelper: KoinComponent {
     }
 
     fun Context.getCurrentDirectory(): String? {
-        return if (sharedPreferences.useExternalStorage()) {
-            getExternalStorageDirectory()
-        } else {
-            this.getInternalStorageDirectory()
-        }
+        return getDirectory(sharedPreferences.useExternalStorage())
     }
 
     private fun Context.getDirectory(useExternalStorageSelected: Boolean): String? {
         return if (useExternalStorageSelected) {
             getExternalStorageDirectory()
         } else {
-            this.getInternalStorageDirectory()
+            getInternalStorageDirectory()
         }
     }
 
@@ -239,7 +234,8 @@ object StorageHelper: KoinComponent {
 
     private fun Context.directoryIsEmpty(externalStorage: Boolean): Boolean {
         return if (externalStorage) {
-            File(getExternalStorageDirectory()).listFiles()?.isEmpty() ?: true
+            val externalStorageDirectory = getExternalStorageDirectory() ?: return true
+            File(externalStorageDirectory).listFiles()?.isEmpty() ?: true
         } else {
             File(getInternalStorageDirectory()).listFiles()?.isEmpty() ?: true
         }

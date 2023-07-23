@@ -1,13 +1,13 @@
 package com.distritv.ui.home
 
 import android.content.Context
-import android.content.res.Resources
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.distritv.BuildConfig
+import com.distritv.DistriTVApp
 import com.distritv.R
 import com.distritv.data.helper.StorageHelper.createOrClearTargetDirectory
 import com.distritv.data.model.DeviceInfoCard
@@ -57,10 +57,6 @@ class HomeViewModel(
     val locale: LiveData<String>
         get() = _locale
 
-    private val _deviceInfoFragmentTexts = MutableLiveData<List<String>>()
-    val deviceInfoFragmentTexts: LiveData<List<String>>
-        get() = _deviceInfoFragmentTexts
-
     private val _referrerRequestPerm = MutableLiveData<Int>()
     val referrerRequestPerm: LiveData<Int>
         get() = _referrerRequestPerm
@@ -73,18 +69,20 @@ class HomeViewModel(
     val externalStorageNotFound: LiveData<Boolean>
         get() = _externalStorageNotFound
 
-    private val _homeFragmentTexts = MutableLiveData<List<String>>()
-    val homeFragmentTexts: LiveData<List<String>>
-        get() = _homeFragmentTexts
+    private val _languageUpdated = MutableLiveData<Boolean>()
+    val languageUpdated: LiveData<Boolean>
+        get() = _languageUpdated
 
     private var error: Int = -1
 
     private val externalStorageEnabled: Boolean = BuildConfig.EXTERNAL_STORAGE_ENABLED
     private val anticipationDaysOptions: String = BuildConfig.ANTICIPATION_DAYS_OPTIONS
 
+    private val appInstance = DistriTVApp.getInstance()
+
     fun registerTvCode(code: String, useExternalStorage: Boolean) {
         if (code.length < 6) {
-            _errorMessage.postValue(context.getString(R.string.msg_tv_code_invalid))
+            _errorMessage.postValue(context.applicationContext.getString(R.string.msg_tv_code_invalid))
             _isValid.postValue(false)
             error = R.string.msg_tv_code_invalid
             return
@@ -99,7 +97,7 @@ class HomeViewModel(
                         _externalStorageSelected.value = useExternalStorage
                         _isValid.postValue(true)
                     } else {
-                        _errorMessage.postValue(context.getString(R.string.msg_tv_code_invalid))
+                        _errorMessage.postValue(context.applicationContext.getString(R.string.msg_tv_code_invalid))
                         _isValid.postValue(false)
                         error = R.string.msg_tv_code_invalid
                     }
@@ -111,17 +109,17 @@ class HomeViewModel(
                 error = R.string.msg_tv_code_connection_error
             } catch (e: HttpException) {
                 error = if (e.code() == HTTP_NOT_FOUND) {
-                    _errorMessage.postValue(context.getString(R.string.msg_tv_code_invalid))
+                    _errorMessage.postValue(context.applicationContext.getString(R.string.msg_tv_code_invalid))
                     R.string.msg_tv_code_invalid
                 } else {
                     Log.e(TAG, "${e.javaClass}: ${e.message}")
-                    _errorMessage.postValue(context.getString(R.string.msg_tv_code_error))
+                    _errorMessage.postValue(context.applicationContext.getString(R.string.msg_tv_code_error))
                     R.string.msg_tv_code_error
                 }
                 _isValid.postValue(false)
             } catch (e: Exception) {
                 Log.e(TAG, "${e.javaClass}: ${e.message}")
-                _errorMessage.postValue(context.getString(R.string.msg_tv_code_error))
+                _errorMessage.postValue(context.applicationContext.getString(R.string.msg_tv_code_error))
                 _isValid.postValue(false)
                 error = R.string.msg_tv_code_error
             }
@@ -244,70 +242,24 @@ class HomeViewModel(
 
     private fun setSystemLocale() {
         sharedPreferences.removeCustomLocale()
-        val systemLocale: Locale = Resources.getSystem().configuration.locales[0]
-        LocaleHelper.setLocale(context, systemLocale)
+        appInstance.setDefaultAppLanguage()
     }
 
     private fun saveLocale(locale: Locale) {
-        LocaleHelper.setLocale(context, locale)
+        appInstance.setAppLanguage(locale)
         sharedPreferences.addCustomLocale("${locale.language}_${locale.country}")
     }
 
     private fun updateDeviceInfoFragmentUI() {
-        _deviceInfoFragmentTexts.value = listOf(
-            context.getString(R.string.device_info_title),
-            context.getString(R.string.device_info_register_button),
-            context.getString(R.string.device_info_switch_external),
-            context.getString(R.string.dialog_title_to_external),
-            context.getString(R.string.dialog_message_to_external),
-            context.getString(R.string.dialog_accept),
-            context.getString(R.string.dialog_cancel)
-        )
+        _languageUpdated.postValue(true)
     }
 
     private fun updateHomeFragmentUI() {
-        _homeFragmentTexts.value = listOf(
-            context.getString(R.string.info_card_version),
-            context.getString(R.string.info_card_tv_code),
-            context.getString(R.string.info_card_labels),
-            context.getString(R.string.info_card_connection_status),
-            context.getString(R.string.language),
-            context.getString(R.string.language_select),
-            context.getString(R.string.info_card_switch_external),
-            context.getString(R.string.info_card_anticipation_days),
-            context.getString(R.string.info_card_anticipation_spinner_title)
-        )
-    }
-
-    fun getDialogSwitchHomeText(): List<String> {
-        return listOf(
-            context.getString(R.string.dialog_title_to_external),
-            context.getString(R.string.dialog_title_to_internal),
-            context.getString(R.string.dialog_message_home_to_external),
-            context.getString(R.string.dialog_message_home_to_internal),
-            context.getString(R.string.dialog_accept),
-            context.getString(R.string.dialog_cancel)
-        )
+        _languageUpdated.postValue(true)
     }
 
     fun getErrorMessage(): String {
         return context.getString(error)
-    }
-
-    fun getDialogTextPermissionDenied(): Triple<String, String, String> {
-        return Triple(
-            context.getString(R.string.dialog_title_permission_denied),
-            context.getString(R.string.dialog_message_permission_denied),
-            context.getString(R.string.dialog_accept)
-        )
-    }
-
-    fun getDialogTextExternalStorageNotFound(): Triple<String, String, String> {
-        return Triple(
-            context.getString(R.string.dialog_message_storage_not_found_title),
-            context.getString(R.string.dialog_message_storage_not_found),
-            context.getString(R.string.dialog_accept)
-        )
     }
 
     fun getLanguages(): Array<String> {

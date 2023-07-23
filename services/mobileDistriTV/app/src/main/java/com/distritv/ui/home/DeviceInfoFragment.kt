@@ -13,16 +13,10 @@ import android.widget.ArrayAdapter
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.distritv.BuildConfig
+import com.distritv.R
 import com.distritv.databinding.FragmentDeviceInfoBinding
 import com.distritv.ui.home.HomeViewModel.Companion.DEVICE_INFO
 import com.distritv.utils.*
-import com.distritv.utils.DeviceInfoFragmentTextIndex.DIALOG_ACCEPT
-import com.distritv.utils.DeviceInfoFragmentTextIndex.DIALOG_CANCEL
-import com.distritv.utils.DeviceInfoFragmentTextIndex.DIALOG_MESSAGE
-import com.distritv.utils.DeviceInfoFragmentTextIndex.DIALOG_TITLE
-import com.distritv.utils.DeviceInfoFragmentTextIndex.REGISTER_BUTTON
-import com.distritv.utils.DeviceInfoFragmentTextIndex.SWITCH_EXTERNAL_STORAGE
-import com.distritv.utils.DeviceInfoFragmentTextIndex.TITLE
 
 
 class DeviceInfoFragment : Fragment() {
@@ -58,7 +52,7 @@ class DeviceInfoFragment : Fragment() {
         homeActivityViewModel = (requireActivity() as HomeActivity).viewModel
 
         localeObserver()
-        textsObserver()
+        languageUpdatedObserver()
         setEventToClearError()
         progressBarObserver()
         tvCodeValidationObserver()
@@ -175,15 +169,22 @@ class DeviceInfoFragment : Fragment() {
         }
     }
 
-    private fun textsObserver() {
-        homeActivityViewModel.deviceInfoFragmentTexts.observe(viewLifecycleOwner) { textList ->
-            binding.title.text = textList[TITLE]
-            binding.registerButton.text = textList[REGISTER_BUTTON]
-            binding.switchExternalStorage.text = textList[SWITCH_EXTERNAL_STORAGE]
-            dialogTitle = textList[DIALOG_TITLE]
-            dialogMessage = textList[DIALOG_MESSAGE]
-            dialogAccept = textList[DIALOG_ACCEPT]
-            dialogCancel = textList[DIALOG_CANCEL]
+    private fun languageUpdatedObserver() {
+        homeActivityViewModel.languageUpdated.observe(viewLifecycleOwner) { langUpdated ->
+            if (!langUpdated) {
+                return@observe
+            }
+            binding.title.text = context?.applicationContext?.getString(R.string.device_info_title)
+            binding.registerButton.text = context?.applicationContext?.getString(R.string.device_info_register_button)
+            binding.switchExternalStorage.text = context?.applicationContext?.getString(R.string.device_info_switch_external)
+            dialogTitle = context?.applicationContext?.getString(R.string.dialog_title_to_external)
+                ?: getString(R.string.dialog_title_to_external)
+            dialogMessage = context?.applicationContext?.getString(R.string.dialog_message_to_external)
+                ?: getString(R.string.dialog_message_to_external)
+            dialogAccept = context?.applicationContext?.getString(R.string.dialog_accept)
+                ?: getString(R.string.dialog_accept)
+            dialogCancel = context?.applicationContext?.getString(R.string.dialog_cancel)
+                ?: getString(R.string.dialog_cancel)
         }
     }
 

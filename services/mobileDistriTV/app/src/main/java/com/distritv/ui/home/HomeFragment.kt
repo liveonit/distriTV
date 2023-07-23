@@ -98,6 +98,8 @@ class HomeFragment: Fragment() {
         switchButtonListener()
 
         setupInformationButton()
+
+        binding.informationBtn.requestFocus()
     }
 
     override fun onAttach(context: Context) {

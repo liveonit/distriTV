@@ -96,21 +96,21 @@ class ContentPlayerActivity : AppCompatActivity() {
 
     private fun addFragment() {
         if (content?.isImage() == true) {
-            supportFragmentManager.addFragment(
+            supportFragmentManager.replaceFragment(
                 R.id.player_fragment_container,
                 ImageFragment.newInstance(content!!, playStartDate!!),
                 false,
                 ImageFragment.TAG
             )
         } else if (content?.isVideo() == true) {
-            supportFragmentManager.addFragment(
+            supportFragmentManager.replaceFragment(
                 R.id.player_fragment_container,
                 VideoFragment.newInstance(content!!, playStartDate!!),
                 false,
                 VideoFragment.TAG
             )
         } else if (content?.isText() == true) {
-            supportFragmentManager.addFragment(
+            supportFragmentManager.replaceFragment(
                 R.id.player_fragment_container,
                 TextFragment.newInstance(content!!, playStartDate!!),
                 false,

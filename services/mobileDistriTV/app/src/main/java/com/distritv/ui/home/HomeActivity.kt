@@ -177,27 +177,12 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         }
     }
 
-
-    private fun addHomeFragment() {
-        supportFragmentManager.addFragment(
-            R.id.home_fragment_container,
-            HomeFragment(),
-            false,
-            HomeFragment.TAG
-        )
-    }
-
     private fun addFragmentObserver() {
         viewModel.isRegistered.observe(this) { isRegistered ->
             if (isRegistered) {
-                supportFragmentManager.addFragment(
-                    R.id.home_fragment_container,
-                    HomeFragment(),
-                    false,
-                    HomeFragment.TAG
-                )
+                addHomeFragment()
             } else {
-                supportFragmentManager.addFragment(
+                supportFragmentManager.replaceFragment(
                     R.id.home_fragment_container,
                     DeviceInfoFragment(),
                     false,
@@ -205,6 +190,15 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
                 )
             }
         }
+    }
+
+    private fun addHomeFragment() {
+        supportFragmentManager.replaceFragment(
+            R.id.home_fragment_container,
+            HomeFragment(),
+            false,
+            HomeFragment.TAG
+        )
     }
 
     private fun playPausedContent() {
@@ -299,6 +293,7 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
             radioButton.text = "USB ${index + 1}"
             binding.externalStorageDriveGroup.addView(radioButton)
         }
+        binding.externalStorageDriveGroup.requestFocus()
 
         binding.externalStorageDriveGroup.visibility = View.VISIBLE
 

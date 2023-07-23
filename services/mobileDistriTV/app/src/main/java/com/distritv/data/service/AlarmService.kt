@@ -4,7 +4,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.distritv.data.model.CalendarModel
 import com.distritv.data.model.Content
 import com.distritv.utils.*
@@ -35,10 +34,6 @@ class AlarmService(private val context: Context) {
             pendingIntent
         )
         Log.i(TAG, "Scheduled content with id $msg, to play on ${calendar.time}.")
-        //TODO borrar toast:
-        Toast.makeText(
-            context, "Scheduled content: $msg, to play on ${calendar.time}.",
-            Toast.LENGTH_SHORT).show()
     }
 
     private fun createCalendar(calendarModel: CalendarModel): Calendar {

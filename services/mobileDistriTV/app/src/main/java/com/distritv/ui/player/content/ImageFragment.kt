@@ -116,7 +116,7 @@ class ImageFragment : Fragment() {
 
             } else {
                 Log.e(TAG, "An error occurred while trying to play. Check storage. Back to home...")
-                Toast.makeText(activity, getString(R.string.msg_unavailable_content),
+                Toast.makeText(activity?.applicationContext, getString(R.string.msg_unavailable_content),
                     Toast.LENGTH_LONG).show()
                 onAfterCompletionContent(TAG, content?.id)
             }

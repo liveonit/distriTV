@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment
 import com.distritv.R
 import com.distritv.databinding.FragmentHomeBinding
 import com.distritv.ui.FullscreenManager
-import com.distritv.ui.home.HomeViewModel.Companion.HOME
 import com.distritv.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -46,10 +45,10 @@ class HomeFragment: Fragment() {
     private var anticipationDaysConfigEnabled = false
 
     private lateinit var externalStorageDialog: AlertDialog
-    private var dialogTitle = ""
-    private var dialogMessage = ""
-    private var dialogAccept = ""
-    private var dialogCancel = ""
+    private var dialogTitle: String? = null
+    private var dialogMessage: String? = null
+    private var dialogAccept: String? = null
+    private var dialogCancel: String? = null
 
     private val fullscreenManager by lazy {
         activity?.let {
@@ -75,7 +74,6 @@ class HomeFragment: Fragment() {
         loadImage()
         deviceInfoObserver()
         languageUpdatedObserver()
-        extStorageNotFoundObserver()
         setLanguageSpinnerSelection()
         setAnticipationDaysSpinnerSelection()
 
@@ -132,28 +130,35 @@ class HomeFragment: Fragment() {
 
     private fun showOrHideInfoCard() {
         if (!infoBtnVisible) {
-            viewModel.getDeviceInfo()
-            binding.informationCard.visibility = View.VISIBLE
-            binding.informationBtn.setImageDrawable(
-                ContextCompat.getDrawable(requireContext(), R.drawable.close_100)
-            )
-            infoBtnVisible = true
-
-            // Set timer to close information card
-            handler.postDelayed({
-                showOrHideInfoCard()
-            }, TimeUnit.SECONDS.toMillis(30))
-
+            showInformationAndSettings()
         } else {
-            binding.informationCard.visibility = View.GONE
-            binding.informationBtn.setImageDrawable(
-                ContextCompat.getDrawable(requireContext(), R.drawable.info_100)
-            )
-            infoBtnVisible = false
-
-            // Remove timer to close information card
-            handler.removeCallbacksAndMessages(null)
+            hideInformationAndSettings()
         }
+    }
+
+    private fun showInformationAndSettings() {
+        viewModel.getDeviceInfo()
+        binding.informationCard.visibility = View.VISIBLE
+        binding.informationBtn.setImageDrawable(
+            ContextCompat.getDrawable(requireContext(), R.drawable.close_100)
+        )
+        infoBtnVisible = true
+
+        // Set timer to close information card
+        handler.postDelayed({
+            showOrHideInfoCard()
+        }, TimeUnit.SECONDS.toMillis(30))
+    }
+
+    private fun hideInformationAndSettings() {
+        binding.informationCard.visibility = View.GONE
+        binding.informationBtn.setImageDrawable(
+            ContextCompat.getDrawable(requireContext(), R.drawable.info_100)
+        )
+        infoBtnVisible = false
+
+        // Remove timer to close information card
+        handler.removeCallbacksAndMessages(null)
     }
 
     private fun addStatus(status: Boolean?) {
@@ -251,7 +256,7 @@ class HomeFragment: Fragment() {
                 ) {
                     // Change locale
                     val selectedLanguage = parent!!.getItemIdAtPosition(position)
-                    viewModel.changeLocale(HOME, selectedLanguage)
+                    viewModel.changeLocale(selectedLanguage)
 
                     updateSpinnerItems()
                 }
@@ -323,14 +328,6 @@ class HomeFragment: Fragment() {
         }
     }
 
-    private fun extStorageNotFoundObserver() {
-        viewModel.externalStorageNotFound.observe(this) {
-            if (it) {
-                binding.switchExternalStorage.isChecked = false
-            }
-        }
-    }
-
     private fun setSwitchExternalStorageVisibility() {
         if (viewModel.isExternalStorageEnabled()) {
             binding.switchExternalStorage.isChecked = viewModel.useExternalStorage()
@@ -343,23 +340,13 @@ class HomeFragment: Fragment() {
     private fun switchButtonListener() {
         binding.switchExternalStorage.setOnClickListener {
             dialogAccept = context?.applicationContext?.getString(R.string.dialog_accept)
-                ?: getString(R.string.dialog_accept)
             dialogCancel = context?.applicationContext?.getString(R.string.dialog_cancel)
-                ?: getString(R.string.dialog_cancel)
             if (binding.switchExternalStorage.isChecked) {
-                dialogTitle =
-                    context?.applicationContext?.getString(R.string.dialog_title_to_external)
-                        ?: getString(R.string.dialog_title_to_external)
-                dialogMessage =
-                    context?.applicationContext?.getString(R.string.dialog_message_home_to_external)
-                        ?: getString(R.string.dialog_message_home_to_external)
+                dialogTitle = context?.applicationContext?.getString(R.string.dialog_title_to_external)
+                dialogMessage = context?.applicationContext?.getString(R.string.dialog_message_home_to_external)
             } else {
-                dialogTitle =
-                    context?.applicationContext?.getString(R.string.dialog_title_to_internal)
-                        ?: getString(R.string.dialog_title_to_internal)
-                dialogMessage =
-                    context?.applicationContext?.getString(R.string.dialog_message_home_to_internal)
-                        ?: getString(R.string.dialog_message_home_to_internal)
+                dialogTitle = context?.applicationContext?.getString(R.string.dialog_title_to_internal)
+                dialogMessage = context?.applicationContext?.getString(R.string.dialog_message_home_to_internal)
             }
 
             if (binding.switchExternalStorage.isChecked) {
@@ -384,11 +371,13 @@ class HomeFragment: Fragment() {
 
     private val dialogConfirmExternalFun = { dialog: DialogInterface, _: Int ->
         listener?.onChangeStorage(true)
+        hideInformationAndSettings()
         dialog.dismiss()
     }
 
     private val dialogConfirmInternalFun = { dialog: DialogInterface, _: Int ->
         listener?.onChangeStorage(false)
+        hideInformationAndSettings()
         dialog.dismiss()
     }
 

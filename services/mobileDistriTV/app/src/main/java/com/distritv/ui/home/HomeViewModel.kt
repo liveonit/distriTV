@@ -104,7 +104,7 @@ class HomeViewModel(
                 }
             } catch (e: SocketTimeoutException) {
                 Log.e(TAG, "${e.javaClass}: ${e.message}")
-                _errorMessage.postValue(context.getString(R.string.msg_tv_code_connection_error))
+                _errorMessage.postValue(context.applicationContext.getString(R.string.msg_tv_code_connection_error))
                 _isValid.postValue(false)
                 error = R.string.msg_tv_code_connection_error
             } catch (e: HttpException) {
@@ -218,7 +218,7 @@ class HomeViewModel(
         return sharedPreferences.getCustomLocale()?.split("_")?.get(0) ?: ""
     }
 
-    fun changeLocale(referrer: Int, itemPosition: Long) {
+    fun changeLocale(itemPosition: Long) {
         when (itemPosition) {
             AUTOMATIC_POS.toLong() -> {
                 setSystemLocale()
@@ -233,11 +233,7 @@ class HomeViewModel(
                 setSystemLocale()
             }
         }
-        if (referrer == DEVICE_INFO) {
-            updateDeviceInfoFragmentUI()
-        } else {
-            updateHomeFragmentUI()
-        }
+        _languageUpdated.postValue(true)
     }
 
     private fun setSystemLocale() {
@@ -250,20 +246,12 @@ class HomeViewModel(
         sharedPreferences.addCustomLocale("${locale.language}_${locale.country}")
     }
 
-    private fun updateDeviceInfoFragmentUI() {
-        _languageUpdated.postValue(true)
-    }
-
-    private fun updateHomeFragmentUI() {
-        _languageUpdated.postValue(true)
-    }
-
     fun getErrorMessage(): String {
-        return context.getString(error)
+        return context.applicationContext.getString(error)
     }
 
     fun getLanguages(): Array<String> {
-        return context.resources.getStringArray(R.array.languages)
+        return context.applicationContext.resources.getStringArray(R.array.languages)
     }
 
     fun isExternalStorageEnabled(): Boolean {
@@ -276,7 +264,9 @@ class HomeViewModel(
             if (options.isEmpty() || !options.all { it.trim().toIntOrNull() != null }) {
                 return null
             }
-            return options.map { it.trim() + ANTICIPATION_DAYS_WHITESPACE + context.getString(R.string.days) }.toTypedArray()
+            return options.map {
+                it.trim() + ANTICIPATION_DAYS_WHITESPACE + context.applicationContext.getString(R.string.days)
+            }.toTypedArray()
         } catch (e: Exception) {
             return null
         }

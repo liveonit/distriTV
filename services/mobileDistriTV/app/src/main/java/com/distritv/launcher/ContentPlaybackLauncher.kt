@@ -61,7 +61,7 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
         if (!content.fileExists(context.getCurrentDirectory())) {
             Log.e(TAG, "Content file not found. Content id: ${content.id}, name: ${content.fileName}")
             Toast.makeText(
-                context, context.getString(R.string.msg_unavailable_content),
+                context.applicationContext, context.getString(R.string.msg_unavailable_content),
                 Toast.LENGTH_LONG
             ).show()
             return

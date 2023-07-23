@@ -21,21 +21,6 @@ import com.distritv.databinding.FragmentHomeBinding
 import com.distritv.ui.FullscreenManager
 import com.distritv.ui.home.HomeViewModel.Companion.HOME
 import com.distritv.utils.*
-import com.distritv.utils.HomeFragmentTextIndex.APP_VERSION
-import com.distritv.utils.HomeFragmentTextIndex.CONNECTION_STATUS
-import com.distritv.utils.HomeFragmentTextIndex.DIALOG_ACCEPT_HOME
-import com.distritv.utils.HomeFragmentTextIndex.DIALOG_CANCEL_HOME
-import com.distritv.utils.HomeFragmentTextIndex.DIALOG_MESSAGE_HOME_TO_EXTERNAL
-import com.distritv.utils.HomeFragmentTextIndex.DIALOG_MESSAGE_HOME_TO_INTERNAL
-import com.distritv.utils.HomeFragmentTextIndex.DIALOG_TITLE_HOME_TO_EXTERNAL
-import com.distritv.utils.HomeFragmentTextIndex.DIALOG_TITLE_HOME_TO_INTERNAL
-import com.distritv.utils.HomeFragmentTextIndex.LANGUAGE
-import com.distritv.utils.HomeFragmentTextIndex.SWITCH_EXTERNAL_STORAGE_HOME
-import com.distritv.utils.HomeFragmentTextIndex.TV_CODE
-import com.distritv.utils.HomeFragmentTextIndex.ANTICIPATION_DAYS
-import com.distritv.utils.HomeFragmentTextIndex.ANTICIPATION_DAYS_SELECT_TITLE
-import com.distritv.utils.HomeFragmentTextIndex.LABELS
-import com.distritv.utils.HomeFragmentTextIndex.LANGUAGE_SELECT_TITLE
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -89,7 +74,8 @@ class HomeFragment: Fragment() {
         fullscreenManager?.enterFullscreen()
         loadImage()
         deviceInfoObserver()
-        textsObserver()
+        languageUpdatedObserver()
+        extStorageNotFoundObserver()
         setLanguageSpinnerSelection()
         setAnticipationDaysSpinnerSelection()
 
@@ -206,17 +192,20 @@ class HomeFragment: Fragment() {
         }
     }
 
-    private fun textsObserver() {
-        viewModel.homeFragmentTexts.observe(viewLifecycleOwner) { textList ->
-            binding.versionKey.text = textList[APP_VERSION]
-            binding.tvCodeKey.text = textList[TV_CODE]
-            binding.labelsKey.text = textList[LABELS]
-            binding.connectionStatusKey.text = textList[CONNECTION_STATUS]
-            binding.languageKey.text = textList[LANGUAGE]
-            binding.languageSpinner.prompt = textList[LANGUAGE_SELECT_TITLE]
-            binding.switchExternalStorage.text = textList[SWITCH_EXTERNAL_STORAGE_HOME]
-            binding.anticipationDaysKey.text = textList[ANTICIPATION_DAYS]
-            binding.anticipationDaysSpinner.prompt = textList[ANTICIPATION_DAYS_SELECT_TITLE]
+    private fun languageUpdatedObserver() {
+        viewModel.languageUpdated.observe(viewLifecycleOwner) { langUpdated ->
+            if (!langUpdated) {
+                return@observe
+            }
+            binding.versionKey.text = context?.applicationContext?.getString(R.string.info_card_version)
+            binding.tvCodeKey.text = context?.applicationContext?.getString(R.string.info_card_tv_code)
+            binding.labelsKey.text = context?.applicationContext?.getString(R.string.info_card_labels)
+            binding.connectionStatusKey.text = context?.applicationContext?.getString(R.string.info_card_connection_status)
+            binding.languageKey.text = context?.applicationContext?.getString(R.string.language)
+            binding.languageSpinner.prompt = context?.applicationContext?.getString(R.string.language_select)
+            binding.switchExternalStorage.text = context?.applicationContext?.getString(R.string.info_card_switch_external)
+            binding.anticipationDaysKey.text = context?.applicationContext?.getString(R.string.info_card_anticipation_days)
+            binding.anticipationDaysSpinner.prompt = context?.applicationContext?.getString(R.string.info_card_anticipation_spinner_title)
         }
     }
 
@@ -334,6 +323,14 @@ class HomeFragment: Fragment() {
         }
     }
 
+    private fun extStorageNotFoundObserver() {
+        viewModel.externalStorageNotFound.observe(this) {
+            if (it) {
+                binding.switchExternalStorage.isChecked = false
+            }
+        }
+    }
+
     private fun setSwitchExternalStorageVisibility() {
         if (viewModel.isExternalStorageEnabled()) {
             binding.switchExternalStorage.isChecked = viewModel.useExternalStorage()
@@ -345,15 +342,24 @@ class HomeFragment: Fragment() {
 
     private fun switchButtonListener() {
         binding.switchExternalStorage.setOnClickListener {
-            val dialogTextList = viewModel.getDialogSwitchHomeText()
-            dialogAccept = dialogTextList[DIALOG_ACCEPT_HOME]
-            dialogCancel = dialogTextList[DIALOG_CANCEL_HOME]
+            dialogAccept = context?.applicationContext?.getString(R.string.dialog_accept)
+                ?: getString(R.string.dialog_accept)
+            dialogCancel = context?.applicationContext?.getString(R.string.dialog_cancel)
+                ?: getString(R.string.dialog_cancel)
             if (binding.switchExternalStorage.isChecked) {
-                dialogTitle = dialogTextList[DIALOG_TITLE_HOME_TO_EXTERNAL]
-                dialogMessage = dialogTextList[DIALOG_MESSAGE_HOME_TO_EXTERNAL]
+                dialogTitle =
+                    context?.applicationContext?.getString(R.string.dialog_title_to_external)
+                        ?: getString(R.string.dialog_title_to_external)
+                dialogMessage =
+                    context?.applicationContext?.getString(R.string.dialog_message_home_to_external)
+                        ?: getString(R.string.dialog_message_home_to_external)
             } else {
-                dialogTitle = dialogTextList[DIALOG_TITLE_HOME_TO_INTERNAL]
-                dialogMessage = dialogTextList[DIALOG_MESSAGE_HOME_TO_INTERNAL]
+                dialogTitle =
+                    context?.applicationContext?.getString(R.string.dialog_title_to_internal)
+                        ?: getString(R.string.dialog_title_to_internal)
+                dialogMessage =
+                    context?.applicationContext?.getString(R.string.dialog_message_home_to_internal)
+                        ?: getString(R.string.dialog_message_home_to_internal)
             }
 
             if (binding.switchExternalStorage.isChecked) {

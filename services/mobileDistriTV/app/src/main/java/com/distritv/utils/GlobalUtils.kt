@@ -14,11 +14,27 @@ const val EXTERNAL_STORAGE_ID = "external_storage_id"
 const val ANTICIPATION_DAYS = "anticipation_days"
 const val CONTENT_IN_PAUSED_PLAYBACK = "content_in_paused_playback"
 
-const val HTTP_NOT_FOUND = 404
+/*
+ * Language
+ */
+const val AUTOMATIC_POS = 0
+const val ENGLISH_POS = 1
+const val SPANISH_POS = 2
+const val EN_LANG = "en"
+const val ES_LANG = "es"
+const val DEFAULT_COUNTRY = "US"
 
+/*
+ * Anticipation days
+ */
 const val ANTICIPATION_DAYS_DEFAULT = 7
 const val ANTICIPATION_DAYS_SEPARATOR = ";"
 const val ANTICIPATION_DAYS_WHITESPACE= " "
+
+/*
+ * Others
+ */
+const val HTTP_NOT_FOUND = 404
 
 const val TEXT_COLOR_DEFAULT = "#000000"
 const val TEXT_BACKGROUND_COLOR_DEFAULT = "#FFFFFF"

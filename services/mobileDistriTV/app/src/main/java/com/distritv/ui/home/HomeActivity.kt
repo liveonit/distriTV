@@ -242,16 +242,19 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
             } else {
                 // Permission denied
                 viewModel.setExternalStorage(false)
-                val dialogText = viewModel.getDialogTextPermissionDenied()
                 if (referrer == DEVICE_INFO) {
                     showDialog(
-                        dialogText.first,
-                        dialogText.second,
-                        dialogText.third,
+                        applicationContext.getString(R.string.dialog_title_permission_denied),
+                        applicationContext.getString(R.string.dialog_message_permission_denied),
+                        applicationContext.getString(R.string.dialog_accept),
                         dialogConfirmFun
                     )
                 } else {
-                    showDialog(dialogText.first, dialogText.second, dialogText.third, null)
+                    showDialog(
+                        applicationContext.getString(R.string.dialog_title_permission_denied),
+                        applicationContext.getString(R.string.dialog_message_permission_denied),
+                        applicationContext.getString(R.string.dialog_accept),
+                        null)
                 }
             }
         }
@@ -322,11 +325,10 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
     }
 
     private fun showExternalStorageNotFoundDialog() {
-        val dialogText = viewModel.getDialogTextExternalStorageNotFound()
         showDialog(
-            dialogText.first,
-            dialogText.second,
-            dialogText.third,
+            applicationContext.getString(R.string.dialog_message_storage_not_found_title),
+            applicationContext.getString(R.string.dialog_message_storage_not_found),
+            applicationContext.getString(R.string.dialog_accept),
             dialogConfirmFun
         )
     }

@@ -1,11 +1,16 @@
 package com.distritv
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
+import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
 import com.distritv.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import java.util.*
 
 
 class DistriTVApp: Application() {
@@ -25,6 +30,7 @@ class DistriTVApp: Application() {
                 )
             )
         }
+        appContext = applicationContext
     }
 
     private var currentActivity: Activity? = null
@@ -97,4 +103,34 @@ class DistriTVApp: Application() {
                 && this.alertDurationLeft != null && this.alertDurationLeft!! > 0L
     }
 
+    fun setDefaultAppLanguage() {
+        val systemLocale: Locale = Resources.getSystem().configuration.locales[0]
+        setAppLanguage(systemLocale)
+    }
+
+    fun setAppLanguage(locale: Locale) {
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.setLocale(locale)
+        if (appContext.resources != null) {
+            appContext.resources.updateConfiguration(config, appContext.resources.displayMetrics)
+        }
+    }
+
+    companion object {
+
+        private lateinit var appContext: Context
+
+        // Singleton instance
+        @SuppressLint("StaticFieldLeak")
+        private var instance: DistriTVApp? = null
+
+        @JvmStatic
+        fun getInstance(): DistriTVApp {
+            if (instance == null) {
+                instance = DistriTVApp()
+            }
+            return instance as DistriTVApp
+        }
+    }
 }

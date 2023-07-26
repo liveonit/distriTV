@@ -203,7 +203,8 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
 
     private fun playPausedContent() {
         val pausedContent = getPausedContent()
-        if (pausedContent != null) {
+        val isAlert = intent.extras?.getBoolean(ALERT_PARAM) ?: false
+        if (pausedContent != null && !isAlert) {
             val scheduledIntent = Intent(this, ContentPlayerActivity::class.java)
             scheduledIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             scheduledIntent.putExtra(CONTENT_PARAM, pausedContent.content)

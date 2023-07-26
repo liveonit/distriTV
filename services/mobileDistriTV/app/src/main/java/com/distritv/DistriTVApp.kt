@@ -6,6 +6,8 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
+import com.distritv.data.helper.PlaybackHelper.existPausedContent
+import com.distritv.data.helper.PlaybackHelper.getPausedContent
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.di.*
 import org.koin.android.ext.koin.androidContext
@@ -67,11 +69,22 @@ class DistriTVApp: Application() {
         return this.isContentCurrentlyPlaying
     }
 
+    fun isContentCurrentlyPlayingOrPaused(): Boolean {
+        return this.isContentCurrentlyPlaying || existPausedContent()
+    }
+
     fun setIfAnyContentIsCurrentlyPlaying(isPlaying: Boolean) {
         this.isContentCurrentlyPlaying = isPlaying
     }
 
     fun getCurrentlyPlayingContentId(): Long? {
+        return this.currentlyPlayingContentId
+    }
+
+    fun getCurrentlyPlayingOrPausedContentId(): Long? {
+        if (this.currentlyPlayingContentId == null && existPausedContent()) {
+            return getPausedContent()?.content?.id
+        }
         return this.currentlyPlayingContentId
     }
 

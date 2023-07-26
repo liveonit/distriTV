@@ -47,7 +47,7 @@ class AlertLauncher : BroadcastReceiver() {
         val alertWasPausedOrDestroyed: Boolean =
             (context.applicationContext as DistriTVApp).alertWasPausedOrDestroyed()
 
-        if(alert != null && alert == getAlertBlank()){
+        if (alert != null && alert == getAlertBlank()) {
             // Cancel current alert
             currentActivity?.finish()
             (context.applicationContext as DistriTVApp).setSkipClearing(null)
@@ -77,15 +77,12 @@ class AlertLauncher : BroadcastReceiver() {
             currentActivity?.finish()
         }
 
-        // Remove content if paused
-        if (existPausedContent()) {
-            removePausedContent()
-        }
-
         if (currentActivity != null
             && (currentActivity is HomeActivity || currentActivity is ContentPlayerActivity)) {
             currentActivity.finish()
         }
+
+        removeContentIfPaused()
 
         if (currentActivity == null) {
             startHomeActivity(context)
@@ -109,7 +106,14 @@ class AlertLauncher : BroadcastReceiver() {
                     or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
                     or Intent.FLAG_ACTIVITY_CLEAR_TOP
         )
+        homeIntent.putExtra(ALERT_PARAM, true)
         context.startActivity(homeIntent)
+    }
+
+    private fun removeContentIfPaused() {
+        if (existPausedContent()) {
+            removePausedContent()
+        }
     }
 
     companion object {

@@ -15,7 +15,6 @@ import android.util.Log
 import android.widget.Toast
 import com.distritv.DistriTVApp
 import com.distritv.R
-import com.distritv.data.helper.PlaybackHelper.existPausedContent
 import com.distritv.data.model.Content
 import com.distritv.ui.home.HomeActivity
 import com.distritv.ui.player.content.ContentPlayerActivity
@@ -41,7 +40,7 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
             (context.applicationContext as DistriTVApp).getCurrentActivity()
 
         val isContentCurrentlyPlaying: Boolean =
-            (context.applicationContext as DistriTVApp).isContentCurrentlyPlaying()
+            (context.applicationContext as DistriTVApp).isContentCurrentlyPlayingOrPaused()
 
         val isAlertCurrentlyPlaying: Boolean =
             (context.applicationContext as DistriTVApp).isAlertCurrentlyPlaying()
@@ -50,7 +49,7 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
             return
         }
 
-        if (isContentCurrentlyPlaying || isAlertCurrentlyPlaying || existPausedContent()) {
+        if (isContentCurrentlyPlaying || isAlertCurrentlyPlaying) {
             Log.w(TAG, "Cannot be played because other content or alert is currently playing")
             if (isAlarm != null && isAlarm) {
                 cancelAlarm(context, content)

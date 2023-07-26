@@ -238,7 +238,7 @@ class HomeViewModel(
 
     private fun setSystemLocale() {
         sharedPreferences.removeCustomLocale()
-        appInstance.setDefaultAppLanguage()
+        appInstance.setSystemAppLanguage()
     }
 
     private fun saveLocale(locale: Locale) {

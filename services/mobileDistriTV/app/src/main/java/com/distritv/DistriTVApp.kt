@@ -6,14 +6,18 @@ import android.app.Application
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
+import com.distritv.data.service.SharedPreferencesService
 import com.distritv.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import org.koin.java.KoinJavaComponent.inject
 import java.util.*
 
 
 class DistriTVApp: Application() {
+
+    private val sharedPreferences: SharedPreferencesService by inject(SharedPreferencesService::class.java)
 
     override fun onCreate() {
         super.onCreate()
@@ -31,6 +35,7 @@ class DistriTVApp: Application() {
             )
         }
         appContext = applicationContext
+        setCustomOrSystemAppLanguage()
     }
 
     private var currentActivity: Activity? = null
@@ -103,7 +108,19 @@ class DistriTVApp: Application() {
                 && this.alertDurationLeft != null && this.alertDurationLeft!! > 0L
     }
 
-    fun setDefaultAppLanguage() {
+    /**
+     * Set language selected by the user, system language otherwise
+     */
+    private fun setCustomOrSystemAppLanguage() {
+        val locale = sharedPreferences.getCustomLocale()
+        if (locale != null) {
+            setAppLanguage(Locale(locale.split("_")[0], locale.split("_")[1]))
+        } else {
+            setSystemAppLanguage()
+        }
+    }
+
+    fun setSystemAppLanguage() {
         val systemLocale: Locale = Resources.getSystem().configuration.locales[0]
         setAppLanguage(systemLocale)
     }

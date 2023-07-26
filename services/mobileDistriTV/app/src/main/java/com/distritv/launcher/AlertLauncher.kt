@@ -12,6 +12,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.distritv.DistriTVApp
+import com.distritv.data.helper.PlaybackHelper.existPausedContent
+import com.distritv.data.helper.PlaybackHelper.removePausedContent
 import com.distritv.data.model.Alert
 import com.distritv.data.model.Content
 import com.distritv.ui.home.HomeActivity
@@ -73,6 +75,11 @@ class AlertLauncher : BroadcastReceiver() {
             // Clear the identifier of the content that was playing:
             (context.applicationContext as DistriTVApp).setCurrentlyPlayingContentId(null)
             currentActivity?.finish()
+        }
+
+        // Remove content if paused
+        if (existPausedContent()) {
+            removePausedContent()
         }
 
         if (currentActivity != null

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.distritv.DistriTVApp
+import com.distritv.data.helper.PlaybackHelper.existPausedContent
 import com.distritv.ui.home.HomeActivity
 
 fun FragmentManager.addFragment(
@@ -87,6 +88,10 @@ private fun Fragment.onAfterCompletion(tag: String, id: Long?, application: Dist
 }
 
 fun Fragment.backHomeOnResume() {
+    if (existPausedContent()) {
+        return
+    }
+
     // If the view is created: back home after end of the duration
     val isPlaying =
         (context?.applicationContext as DistriTVApp?)?.isContentCurrentlyPlaying() ?: false

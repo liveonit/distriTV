@@ -34,7 +34,7 @@ object PlaybackHelper: KoinComponent {
         return false
     }
 
-    private fun removePausedContent() {
+    fun removePausedContent() {
         sharedPreferences.removeContentInPausedPlayback()
     }
 }

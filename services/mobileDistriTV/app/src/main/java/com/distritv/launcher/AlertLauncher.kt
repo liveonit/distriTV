@@ -12,8 +12,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.distritv.DistriTVApp
-import com.distritv.data.helper.PlaybackHelper.existPausedContent
-import com.distritv.data.helper.PlaybackHelper.removePausedContent
 import com.distritv.data.model.Alert
 import com.distritv.data.model.Content
 import com.distritv.ui.home.HomeActivity
@@ -82,8 +80,6 @@ class AlertLauncher : BroadcastReceiver() {
             currentActivity.finish()
         }
 
-        removeContentIfPaused()
-
         if (currentActivity == null) {
             startHomeActivity(context)
         }
@@ -108,12 +104,6 @@ class AlertLauncher : BroadcastReceiver() {
         )
         homeIntent.putExtra(ALERT_PARAM, true)
         context.startActivity(homeIntent)
-    }
-
-    private fun removeContentIfPaused() {
-        if (existPausedContent()) {
-            removePausedContent()
-        }
     }
 
     companion object {

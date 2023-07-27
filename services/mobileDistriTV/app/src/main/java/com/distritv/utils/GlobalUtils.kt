@@ -13,6 +13,7 @@ const val USE_EXTERNAL_STORAGE = "use_external_storage"
 const val EXTERNAL_STORAGE_ID = "external_storage_id"
 const val ANTICIPATION_DAYS = "anticipation_days"
 const val CONTENT_IN_PAUSED_PLAYBACK = "content_in_paused_playback"
+const val ALERT_IN_PAUSED_PLAYBACK = "alert_in_paused_playback"
 
 /*
  * Language

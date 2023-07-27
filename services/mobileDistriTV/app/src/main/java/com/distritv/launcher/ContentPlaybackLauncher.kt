@@ -15,6 +15,7 @@ import android.util.Log
 import android.widget.Toast
 import com.distritv.DistriTVApp
 import com.distritv.R
+import com.distritv.data.helper.PlaybackHelper.existPausedAlert
 import com.distritv.data.model.Content
 import com.distritv.ui.home.HomeActivity
 import com.distritv.ui.player.content.ContentPlayerActivity
@@ -49,7 +50,7 @@ class ContentPlaybackLauncher : BroadcastReceiver() {
             return
         }
 
-        if (isContentCurrentlyPlaying || isAlertCurrentlyPlaying) {
+        if (isContentCurrentlyPlaying || isAlertCurrentlyPlaying || existPausedAlert()) {
             Log.w(TAG, "Cannot be played because other content or alert is currently playing")
             if (isAlarm != null && isAlarm) {
                 cancelAlarm(context, content)

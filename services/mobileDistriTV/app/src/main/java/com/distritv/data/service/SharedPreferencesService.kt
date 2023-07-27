@@ -1,6 +1,7 @@
 package com.distritv.data.service
 
 import android.content.SharedPreferences
+import com.distritv.data.model.Alert
 import com.distritv.data.model.PausedContent
 import com.distritv.utils.*
 import com.google.gson.Gson
@@ -85,6 +86,24 @@ class SharedPreferencesService (private var sharedPreferences: SharedPreferences
     fun getContentInPausedPlayback(): PausedContent? {
         val jsonContent = sharedPreferences.getString(CONTENT_IN_PAUSED_PLAYBACK, null) ?: return null
         return Gson().fromJson(jsonContent, PausedContent::class.java)
+    }
+
+    fun setAlertInPausedPlayback(alert: Alert) {
+        val jsonAlert = Gson().toJson(alert)
+        val editor = sharedPreferences.edit()
+        editor.putString(ALERT_IN_PAUSED_PLAYBACK, jsonAlert)
+        editor.apply()
+    }
+
+    fun removeAlertInPausedPlayback() {
+        val editor = sharedPreferences.edit()
+        editor.remove(ALERT_IN_PAUSED_PLAYBACK)
+        editor.apply()
+    }
+
+    fun getAlertInPausedPlayback(): Alert? {
+        val jsonAlert = sharedPreferences.getString(ALERT_IN_PAUSED_PLAYBACK, null) ?: return null
+        return Gson().fromJson(jsonAlert, Alert::class.java)
     }
 
 }

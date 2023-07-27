@@ -1,5 +1,6 @@
 package com.distritv.data.helper
 
+import com.distritv.data.model.Alert
 import com.distritv.data.model.PausedContent
 import com.distritv.data.service.SharedPreferencesService
 import com.distritv.utils.localDateTimeToMillis
@@ -11,6 +12,10 @@ import java.util.concurrent.TimeUnit
 object PlaybackHelper: KoinComponent {
 
     private val sharedPreferences: SharedPreferencesService by inject()
+
+    /*
+     * Content
+     */
 
     fun setPausedContent(pausedContent: PausedContent) {
         sharedPreferences.setContentInPausedPlayback(pausedContent)
@@ -36,5 +41,34 @@ object PlaybackHelper: KoinComponent {
 
     fun removePausedContent() {
         sharedPreferences.removeContentInPausedPlayback()
+    }
+
+    /*
+     * Alert
+     */
+
+    fun setPausedAlert(alert: Alert) {
+        sharedPreferences.setAlertInPausedPlayback(alert)
+    }
+
+    fun getPausedAlert(): Alert? {
+        if (existPausedAlert()) {
+            return sharedPreferences.getAlertInPausedPlayback()
+        }
+        return null
+    }
+
+    fun existPausedAlert(): Boolean {
+        val pausedAlert = sharedPreferences.getAlertInPausedPlayback() ?: return false
+        if (pausedAlert.durationLeft > 0) {
+            return true
+        } else {
+            removePausedAlert()
+        }
+        return false
+    }
+
+    fun removePausedAlert() {
+        sharedPreferences.removeAlertInPausedPlayback()
     }
 }

@@ -7,6 +7,8 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.distritv.DistriTVApp
 import com.distritv.R
+import com.distritv.data.helper.PlaybackHelper.existPausedContent
+import com.distritv.data.helper.PlaybackHelper.removePausedContent
 import com.distritv.data.model.Alert
 import com.distritv.databinding.ActivityPlayerBinding
 import com.distritv.ui.*
@@ -46,6 +48,9 @@ class AlertPlayerActivity : AppCompatActivity() {
         myApp?.setCurrentActivity(this)
         // Set the identifier of the currently playing alert:
         myApp?.setCurrentlyPlayingAlertId(alert?.id)
+        // Remove content if paused:
+        // This prevents the content from resuming after the alert ends
+        removeContentIfPaused()
     }
 
     override fun onStop() {
@@ -75,6 +80,12 @@ class AlertPlayerActivity : AppCompatActivity() {
     private fun clearReferences() {
         val currActivity: Activity? = myApp?.getCurrentActivity()
         if (this == currActivity) myApp?.setCurrentActivity(null)
+    }
+
+    private fun removeContentIfPaused() {
+        if (existPausedContent()) {
+            removePausedContent()
+        }
     }
 
     private fun addFragment() {

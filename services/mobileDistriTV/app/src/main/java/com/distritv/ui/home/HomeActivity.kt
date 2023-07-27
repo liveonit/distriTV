@@ -23,12 +23,16 @@ import com.distritv.R
 import com.distritv.daemon.ContentSchedulingDaemon
 import com.distritv.daemon.GarbageCollectorDaemon
 import com.distritv.daemon.RequestDaemon
+import com.distritv.data.helper.PlaybackHelper.existPausedAlert
+import com.distritv.data.helper.PlaybackHelper.existPausedContent
+import com.distritv.data.helper.PlaybackHelper.getPausedAlert
 import com.distritv.data.helper.PlaybackHelper.getPausedContent
 import com.distritv.data.helper.StorageHelper.MIN_SDK_VERSION_NOT_NEED_WRITE_EXTERNAL_STORAGE_PERMISSION
 import com.distritv.data.helper.StorageHelper.getExternalMountedStorages
 import com.distritv.databinding.ActivityHomeBinding
 import com.distritv.ui.home.HomeViewModel.Companion.DEVICE_INFO
 import com.distritv.ui.home.HomeViewModel.Companion.HOME
+import com.distritv.ui.player.alert.AlertPlayerActivity
 import com.distritv.ui.player.content.ContentPlayerActivity
 import com.distritv.utils.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -79,8 +83,8 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
     override fun onResume() {
         super.onResume()
         myApp.setCurrentActivity(this)
-        // Play if there is paused content
-        playPausedContent()
+        // Play if there is paused alert or content
+        startPausedAlertOrContent()
     }
 
     override fun onStop() {
@@ -201,10 +205,31 @@ class HomeActivity : AppCompatActivity(), DeviceInfoFragment.OnFragmentInteracti
         )
     }
 
+    private fun startPausedAlertOrContent() {
+        val fromAlertLauncher = intent.extras?.getBoolean(ALERT_PARAM) ?: false
+        if (!fromAlertLauncher) {
+            if (existPausedAlert()) {
+                playPausedAlert()
+            } else if (existPausedContent()) {
+                playPausedContent()
+            }
+        }
+    }
+
+    private fun playPausedAlert() {
+        val pausedAlert = getPausedAlert()
+        if (pausedAlert != null) {
+            val alertIntent = Intent(this, AlertPlayerActivity::class.java)
+            alertIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            alertIntent.putExtra(ALERT_PARAM, pausedAlert)
+            this.startActivity(alertIntent)
+            this.finish()
+        }
+    }
+
     private fun playPausedContent() {
         val pausedContent = getPausedContent()
-        val isAlert = intent.extras?.getBoolean(ALERT_PARAM) ?: false
-        if (pausedContent != null && !isAlert) {
+        if (pausedContent != null) {
             val scheduledIntent = Intent(this, ContentPlayerActivity::class.java)
             scheduledIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             scheduledIntent.putExtra(CONTENT_PARAM, pausedContent.content)

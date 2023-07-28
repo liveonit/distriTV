@@ -60,9 +60,7 @@ class DeviceInfoService(
             useExternalStorage(),
             externalStorageAvailable(),
             externalStoragePermissionGranted(),
-            displayOverOtherAppsPermissionGranted(),
             isAnyAlertPlaying(),
-            getCurrentlyPlayingAlertId(),
             getAlertDurationLeft(),
             getAnticipationDays()
         )
@@ -125,20 +123,8 @@ class DeviceInfoService(
         return myApp?.isAlertCurrentlyPlaying() ?: false
     }
 
-    private fun getCurrentlyPlayingAlertId(): Long? {
-        return myApp?.getCurrentlyPlayingAlertId()
-    }
-
     private fun getAlertDurationLeft(): Long? {
         return myApp?.getAlertDurationLeft()
-    }
-
-    private fun displayOverOtherAppsPermissionGranted(): Boolean? {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            Settings.canDrawOverlays(context)
-        } else {
-            null
-        }
     }
 
     /**

@@ -3,6 +3,6 @@ import { TypeOrmMigrationFromFile } from "@lib/dbMigrations/TypeOrmMigrationFrom
 
 export class correct_television_constraint1690329230701 extends TypeOrmMigrationFromFile {
   constructor() {
-    super(path.resolve(__dirname, 'down.sql'), path.resolve(__dirname, 'up.sql'))
+    super(path.resolve(__dirname, 'up.sql'), path.resolve(__dirname, 'down.sql'))
   }
 }

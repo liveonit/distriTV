@@ -23,9 +23,7 @@ data class DeviceInfo(
     val useExternalStorage: Boolean,
     val isExternalStorageConnected: Boolean?,
     val externalStoragePermissionGranted: Boolean?,
-    val displayOverOtherAppsPermissionGranted: Boolean?,
     val isAnyAlertPlaying: Boolean,
-    val currentlyPlayingAlertId: Long?,
     val alertDurationLeft: Long?,
     val anticipationDays: Int
 ) : Parcelable {

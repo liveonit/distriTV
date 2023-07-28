@@ -9,6 +9,7 @@ import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import com.distritv.DistriTVApp
@@ -80,7 +81,7 @@ class AlertLauncher : BroadcastReceiver() {
             currentActivity.finish()
         }
 
-        if (currentActivity == null) {
+        if (currentActivity == null && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             startHomeActivity(context)
         }
 

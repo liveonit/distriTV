@@ -11,7 +11,7 @@ export const runTelevisionTests = (apiUrl: string) => {
     token = `Bearer ${res.body.accessToken}`;
   });
 
-  describe('CRUD tests for television entity', () => {
+  describe('🧪 CRUD tests for television entity 📺', () => {
     test('List television shoud work fine', async () => {
       const res = await request(apiUrl)
         .get('/television')
@@ -63,7 +63,7 @@ export const runTelevisionTests = (apiUrl: string) => {
       });
     });
 
-    test('Update institution shoud work fine', async () => {
+    test('Update television shoud work fine', async () => {
       const updatedTv = {
         name: 'updated television example',
         ip: '192.168.0.1',
@@ -101,7 +101,7 @@ export const runTelevisionTests = (apiUrl: string) => {
       expect(secRes.body.find((i: any) => i.id === updateRes.body.id)).toEqual(updateRes.body);
     });
 
-    test('Delete institution shoud work fine', async () => {
+    test('Delete television shoud work fine', async () => {
       const firstRes = await request(apiUrl)
         .get('/television')
         .set('auth-type', 'local')

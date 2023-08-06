@@ -3,10 +3,11 @@ import 'reflect-metadata';
 import { App } from './App';
 
 import { db } from './db';
+import { config } from './config';
+
 import { redisClient } from './redisCient';
 
 import { logger } from '@lib/Logger';
-import { config } from './config';
 global.logger = logger;
 
 async function main() {

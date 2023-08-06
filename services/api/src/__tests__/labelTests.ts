@@ -1,6 +1,5 @@
 import request from 'supertest';
-
-export const runInstitutionTests = (apiUrl: string) => {
+export const runLabelTests = (apiUrl: string) => {
   let token = '';
 
   beforeAll(async () => {
@@ -11,51 +10,44 @@ export const runInstitutionTests = (apiUrl: string) => {
     token = `Bearer ${res.body.accessToken}`;
   });
 
-  describe('🧪 CRUD tests for institution entity 🏢', () => {
-    test('List institutions shoud work fine', async () => {
+  describe('🧪 CRUD tests for label entity 🏷️', () => {
+    test('List label shoud work fine', async () => {
       const res = await request(apiUrl)
-        .get('/institution')
+        .get('/label')
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();
       expect(res.status).toBe(200);
-      expect(res.body.length).toBe(1);
-      expect(res.body[0]).toEqual({
-        id: 1,
-        name: 'Ceibal',
-        city: 'Montevideo',
-        locality: 'Montevideo',
-      });
+      expect(res.body.length).toBe(0);
     });
 
-    test('Create institution shoud work fine', async () => {
-      const inst = {
-        name: 'InstitutionExample',
-        city: 'CitiExample',
-        locality: 'LocalityExample',
+    test('Create label shoud work fine', async () => {
+      const label = {
+        name: 'label example',
+        description: 'some description',
       };
 
       const firstRes = await request(apiUrl)
-        .get('/institution')
+        .get('/label')
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(1);
+      expect(firstRes.body.length).toBe(0);
 
       const addRes = await request(apiUrl)
-        .post('/institution')
+        .post('/label')
         .set('auth-type', 'local')
         .set('authorization', token)
-        .send(inst);
+        .send(label);
       expect(addRes.status).toBe(200);
       expect(addRes.body).toEqual({
         id: addRes.body.id,
-        ...inst,
+        ...label,
       });
 
       const secRes = await request(apiUrl)
-        .get('/institution')
+        .get('/label')
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();
@@ -64,34 +56,30 @@ export const runInstitutionTests = (apiUrl: string) => {
       expect(secRes.body.find((i: any) => i.id === addRes.body.id)).toEqual(addRes.body);
     });
 
-    test('Update institution shoud work fine', async () => {
-      const updatedInst = {
-        name: 'UpdatedInstitutionExample',
-        city: 'UpdatedCitiExample',
-        locality: 'UpdatedLocalityExample',
+    test('Update label shoud work fine', async () => {
+      const updatedLabel = {
+        name: 'updated label',
+        description: 'updated description',
       };
 
       const firstRes = await request(apiUrl)
-        .get('/institution')
+        .get('/label')
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(2);
+      expect(firstRes.body.length).toBe(1);
 
       const updateRes = await request(apiUrl)
-        .put('/institution/2')
+        .put('/label/1')
         .set('auth-type', 'local')
         .set('authorization', token)
-        .send(updatedInst);
+        .send(updatedLabel);
       expect(updateRes.status).toBe(200);
-      expect(updateRes.body).toEqual({
-        id: 2,
-        ...updatedInst,
-      });
+      expect(updateRes.body).toEqual({ id: 1, ...updatedLabel });
 
       const secRes = await request(apiUrl)
-        .get('/institution')
+        .get('/label')
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();
@@ -100,25 +88,25 @@ export const runInstitutionTests = (apiUrl: string) => {
       expect(secRes.body.find((i: any) => i.id === updateRes.body.id)).toEqual(updateRes.body);
     });
 
-    test('Delete institution shoud work fine', async () => {
+    test('Delete label shoud work fine', async () => {
       const firstRes = await request(apiUrl)
-        .get('/institution')
+        .get('/label')
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(2);
+      expect(firstRes.body.length).toBe(1);
 
       const deleteRes = await request(apiUrl)
-        .delete('/institution/2')
+        .delete('/label/1')
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();
       expect(deleteRes.status).toBe(200);
-      expect(deleteRes.body).toEqual({ id: 2 });
+      expect(deleteRes.body).toEqual({ id: 1 });
 
       const secRes = await request(apiUrl)
-        .get('/institution')
+        .get('/label')
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();

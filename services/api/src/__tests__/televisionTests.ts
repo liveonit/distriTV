@@ -50,18 +50,17 @@ export const runTelevisionTests = (apiUrl: string) => {
       expect(addRes.body.monitor).toBeDefined();
 
       const secRes = await request(apiUrl)
-        .get('/television')
+        .get('/television?relations=monitor')
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();
       expect(secRes.status).toBe(200);
       expect(secRes.body.length).toBe(firstRes.body.length + 1);
-      expect(
-        _.pick(
-          secRes.body.find((i: any) => i.id === addRes.body.id),
-          ['id', 'institutionId', 'name', 'tvCode'],
-        ),
-      ).toEqual(_.pick(addRes.body, ['id', 'institutionId', 'name', 'tvCode']));
+      expect(secRes.body.find((i: any) => i.id === addRes.body.id)).toEqual({
+        ...addRes.body,
+        ip: null,
+        mac: null,
+      });
     });
 
     test('Update institution shoud work fine', async () => {

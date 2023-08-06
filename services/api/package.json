@@ -19,7 +19,7 @@
     "prettier:check": "prettier --check --ignore-path .gitignore \"**/*.+(js|ts|json)\"",
     "prettier:format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "test": "NODE_ENV=\"development\" jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage --runInBand"
   },
   "keywords": [],
   "author": "",

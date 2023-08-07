@@ -9,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.distritv.BuildConfig
-import com.distritv.data.helper.PlaybackHelper.removePausedAlert
-import com.distritv.data.helper.PlaybackHelper.setPausedAlert
 import com.distritv.data.model.Alert
 import com.distritv.databinding.FragmentTextBinding
 import com.distritv.ui.FullscreenManager
@@ -63,13 +61,8 @@ class AlertTextFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        this.cancelPlay()
         timer.cancel()
-        if (alert != null && alert!!.durationLeft > 0L) {
-            setPausedAlert(alert!!)
-        } else {
-            removePausedAlert()
-        }
+        this.cancelAlertPlay(alert)
     }
 
     override fun onDestroy() {

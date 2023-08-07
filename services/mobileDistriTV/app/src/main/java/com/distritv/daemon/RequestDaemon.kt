@@ -113,7 +113,7 @@ class RequestDaemon: Service() {
                     return@launch
                 }
 
-                val scheduleList = scheduleService.getAllSchedules()
+                val scheduleList = scheduleService.getAllSchedules().toMutableList()
 
                 // Fetch schedules with content from the server
                 val responseTelevision =
@@ -147,6 +147,7 @@ class RequestDaemon: Service() {
                     // If no schedule exists: insert new schedule
                     if (originalSchedule == null) {
                         if (scheduleService.saveNewSchedule(schedule) > 0) {
+                            scheduleList.add(schedule)
                             Log.i(TAG, "Schedule was saved: $schedule")
                         }
 

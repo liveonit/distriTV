@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.distritv.BuildConfig
+import com.distritv.data.helper.PlaybackHelper.removePausedAlert
+import com.distritv.data.helper.PlaybackHelper.setPausedAlert
 import com.distritv.data.model.Alert
 import com.distritv.databinding.FragmentTextBinding
 import com.distritv.ui.FullscreenManager

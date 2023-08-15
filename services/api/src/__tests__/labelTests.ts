@@ -114,5 +114,57 @@ export const runLabelTests = (apiUrl: string) => {
       expect(secRes.body.length).toBe(firstRes.body.length - 1);
       expect(secRes.body.find((i: any) => i.id === deleteRes.body.id)).toBeUndefined();
     });
+
+    test('Associating/Disassociating label to tv should work fine', async () => {
+      const label = {
+        name: 'label to associtate',
+        description: 'description of label to associate',
+      };
+      const createLabelRes = await request(apiUrl)
+        .post('/label')
+        .set('auth-type', 'local')
+        .set('authorization', token)
+        .send(label);
+      expect(createLabelRes.status).toBe(200);
+
+      const television = {
+        institutionId: 1,
+        name: 'television example',
+        tvCode: 'a1w2e3',
+      };
+
+      const createTelevisionRes = await request(apiUrl)
+        .post('/television?relations=labels')
+        .set('auth-type', 'local')
+        .set('authorization', token)
+        .send(television);
+      expect(createTelevisionRes.status).toBe(200);
+
+      const addLabelRes = await request(apiUrl)
+        .put(`/television/${createTelevisionRes.body.id}?relations=institution,labels`)
+        .set('auth-type', 'local')
+        .set('authorization', token)
+        .send({
+          id: createTelevisionRes.body.id,
+          m2mRelations: { labels: [createLabelRes.body.id] },
+        });
+      expect(addLabelRes.status).toBe(200);
+      expect(addLabelRes.body.labels.length).toBe(1);
+      expect(addLabelRes.body.labels.find((l: any) => l.id === createLabelRes.body.id)).toEqual({
+        id: createLabelRes.body.id,
+        ...label,
+      });
+
+      const removeLabelRes = await request(apiUrl)
+        .put(`/television/${createTelevisionRes.body.id}?relations=institution,labels`)
+        .set('auth-type', 'local')
+        .set('authorization', token)
+        .send({
+          id: createTelevisionRes.body.id,
+          m2mRelations: { labels: [] },
+        });
+      expect(removeLabelRes.status).toBe(200);
+      expect(removeLabelRes.body.labels.length).toBe(0);
+    });
   });
 };

@@ -5,6 +5,7 @@ export const updateContentBody = z.object({
   url: z.string().optional(),
   type: z.string().optional(),
   text: z.string().optional(),
+  duration: z.number().optional(),
   isPublic: z.boolean().optional(),
   isApproved: z.boolean().optional(),
 });

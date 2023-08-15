@@ -4,14 +4,15 @@ import { Alert } from '@src/entities/Alert';
 import { Monitor } from '@src/entities/Monitor';
 import { Schedule } from '@src/entities/Schedule';
 import { MonitorSvc } from '../Monitor/Monitor.service';
+import { FindOneOptions } from 'typeorm';
 
 export class TelevisionSvc extends BaseService<Television> {
-  public createTelevisionWithMonitor = async (body: any) => {
+  public createWithMonitor = async (body: Television, options?: FindOneOptions<Television>) => {
     const monitorSvc = new MonitorSvc(Monitor);
     const monitor = await monitorSvc.create(Monitor.create({}));
-    const tv = Television.create(body);
+    const tv = await this.create({ ...body, monitor } as Television, options);
     tv.monitor = monitor;
-    return tv.save();
+    return tv;
   };
 
   public getByTVcode = async (tvCode: string, body: any) => {

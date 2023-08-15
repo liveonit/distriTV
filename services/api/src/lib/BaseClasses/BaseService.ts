@@ -66,7 +66,8 @@ export class BaseService<T extends BaseCustomEntity> {
     await queryRunner.startTransaction();
     const queryBuilder = queryRunner.manager.createQueryBuilder();
     try {
-      await queryRunner.manager.update(this.model, { id }, data as QueryDeepPartialEntity<T>);
+      if (data && Object.keys(data).length)
+        await queryRunner.manager.update(this.model, { id }, data as QueryDeepPartialEntity<T>);
 
       if (m2mRelations) {
         const updatedEntity = await queryRunner.manager.findOneOrFail(this.model, {

@@ -32,7 +32,7 @@ export class App {
           excludeHeaders: ['authorization'], // Exclude 'authorization' header from requests
           excludeBody: ['creditCard'], // Exclude 'creditCard' field from requests body
           maskHeaders: ['header1'], // Mask 'header1' header in incoming requests
-          maxBodyLength: 50, // limit length to 50 chars + '...'
+          maxBodyLength: 100, // limit length to 50 chars + '...'
         },
         response: {
           maskBody: ['session_token'], // Mask 'session_token' field in response body

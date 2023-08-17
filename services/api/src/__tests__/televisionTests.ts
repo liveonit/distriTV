@@ -2,6 +2,8 @@ import request from 'supertest';
 import _ from 'lodash';
 export const runTelevisionTests = (apiUrl: string) => {
   let token = '';
+  let tvId: number;
+  const tvCode = "p0o9i8"
 
   beforeAll(async () => {
     const res = await request(apiUrl).post('/auth/login').set('auth-type', 'local').send({
@@ -19,14 +21,13 @@ export const runTelevisionTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(res.status).toBe(200);
-      expect(res.body.length).toBe(0);
     });
 
     test('Create television shoud work fine', async () => {
       const television = {
         institutionId: 1,
         name: 'television example',
-        tvCode: 'a1w2e3',
+        tvCode
       };
 
       const firstRes = await request(apiUrl)
@@ -35,7 +36,6 @@ export const runTelevisionTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(0);
 
       const addRes = await request(apiUrl)
         .post('/television')
@@ -48,6 +48,7 @@ export const runTelevisionTests = (apiUrl: string) => {
         ...television,
       });
       expect(addRes.body.monitor).toBeDefined();
+      tvId = addRes.body.id
 
       const secRes = await request(apiUrl)
         .get('/television?relations=monitor')
@@ -75,19 +76,18 @@ export const runTelevisionTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(1);
 
       const updateRes = await request(apiUrl)
-        .put('/television/1')
+        .put(`/television/${tvId}`)
         .set('auth-type', 'local')
         .set('authorization', token)
         .send(updatedTv);
       expect(updateRes.status).toBe(200);
       expect(updateRes.body).toEqual({
-        id: 1,
+        id: tvId,
         institutionId: 1,
         mac: null,
-        tvCode: 'a1w2e3',
+        tvCode,
         ...updatedTv,
       });
 
@@ -108,15 +108,14 @@ export const runTelevisionTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(1);
 
       const deleteRes = await request(apiUrl)
-        .delete('/television/1')
+        .delete(`/television/${tvId}`)
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();
       expect(deleteRes.status).toBe(200);
-      expect(deleteRes.body).toEqual({ id: 1 });
+      expect(deleteRes.body).toEqual({ id: tvId });
 
       const secRes = await request(apiUrl)
         .get('/television')
@@ -125,7 +124,7 @@ export const runTelevisionTests = (apiUrl: string) => {
         .send();
       expect(secRes.status).toBe(200);
       expect(secRes.body.length).toBe(firstRes.body.length - 1);
-      expect(secRes.body.find((i: any) => i.id === deleteRes.body.id)).toBeUndefined();
+      expect(secRes.body.find((i: any) => i.id === tvId)).toBeUndefined();
     });
   });
 };

@@ -5,6 +5,7 @@ import { config } from '../config';
 import request from 'supertest';
 import { runLabelTests } from './labelTests';
 import { runContentTests } from './contentTests';
+import { runScheduleTests } from './scheduleTests';
 
 const API_URL = `http://localhost:${config.API_PORT}${config.API_PREFIX}/${config.API_VERSION}`;
 
@@ -13,7 +14,8 @@ describe('👉👉👉 Api tests 👈👈👈', () => {
   runInstitutionTests(API_URL);
   runTelevisionTests(API_URL);
   runLabelTests(API_URL);
-  runContentTests(API_URL)
+  runContentTests(API_URL);
+  runScheduleTests(API_URL);
   test('Clearing DB data', async () => {
     const res = await request(API_URL).get('/clear-db').send();
     expect(res.status).toBe(200);

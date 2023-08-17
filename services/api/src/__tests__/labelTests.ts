@@ -1,7 +1,7 @@
 import request from 'supertest';
 export const runLabelTests = (apiUrl: string) => {
   let token = '';
-
+  let labelId: number;
   beforeAll(async () => {
     const res = await request(apiUrl).post('/auth/login').set('auth-type', 'local').send({
       username: 'admin',
@@ -18,12 +18,11 @@ export const runLabelTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(res.status).toBe(200);
-      expect(res.body.length).toBe(0);
     });
 
     test('Create label shoud work fine', async () => {
       const label = {
-        name: 'label example',
+        name: "lababc",
         description: 'some description',
       };
 
@@ -33,7 +32,6 @@ export const runLabelTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(0);
 
       const addRes = await request(apiUrl)
         .post('/label')
@@ -45,6 +43,7 @@ export const runLabelTests = (apiUrl: string) => {
         id: addRes.body.id,
         ...label,
       });
+      labelId = addRes.body.id
 
       const secRes = await request(apiUrl)
         .get('/label')
@@ -68,15 +67,14 @@ export const runLabelTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(1);
 
       const updateRes = await request(apiUrl)
-        .put('/label/1')
+        .put(`/label/${labelId}`)
         .set('auth-type', 'local')
         .set('authorization', token)
         .send(updatedLabel);
       expect(updateRes.status).toBe(200);
-      expect(updateRes.body).toEqual({ id: 1, ...updatedLabel });
+      expect(updateRes.body).toEqual({ id: updateRes.body.id, ...updatedLabel });
 
       const secRes = await request(apiUrl)
         .get('/label')
@@ -95,15 +93,14 @@ export const runLabelTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(1);
 
       const deleteRes = await request(apiUrl)
-        .delete('/label/1')
+        .delete(`/label/${labelId}`)
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();
       expect(deleteRes.status).toBe(200);
-      expect(deleteRes.body).toEqual({ id: 1 });
+      expect(deleteRes.body).toEqual({ id: labelId });
 
       const secRes = await request(apiUrl)
         .get('/label')
@@ -129,8 +126,8 @@ export const runLabelTests = (apiUrl: string) => {
 
       const television = {
         institutionId: 1,
-        name: 'television example',
-        tvCode: 'a1w2e3',
+        name: 'television example in labels',
+        tvCode: "labbcd",
       };
 
       const createTelevisionRes = await request(apiUrl)

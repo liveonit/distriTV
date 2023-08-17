@@ -18,7 +18,7 @@
     "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
     "prettier:check": "prettier --check --ignore-path .gitignore \"**/*.+(js|ts|json)\"",
     "prettier:format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
-    "test": "NODE_ENV=\"development\" jest",
+    "test": "NODE_ENV=\"development\" jest --runInBand",
     "test:coverage": "jest --coverage --runInBand"
   },
   "keywords": [],

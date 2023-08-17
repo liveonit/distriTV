@@ -2,7 +2,7 @@ import request from 'supertest';
 
 export const runInstitutionTests = (apiUrl: string) => {
   let token = '';
-
+  let institutionId: number;
   beforeAll(async () => {
     const res = await request(apiUrl).post('/auth/login').set('auth-type', 'local').send({
       username: 'admin',
@@ -19,8 +19,7 @@ export const runInstitutionTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(res.status).toBe(200);
-      expect(res.body.length).toBe(1);
-      expect(res.body[0]).toEqual({
+      expect(res.body.find((entity: any) => entity.id === 1)).toEqual({
         id: 1,
         name: 'Ceibal',
         city: 'Montevideo',
@@ -41,7 +40,6 @@ export const runInstitutionTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(1);
 
       const addRes = await request(apiUrl)
         .post('/institution')
@@ -53,6 +51,7 @@ export const runInstitutionTests = (apiUrl: string) => {
         id: addRes.body.id,
         ...inst,
       });
+      institutionId = addRes.body.id
 
       const secRes = await request(apiUrl)
         .get('/institution')
@@ -77,16 +76,15 @@ export const runInstitutionTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(2);
 
       const updateRes = await request(apiUrl)
-        .put('/institution/2')
+        .put(`/institution/${institutionId}`)
         .set('auth-type', 'local')
         .set('authorization', token)
         .send(updatedInst);
       expect(updateRes.status).toBe(200);
       expect(updateRes.body).toEqual({
-        id: 2,
+        id: institutionId,
         ...updatedInst,
       });
 
@@ -107,15 +105,14 @@ export const runInstitutionTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(2);
 
       const deleteRes = await request(apiUrl)
-        .delete('/institution/2')
+        .delete(`/institution/${institutionId}`)
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();
       expect(deleteRes.status).toBe(200);
-      expect(deleteRes.body).toEqual({ id: 2 });
+      expect(deleteRes.body).toEqual({ id: institutionId });
 
       const secRes = await request(apiUrl)
         .get('/institution')

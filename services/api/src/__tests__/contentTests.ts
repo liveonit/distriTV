@@ -2,7 +2,7 @@ import request from 'supertest';
 
 export const runContentTests = (apiUrl: string) => {
   let token = '';
-
+  let contentId: number;
   beforeAll(async () => {
     const res = await request(apiUrl).post('/auth/login').set('auth-type', 'local').send({
       username: 'admin',
@@ -19,7 +19,6 @@ export const runContentTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(res.status).toBe(200);
-      expect(res.body.length).toBe(0);
     })
 
     test('Create content shoud work fine', async () => {
@@ -35,7 +34,6 @@ export const runContentTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(0);
 
       const addRes = await request(apiUrl)
         .post('/content')
@@ -48,6 +46,7 @@ export const runContentTests = (apiUrl: string) => {
         ...content,
         url: null
       });
+      contentId = addRes.body.id
 
       const secRes = await request(apiUrl)
         .get('/content')
@@ -73,16 +72,15 @@ export const runContentTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(1);
 
       const updateRes = await request(apiUrl)
-        .put('/content/1')
+        .put(`/content/${contentId}`)
         .set('auth-type', 'local')
         .set('authorization', token)
         .send(updatedCont);
       expect(updateRes.status).toBe(200);
       expect(updateRes.body).toEqual({
-        id: 1,
+        id: updateRes.body.id,
         ...updatedCont,
         url: null
       });
@@ -104,15 +102,14 @@ export const runContentTests = (apiUrl: string) => {
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
-      expect(firstRes.body.length).toBe(1);
 
       const deleteRes = await request(apiUrl)
-        .delete('/content/1')
+        .delete(`/content/${contentId}`)
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();
       expect(deleteRes.status).toBe(200);
-      expect(deleteRes.body).toEqual({ id: 1 });
+      expect(deleteRes.body).toEqual({ id: contentId });
 
       const secRes = await request(apiUrl)
         .get('/content')

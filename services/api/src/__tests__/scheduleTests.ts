@@ -198,5 +198,42 @@ export const runScheduleTests = (apiUrl: string) => {
       expect(schRes.body.schedules.find((sch: any) => sch.id === scheduleId)).toBeUndefined();
 
     });
+    test('Create schedule (content to LABEL) shoud work fine', async () => {
+      const schedule = {
+        contentId: contentRes.body.id,
+        labelId: labelRes.body.id,
+        destinationType: "LABEL",
+        startDate: new Date().toISOString(),
+        endDate: new Date(Date.now() + 1000 * 60 * 24 * 7).toISOString(),
+        cron: "0 30 * ? * FRI,MON,WED"
+      };
+      const firstRes = await request(apiUrl)
+        .post(`/television/${tvRes.body.tvCode}/schedules`)
+        .send({});
+      expect(firstRes.status).toBe(200);
+
+
+      const addRes = await request(apiUrl)
+        .post('/schedule')
+        .set('auth-type', 'local')
+        .set('authorization', token)
+        .send(schedule);
+      expect(addRes.status).toBe(200);
+      expect(_.pick(addRes.body, ["labelId", "contentId", "cron"])).toEqual(_.pick(schedule, ["labelId", "contentId", "cron"]));
+
+      scheduleId = addRes.body.id
+
+      const secRes = await request(apiUrl)
+        .post(`/television/${tvRes.body.tvCode}/schedules`)
+        .set('auth-type', 'local')
+        .set('authorization', token)
+        .send();
+      expect(secRes.status).toBe(200);
+      expect(secRes.body.schedules.length).toBe(firstRes.body.schedules.length + 1);
+      expect(_.pick(secRes.body.schedules.find((sch: any) => sch.id === scheduleId), ["labelId", "contentId", "cron"])).toEqual(_.pick(schedule, ["labelId", "contentId", "cron"]));
+    });
+
+
+
   });
 };

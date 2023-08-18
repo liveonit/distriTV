@@ -32,7 +32,7 @@ export class App {
           excludeHeaders: ['authorization'], // Exclude 'authorization' header from requests
           excludeBody: ['creditCard'], // Exclude 'creditCard' field from requests body
           maskHeaders: ['header1'], // Mask 'header1' header in incoming requests
-          maxBodyLength: 50, // limit length to 50 chars + '...'
+          maxBodyLength: 100, // limit length to 50 chars + '...'
         },
         response: {
           maskBody: ['session_token'], // Mask 'session_token' field in response body
@@ -61,11 +61,21 @@ export class App {
   };
   private setRoutes = (): void => {
     this.app.get(`${config.API_PREFIX}/${config.API_VERSION}/health`, this.healthCheck);
+    if (config.ENVIRONMENT === 'development')
+      this.app.get(
+        `${config.API_PREFIX}/${config.API_VERSION}/clear-db`,
+        this.clearDbEndpointForDev,
+      );
     this.app.use(`${config.API_PREFIX}/${config.API_VERSION}`, router);
   };
 
-  private notFoundError = (req: Request, res: Response, next: NextFunction) => {
+  private notFoundError = (_req: Request, _res: Response, _next: NextFunction) => {
     throw new NotFound();
+  };
+
+  private clearDbEndpointForDev = async (_req: Request, res: Response, _next: NextFunction) => {
+    await db.clearDb();
+    return res.status(200).send();
   };
 
   private healthCheck = async (req: Request, res: Response, next: NextFunction) => {

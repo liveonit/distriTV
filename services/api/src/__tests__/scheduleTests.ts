@@ -196,7 +196,6 @@ export const runScheduleTests = (apiUrl: string) => {
         .send();
       expect(schRes.status).toBe(200);
       expect(schRes.body.schedules.find((sch: any) => sch.id === scheduleId)).toBeUndefined();
-
     });
     test('Create schedule (content to LABEL) shoud work fine', async () => {
       const schedule = {
@@ -211,7 +210,6 @@ export const runScheduleTests = (apiUrl: string) => {
         .post(`/television/${tvRes.body.tvCode}/schedules`)
         .send({});
       expect(firstRes.status).toBe(200);
-
 
       const addRes = await request(apiUrl)
         .post('/schedule')
@@ -232,8 +230,6 @@ export const runScheduleTests = (apiUrl: string) => {
       expect(secRes.body.schedules.length).toBe(firstRes.body.schedules.length + 1);
       expect(_.pick(secRes.body.schedules.find((sch: any) => sch.id === scheduleId), ["labelId", "contentId", "cron"])).toEqual(_.pick(schedule, ["labelId", "contentId", "cron"]));
     });
-
-
 
   });
 };

@@ -86,7 +86,7 @@ const createTelevision: Epic = (action$) =>
       return apiSvc
         .request({
           method: 'POST',
-          path: '/television?relations=institution,labels',
+          path: '/television?relations=institution,labels,monitor',
           requireAuthType: session?.type,
           body: payload,
         })
@@ -118,7 +118,7 @@ const updateTelevision: Epic = (action$) =>
       return apiSvc
         .request({
           method: 'PUT',
-          path: `/television/${payload.id}?relations=institution,labels`,
+          path: `/television/${payload.id}?relations=institution,labels,monitor`,
           requireAuthType: session?.type,
           body: payload,
         })

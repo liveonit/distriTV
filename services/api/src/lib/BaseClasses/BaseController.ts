@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { BaseService } from './BaseService';
 import { BaseCustomEntity } from './BaseCustomEntity';
 import { z } from 'zod';
-import { DeepPartial, FindOptionsWhere } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm';
 
 export class BaseController<T extends BaseCustomEntity, S extends BaseService<T>> {
   public readonly service: S;
@@ -35,8 +35,7 @@ export class BaseController<T extends BaseCustomEntity, S extends BaseService<T>
     if (this.responseSchema) result = this.responseSchema.parse(result) as T;
     return res.status(200).json(result);
   });
-  //_.pick(result, Object.keys(this.responseSchema))
-  //
+
   public getMany = handleErrorAsync(async (req: Request, res: Response) => {
     const { skip, take, relations, search } = this.querySchema?.parse(req.query) || {};
     let result = await this.service.getMany({ skip, take, relations, where: search });

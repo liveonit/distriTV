@@ -48,6 +48,7 @@ class AlertLauncher : BroadcastReceiver() {
 
         if (alert != null && alert == getAlertBlank()) {
             // Cancel current alert
+            (context.applicationContext as DistriTVApp).setAlertRemoved(true)
             currentActivity?.finish()
             (context.applicationContext as DistriTVApp).setSkipClearing(null)
             startHomeActivity(context)
@@ -61,6 +62,7 @@ class AlertLauncher : BroadcastReceiver() {
         // Alert is new or paused or destroyed
         if ((isAlertCurrentlyPlaying && !alert.started) || alertWasPausedOrDestroyed) {
             Log.w(TAG, "Alert is playing but new alert must override it")
+            (context.applicationContext as DistriTVApp).setAlertRemoved(true)
             (context.applicationContext as DistriTVApp).setSkipClearing(true)
             currentActivity?.finish()
         } else if (isAlertCurrentlyPlaying) {

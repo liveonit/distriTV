@@ -6,6 +6,9 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.distritv.DistriTVApp
+import com.distritv.data.helper.PlaybackHelper.removePausedAlert
+import com.distritv.data.helper.PlaybackHelper.setPausedAlert
+import com.distritv.data.model.Alert
 import com.distritv.ui.home.HomeActivity
 
 fun FragmentManager.addFragment(
@@ -105,9 +108,19 @@ fun Fragment.setAlertDurationLeft(durationLeft: Long) {
     application?.setAlertDurationLeft(durationLeft)
 }
 
-fun Fragment.cancelPlay() {
+fun Fragment.cancelAlertPlay(alert: Alert?) {
     // Notice that the alert has finished playing:
     (context?.applicationContext as DistriTVApp?)?.setIfAnyAlertIsCurrentlyPlaying(false)
+    val alertRemoved = (context?.applicationContext as DistriTVApp?)?.getAlertRemoved() ?: false
+    if (alertRemoved) {
+        (context?.applicationContext as DistriTVApp?)?.setAlertRemoved(false)
+        return
+    }
+    if (alert != null && alert.durationLeft > 0L) {
+        setPausedAlert(alert)
+    } else {
+        removePausedAlert()
+    }
 }
 
 fun Fragment.isHexColorCode(input: String): Boolean {

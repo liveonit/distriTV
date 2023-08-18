@@ -5,7 +5,7 @@ import com.distritv.data.model.Label
 class LabelService(private val labelDBService: LabelDBService) {
 
     fun saveLabels(labelList: List<Label>?) {
-        val labelsSaved = getLabels()
+        val labelsSaved = getLabels().toMutableList()
 
         if (labelList == null) {
             if (labelsSaved.isNotEmpty()) {
@@ -29,6 +29,7 @@ class LabelService(private val labelDBService: LabelDBService) {
                 update(label)
             } else if (savedLabel == null) {
                 save(label)
+                labelsSaved.add(label)
             }
         }
     }

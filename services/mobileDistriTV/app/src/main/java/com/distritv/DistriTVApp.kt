@@ -46,6 +46,7 @@ class DistriTVApp: Application() {
     private var currentlyPlayingContentId: Long? = null
     private var currentlyPlayingAlertId: Long? = null
     private var alertDurationLeft: Long? = null
+    private var alertRemoved = false
 
     private var skipClearing: Boolean? = null
 
@@ -119,6 +120,14 @@ class DistriTVApp: Application() {
     fun alertWasPausedOrDestroyed(): Boolean {
         return !this.isAlertCurrentlyPlaying && this.currentlyPlayingAlertId != null
                 && this.alertDurationLeft != null && this.alertDurationLeft!! > 0L
+    }
+
+    fun setAlertRemoved(value: Boolean) {
+        this.alertRemoved = value
+    }
+
+    fun getAlertRemoved(): Boolean {
+        return this.alertRemoved
     }
 
     /**

@@ -38,7 +38,7 @@ export const runTelevisionTests = (apiUrl: string) => {
       expect(firstRes.status).toBe(200);
 
       const addRes = await request(apiUrl)
-        .post('/television')
+        .post('/television?relations=monitor')
         .set('auth-type', 'local')
         .set('authorization', token)
         .send(television);
@@ -71,19 +71,20 @@ export const runTelevisionTests = (apiUrl: string) => {
       };
 
       const firstRes = await request(apiUrl)
-        .get('/television')
+        .get('/television?relations=monitor')
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();
       expect(firstRes.status).toBe(200);
 
       const updateRes = await request(apiUrl)
-        .put(`/television/${tvId}`)
+        .put(`/television/${tvId}?relations=monitor`)
         .set('auth-type', 'local')
         .set('authorization', token)
         .send(updatedTv);
       expect(updateRes.status).toBe(200);
-      expect(updateRes.body).toEqual({
+      expect(updateRes.body.monitor).toBeDefined()
+      expect({ ...updateRes.body, monitor: undefined}).toEqual({
         id: tvId,
         institutionId: 1,
         mac: null,
@@ -92,7 +93,7 @@ export const runTelevisionTests = (apiUrl: string) => {
       });
 
       const secRes = await request(apiUrl)
-        .get('/television')
+        .get('/television?relations=monitor')
         .set('auth-type', 'local')
         .set('authorization', token)
         .send();

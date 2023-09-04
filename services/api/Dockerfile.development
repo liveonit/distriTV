@@ -1,12 +1,19 @@
 FROM node:18-alpine
 
-WORKDIR /api
+RUN yarn global add pnpm
+
+WORKDIR /services
 
 COPY package.json .
 COPY yarn.lock .
+COPY pnpm-*.yaml .
+COPY api/package.json ./api/
+COPY api/yarn.lock ./api/
+COPY packages/validation/package.json ./packages/validation/
+COPY packages/validation/yarn.lock ./packages/validation/
 
-RUN yarn install
+RUN pnpm install --filter "./packages/**" --filter api
 
 COPY . .
 
-CMD [ "npm", "run", "development" ]
+CMD [ "yarn", "start:api:dev" ]

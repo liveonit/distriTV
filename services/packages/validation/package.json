@@ -1,0 +1,20 @@
+{
+    "name": "validation",
+    "version": "1.0.0",
+    "description": "A code library for validation, reusable in the frontend and backend.",
+    "main": "build/src/index.js",
+    "scripts": {
+        "clean": "rm -rf build tsconfig.tsbuildinfo",
+        "build": "tsc",
+        "start:dev": "tsc -w"
+    },
+    "keywords": [],
+    "author": "ashley@codecapers.com.au",
+    "license": "MIT",
+    "devDependencies": {
+        "typescript": "^4.7.4"
+    },
+    "dependencies": {
+        "zod": "^3.22.2"
+    }
+}

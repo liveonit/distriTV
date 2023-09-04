@@ -2,11 +2,10 @@ import { Schedule } from '@src/entities/Schedule';
 import { BaseController } from '@lib/BaseClasses/BaseController';
 import { querySchema } from '@lib/BaseClasses/QueryType';
 import { ScheduleSvc, scheduleSvc } from './Schedule.service';
-import { createScheduleBody } from './types/CreateScheduleBody';
-import { updateScheduleBody } from './types/UpdateScheduleBody';
+import { createScheduleBody } from 'validation/src/Agenda/CreateScheduleBody';
+import { updateScheduleBody } from 'validation/src/Agenda/UpdateScheduleBody';
 import { handleErrorAsync } from '@src/middlewares/errorCatcher';
 import { Request, Response } from 'express';
-import { BadRequest } from '@lib/errors';
 
 
 class ScheduleController extends BaseController<Schedule, ScheduleSvc> { 

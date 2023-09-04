@@ -10,4 +10,4 @@ export const createScheduleBody = z.object({
   cron: z.string()
 });
 
-export type CreateTelevisionBodyType = z.infer<typeof createScheduleBody>;
+export type CreateScheduleBodyType = z.infer<typeof createScheduleBody>;

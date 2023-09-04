@@ -104,7 +104,7 @@
     "zod": "^3.21.4"
   },
   "scripts": {
-    "dev": "webpack-dev-server --config webpack.dev.js",
+    "start:dev": "webpack-dev-server --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "build:docker": "docker build -t $npm_package_name .",
     "run:docker": "docker run -p 3000:3000 $npm_package_name",

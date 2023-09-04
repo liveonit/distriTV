@@ -3,14 +3,11 @@
   "version": "1.0.0",
   "description": "Basic example of Rest APP written in Typescript and using Redis, MySql",
   "main": "index.js",
-  "engines": {
-    "node": "18.x"
-  },
   "scripts": {
     "clean": "rm -rf build/",
     "copy-files": "copyfiles -u 1 src/**/*.sql build/",
     "build": "npm run clean && tsc && tsc-alias && npm run copy-files",
-    "development": "nodemon -w src --ext ts,sql --exec ts-node -r tsconfig-paths/register src/index.ts",
+    "start:dev": "nodemon -w src --ext ts,sql --exec ts-node -r tsconfig-paths/register src/index.ts",
     "start": "node build/index.js",
     "typeorm:migration:create": "npx ts-node src/lib/dbMigrations/createMigration.ts migration -- ",
     "typeorm:seed:create": "npx ts-node src/lib/dbMigrations/createMigration.ts seed -- ",
@@ -51,7 +48,8 @@
     "redis": "^4.1.0",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.6",
-    "zod": "^3.19.0"
+    "zod": "^3.22.2",
+    "validation": "workspace:*"
   },
   "devDependencies": {
     "@babel/register": "^7.17.7",

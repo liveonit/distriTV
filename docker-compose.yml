@@ -63,8 +63,8 @@ services:
     image: api
     container_name: ${PROJECT_NAME}-api
     build:
-      context: ./services/api
-      dockerfile: Dockerfile.development
+      context: ./services
+      dockerfile: api/Dockerfile.development
     tty: true
     environment:
       ENVIRONMENT: development
@@ -75,7 +75,8 @@ services:
     env_file:
       - .env
     volumes:
-      - ./services/api/src:/api/src
+      - ./services/api/src:/services/api/src
+      - ./services/packages/validation/src:/services/packages/validation/src
       - uploaded_assets:${PATH_TO_UPLOAD_FILES}
     networks:
       - backend_net

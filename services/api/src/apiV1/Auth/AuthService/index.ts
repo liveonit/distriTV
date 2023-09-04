@@ -2,9 +2,6 @@ import { config } from '@src/config';
 import { User } from '@src/entities/User';
 import * as argon2 from 'argon2';
 
-import { Role } from '@src/entities/Role';
-import { FindManyOptions, In } from 'typeorm';
-
 import { signJwt, verifyJwt } from './jwt';
 import {
   AuthSessionType,
@@ -12,7 +9,7 @@ import {
   mapFromGoogleToPayload,
   LoginBodyType,
   RefreshTokenBodyType,
-} from '..';
+} from 'validation/src';
 import _ from 'lodash';
 import { redisClient } from '@src/redisCient';
 
@@ -21,8 +18,8 @@ import { BadRequest, Unauthorized } from '@lib/errors';
 import { handleErrorAsync } from '@middlewares/errorCatcher';
 import { uuid } from '@lib/helpers/uuid';
 import { googleAuthSvc } from './GoogleAuthService';
-import { authPayloadSchema, authSessionSchema } from '../types/AuthSessionBody';
-import { UpdateProfileBodyType } from '../types/UpdateProfileBody';
+import { authPayloadSchema, authSessionSchema } from 'validation/src';
+import { UpdateProfileBodyType } from 'validation/src';
 export interface CustomContext {
   req: Request;
   res: Response;

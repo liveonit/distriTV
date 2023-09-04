@@ -1,5 +1,5 @@
 import { handleErrorAsync } from '@src/middlewares/errorCatcher';
-import { googleLoginBodySchema, loginBodySchema, refreshTokenBodySchema } from '.';
+import { googleLoginBodySchema, loginBodySchema, refreshTokenBodySchema } from 'validation/src';
 import { Request, Response } from 'express';
 
 import _ from 'lodash';
@@ -8,7 +8,7 @@ import { authSvc } from '@src/apiV1/Auth/AuthService';
 import { querySchema } from '@lib/BaseClasses/QueryType';
 import { googleAuthSvc } from '@src/apiV1/Auth/AuthService/GoogleAuthService';
 import { User } from '@src/entities/User';
-import { updateProfileBody, UpdateProfileBodyType } from './types/UpdateProfileBody';
+import { updateProfileBody, UpdateProfileBodyType } from 'validation/src';
 import { redisClient } from '@src/redisCient';
 import { config } from '@src/config';
 import argon2 from 'argon2';

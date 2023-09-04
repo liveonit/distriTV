@@ -2,8 +2,8 @@ import { Schedule } from '@src/entities/Schedule';
 import { BaseController } from '@lib/BaseClasses/BaseController';
 import { querySchema } from '@lib/BaseClasses/QueryType';
 import { ScheduleSvc, scheduleSvc } from './Schedule.service';
-import { createScheduleBody } from 'validation/src/Agenda/CreateScheduleBody';
-import { updateScheduleBody } from 'validation/src/Agenda/UpdateScheduleBody';
+import { createScheduleBody } from 'validation/src';
+import { updateScheduleBody } from 'validation/src';
 import { handleErrorAsync } from '@src/middlewares/errorCatcher';
 import { Request, Response } from 'express';
 

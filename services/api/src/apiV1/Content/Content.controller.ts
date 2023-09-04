@@ -7,8 +7,8 @@ import { BadRequest } from '@lib/errors';
 import { Request, Response } from 'express';
 import path from 'path';
 import { ContentSvc, contentSvc } from './Content.service';
-import { createContentBody } from './types/CreateContentBody';
-import { updateContentBody } from './types/UpdateContentBody';
+import { createContentBody } from 'validation/src';
+import { updateContentBody } from 'validation/src';
 
 class ContentController extends BaseController<Content, ContentSvc> {
   public uploadFiles = handleErrorAsync(async (req: Request, res: Response) => {

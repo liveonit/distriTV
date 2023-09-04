@@ -8,7 +8,6 @@ import {
 import { config } from '@src/config';
 import { NotFound } from '@src/lib/errors';
 import { Response } from 'express';
-import { UploadedFile } from 'express-fileupload';
 import { Readable } from 'typeorm/platform/PlatformTools';
 
 /**

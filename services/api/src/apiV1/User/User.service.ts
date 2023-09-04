@@ -5,8 +5,8 @@ import { FindOneOptions, FindOptionsWhere, In } from 'typeorm';
 import * as argon2 from 'argon2';
 import { RoleMapping } from '@src/entities/RoleMapping';
 import { Role } from '@src/entities/Role';
-import { createUserBody, CreateUserBodyType } from '../Auth';
-import { updateUserBody } from './types/UpdateUserBody';
+import { createUserBody, CreateUserBodyType } from 'validation/src';
+import { updateUserBody } from 'validation/src';
 
 export class UserSvc extends BaseService<User> {
   public override readonly create = async (data: User, options?: FindOneOptions<User>) => {

@@ -1,5 +1,4 @@
-import { RoleMapping } from '@src/entities/RoleMapping';
-import { TokenPayload } from 'google-auth-library';
+// import { TokenPayload } from 'google-auth-library';
 import { z } from 'zod';
 
 export const authPayloadSchema = z.object({
@@ -23,7 +22,7 @@ export const authSessionSchema = z.object({
 export type AuthSessionType = z.infer<typeof authSessionSchema>;
 
 
-export const mapFromGoogleToPayload = (googlePayload: TokenPayload, roleMappings?: RoleMapping[]) => {
+export const mapFromGoogleToPayload = (googlePayload: any, roleMappings?: any[]) => {
   return {
     id: googlePayload.sub,
     username: googlePayload.email,

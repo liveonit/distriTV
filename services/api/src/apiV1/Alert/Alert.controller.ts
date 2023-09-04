@@ -2,8 +2,8 @@ import { Alert } from '@src/entities/Alert';
 import { BaseController } from '@lib/BaseClasses/BaseController';
 import { querySchema } from '@lib/BaseClasses/QueryType';
 import { AlertSvc, alertSvc } from './Alert.service';
-import { createAlertBody } from './types/CreateAlertBody';
-import { updateAlertBody } from './types/UpdateAlertBody';
+import { createAlertBody } from 'validation/src';
+import { updateAlertBody } from 'validation/src';
 import { handleErrorAsync } from '@src/middlewares/errorCatcher';
 import { Request, Response } from 'express';
 

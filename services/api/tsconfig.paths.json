@@ -5,6 +5,7 @@
       "@lib/*": ["./src/lib/*"],
       "@entities/*": ["./src/entities/*"],
       "@middlewares/*": ["./src/middlewares/*"],
+      "@types/express-serve-static-core": [ "./node_modules/@types/express-serve-static-core"]
     }
   }
 }

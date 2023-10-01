@@ -76,7 +76,8 @@ services:
       - .env
     volumes:
       - ./services/api/src:/services/api/src
-      - ./services/packages/validation/src:/services/packages/validation/src
+      - ./services/packages/validation:/services/packages/validation
+      - /services/packages/validation/node_modules
       - uploaded_assets:${PATH_TO_UPLOAD_FILES}
     networks:
       - backend_net
@@ -86,16 +87,18 @@ services:
   dashboard:
     image: dashboard
     build:
-      context: ./services/dashboard
-      dockerfile: Dockerfile.development
+      context: ./services
+      dockerfile: dashboard/Dockerfile.development
     env_file:
       - .env
     container_name: ${PROJECT_NAME}-dashboard
     restart: unless-stopped
     tty: true
     volumes:
-      - ./services/dashboard/src:/dashboard/src
-      - ./services/dashboard/public:/dashboard/public
+      - ./services/dashboard/src:/services/dashboard/src
+      - ./services/dashboard/public:/services/dashboard/public
+      - ./services/packages/validation:/services/packages/validation
+      - /services/packages/validation/node_modules
     ports:
       - "3000:3000"
     networks:

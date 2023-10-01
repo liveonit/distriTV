@@ -1,5 +1,5 @@
 import path from "path";
-import { TypeOrmMigrationFromFile } from "@lib/dbMigrations/TypeOrmMigrationFromFile";
+import { TypeOrmMigrationFromFile } from "lib/dbMigrations/TypeOrmMigrationFromFile";
 
 export class AddApprovedAndisPublicAttrToContent1689868036669 extends TypeOrmMigrationFromFile {
   constructor() {

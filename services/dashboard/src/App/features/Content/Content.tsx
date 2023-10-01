@@ -17,7 +17,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { listContents } from 'src/store/content/content.action'
 import { contentIsLoadingSelector, contentSelector } from 'src/store/content/content.selector'
 import AddIcon from '@material-ui/icons/Add'
-import { ContentT } from 'src/store/content/content.type'
+import {  UpdateContentBodyType } from 'validation/entities/Content'
 import { Trans } from 'react-i18next/TransWithoutContext'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
@@ -53,8 +53,8 @@ export default function ContentList() {
   const [isModalCreate, setIsModalCreate] = React.useState(false)
   const isLoading = useSelector(contentIsLoadingSelector)
   const contents = useSelector(contentSelector)
-  const [contentToEdit, setContentToEdit] = React.useState<ContentT | null>(null)
-  const [contentToDelete, setContentToDelete] = React.useState<ContentT | null>(null)
+  const [contentToEdit, setContentToEdit] = React.useState<UpdateContentBodyType | null>(null)
+  const [contentToDelete, setContentToDelete] = React.useState<UpdateContentBodyType | null>(null)
 
   function handleCloseEditContentModal() {
     setContentToEdit(null)
@@ -118,7 +118,7 @@ export default function ContentList() {
                     onClick={() => {
                       console.log(content)
                       setContentToEdit(content)
-                      
+
                     }}
                     color='primary'
                     aria-label='edit content'

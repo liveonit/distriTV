@@ -3,13 +3,14 @@ import { redisClient } from './redisCient';
 import express, { Request, Response, NextFunction, urlencoded } from 'express';
 import helmet from 'helmet';
 import compression from 'compression';
-import { errorCatcher } from '@middlewares/errorCatcher';
-import { loggerMiddleware } from '@middlewares/logger.middleware';
+import { errorCatcher } from 'lib/middlewares/errorCatcher';
+import { loggerMiddleware } from 'lib/middlewares/logger.middleware';
 import router from './apiV1';
 import audit from 'express-requests-logger';
 import { config } from './config';
-import { NotFound } from '@lib/errors';
+import { NotFound } from 'lib/errors';
 import fileUpload from 'express-fileupload';
+import { logger } from 'lib';
 
 export class App {
   public readonly app = express();
@@ -17,7 +18,7 @@ export class App {
     this.setMiddlewares();
     this.setRoutes();
     this.app.use(this.notFoundError);
-    this.app.use(errorCatcher);
+    this.app.use(errorCatcher(config));
   }
 
   private setMiddlewares = (): void => {
@@ -57,7 +58,7 @@ export class App {
     );
     this.app.use(helmet());
     this.app.use(compression());
-    this.app.use(loggerMiddleware);
+    this.app.use(loggerMiddleware(config));
   };
   private setRoutes = (): void => {
     this.app.get(`${config.API_PREFIX}/${config.API_VERSION}/health`, this.healthCheck);

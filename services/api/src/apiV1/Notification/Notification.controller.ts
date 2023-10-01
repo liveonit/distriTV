@@ -1,9 +1,9 @@
-import { Notification } from '@src/entities/Notification';
-import { BaseController } from '@lib/BaseClasses/BaseController';
-import { querySchema } from '@lib/BaseClasses/QueryType';
+import { Notification } from 'validation/entities/Notification';
+import { BaseController } from 'lib/BaseClasses/BaseController';
+import { querySchema } from 'lib/BaseClasses/QueryType';
 import { NotificationSvc, notificationSvc } from './Notification.service';
-import { createNotificationBody } from 'validation/src';
-import { updateNotificationBodySchema } from 'validation/src';
+import { createNotificationBody } from 'validation/entities';
+import { updateNotificationBodySchema } from 'validation/entities';
 
 class NotificationController extends BaseController<Notification, NotificationSvc> { }
 

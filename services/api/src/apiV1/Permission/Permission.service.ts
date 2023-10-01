@@ -1,5 +1,5 @@
-import { Permission } from '@src/entities/Permission';
-import { BaseService } from '@lib/BaseClasses/BaseService';
+import { Permission } from 'validation/entities/Permission';
+import { BaseService } from 'lib/BaseClasses/BaseService';
 
 export class PermissionSvc extends BaseService<Permission> {}
 

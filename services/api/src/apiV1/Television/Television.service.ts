@@ -1,14 +1,15 @@
-import { Television } from '@src/entities/Television';
-import { BaseService } from '@lib/BaseClasses/BaseService';
-import { Alert } from '@src/entities/Alert';
-import { Monitor } from '@src/entities/Monitor';
-import { Schedule } from '@src/entities/Schedule';
+import { Television } from 'validation/entities/Television';
+import { BaseService } from 'lib/BaseClasses/BaseService';
+import { Alert } from 'validation/entities/Alert';
+import { Monitor } from 'validation/entities/Monitor';
+import { Schedule } from 'validation/entities/Schedule';
 import { MonitorSvc } from '../Monitor/Monitor.service';
 import { FindOneOptions } from 'typeorm';
+import { db } from '@src/db';
 
 export class TelevisionSvc extends BaseService<Television> {
   public createWithMonitor = async (body: Television, options?: FindOneOptions<Television>) => {
-    const monitorSvc = new MonitorSvc(Monitor);
+    const monitorSvc = new MonitorSvc(Monitor, this.db);
     const monitor = await monitorSvc.create(Monitor.create({}));
     const tv = await this.create({ ...body, monitor } as Television, options);
     tv.monitor = monitor;
@@ -66,4 +67,4 @@ export class TelevisionSvc extends BaseService<Television> {
   };
 }
 
-export const televisionSvc = new TelevisionSvc(Television);
+export const televisionSvc = new TelevisionSvc(Television, db);

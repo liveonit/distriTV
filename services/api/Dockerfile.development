@@ -6,11 +6,10 @@ WORKDIR /services
 
 COPY package.json .
 COPY yarn.lock .
-COPY pnpm-*.yaml .
+COPY pnpm-* .
 COPY api/package.json ./api/
-COPY api/yarn.lock ./api/
 COPY packages/validation/package.json ./packages/validation/
-COPY packages/validation/yarn.lock ./packages/validation/
+COPY packages/lib/package.json ./packages/lib/
 
 RUN pnpm install --filter "./packages/**" --filter api
 

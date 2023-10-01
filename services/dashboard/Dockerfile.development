@@ -2,18 +2,21 @@ FROM node:18-alpine
 
 RUN apk add g++ make py3-pip
 
-# Create app directory
-RUN mkdir -p /dashboard
+RUN yarn global add pnpm
 
-WORKDIR /dashboard
+WORKDIR /services
 
 COPY package.json .
 COPY yarn.lock .
+COPY pnpm-* .
+COPY dashboard/package.json ./dashboard/
+COPY packages/validation/package.json ./packages/validation/
 
-RUN yarn install
+RUN pnpm install --filter "./packages/**" --filter dashboard
 
 COPY . .
 
 ENV PORT=3000
 EXPOSE 3000
-CMD ["yarn", "start:dev"]
+
+CMD [ "yarn", "start:dashboard:dev" ]

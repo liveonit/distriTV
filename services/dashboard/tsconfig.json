@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es2022",
     "module": "ESNext",
-    "lib": ["dom", "es2015"],
+    "lib": ["es2022", "dom", "dom.iterable"],
     "jsx": "react",
     "sourceMap": true,
     "removeComments": true,
@@ -16,7 +16,11 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "skipLibCheck": true,
-    "plugins": [{ "name": "typescript-plugin-css-modules" }],
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ],
     "paths": {
       "*": ["*"],
       "@app/*": ["src/App/*"],
@@ -27,8 +31,8 @@
     },
     "typeRoots": ["../types", "./node_modules/@types"],
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
 }

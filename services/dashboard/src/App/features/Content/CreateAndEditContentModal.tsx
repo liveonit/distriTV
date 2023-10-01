@@ -14,7 +14,6 @@ import CloudUpload from '@material-ui/icons/CloudUpload'
 import CloudDone from '@material-ui/icons/CloudDone'
 import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { contentSchema, ContentT } from 'src/store/content/content.type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { removeEmpty } from 'src/utils/removeEmpty'
 //import { createContent } from 'src/store/content/content.action'
@@ -22,17 +21,18 @@ import { FormInputText } from 'src/App/components/molecules/Forms/FormInputText'
 import { FormHelperText } from '@material-ui/core'
 import { Trans, useTranslation } from 'react-i18next'
 import { FormInputNumber } from 'src/App/components/molecules/Forms/FormInputNumber'
+import { CreateContentBodyType, UpdateContentBodyType, createContentBody } from 'validation/entities/Content'
 
 type IProps = {
   handleCloseContentModal: () => void
-  content: Partial<ContentT>
+  content?: CreateContentBodyType | UpdateContentBodyType
 }
 const contentType = ['Video', 'Image', 'Text']
 
 export default function CreateAndEditContentModal({ handleCloseContentModal, content }: IProps) {
   const [file, setFile] = React.useState<File | null>(null)
   const [fileError, setFileError] = React.useState('')
-  const contentInitialState: ContentT = {
+  const contentInitialState: CreateContentBodyType = {
     name: '',
     duration: 5,
     type: 'Video',
@@ -51,8 +51,8 @@ export default function CreateAndEditContentModal({ handleCloseContentModal, con
   }, [])
   const { getRootProps, getInputProps } = useDropzone({ onDrop, maxFiles: 1 })
 
-  const methods = useForm<ContentT>({
-    resolver: zodResolver(contentSchema),
+  const methods = useForm<CreateContentBodyType>({
+    resolver: zodResolver(createContentBody),
     defaultValues: contentInitialState,
   })
   const { reset, control, watch, getValues, handleSubmit, register } = methods
@@ -71,7 +71,7 @@ export default function CreateAndEditContentModal({ handleCloseContentModal, con
       }
     })
 
-  const onSubmit: SubmitHandler<ContentT> = async (data) => {
+  const onSubmit: SubmitHandler<CreateContentBodyType> = async (data) => {
     if ((data.type === 'Image' || data.type === 'Video') && file) {
       const renamedFile = new File([file], `${data.name}.${file.name.split('.').pop()}`)
       if (data.type === 'Video') data.duration = await getVideoDuration(renamedFile)

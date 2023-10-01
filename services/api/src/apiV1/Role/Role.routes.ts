@@ -1,5 +1,5 @@
 import { roleController } from './Role.controller';
-import { BaseRoute } from '@src/lib/BaseClasses/BaseRoute';
+import { BaseRoute } from 'lib/BaseClasses/BaseRoute';
 
 const routes = new BaseRoute(roleController);
 routes.setRoutes({

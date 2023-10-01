@@ -15,7 +15,6 @@ import { agendasIsLoadingSelector, agendasSelector } from 'src/store/agenda/agen
 import { CircularProgress } from 'node_modules/@mui/material'
 import Button from '@material-ui/core/Button'
 import { listAgendas } from 'src/store/agenda/agenda.action'
-import { AgendaT } from 'src/store/agenda/agenda.type'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
@@ -29,6 +28,7 @@ import { televisionsSelector } from 'src/store/television/television.selector'
 import { listTelevisions } from 'src/store/television/television.action'
 import { listContents } from 'src/store/content/content.action'
 import { contentSelector } from 'src/store/content/content.selector'
+import {  UpdateScheduleBodyType } from 'validation/entities/Agenda'
 
 import AgendaDeleteModal from './AgendaDeleteModal'
 import AgendaCreateAndEditModal from './AgendaCreateAndEditModal'
@@ -62,8 +62,8 @@ export default function AgendaList() {
   const televisions = useSelector(televisionsSelector)
   const contents = useSelector(contentSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
-  const [agendaToEdit, setAgendaToEdit] = React.useState<AgendaT | null>(null)
-  const [agendaToDelete, setAgendaToDelete] = React.useState<AgendaT | null>(null)
+  const [agendaToEdit, setAgendaToEdit] = React.useState<UpdateScheduleBodyType | null >(null)
+  const [agendaToDelete, setAgendaToDelete] = React.useState<UpdateScheduleBodyType | null>(null)
   const [titleModal, setModalTitle] = React.useState('Titulo')
 
   function handleCloseEditAgendaModal() {

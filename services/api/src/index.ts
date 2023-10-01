@@ -7,8 +7,7 @@ import { config } from './config';
 
 import { redisClient } from './redisCient';
 
-import { logger } from '@lib/Logger';
-global.logger = logger;
+import { logger } from 'lib/Logger';
 
 async function main() {
   // Detect unhandled exceptions

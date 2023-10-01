@@ -1,9 +1,9 @@
-import { Permission } from '@src/entities/Permission';
-import { BaseController } from '@lib/BaseClasses/BaseController';
-import { querySchema } from '@lib/BaseClasses/QueryType';
+import { Permission } from 'validation/entities/Permission';
+import { BaseController } from 'lib/BaseClasses/BaseController';
+import { querySchema } from 'lib/BaseClasses/QueryType';
 import { PermissionSvc, permissionSvc } from './Permission.service';
-import { createPermissionBody } from 'validation/src';
-import { updatePermissionBody } from 'validation/src';
+import { createPermissionBody } from 'validation/entities';
+import { updatePermissionBody } from 'validation/entities';
 
 class PermissionController extends BaseController<Permission, PermissionSvc> { }
 

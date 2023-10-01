@@ -1,5 +1,5 @@
 import { config } from '@src/config';
-import { User } from '@src/entities/User';
+import { User } from 'validation/entities/User';
 import * as argon2 from 'argon2';
 
 import { signJwt, verifyJwt } from './jwt';
@@ -9,17 +9,18 @@ import {
   mapFromGoogleToPayload,
   LoginBodyType,
   RefreshTokenBodyType,
-} from 'validation/src';
+} from 'validation/entities';
 import _ from 'lodash';
 import { redisClient } from '@src/redisCient';
 
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { BadRequest, Unauthorized } from '@lib/errors';
-import { handleErrorAsync } from '@middlewares/errorCatcher';
-import { uuid } from '@lib/helpers/uuid';
+import { BadRequest, Unauthorized } from 'lib/errors';
+import { handleErrorAsync } from 'lib/middlewares/errorCatcher';
+import { uuid } from 'lib/helpers/uuid';
 import { googleAuthSvc } from './GoogleAuthService';
-import { authPayloadSchema, authSessionSchema } from 'validation/src';
-import { UpdateProfileBodyType } from 'validation/src';
+import { authPayloadSchema, authSessionSchema } from 'validation/entities';
+import { UpdateProfileBodyType } from 'validation/entities';
+import { logger } from 'lib';
 export interface CustomContext {
   req: Request;
   res: Response;

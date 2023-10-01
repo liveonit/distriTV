@@ -1,9 +1,10 @@
 import { config } from '@src/config';
-import { RoleMapping } from '@src/entities/RoleMapping';
-import { User } from '@src/entities/User';
-import { mapFromGoogleToPayload } from 'validation/src';
-import { Unauthorized } from '@lib/errors';
+import { RoleMapping } from 'validation/entities/RoleMapping';
+import { User } from 'validation/entities/User';
+import { mapFromGoogleToPayload } from 'validation/entities/Auth';
+import { Unauthorized } from 'lib/errors';
 import { OAuth2Client } from 'google-auth-library';
+import { logger } from 'lib';
 
 class GoogleAuthService {
   public readonly client: OAuth2Client;

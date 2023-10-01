@@ -6,7 +6,7 @@ import institutionRoute from './Institution/Institution.routes'
 import labelRoute from './Label/Label.routes'
 import notificationRoute from './Notification/Notification.routes'
 import televisionRoute from './Television/Television.routes'
-import scheduleRoute  from './Agenda/Schedule.routes';
+import scheduleRoute  from './Schedule/Schedule.routes';
 import AlertRoute from './Alert/Alert.routes';
 import MonitorRoute from './Monitor/Monitor.routes';
 

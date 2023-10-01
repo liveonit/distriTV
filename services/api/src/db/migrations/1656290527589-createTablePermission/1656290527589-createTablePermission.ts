@@ -1,5 +1,5 @@
 import path from 'path';
-import { TypeOrmMigrationFromFile } from '@lib/dbMigrations/TypeOrmMigrationFromFile';
+import { TypeOrmMigrationFromFile } from 'lib/dbMigrations/TypeOrmMigrationFromFile';
 
 export class createTablePermission1656290527589 extends TypeOrmMigrationFromFile {
   constructor() {

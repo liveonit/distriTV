@@ -49,7 +49,8 @@
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.6",
     "zod": "^3.22.2",
-    "validation": "workspace:*"
+    "validation": "workspace:*",
+    "lib": "workspace:*"
   },
   "devDependencies": {
     "@babel/register": "^7.17.7",

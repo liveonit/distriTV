@@ -1,5 +1,5 @@
 import { roleMappingController } from './RoleMapping.controller';
-import { BaseRoute } from '@src/lib/BaseClasses/BaseRoute';
+import { BaseRoute } from 'lib/BaseClasses/BaseRoute';
 
 const routes = new BaseRoute(roleMappingController);
 routes.setRoutes({

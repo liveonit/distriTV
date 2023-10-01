@@ -1,9 +1,9 @@
-import { Institution } from '@src/entities/Institution';
-import { BaseController } from '@lib/BaseClasses/BaseController';
-import { querySchema } from '@lib/BaseClasses/QueryType';
+import { Institution } from 'validation/entities/Institution';
+import { BaseController } from 'lib/BaseClasses/BaseController';
+import { querySchema } from 'lib/BaseClasses/QueryType';
 import { institutionSvc, InstitutionSvc } from './Institution.service';
-import { createInstitutionBody } from 'validation/src';
-import { updateInstitutionBodySchema } from 'validation/src';
+import { createInstitutionBody } from 'validation/entities';
+import { updateInstitutionBodySchema } from 'validation/entities';
 
 class InstitutionController extends BaseController<Institution, InstitutionSvc> { }
 

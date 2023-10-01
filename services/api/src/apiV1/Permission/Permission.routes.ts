@@ -1,5 +1,5 @@
 import { permissionController } from './Permission.controller';
-import { BaseRoute } from '@src/lib/BaseClasses/BaseRoute';
+import { BaseRoute } from 'lib/BaseClasses/BaseRoute';
 
 const routes = new BaseRoute(permissionController);
 routes.setRoutes({

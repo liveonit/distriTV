@@ -1,18 +1,19 @@
 import { config } from '@src/config';
-import { Content } from '@src/entities/Content';
-import { BaseService } from '@lib/BaseClasses/BaseService';
+import { Content } from 'validation/entities/Content';
+import { BaseService } from 'lib/BaseClasses/BaseService';
 import fileUpload, { UploadedFile } from 'express-fileupload';
 import path from 'path';
 import { Request, Response } from 'express';
-import { BadRequest, NotFound } from '@src/lib/errors';
+import { BadRequest } from 'lib/errors';
 import {
   S3Client,
   PutObjectCommand,
-  GetObjectCommand,
   S3ClientConfig,
   PutObjectCommandInput,
 } from '@aws-sdk/client-s3';
 import { s3StreamGetObject } from './s3Helpers';
+import { logger } from 'lib';
+import { db } from '@src/db';
 
 export class ContentSvc extends BaseService<Content> {
   private isSingleFile(file: UploadedFile | UploadedFile[]): file is UploadedFile {
@@ -65,4 +66,4 @@ export class ContentSvc extends BaseService<Content> {
     return await s3StreamGetObject(res, config.BUCKET_NAME!, fileKey);
   }
 }
-export const contentSvc = new ContentSvc(Content);
+export const contentSvc = new ContentSvc(Content, db);

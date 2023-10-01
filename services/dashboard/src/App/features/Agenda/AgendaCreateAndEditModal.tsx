@@ -5,7 +5,6 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import { agendaSchema, AgendaT } from 'src/store/agenda/agenda.type'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormInputDropdown } from 'src/App/components/molecules/Forms/FormInputDropdown'
@@ -22,24 +21,25 @@ import { labelsSelector } from 'src/store/label/label.selector'
 import { Trans, useTranslation } from 'react-i18next'
 import { FormInputCron } from 'src/App/components/molecules/Forms/FormInputCron/FormInputCron'
 import { Checkbox, FormControlLabel } from '@material-ui/core'
+import { createScheduleBody, CreateScheduleBodyType, UpdateScheduleBodyType } from 'validation/entities/Agenda'
 
 type IProps = {
   handleCloseEditModal: () => void
-  agenda: Partial<AgendaT>
+  agenda?: UpdateScheduleBodyType | CreateScheduleBodyType
   title: string
 }
 
 export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda, title }: IProps) {
-  const agendaInitialState: AgendaT = {
+  const agendaInitialState: CreateScheduleBodyType = {
     televisionId: undefined,
     labelId: undefined,
     startDate: new Date(),
     endDate: new Date(),
     destinationType: 'TELEVISION',
     ...removeEmpty(agenda)
-  }  
+  }
 
-  
+
   const checkPeriodicty = () => {
     if(agenda) {
       return !(agenda.startDate === agenda.endDate && agenda.cron === '0 * * * * ?')
@@ -53,8 +53,8 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
   const contents = useSelector(contentSelector)
   const televisions = useSelector(televisionsSelector)
   const labels = useSelector(labelsSelector)
-  const methods = useForm<AgendaT>({
-    resolver: zodResolver(agendaSchema),
+  const methods = useForm<CreateScheduleBodyType>({
+    resolver: zodResolver(createScheduleBody),
     defaultValues: agendaInitialState,
   })
   const { reset, handleSubmit, watch, control, setValue, getValues } = methods
@@ -64,7 +64,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
     if(!periodicity) {
       setValue('endDate', new Date(getValues('startDate')))
       setValue('cron', '0 * * * * ?')
-    }    
+    }
   }, [periodicity, watch('startDate')])
 
   const { t } = useTranslation()
@@ -75,7 +75,7 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
     dispatch(listLabels())
   }, [dispatch])
 
-  const onSubmit: SubmitHandler<AgendaT> = (data) => {
+  const onSubmit: SubmitHandler<CreateScheduleBodyType> = (data) => {
     if (!agenda) {
       dispatch(createAgenda(data))
     } else {
@@ -139,15 +139,15 @@ export default function AgendaCreateAndEditModal({ handleCloseEditModal, agenda,
           </Grid>
           <br />
           <FormInputDate name='startDate' control={control} label={t('START_DATE')} />
-          <FormControlLabel 
-            label={t('CRONTAB')} 
+          <FormControlLabel
+            label={t('CRONTAB')}
             control={<Checkbox onChange={() => {setPeriodicity(!periodicity)}} checked={periodicity}/>}
           />
           {periodicity && (
             <>
               <FormInputCron name='cron' control={control} label={t('CRONTAB')}></FormInputCron>
               <FormInputDate name='endDate' control={control} label={t('END_DATE')} />
-            </>            
+            </>
           )}
         </DialogContent>
         <DialogActions>

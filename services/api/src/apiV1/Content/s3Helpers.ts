@@ -6,9 +6,10 @@ import {
   S3ClientConfig,
 } from '@aws-sdk/client-s3';
 import { config } from '@src/config';
-import { NotFound } from '@src/lib/errors';
+import { NotFound } from 'lib/errors';
 import { Response } from 'express';
 import { Readable } from 'typeorm/platform/PlatformTools';
+import { logger } from 'lib';
 
 /**
  *

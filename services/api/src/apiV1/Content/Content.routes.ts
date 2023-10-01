@@ -1,7 +1,8 @@
 import { contentController } from './Content.controller';
-import { BaseRoute } from '@lib/BaseClasses/BaseRoute';
+import { BaseRoute } from 'lib/BaseClasses/BaseRoute';
+import { authSvc } from '../Auth/AuthService';
 
-const routes = new BaseRoute(contentController);
+const routes = new BaseRoute(contentController, authSvc);
 routes.setRoutes({});
 
 routes.router.post('/upload', contentController.uploadFiles);

@@ -1,12 +1,14 @@
-import { User } from '@src/entities/User';
-import { BaseService } from '@lib/BaseClasses/BaseService';
+import { User } from 'validation/entities/User';
+import { BaseService } from 'lib/BaseClasses/BaseService';
 import _ from 'lodash';
 import { FindOneOptions, FindOptionsWhere, In } from 'typeorm';
 import * as argon2 from 'argon2';
-import { RoleMapping } from '@src/entities/RoleMapping';
-import { Role } from '@src/entities/Role';
-import { createUserBody, CreateUserBodyType } from 'validation/src';
-import { updateUserBody } from 'validation/src';
+import { RoleMapping } from 'validation/entities/RoleMapping';
+import { Role } from 'validation/entities/Role';
+import { createUserBody } from 'validation/entities';
+import { updateUserBody } from 'validation/entities';
+import { logger } from 'lib';
+import { db } from '@src/db';
 
 export class UserSvc extends BaseService<User> {
   public override readonly create = async (data: User, options?: FindOneOptions<User>) => {
@@ -86,4 +88,4 @@ export class UserSvc extends BaseService<User> {
   };
 }
 
-export const userSvc = new UserSvc(User);
+export const userSvc = new UserSvc(User, db);

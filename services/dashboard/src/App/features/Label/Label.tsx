@@ -20,9 +20,9 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { Trans } from 'react-i18next/TransWithoutContext'
 import { SearchBox } from 'src/App/components/molecules/Search/SearchBox'
 import { useSearchQueryString } from 'src/App/hooks/useSearchQueryString'
-import { LabelT } from 'src/store/label/label.type'
 import { useTranslation } from 'react-i18next'
 import { FormatListBulleted } from '@material-ui/icons'
+import { UpdateLabelBodyType } from 'validation/entities/Label'
 
 import LabelCreateAndEditModal from './LabelCreateAndEditModal'
 import LabelDeleteModal from './LabelDeleteModal'
@@ -52,9 +52,9 @@ export default function LabelList() {
   const isLoading = useSelector(labelsIsLoadingSelector)
   const labels = useSelector(labelsSelector)
   const [isModalCreate, setIsModalCreate] = React.useState(false)
-  const [labelToEdit, setLabelToEdit] = React.useState<LabelT | null>(null)
-  const [listTelevisions, setListTelevisions] = React.useState<LabelT | null>(null)
-  const [labelToDelete, setLabelToDelete] = React.useState<LabelT | null>(null)
+  const [labelToEdit, setLabelToEdit] = React.useState<UpdateLabelBodyType | null>(null)
+  const [listTelevisions, setListTelevisions] = React.useState< | null>(null)
+  const [labelToDelete, setLabelToDelete] = React.useState<UpdateLabelBodyType | null>(null)
   const [titleModal, setModalTitle] = React.useState('Titulo')
 
   function handleCloseEditLabelModal() {
@@ -105,7 +105,7 @@ export default function LabelList() {
         <Table className={classes.table} aria-label='simple table'>
           <TableHead>
             <TableRow>
-              <TableCell><Trans>NAME</Trans></TableCell>            
+              <TableCell><Trans>NAME</Trans></TableCell>
               <TableCell><Trans>DESCRIPTION</Trans></TableCell>
               <TableCell><Trans>TELEVISIONS</Trans></TableCell>
               <TableCell><Trans>ACTION</Trans></TableCell>

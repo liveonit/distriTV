@@ -1,5 +1,6 @@
 import { createClient, RedisClientType } from 'redis';
 import { config } from '@src/config';
+import { logger } from 'lib';
 let redisClient = {} as RedisClientType;
 if (config.REDIS_ENABLED) {
   redisClient = createClient({

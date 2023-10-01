@@ -1,14 +1,13 @@
-import { handleErrorAsync } from '@src/middlewares/errorCatcher';
-import { googleLoginBodySchema, loginBodySchema, refreshTokenBodySchema } from 'validation/src';
+import { handleErrorAsync } from 'lib/middlewares/errorCatcher';
+import { googleLoginBodySchema, loginBodySchema, refreshTokenBodySchema } from 'validation/entities/Auth';
 import { Request, Response } from 'express';
 
 import _ from 'lodash';
-import { BadRequest, Unauthorized } from '@lib/errors';
+import { Unauthorized } from 'lib/errors';
 import { authSvc } from '@src/apiV1/Auth/AuthService';
-import { querySchema } from '@lib/BaseClasses/QueryType';
 import { googleAuthSvc } from '@src/apiV1/Auth/AuthService/GoogleAuthService';
-import { User } from '@src/entities/User';
-import { updateProfileBody, UpdateProfileBodyType } from 'validation/src';
+import { User } from 'validation/entities/User';
+import { updateProfileBody, UpdateProfileBodyType } from 'validation/entities/Auth';
 import { redisClient } from '@src/redisCient';
 import { config } from '@src/config';
 import argon2 from 'argon2';

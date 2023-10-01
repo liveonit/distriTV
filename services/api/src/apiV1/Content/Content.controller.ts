@@ -1,14 +1,13 @@
 import { config } from '@src/config';
-import { Content } from '@src/entities/Content';
-import { handleErrorAsync } from '@src/middlewares/errorCatcher';
-import { BaseController } from '@lib/BaseClasses/BaseController';
-import { querySchema } from '@lib/BaseClasses/QueryType';
-import { BadRequest } from '@lib/errors';
+import { Content } from 'validation/entities/Content';
+import { handleErrorAsync } from 'lib/middlewares/errorCatcher';
+import { BaseController } from 'lib/BaseClasses/BaseController';
+import { querySchema } from 'lib/BaseClasses/QueryType';
+import { BadRequest } from 'lib/errors';
 import { Request, Response } from 'express';
 import path from 'path';
 import { ContentSvc, contentSvc } from './Content.service';
-import { createContentBody } from 'validation/src';
-import { updateContentBody } from 'validation/src';
+import { createContentBody, updateContentBody } from 'validation/entities';
 
 class ContentController extends BaseController<Content, ContentSvc> {
   public uploadFiles = handleErrorAsync(async (req: Request, res: Response) => {

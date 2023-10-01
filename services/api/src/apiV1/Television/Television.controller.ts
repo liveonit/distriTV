@@ -1,11 +1,11 @@
-import { Television } from '@src/entities/Television';
-import { BaseController } from '@lib/BaseClasses/BaseController';
-import { querySchema } from '@lib/BaseClasses/QueryType';
+import { Television } from 'validation/entities/Television';
+import { BaseController } from 'lib/BaseClasses/BaseController';
+import { querySchema } from 'lib/BaseClasses/QueryType';
 import { TelevisionSvc, televisionSvc } from './Television.service';
-import { createTelevisionBody } from 'validation/src';
-import { updateTelevisionBodySchema } from 'validation/src';
-import { handleErrorAsync } from '@src/middlewares/errorCatcher';
-import { BadRequest, NotFound } from '@lib/errors';
+import { createTelevisionBody } from 'validation/entities';
+import { updateTelevisionBodySchema } from 'validation/entities';
+import { handleErrorAsync } from 'lib/middlewares/errorCatcher';
+import { BadRequest, NotFound } from 'lib/errors';
 import { Request, Response } from 'express';
 
 class TelevisionController extends BaseController<Television, TelevisionSvc> {
